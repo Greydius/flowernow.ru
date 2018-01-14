@@ -86,11 +86,17 @@ class Product extends Model
 
         static function popular($city_id = null) {
 
+                return self::with('shop')->whereHas('shop', function($query) use ($city_id) {
+                        $query->where('city_id', $city_id);
+                })->where('price', '>', 0)->get();
+
+                /*
                 return \DB::table('products')
                         ->select('products.*', 'shops.name AS shop_name')
                         ->join('shops', 'shops.id', '=', 'products.shop_id')
                         ->where('shops.city_id', $city_id)
                         ->where('price', '>', 0)->get();
+                */
         }
 
         public function getClientPriceAttribute() {

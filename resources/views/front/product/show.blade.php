@@ -29,7 +29,7 @@
         <div class="col-md-7">
             <div class="row">
                 <div class="col-sm-6 col-md-7">
-                    <h1 class="h3 title-media-item-opened"><strong>{{ $product->name }}, {{ $product->price }} руб.</strong></h1>
+                    <h1 class="h3 title-media-item-opened"><strong>{{ $product->name }}, {{ $product->clientPrice }} руб.</strong></h1>
 
 
                     <br><br>

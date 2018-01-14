@@ -141,7 +141,7 @@
                 <h3 class="margin-top-null hidden-lg hidden-md"><strong>Популярные букеты</strong></h3>
                 <br class="hidden-lg hidden-md">
 
-                <div class="row">
+                <div class="row" ng-cloak>
 
                     <div class="col-sm-4" ng-repeat="product in popularProduct">
                         <div class="media-item">
@@ -160,7 +160,7 @@
                             <div class="description-media-item">
                                 <div class="row">
                                     <div class="col-xs-11">
-                                        <p><strong class="price-media-item"><% product.price %> руб.</strong> <a href="#"><% product.name %></a></p>
+                                        <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#"><% product.name %></a></p>
                                         <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="..."> 2 ч 20 мин</p>
                                     </div>
 
@@ -212,7 +212,7 @@
 
 @section('footer')
     <script type="text/javascript">
-        jsonData.popularProduct = {!! $popularProduct->toJson() !!};
+        jsonData.popularProduct = {!! $popularProduct->makeHidden('price')->toJson() !!};
     </script>
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
