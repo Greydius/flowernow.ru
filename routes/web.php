@@ -32,6 +32,11 @@ Route::get('cart/{product_id}', [
         'as' => 'order.add'
 ]);
 
+Route::post('cart', [
+        'uses' => 'OrdersController@create',
+        'as' => 'order.create'
+]);
+
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 

@@ -666,7 +666,7 @@ h5 + hr {
 table > thead > tr > th {
   font-weight: normal;
   border: 0 !important; }
-  table > thead > tr > th:last-child {
+  table.other-proposition > thead > tr > th:last-child {
     width: 180px; }
 table > tbody > tr > td {
   position: relative;

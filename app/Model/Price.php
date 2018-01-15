@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
 
-class Price extends Model
+class Price extends MainModel
 {
     //
 }

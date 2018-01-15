@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
 
-class Size extends Model
+class Size extends MainModel
 {
     //
 }

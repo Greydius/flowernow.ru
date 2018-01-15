@@ -36,6 +36,11 @@
 		<!--[if lt IE 9]>
 			<p class="chromeframe text-center">Вы используете <strong>устаревший</strong> браузер. Пожалуйста <a href="http://browsehappy.com/">обновите ваш браузер</a>.</p>
 		<![endif]-->
+		<div class="preloader-wrapper">
+			<div class="preloader">
+				<img src="{{ asset('assets/front/img/loading.gif') }}" alt="...">
+			</div>
+		</div>
 		<header>
 			<nav class="navbar navbar-default navbar-fixed-top">
 				<div class="container">

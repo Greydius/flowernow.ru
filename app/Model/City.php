@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
 
-class City extends Model
+class City extends MainModel
 {
     //
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

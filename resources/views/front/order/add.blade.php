@@ -25,27 +25,40 @@
 				<div class="row">
 					<div class="col-md-8">
 						<div class="bg-white order-form">
-							<form>
+							<form id="order-frm" method="post" action="{{ route('order.create') }}">
+								{{ csrf_field() }}
 								<div class="">
 									<label>
 										<span class="h4"><strong>Пожелание</strong> <small class="text-muted">Бесплатно</small></span>
 									</label>
 								</div>
 								<div class="form-group">
-									<textarea class="form-control" rows="3" placeholder="Напишите текст открытки. По желанию - подпишитесь."></textarea>
+									<textarea class="form-control" rows="3" name="text" placeholder="Напишите текст открытки. По желанию - подпишитесь."></textarea>
 								</div>
 								<br>
 								<p class="h4"><strong>Получатель</strong></p>
 								<div class="checkbox">
 									<label>
-										<input type="checkbox"> Я сам получу цветы
+										<input type="checkbox" name="recipient_self" id="recipient_self"> Я сам получу цветы
 									</label>
 								</div>
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Имя">
+								<div class="form1">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Имя получателя" name="recipient_name">
+									</div>
+									<div class="form-group">
+										<input type="tel" class="form-control phone_input" data-placeholder="Телефон получателя" id="recipient_phone">
+										<input type="hidden" name="recipient_phone" value="">
+									</div>
 								</div>
-								<div class="form-group">
-									<input type="text" class="form-control phone" placeholder="Телефон">
+
+								<div class="form2">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Ваше имя" name="name">
+									</div>
+									<div class="form-group">
+										<input type="tel" class="form-control phone_input customer_phone" data-placeholder="Ваш телефон" name="phone">
+									</div>
 								</div>
 
 								<div class="row">
@@ -54,13 +67,13 @@
                                             г. {{ $product->shop->city->name }}
                                         </label>
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Адрес доставки (улица и дом)">
+											<input type="text" class="form-control" placeholder="Адрес доставки (улица и дом)" name="recipient_address">
 										</div>
 									</div>
 									<div class="col-sm-4">
                                         <label>&nbsp;</label>
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Квартира / Офис">
+											<input type="text" class="form-control" placeholder="Квартира / Офис" name="recipient_flat">
 										</div>
 									</div>
 								</div>
@@ -69,7 +82,7 @@
 										Дополнительная информаця
 									</label>
                                     <div class="form-group">
-                                        <textarea class="form-control" rows="3" placeholder="Подьезд, домофон, злая собака - что угодно..."></textarea>
+                                        <textarea class="form-control" rows="3" placeholder="Подьезд, домофон, злая собака - что угодно..." name="recipient_info"></textarea>
                                     </div>
 								</div>
 
@@ -77,130 +90,70 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Дата доставки">
+											<input type="text" class="form-control datepicker" placeholder="Дата доставки" name="receiving_date" readonly>
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<select class="form-control">
-												<option>Время доставки</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-												<option>5</option>
+											<select class="form-control" name="receiving_time">
+												<option value="" selected="">Время доставки</option>
+												<option value="Время согласовать">Согласовать</option>
+												<option value="с 11:00 до 12:00">с 11:00 до 12:00</option>
+												<option value="с 12:00 до 13:00">с 12:00 до 13:00</option>
+												<option value="с 13:00 до 14:00">с 13:00 до 14:00</option>
+												<option value="с 14:00 до 15:00">с 14:00 до 15:00</option>
+												<option value="с 15:00 до 16:00">с 15:00 до 16:00</option>
+												<option value="с 16:00 до 17:00">с 16:00 до 17:00</option>
+												<option value="с 17:00 до 18:00">с 17:00 до 18:00</option>
+												<option value="с 18:00 до 19:00">с 18:00 до 19:00</option>
+												<option value="с 19:00 до 20:00">с 19:00 до 20:00</option>
+												<option value="с 20:00 до 21:00">с 20:00 до 21:00</option>
+												<option value="с 21:00 до 22:00">с 21:00 до 22:00</option>
 											</select>
 										</div>
 									</div>
 								</div>
-								<br><br>
-								<p class="h4"><strong>Ваши данные</strong></p>
-								<div class="form-group">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox"> Отправить цветы анонимно
-										</label>
+								<div class="form1">
+
+									<br><br>
+									<p class="h4"><strong>Ваши данные</strong></p>
+									<div class="form-group">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" name="anonymous"> Отправить цветы анонимно
+											</label>
+										</div>
+										<input type="text" class="form-control" placeholder="Имя" name="name">
 									</div>
-									<input type="text" class="form-control" placeholder="Имя">
-								</div>
-								<div class="form-group">
-									<input type="text" class="form-control phone" required placeholder="Телефон">
-								</div>
-								<div class="form-group">
-									<input type="email" class="form-control" placeholder="Эл. почта">
+									<div class="form-group">
+										<input type="tel" class="form-control phone_input customer_phone" required data-placeholder="Телефон">
+									</div>
+									<div class="form-group">
+										<input type="email" class="form-control" placeholder="Эл. почта" name="email">
+									</div>
+
 								</div>
 
 								<br>
 								<p class="h4"><strong>Выберите способ оплаты</strong></p>
+								<input type="hidden" name="order_id" value="">
+								<input type="hidden" name="phone" value="">
+								<input type="hidden" name="payment" value="card">
+								<input type="hidden" name="products[]" value="{{ $product->id }}">
 								<div class="order-tabs">
-									<ul class="nav nav-tabs" role="tablist">
-										<li role="presentation" class="active"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab"><figure><img height="40" src="{{ asset('assets/front/img/karta.png') }}" alt="..."></figure>Банковская карта</a></li>
-										<li role="presentation"><a href="#oplata2" aria-controls="profile" role="oplata2" data-toggle="tab"><figure><img  height="40" src="{{ asset('assets/front/img/nal.png') }}" alt="..."></figure>Наличные</a></li>
-										<li role="presentation"><a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab"><figure><img  height="40" src="{{ asset('assets/front/img/beznal.png') }}" alt="..."></figure>Безнал для юр.</a></li>
+									<ul class="nav nav-tabs" role="tablist" id="payment_methods_list">
+										<li role="presentation" class="active"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab" data-payment="card"><figure><img height="40" src="{{ asset('assets/front/img/karta.png') }}" alt="..."></figure>Банковская карта</a></li>
+										<li role="presentation"><a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs"><figure><img  height="40" src="{{ asset('assets/front/img/beznal.png') }}" alt="..."></figure>Безнал для юр.</a></li>
 									</ul>
 
 									<br>
 
 									<div class="tab-content">
 										<div role="tabpanel" class="tab-pane active" id="oplata1">
-											<div class="row">
-												<div class="col-sm-6">
-													<div class="media">
-														<div class="media-left">
-															<img class="media-object" src="{{ asset('assets/front/img/lock.png') }}" alt="...">
-														</div>
-														<div class="media-body">
-															<p><strong>Безопасная оплата картой</strong></p>
-															<p class="text-muted">Данные защищены по стандарту PCI DSS</p>
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-6">
-													<ul class="list-inline">
-														<li><img src="{{ asset('assets/front/img/comodo.png') }}" alt="..."></li>
-														<li><img src="{{ asset('assets/front/img/visa.png') }}" alt="..."></li>
-														<li><img src="{{ asset('assets/front/img/master.png') }}" alt="..."></li>
-														<li><img src="{{ asset('assets/front/img/pci.png') }}" alt="..."></li>
-													</ul>
-												</div>
-											</div>
-											<br>
-											<p>Введите данные карты для оплаты:</p>
-											<div class="carta-block-box">
-												<div class="carta-block-first">
-													<figure class="text-right">
-														<img src="{{ asset('assets/front/img/sprite-cloud.png') }}" alt="...">
-													</figure>
-													<div class="form-group">
-														<label for="nomerKarty">Номер карты <button type="button" class="btn btn-inf" data-toggle="tooltip" data-placement="top" title="" data-original-title="Номер карты напечатан на лицевой стороне карты и состоит из 16 или 18 цифр"><span class="glyphicon glyphicon-question-sign text-muted" aria-hidden="true"></span></button></label>
-														<input type="text" class="form-control" id="nomerKarty" placeholder="0000 0000 0000 0000">
-													</div>
-													<div class="form-group">
-														<label for="dateFinishCard">Действует до <button type="button" class="btn btn-inf" data-toggle="tooltip" data-placement="top" title="" data-original-title="Срок действия указан на лицевой стороне карты в виде 4 цифры: месяц / год"><span class="glyphicon glyphicon-question-sign text-muted" aria-hidden="true"></span></button></label>
-														<div class="row">
-															<div class="col-sm-3 col-xs-4">
-																<input type="text" class="form-control" id="dateFinishCard" placeholder="12">
-															</div>
-															<div class="col-sm-3 col-xs-4">
-																<input type="text" class="form-control" placeholder="22">
-															</div>
-														</div>
-													</div>
-													<div class="form-group">
-														<label for="nameCardholder">Имя владельца <button type="button" class="btn btn-inf" data-toggle="tooltip" data-placement="top" title="" data-original-title="Латиницей, как на карте"><span class="glyphicon glyphicon-question-sign text-muted" aria-hidden="true"></span></button></label>
-														<input type="text" class="form-control" id="nameCardholder" placeholder="ALEXANDER PUSHKIN">
-													</div>
-												</div>
-												<div class="carta-block-second">
-													<div class="card-line"></div>
-													<div class="row">
-														<div class="col-sm-4 col-sm-offset-8 col-xs-6 col-xs-offset-6">
-															<div class="form-group">
-																<label for="nomerKarty">Код CVV</label>
-																<input type="text" class="form-control" id="nomerKarty" placeholder="000">
-																<p class="text-muted">Три цифры с обратной стороны карты</p>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox">Сохранить как основной способ оплаты для следующих покупок <br><small class="text-muted"> Следующая покупка в один клик </small>
-												</label>
-											</div>
 											<hr>
 											<div class="text-center" ng-cloak>
-												<button type="button" class="btn btn-warning">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
+												<button type="button" class="btn btn-warning create-order">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
 											</div>
-											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
-										</div>
-										<div role="tabpanel" class="tab-pane" id="oplata2">
-											<br>
-											<p class="text-center">Оплата наличными курьеру при доставке</p>
-											<div class="text-center" ng-cloak>
-												<button type="button" class="btn btn-warning">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
-											</div>
-											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
 										</div>
 										<div role="tabpanel" class="tab-pane" id="oplata3">
 											<br><br>
@@ -234,8 +187,9 @@
 													</div>
 												</div>
 											</div>
-											<div class="text-center">
-												<button type="button" class="btn btn-warning">Выставить счёт 108.78 $</button>
+											<hr>
+											<div class="text-center" ng-cloak>
+												<button type="button" class="btn btn-warning create-order">Выставить счёт <% total() %> <i class="fa fa-rub"></i></button>
 											</div>
 											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
 										</div>
@@ -258,6 +212,7 @@
 												<ul class="list-inline text-center">
 													<li><span class="glyphicon glyphicon-menu-left text-muted order-arrow"  ng-click="downQty()" aria-hidden="true"></span></li>
 													<li ng-cloak><% qty %></li>
+													<input type="hidden" name="qty" value="<% qty %>">
 													<li><span class="glyphicon glyphicon-menu-right text-muted order-arrow" ng-click="upQty()" aria-hidden="true"></span></li>
 												</ul>
 											</div>
@@ -297,15 +252,23 @@
 @endsection
 
 @section('head')
-
+<link href="{{ asset('assets/plugins/intl-tel-input-12.1.0/css/intlTelInput.css') }}" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
 @stop
 
 @section('footer')
 
     <script type="text/javascript">
         jsonData.product = {!! $product->makeHidden('price')->toJson() !!};
+        var cl_publicId = '{!! \Config::get('cloudpayments.publicId') !!}';
     </script>
 
+	<script src="https://widget.cloudpayments.ru/bundles/cloudpayments" type="text/javascript"></script>
+	<script src="{{ asset('assets/plugins/intl-tel-input-12.1.0/js/intlTelInput.min.js') }}" type="text/javascript"></script>
+	<script src="{{ asset('assets/plugins/notifyjs/notify.min.js') }}" type="text/javascript"></script>
+	<script src="{{ asset('assets/plugins/moment/moment.min.js') }}" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
     <script src="{{ asset('assets/front/ng/order.js') }}" type="text/javascript"></script>
 
 @stop
