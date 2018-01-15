@@ -42,4 +42,9 @@ class Shop extends MainModel
         function products() {
                 return $this->hasMany('App\Model\Product');
         }
+
+        // relation for orders
+        function orders() {
+                return $this->hasMany('App\Model\Order');
+        }
 }

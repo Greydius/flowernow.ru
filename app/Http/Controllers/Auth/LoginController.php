@@ -34,12 +34,18 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    public function username()
+    {
+        return 'phone';
+    }
+
     protected function redirectTo() {
             return route('admin.shop.profile');
     }
 
     public function login(Request $request)
     {
+            $request->merge(['phone' => AppHelper::normalizePhone($request->phone)]);
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -50,8 +56,6 @@ class LoginController extends Controller
 
             return $this->sendLockoutResponse($request);
         }
-
-        $request->merge(['phone' => AppHelper::normalizePhone($request->phone)]);
 
         if ($this->attemptLogin($request)) {
                 return $this->sendLoginResponse($request);

@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\MainModel;
+use App\Model\OrderList;
 
 class Order extends MainModel
 {
@@ -27,4 +28,54 @@ class Order extends MainModel
         public static $PAYMENT_CARD = 'card';
         public static $PAYMENT_RS = 'rs';
         public static $PAYMENT_CASH = 'cash';
+
+        // relation for Order List
+        function orderLists() {
+                return $this->hasMany('App\Model\OrderList');
+        }
+
+        // relation for shop
+        function shop() {
+                return $this->belongsTo('App\Model\Shop');
+        }
+
+        //возвращает сумму заказа
+        public function amount() {
+                $amount = 0;
+                foreach ($this->orderLists()->get() as $orderList) {
+                        $amount += $orderList->client_price;
+                }
+
+                return $amount;
+        }
+
+        //возвращает сумму заказа
+        public function amountShop() {
+                $amount = 0;
+                foreach ($this->orderLists()->get() as $orderList) {
+                        $amount += $orderList->shop_price;
+                }
+
+                return $amount;
+        }
+
+        public function getStatusNameAttribute() {
+                $name = '';
+
+                switch ($this->status) {
+                        case Order::$STATUS_NEW:
+                                $name = 'новый';
+                                break;
+
+                        case Order::$STATUS_ACCEPTED:
+                                $name = 'принят';
+                                break;
+
+                        case Order::$STATUS_COMPLETED:
+                                $name = 'выполнен';
+                                break;
+                }
+
+                return $name;
+        }
 }

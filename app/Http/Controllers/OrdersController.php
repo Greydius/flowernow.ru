@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Product;
 use App\Model\Order;
 use App\Model\OrderList;
+use App\Helpers\Sms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +15,7 @@ class OrdersController extends Controller
     //
 
         function add($productId) {
+
                 $product = Product::with('shop.city')->with('compositions.flower')->findOrFail($productId);
 
                 return view('front.order.add',[
@@ -58,6 +60,8 @@ class OrdersController extends Controller
                                         $shop_id = $productModel[0]->shop_id;
                                 }
 
+                                $date = \DateTime::createFromFormat('d.m.Y', $request->receiving_date);
+
                                 $order = new Order();
                                 $order->shop_id = $shop_id;
                                 $order->recipient_name = $request->recipient_name;
@@ -65,7 +69,7 @@ class OrdersController extends Controller
                                 $order->recipient_address = $request->recipient_address;
                                 $order->recipient_flat = $request->recipient_flat;
                                 $order->recipient_self = !empty($request->recipient_self) ? 1 : 0;
-                                $order->receiving_date = $request->receiving_date;
+                                $order->receiving_date = $date->format('Y-m-d');
                                 $order->receiving_time = $request->receiving_time;
                                 $order->anonymous = !empty($request->anonymous) ? 1 : 0;
                                 $order->name = $request->name;
@@ -80,7 +84,7 @@ class OrdersController extends Controller
                                         foreach ($productModel as $item) {
                                                 $orderList = new OrderList();
                                                 $orderList->order_id = $order->id;
-                                                $orderList->flower_id = $item->id;
+                                                $orderList->product_id = $item->id;
                                                 $orderList->single = 0;
                                                 $orderList->qty = !empty((int)$request->qty) ? (int)$request->qty : 1;
                                                 $orderList->shop_price = $item->price;
@@ -95,6 +99,14 @@ class OrdersController extends Controller
                                         return response()->json([
                                                 'order_id' => $order->id,
                                                 'message' => '',
+                                                'cloudpayments' => [
+                                                        'publicId'      => \Config::get('cloudpayments.publicId'),  //id из личного кабинета
+                                                        'description'   => 'Заказ №'.$order->id, //назначение
+                                                        'amount'        => $order->amount(), //сумма
+                                                        'currency'      => 'RUB', //валюта
+                                                        'invoiceId'     => $order->id, //номер заказа  (необязательно)
+                                                        'accountId'     => $order->email, //идентификатор плательщика (необязательно)
+                                                ],
                                                 'code' => 200
                                         ], 200);
 
@@ -118,5 +130,71 @@ class OrdersController extends Controller
                         }
 
                 }
+        }
+
+        function checkpayment(Request $request) {
+
+                $code = 0;
+
+                $order = Order::find($request->InvoiceId);
+
+                if(empty($order)) {
+                        $code = 10;
+                } elseif ($order->amount() != $request->Amount) {
+                        $code = 11;
+                } elseif ($order->payed) {
+                        $code = 13;
+                }
+
+                return response()->json([
+                        'code' => $code
+                ], 200);
+        }
+
+        function confirmpayment(Request $request) {
+                $code = 0;
+
+                $order = Order::with('shop')->find($request->InvoiceId);
+
+                if(empty($order)) {
+                        $code = 10;
+                } else {
+                        $order->payed = 1;
+                        if($order->save()) {
+                                $this->sendSuccessSms($order);
+                        }
+                }
+
+                return response()->json([
+                        'code' => $code
+                ], 200);
+        }
+
+        private function sendSuccessSms($order) {
+                try {
+                        $shop = $order->shop;
+                        if($shop->phone) {
+                                Sms::instance()->send($shop->phone, 'У Вас новый заказ!');
+                        }
+
+                        if($order->phone) {
+                                Sms::instance()->send($order->phone, 'Спасибо за оплату. Номер вашего заказа '.$order->id);
+                        }
+
+                } catch (\Exception $e) {
+
+                }
+        }
+
+        function success() {
+                return view('front.order.success',[]);
+        }
+
+        function orders() {
+                $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
+
+                return view('admin.orders.list', [
+                        'orders' => $orders
+                ]);
         }
 }

@@ -260,7 +260,6 @@
 
     <script type="text/javascript">
         jsonData.product = {!! $product->makeHidden('price')->toJson() !!};
-        var cl_publicId = '{!! \Config::get('cloudpayments.publicId') !!}';
     </script>
 
 	<script src="https://widget.cloudpayments.ru/bundles/cloudpayments" type="text/javascript"></script>

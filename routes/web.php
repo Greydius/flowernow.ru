@@ -37,8 +37,30 @@ Route::post('cart', [
         'as' => 'order.create'
 ]);
 
+Route::get('payment/success', [
+        'uses' => 'OrdersController@success',
+        'as' => 'payment.success'
+]);
+
+/*Payment notifications*/
+Route::post('payment/cloudpayments/checkpayment', [
+        'uses' => 'OrdersController@checkpayment',
+        'as' => 'cloudpayments.checkpayment'
+]);
+
+Route::post('payment/cloudpayments/confirmpayment', [
+        'uses' => 'OrdersController@confirmpayment',
+        'as' => 'cloudpayments.confirmpayment'
+]);
+
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
+
+        /* ORDERS*/
+        Route::get('orders', [
+                'uses' => 'OrdersController@orders',
+                'as' => 'admin.orders'
+        ]);
 
         /* SHOPS*/
         Route::get('shop', [

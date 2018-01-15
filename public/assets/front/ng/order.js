@@ -164,6 +164,10 @@ $(document).ready(function() {
                                 if(data.order_id) {
                                         $('[name="order_id"]').val(data.order_id);
                                 }
+
+                                if(data.cloudpayments) {
+                                        pay(data.cloudpayments);
+                                }
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                                 preloader('hide');
@@ -172,24 +176,16 @@ $(document).ready(function() {
                 });
         }
 
-        pay = function () {
+        function pay(options) {
             var widget = new cp.CloudPayments();
-            widget.charge({ // options
-                    publicId: 'test_api_00000000000000000000001',  //id из личного кабинета
-                    description: 'Пример оплаты (деньги сниматься не будут)', //назначение
-                    amount: 10, //сумма
-                    currency: 'RUB', //валюта
-                    invoiceId: '1234567', //номер заказа  (необязательно)
-                    accountId: 'user@example.com', //идентификатор плательщика (необязательно)
-                    data: {
-                        myProp: 'myProp value' //произвольный набор параметров
-                    }
-                },
+            widget.charge(options,
                 function (options) { // success
                     //действие при успешной оплате
+                        window.location = '/payment/success';
                 },
                 function (reason, options) { // fail
                     //действие при неуспешной оплате
+                        $.notify("Неуспешной оплата. Попробуйте еще раз. ("+reason+")", "error")
                 });
         };
 }) ;
