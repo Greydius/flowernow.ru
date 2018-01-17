@@ -14,7 +14,7 @@ class Product extends MainModel
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-        protected $appends = ['clientPrice'];
+        protected $appends = ['clientPrice', 'url', 'photoUrl'];
 
         public static $photoRules = [
                 'file' => 'required | mimes:jpeg,jpg,png,PNG,JPEG,JPG | max:15000',
@@ -101,5 +101,15 @@ class Product extends MainModel
 
         public function getClientPriceAttribute() {
                 return $this->price * 1.2;
+        }
+
+        public function getUrlAttribute() {
+
+                return route('product.show', ['slug' => $this->slug]);
+        }
+
+        public function getPhotoUrlAttribute() {
+
+                return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
         }
 }

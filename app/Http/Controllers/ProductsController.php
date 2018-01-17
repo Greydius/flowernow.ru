@@ -113,7 +113,7 @@ class ProductsController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $response['products'] = Product::with('compositions.flower')->orderBy('id', 'desc')->get();
+                                $response['products'] = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->get();
                         } else {
                                 $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->orderBy('id', 'desc')->get();
                         }

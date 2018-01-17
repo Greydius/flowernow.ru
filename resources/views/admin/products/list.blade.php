@@ -66,9 +66,18 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" ng-show="product.shop">
                                 <div class="col-xl-12">
+                                    <div style="    padding: 5px;">
+                                        <div class="m-widget4__ext">
+                                            <a href="#" class="m-widget4__icon m--font-brand">
+                                                <i class="flaticon-interface-4"></i>
+                                            </a>
 
+                                            <% product.shop.name %>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -144,8 +153,6 @@
 
                             </div>
 
-                            <!--
-
                             <div class="form-group m-form__group">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -178,8 +185,6 @@
                                 </div>
 
                             </div>
-
-                            -->
 
                             <div class="form-group m-form__group">
                                 <div class="row">
@@ -256,7 +261,7 @@
                                         <label for="edit-product-height">
                                             Описание
                                         </label>
-                                        <textarea class="form-control" ng-model="item.description"></textarea>
+                                        <textarea class="form-control" ng-model="item.description" rows="6"></textarea>
                                     </div>
 
                                 </div>

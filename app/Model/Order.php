@@ -4,9 +4,18 @@ namespace App\Model;
 
 use App\MainModel;
 use App\Model\OrderList;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends MainModel
 {
+        use SoftDeletes;
+
+        protected $dates = ['deleted_at'];
+
+        protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+        protected $appends = ['amount', 'amountShop'];
+
     //
         public static $orderRules = [
                 'receiving_date' => 'required | date_format:"d.m.Y"',
@@ -49,6 +58,10 @@ class Order extends MainModel
                 return $amount;
         }
 
+        public function getAmountAttribute() {
+                return $this->amount();
+        }
+
         //возвращает сумму заказа
         public function amountShop() {
                 $amount = 0;
@@ -57,6 +70,10 @@ class Order extends MainModel
                 }
 
                 return $amount;
+        }
+
+        public function getAmountShopAttribute() {
+                return $this->amountShop();
         }
 
         public function getStatusNameAttribute() {

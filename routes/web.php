@@ -16,6 +16,8 @@ Route::get('/', [
         'as' => 'front.index'
 ]);
 
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
 Route::get('/flowers/{slug}', [
         'uses' => 'ProductsController@show',
         'as' => 'product.show'
@@ -62,6 +64,16 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.orders'
         ]);
 
+        Route::get('order/{id}', [
+                'uses' => 'OrdersController@view',
+                'as' => 'admin.order.view'
+        ]);
+
+        Route::post('order/{id}', [
+                'uses' => 'OrdersController@update',
+                'as' => 'admin.order.update'
+        ]);
+
         /* SHOPS*/
         Route::get('shop', [
                 'uses' => 'ShopsController@profile',
@@ -103,6 +115,12 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::get('products', [
                         'uses' => 'ProductsController@apiList',
                         'as' => 'admin.api.products.list'
+                ]);
+
+                /* ORDERS*/
+                Route::get('orders', [
+                        'uses' => 'OrdersController@apiList',
+                        'as' => 'admin.api.orders.list'
                 ]);
         });
 });

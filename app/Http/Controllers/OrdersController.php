@@ -197,4 +197,65 @@ class OrdersController extends Controller
                         'orders' => $orders
                 ]);
         }
+
+        public function apiList() {
+
+                $statusCode = 200;
+                $response = [
+                        'orders' => []
+                ];
+
+                try{
+                        if($this->user->admin) {
+
+                        } else {
+
+                        }
+
+                        $response['orders'] = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
+
+                } catch (\Exception $e){
+                    $statusCode = 400;
+                }finally{
+                    return response()->json($response, $statusCode);
+                }
+        }
+
+        public function view($id) {
+                $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+
+                return view('admin.orders.view', [
+                        'order' => $order
+                ]);
+        }
+
+        public function update($id, Request $request) {
+                $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+
+                if(!empty($request->status) && $request->status != $order->status) {
+                        switch ($request->status) {
+                                case Order::$STATUS_NEW:
+                                        if($this->user->admin) {
+                                                $order->status = Order::$STATUS_NEW;
+                                                $order->save();
+                                        }
+                                        break;
+                                case Order::$STATUS_ACCEPTED:
+                                        if($order->status == Order::$STATUS_NEW) {
+                                                $order->status = Order::$STATUS_ACCEPTED;
+                                                $order->save();
+                                        }
+                                        break;
+
+                                case Order::$STATUS_COMPLETED:
+                                        if($order->status == Order::$STATUS_ACCEPTED) {
+                                                $order->status = Order::$STATUS_COMPLETED;
+                                                $order->save();
+                                        }
+                                        break;
+                        }
+                }
+
+                return back();
+        }
 }

@@ -173,7 +173,7 @@ class RegisterController extends Controller
                     $shop->name = Input::get('shop_name');
                     $shop->email = Input::get('email');
                     $shop->city_id = Input::get('city_id');
-                    $shop->phone = '';
+                    $shop->phone = $user->phone;
                     $shop->save();
                     $user->shops()->attach($shop->id);
 

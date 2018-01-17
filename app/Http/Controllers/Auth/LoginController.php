@@ -75,4 +75,11 @@ class LoginController extends Controller
             $this->username() => [trans('auth.failed')],
         ]);
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect(route('login'));
+
+    }
 }
