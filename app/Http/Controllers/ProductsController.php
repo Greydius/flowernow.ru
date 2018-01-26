@@ -20,6 +20,8 @@ class ProductsController extends Controller
 
                 $popularProduct = Product::popular($this->current_city->id);
 
+//                dd($popularProduct);
+
                 return view('front.index',[
                         'popularProduct' => $popularProduct,
                         'prices' => Price::all(),
@@ -31,9 +33,12 @@ class ProductsController extends Controller
         }
 
         public function show($slug) {
-                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->first();
+                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->firstOrFail();
                 return view('front.product.show',[
-                        'product' => $product
+                        'product' => $product,
+                        'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
+                        'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',
+                        'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
                 ]);
         }
 
@@ -122,6 +127,35 @@ class ProductsController extends Controller
                     $statusCode = 400;
                 }finally{
                     return response()->json($response, $statusCode);
+                }
+        }
+
+        public function apiProductDelete($id) {
+
+                $statusCode = 200;
+                $message = '';
+
+                try{
+                        if($this->user->admin) {
+                                $product = Product::find($id);
+                        } else {
+                                $product = $this->user->getShop()->products()->where('id', $id)->first();
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->delete();
+                        }
+
+                } catch (\Exception $e){
+                        $statusCode = 400;
+                        $message = $e->getMessage();
+                }finally{
+                        return response()->json([
+                                'message' => $message,
+                                'code' => $statusCode
+                        ], $statusCode);
                 }
         }
 

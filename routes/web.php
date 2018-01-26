@@ -55,6 +55,31 @@ Route::post('payment/cloudpayments/confirmpayment', [
         'as' => 'cloudpayments.confirmpayment'
 ]);
 
+Route::get('/delivery', [
+        'uses' => 'HomeController@delivery',
+        'as' => 'front.delivery'
+]);
+
+Route::get('/payment', [
+        'uses' => 'HomeController@payment',
+        'as' => 'front.payment'
+]);
+
+Route::get('/faq', [
+        'uses' => 'HomeController@faq',
+        'as' => 'front.faq'
+]);
+
+Route::get('/registershop', [
+        'uses' => 'HomeController@registershop',
+        'as' => 'front.registershop'
+]);
+
+Route::get('/corporate', [
+        'uses' => 'HomeController@corporate',
+        'as' => 'front.corporate'
+]);
+
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
@@ -116,6 +141,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'uses' => 'ProductsController@apiList',
                         'as' => 'admin.api.products.list'
                 ]);
+                
+                Route::post('product/delete/{id}', [
+                        'uses' => 'ProductsController@apiProductDelete',
+                        'as' => 'admin.api.product.delete'
+                ]);
 
                 /* ORDERS*/
                 Route::get('orders', [
@@ -146,4 +176,8 @@ Route::get('/register/verify/{code}', [
 Route::post('/register/checkData', [
         'uses' => 'Auth\RegisterController@checkData',
         'as' => 'register.check.data'
+]);
+
+Route::get('/seed/addCitySlug', [
+        'uses' => 'SeedController@addCitySlug'
 ]);

@@ -51,4 +51,45 @@ class SeedController extends Controller
                         exit();
                 }
         }
+        
+        function addCitySlug() {
+
+                $cities = City::popular(300, false);
+
+                foreach ($cities as $city) {
+                        //echo "['".$city->name."' => '".$city->slug."'],<br>";
+                        echo "['name' => '".$city->name."', 'slug' => '".$city->slug."'],<br>";
+                }
+
+                exit();
+
+                $host = strtolower(request()->getHost());
+                $shortHost = str_replace('floristum.ru', '', $host);
+                $shortHost = str_replace('flowenow.ru', '', $shortHost);
+
+                $subdomains = explode('.', $shortHost);
+                if(count($subdomains) > 2) {
+                        abort(404);
+                }
+
+                $subdomain = current($subdomains);
+
+                if(empty($subdomain) || $subdomain == 'www') {
+                        $subdomain = 'moskva';
+                }
+
+                $city = City::whereSlug($subdomain)->firstOrFail();
+
+                dd($city);
+
+                echo current(explode('.',  $shortHost)); exit();
+                //echo current(explode('.',  request()->getHost())); exit();
+
+                $cities = City::where('population', '>', 0)->get();
+
+                foreach ($cities as $city) {
+                        $city->slug = str_slug($city->name, '-');
+                        //$city->save();
+                }
+        }
 }

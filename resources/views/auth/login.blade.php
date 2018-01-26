@@ -36,11 +36,11 @@
 								</div>
 								<div class="m-login__title">
 									<h3>
-										JOIN OUR GREAT METRO COMMUNITY GET FREE ACCOUNT
+										Регистрация нового цветочного магазина на floristum.ru
 									</h3>
 								</div>
 								<div class="m-login__desc">
-									Amazing Stuff is Lorem Here.Grownng Team
+									Быстрая и удобная
 								</div>
 								<div class="m-login__form-action">
 									<a href="{{ route('register') }}" class="btn btn-outline-focus m-btn--pill">

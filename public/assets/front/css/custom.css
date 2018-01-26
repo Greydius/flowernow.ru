@@ -54,3 +54,32 @@ body.preloader-site {
 .form-control[readonly]{
     background-color: #fff;
 }
+
+.description-media-item .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: inline-block;
+}
+
+.media-item-opened .after-ord-icn span.digital {
+    font-size: 44px;
+    font-style: italic;
+}
+
+.media-item-opened .after-ord-icn span.digital.one {
+    color: #da2a13;
+}
+
+.media-item-opened .after-ord-icn span.digital.two {
+    color: #01addf;
+}
+
+.media-item-opened .after-ord-icn span.digital.three {
+    color: #cee83f;
+}
+
+.media-item-opened .after-ord-icn span.digital.four {
+    color: #006303;
+}

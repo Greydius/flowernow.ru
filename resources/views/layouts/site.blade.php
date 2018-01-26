@@ -5,9 +5,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Floristum</title>
+    <title>@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')</title>
+
+    <meta name="description" content="@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')">
+    <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветов, букетов, заказ, служба, дом, офис, '.$current_city->name)">
+    <meta name="yandex-verification" content="bdbc1bcf29169555" />
+
+    <meta property='og:image' content='{{ asset('assets/front/img/og_logo_floristum_ru_s.png') }}' />
+    <meta property='og:title' content='@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')' />
+    <meta property='og:description' content='@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')' />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ \Request::url() }}" />
 
     <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/less-space.min.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&amp;subset=cyrillic" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
@@ -38,7 +50,7 @@
 <![endif]-->
 <div class="preloader-wrapper">
     <div class="preloader">
-        <img src="{{ asset('assets/front/img/loading.gif') }}" alt="...">
+        <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
     </div>
 </div>
 <header>
@@ -69,6 +81,8 @@
                         </ul>
                     </li>
                     <li class="dropdown link-support">
+                        <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
+                        <!--
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
                         <div class="dropdown-menu dropdown-support">
                             <form class="form-support-search">
@@ -90,6 +104,7 @@
                             </div>
                             <a href="#" class="btn btn-block btn-support">Центр помощи</a>
                         </div>
+                        -->
                     </li>
                     <li class="dropdown link-login">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
@@ -100,11 +115,13 @@
                                 </div>
                                 <button type="submit" class="btn btn-default">Получить код</button>
                             </form>
+                            <!--
                             <p>На телефон будет отправлено СМС с кодом для входа в ваш кабинет</p>
                             <br>
                             <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
                             <br>
                             <p class="h6 text-muted">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
+                            -->
                         </div>
                     </li>
                 </ul>
@@ -119,24 +136,7 @@
 
     <div class="container">
 
-        <h3 class="text-center"><strong>О доставке цветов с Floristum.ru</strong></h3>
-        <br>
-        <hr>
-        <p>Floristum.ru - сервис доставки букетов из популярных цветочных магазинов вашего города. <br><br>
-            На Floristum.ru вы можете выбрать и заказать букет с доставкой с оптимальным соотношением цена-качество, сравнив его с предлажениями многих магазинов цветов, представленных в Вашем городе. <br><br>
-            Заказывая букет у нас, Вы всегда получаете гарантировано свежие цветы с доставкой в кратчайшие сроки в полном соответствии с указанной на странице букета информацией и с фотографиями. Магазины представленные у нас заинтересованы в том, чтобы клиент был доволен и оставил хороший отзыв на страницах системы, отзывы влияют на рейтинг магазина и частоту заказов цветов.<br><br>
-            Каждая доставка защищена системой Floristum.ru с гарантией возврата оплаченной суммы покупателю в форсмажорных случаях при исполнении заказа цветов. Поэтому, не стесняйтесь обращаться в службу поддержки Флористум при возникновении вопросов.
-
-
-            <br><br>
-
-
-            Мы готовы доставить, практически, любые цветы для Вас и ваших близких: подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.
-
-        </p>
-
-
-        <br><br>
+        
 
         <div class="row">
             <div class="col-md-8">
@@ -145,60 +145,60 @@
                 <div class="row">
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="#">Воронеж</a></p>
+                            <p><a href="http://<?=$popular_city[0]['slug']?>.floristum.ru"><?=$popular_city[0]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Санкт-Петербург</a></p>
+                            <p><a href="http://<?=$popular_city[1]['slug']?>.floristum.ru"><?=$popular_city[1]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Новосибирск</a></p>
+                            <p><a href="http://<?=$popular_city[2]['slug']?>.floristum.ru"><?=$popular_city[2]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="#">Екатеринбург</a></p>
+                            <p><a href="http://<?=$popular_city[3]['slug']?>.floristum.ru"><?=$popular_city[3]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Нижний Новгород</a></p>
+                            <p><a href="http://<?=$popular_city[4]['slug']?>.floristum.ru"><?=$popular_city[4]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Казань</a></p>
+                            <p><a href="http://<?=$popular_city[5]['slug']?>.floristum.ru"><?=$popular_city[5]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="#">Челябинск</a></p>
+                            <p><a href="http://<?=$popular_city[6]['slug']?>.floristum.ru"><?=$popular_city[6]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Омск</a></p>
+                            <p><a href="http://<?=$popular_city[7]['slug']?>.floristum.ru"><?=$popular_city[7]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Самара</a></p>
+                            <p><a href="http://<?=$popular_city[8]['slug']?>.floristum.ru"><?=$popular_city[8]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="#">Ростов-на-Дону</a></p>
+                            <p><a href="http://<?=$popular_city[9]['slug']?>.floristum.ru"><?=$popular_city[9]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Уфа</a></p>
+                            <p><a href="http://<?=$popular_city[10]['slug']?>.floristum.ru"><?=$popular_city[10]['name']?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
@@ -247,14 +247,16 @@
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Клиентам</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="#">Доставка и оплата</a></li>
+                            <li><a href="{{ route('front.delivery') }}">Доставка</a></li>
+                            <li><a href="{{ route('front.payment') }}">Оплата</a></li>
+                            <li><a href="{{ route('front.faq') }}">FAQ</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Организациям</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="#">Магазинам цветов</a></li>
-                            <li><a href="#">Корпоративным клиентам</a></li>
+                            <li><a href="{{ route('front.registershop') }}">Магазинам цветов</a></li>
+                            <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
@@ -275,7 +277,7 @@
                 <p>Служба поддержки: <br> <span class="h4"><a href="mailto:cervice@floristum.ru"><strong>cervice@floristum.ru</strong></a> <br> <a href="tel:89119245792"><strong>8 (911) 924-57-92</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
-                <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов">
+                <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов {{$current_city->name}}">
             </div>
         </div>
         <br>

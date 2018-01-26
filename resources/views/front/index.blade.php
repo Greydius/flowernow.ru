@@ -18,6 +18,8 @@
     <br>
 </div>
 
+@if(count($popularProduct))
+
 <div class="bg-white">
     <div class="container">
         <h3><strong>Преимущества доставки букетов floristum.ru:</strong></h3>
@@ -25,28 +27,28 @@
         <div class="row text-center">
             <div class="col-sm-3">
                 <figure>
-                    <img src="{{ asset('assets/front/img/na-odnom-sayte.png') }}" alt="...">
+                    <img src="{{ asset('assets/front/img/na-odnom-sayte.png') }}" alt="Все цветочные магазины г {{$current_city->name}}">
                 </figure>
                 <br>
                 <h4>Цветочные магазины<br>г. {{ $current_city->name }}<br>на одном сайте!</h4>
             </div>
             <div class="col-sm-3">
                 <figure>
-                    <img src="{{ asset('assets/front/img/dostavka.png') }}" alt="...">
+                    <img src="{{ asset('assets/front/img/dostavka.png') }}" alt="Быстрая доставка по г {{$current_city->name}}">
                 </figure>
                 <br>
                 <h4>Доставка цветов<br>от 15 минут!</h4>
             </div>
             <div class="col-sm-3">
                 <figure>
-                    <img src="{{ asset('assets/front/img/zashita.png') }}" alt="...">
+                    <img src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
                 </figure>
                 <br>
                 <h4>Защита каждой<br>доставки цветов!</h4>
             </div>
             <div class="col-sm-3">
                 <figure>
-                    <img src="{{ asset('assets/front/img/otzivy.png') }}" alt="...">
+                    <img src="{{ asset('assets/front/img/otzivy.png') }}" alt="Отзывы о магазинах цветов">
                 </figure>
                 <br>
                 <h4>Рейтинги доставок букетов,<br>отзывы покупателей!</h4>
@@ -86,7 +88,7 @@
                     <div class="collapse in" id="filter3">
                         <ul class="list-unstyled">
                             @foreach ($productTypes as $type)
-                                <li><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="..."> {{ $type->name }}</li>
+                                <li><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
                             @endforeach
                     </div>
                 </div>
@@ -160,8 +162,8 @@
                             <div class="description-media-item">
                                 <div class="row">
                                     <div class="col-xs-11">
-                                        <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#"><% product.name %></a></p>
-                                        <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="..."> 2 ч 20 мин</p>
+                                        <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#" class="name"><% product.name %></a></p>
+                                        <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
                                     </div>
 
                                 </div>
@@ -183,6 +185,45 @@
 
 </div>
 
+@else
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="md-mt-30 md-mb-50 text-center">В ближайшее время сервис доставки букетов Floristum.ru заработает в городе {{ $current_city->name_prepositional }}.</h4>
+
+                <h3 class="text-center"><strong>Вы представитель магазина?</strong></h3>
+
+                <h4 class="md-mb-40">Если Вы — представитель магазина цветов, а {{ $current_city->name }} — территория работы Вашей службы доставки,торегистрируйтесь прямо сейчас и получайте заказы уже завтра!</h4>
+            </div>
+        </div>
+    </div>
+
+@endif
+
+<div class="container">
+
+<h3 class="text-center"><strong>О доставке цветов с Floristum.ru</strong></h3>
+    <br>
+    <hr>
+    <p>Floristum.ru - сервис доставки букетов из популярных цветочных магазинов вашего города. <br><br>
+        На Floristum.ru вы можете выбрать и заказать букет с доставкой с оптимальным соотношением цена-качество, сравнив его с предложениями многих магазинов цветов, представленных в Вашем городе. <br><br>
+        Заказывая букет у нас, Вы всегда получаете гарантировано свежие цветы с доставкой в кратчайшие сроки в полном соответствии с указанной на странице букета информацией и с фотографиями. Магазины представленные у нас заинтересованы в том, чтобы клиент был доволен и оставил хороший отзыв на страницах системы, отзывы влияют на рейтинг магазина и частоту заказов цветов.<br><br>
+        Каждая доставка защищена системой Floristum.ru с гарантией возврата оплаченной суммы покупателю в форсмажорных случаях при исполнении заказа цветов. Поэтому, не стесняйтесь обращаться в службу поддержки Флористум при возникновении вопросов.
+
+
+        <br><br>
+
+
+        Мы готовы доставить, практически, любые цветы для Вас и ваших близких: подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.
+
+    </p>
+
+
+    <br><br>
+
+</div>
+
 @endsection
 
 @section('head')
@@ -195,7 +236,7 @@
     </script>
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
-    <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
     <script src="{{ asset('assets/front/js/index.js') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js') }}" type="text/javascript"></script>
 @stop

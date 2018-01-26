@@ -1,3 +1,7 @@
+@section('pageTitle', $pageTitle)
+@section('pageDescription', $pageDescription)
+@section('pageKeywords', $pageKeywords)
+
 @extends('layouts.site')
 
 @section('content')
@@ -20,7 +24,7 @@
 
 
         <br>
-				<h1 class="h2 margin-top-null"><strong>Оформление заказа</strong></h1>
+				<h1 class="h2 margin-top-null"><strong>Оформление заказа на доставку</strong></h1>
 
 				<div class="row">
 					<div class="col-md-8">
@@ -197,6 +201,43 @@
 								</div>
 							</form>
 						</div>
+
+
+						<div class="row media-item-opened">
+
+							<div class="col-md-12">
+
+								<p class="h3" id="chto-posle"><strong>Что после оплаты заказа?</strong></p>
+								<br>
+								<div class="row">
+									<div class="col-xs-6 col-sm-3">
+										<figure class="after-ord-icn">
+											<span class="digital one">1</span>
+											<figcaption>Флорист отправит Вам подтверждение заказа</figcaption>
+										</figure>
+									</div>
+									<div class="col-xs-6 col-sm-3">
+										<figure class="after-ord-icn">
+											<span class="digital two">2</span>
+											<figcaption>Соберёт букет из свежих цветов</figcaption>
+										</figure>
+									</div>
+									<div class="col-xs-6 col-sm-3">
+										<figure class="after-ord-icn">
+											<span class="digital three">3</span>
+											<figcaption>Доставка цветов получателю</figcaption>
+										</figure>
+									</div>
+									<div class="col-xs-6 col-sm-3">
+										<figure class="after-ord-icn">
+											<span class="digital four">4</span>
+											<figcaption>Пожалуйста, оставте отзыв о доставке цветов</figcaption>
+										</figure>
+									</div>
+								</div>
+							</div>
+						</div>
+
 					</div>
 					<div class="col-md-4">
 						<div class="media order-total-cost">
@@ -233,12 +274,15 @@
 
 					</div>
 				</div>
-				<br><br><br>
 
 
 
 
 
+
+
+
+<br><br><br>
 
 
 

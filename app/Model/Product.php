@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\MainModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Pagination\Paginator;
 
 class Product extends MainModel
 {
@@ -86,9 +87,15 @@ class Product extends MainModel
 
         static function popular($city_id = null) {
 
+                $currentPage = 2;
+
+                Paginator::currentPageResolver(function () use ($currentPage) {
+                        return $currentPage;
+                });
+
                 return self::with('shop')->whereHas('shop', function($query) use ($city_id) {
                         $query->where('city_id', $city_id);
-                })->where('price', '>', 0)->get();
+                })->where('price', '>', 0)->paginate(30);
 
                 /*
                 return \DB::table('products')
@@ -100,7 +107,7 @@ class Product extends MainModel
         }
 
         public function getClientPriceAttribute() {
-                return $this->price * 1.2;
+                return ceil($this->price * 1.2);
         }
 
         public function getUrlAttribute() {
@@ -111,5 +118,20 @@ class Product extends MainModel
         public function getPhotoUrlAttribute() {
 
                 return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+        }
+
+        public function getDeliveryTimeAttribute() {
+
+                $return = '';
+
+                if($this->make_time) {
+                        $hours = floor($this->make_time / 60);
+                        $minutes = $this->make_time % 60;
+
+                        $return .= ($hours ? $hours .'ч. ' : '');
+                        $return .= ($minutes ? $minutes .'мин.' : '');
+                }
+
+                return $return;
         }
 }

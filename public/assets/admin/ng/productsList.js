@@ -52,6 +52,37 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                         });
                 });
         }
+        
+        $scope.deleteItem = function (item) {
+
+                $scope.modalInstance = ModalService.showModal({
+                        templateUrl: 'delete-item-modal.html',
+                        controller: 'productDelete',
+                        inputs: {
+                                item: item
+                        },
+                        scope: $scope
+                });
+                $scope.modalInstance.then(function(modal) {
+
+                        modal.element.modal();
+
+                        modal.element.on('shown.bs.modal', function() {
+                                
+                        });
+
+                        modal.close.then(function(result) {
+                                if(result) {
+                                        angular.forEach($scope.products, function(value, key) {
+                                                if(value.id == result.id) {
+                                                        var index = $scope.products.indexOf($scope.products[key]);
+                                                        $scope.products.splice(index, 1);
+                                                }
+                                        });
+                                }
+                        });
+                });
+        }
 
         $scope.getProducts();
 });
@@ -103,4 +134,38 @@ angular.module('flowApp').controller('productEdit', function($scope, close, item
                 var index = $scope.item.compositions.indexOf(i);
                 $scope.item.compositions.splice(index, 1);
         }
+})
+
+angular.module('flowApp').controller('productDelete', function($scope, close, item, $element, $http, CSRF_TOKEN) {
+        $scope.item = item;
+
+        $scope.save = function(result) {
+
+                $http({
+
+                        method: 'POST',
+                        url:  routes.productDelete + $scope.item.id,
+                        data: {'csrf-token': CSRF_TOKEN},
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+                }).then(function (response) {
+
+                        $element.modal('hide');
+                        close(result, 500);
+
+                }, function (response) {
+                        if(response.data.error && response.data.message) {
+                                    toastr.error(response.data.message);
+                        } else {
+                                    toastr.error('Ошибка!');
+                        }
+                }).then(function (response) {
+
+                });
+
+                /*
+                $element.modal('hide');
+                close(result, 500);
+                */
+        };
 })

@@ -87,7 +87,7 @@
                                 <button type="reset" class="btn btn-secondary btn-sm" ng-click="editItem($event, product)">
                                     <i class="flaticon-edit"></i> Редактировать
                                 </button>
-                                <button type="reset" class="btn btn-secondary btn-sm">
+                                <button type="reset" class="btn btn-secondary btn-sm" ng-click="deleteItem(product)">
                                     <i class="flaticon-circle"></i> Удалить
                                 </button>
                             </div>
@@ -275,6 +275,38 @@
                         </button>
                         <button type="button" class="btn btn-primary" ng-click="save(item)">
                             Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+
+
+    <script type="text/ng-template" id="delete-item-modal.html">
+        <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Внимание
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Вы действительно хотите удалить данный товар?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Закрыть
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="save(item)">
+                            Удалить
                         </button>
                     </div>
                 </div>

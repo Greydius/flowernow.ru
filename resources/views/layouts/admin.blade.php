@@ -25,10 +25,12 @@
 		<script type="text/javascript">
 			var jsonData={};
 			var routes = {};
-			routes.shop = '{{ route('admin.api.shop.profile')  }}';
-			routes.products = '{{ route('admin.api.products.list')  }}';
-			routes.orders = '{{ route('admin.api.orders.list')  }}';
+			routes.shop = '{{ route('admin.api.shop.profile') }}';
+			routes.products = '{{ route('admin.api.products.list') }}';
+			routes.productDelete = '/admin/api/v1/product/delete/';
+			routes.orders = '{{ route('admin.api.orders.list') }}';
 		</script>
+
 	</head>
 	<!-- end::Head -->
 	<!-- end::Body -->
@@ -218,6 +220,7 @@
 
 		<script type="text/javascript">
 			jsonData.shop = {!! $shop->toJson() !!};
+			angular.module("flowApp").constant("CSRF_TOKEN", '{{ csrf_token() }}');
     	</script>
 		<!--end::Base Scripts -->
 

@@ -19,7 +19,10 @@ class OrdersController extends Controller
                 $product = Product::with('shop.city')->with('compositions.flower')->findOrFail($productId);
 
                 return view('front.order.add',[
-                        'product' => $product
+                        'product' => $product,
+                        'pageTitle' => 'Оплата доставки '.$product->name.' в г '.$product->shop->city->name,
+                        'pageDescription' => 'Оплата доставки '.$product->name.' в г '.$product->shop->city->name.' и оформление заказа',
+                        'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name.', оплата',
                 ]);
         }
 
