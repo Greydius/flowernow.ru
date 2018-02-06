@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', [
         'uses' => 'ProductsController@index',
         'as' => 'front.index'
@@ -22,6 +23,11 @@ Route::get('/flowers/{slug}', [
         'uses' => 'ProductsController@show',
         'as' => 'product.show'
 ]);
+
+Route::get('/catalog/{query?}', [
+        'uses' => 'ProductsController@filter',
+        'as' => 'product.catalog'
+])->where('query','(.*)');
 
 Route::get('searchCity', [
         'uses' => 'CitiesController@search',
@@ -80,6 +86,20 @@ Route::get('/corporate', [
         'as' => 'front.corporate'
 ]);
 
+Route::get('/cities', [
+        'uses' => 'CityController@popular',
+        'as' => 'city.popular'
+]);
+
+/* API */
+Route::group(['prefix' => 'api/v1'], function() {
+        /* PRODUCTS*/
+        Route::get('products', [
+                'uses' => 'ProductsController@apiPopular',
+                'as' => 'api.products.popular'
+        ]);
+});
+
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
@@ -105,9 +125,19 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.shop.profile'
         ]);
 
+        Route::get('shop2', [
+                'uses' => 'ShopsController@profile2',
+                'as' => 'admin.shop.profile2'
+        ]);
+
         Route::post('shop/uploadLogo', [
                 'uses' => 'ShopsController@uploadLogo',
                 'as' => 'admin.shop.uploadLogo'
+        ]);
+
+        Route::post('shop/uploadPhoto', [
+                'uses' => 'ShopsController@uploadPhoto',
+                'as' => 'admin.shop.uploadPhoto'
         ]);
 
         /* PRODUCTS*/
@@ -180,4 +210,12 @@ Route::post('/register/checkData', [
 
 Route::get('/seed/addCitySlug', [
         'uses' => 'SeedController@addCitySlug'
+]);
+
+Route::get('/seed/addProductTypesSlug', [
+        'uses' => 'SeedController@addProductTypesSlug'
+]);
+
+Route::get('/seed/addFlowersSlug', [
+        'uses' => 'SeedController@addFlowersSlug'
 ]);

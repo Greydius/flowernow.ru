@@ -20,7 +20,7 @@
 
 @if(count($popularProduct))
 
-<div class="bg-white">
+<div class="bg-white hidden-xs hidden-sm">
     <div class="container">
         <h3><strong>Преимущества доставки букетов floristum.ru:</strong></h3>
         <br>
@@ -58,12 +58,12 @@
     <br>
 </div>
 
-<br>
+<br class="hidden-xs hidden-sm">
 
 <div class="container">
 
-    <div class="row">
-        <div class="col-md-5 hidden-xs hidden-sm">
+    <div class="row hidden-xs hidden-sm">
+        <div class="col-md-5">
             <h3 class="margin-top-null"><strong>Популярные букеты</strong></h3>
         </div>
         <div class="col-md-7">
@@ -75,21 +75,22 @@
         </div>
     </div>
 
-    <br>
+    <br class="hidden-xs hidden-sm">
 
-    <div class="row">
+    <div class="row" ng-controller="mainPage" id="products-container">
 
-        <div class="col-md-3 col-md-push-9">
+        <div class="col-md-3 col-md-push-9 hidden-xs hidden-sm">
                 <p class="h3 margin-top-null">Уточнить категорию</p>
                 <br>
 
-                <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default" type="button" data-toggle="collapse" data-target="#filter3" aria-expanded="false" aria-controls="filter3"><span class="pull-left">Тип букета</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse in" id="filter3">
-                        <ul class="list-unstyled">
+                <div class="filter-block filter-product-checker">
+                    <button class="btn btn-lg btn-block btn-default" type="button" data-toggle="collapse" data-target="#filter-product-type" aria-expanded="false" aria-controls="filter3"><span class="pull-left">Тип букета</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse in" id="filter-product-type">
+                        <ul class="list-unstyled filter">
                             @foreach ($productTypes as $type)
-                                <li><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type) && request()->product_type == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
                             @endforeach
+                        </ul>
                     </div>
                 </div>
 
@@ -101,7 +102,7 @@
                                 <li>
                                     <div class="checkbox">
                                         <label>
-                                            <input type="checkbox" value="{{ $flower->id }}"> {{ $flower->name }}
+                                            <input type="checkbox" value="{{ $flower->id }}" data-slug="{{ $flower->slug }}" name="flowers[]" {{ !empty(request()->flowers) && in_array($flower->id, request()->flowers) ? 'checked' : null }}> {{ $flower->name }}
                                         </label>
                                     </div>
                                 </li>
@@ -110,12 +111,12 @@
                     </div>
                 </div>
 
-                <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter1" aria-expanded="false" aria-controls="filter1"><span class="pull-left">Цены</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse" id="filter1">
+                <div class="filter-block filter-product-checker">
+                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="false" aria-controls="filter1"><span class="pull-left">Цены</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse" id="filter-product-price">
                         <ul class="list-unstyled">
                             @foreach ($prices as $price)
-                                <li><a href="#">{{ $price->name }}</a></li>
+                                <li data-id="{{ $price->id }}" data-from="{{ $price->price_from }}" data-to="{{ $price->price_to }}" class="{{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == $price->price_from && request()->price_to == $price->price_to ? 'active' : null }}">{{ $price->name }}</li>
                             @endforeach
                         </ul>
                     </div>
@@ -123,27 +124,31 @@
 
 
                 <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter5" aria-expanded="false" aria-controls="filter5"><span class="pull-left">Цвет</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse" id="filter5">
+                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="false" aria-controls="filter5"><span class="pull-left">Цвет</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse" id="filter-product-color">
                         <div class="row">
                             @foreach ($colors as $color)
-                                <div class="col-2-5">
+                                <div class="col-2-5 color-item {{ !empty(request()->color) && request()->color == $color->id ? 'active' : null }}" data-id="{{ $color->id }}">
                                     <div class="selected-color {{ $color->css_class }}"></div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
+
+                <button class="btn btn-info btn-block" ng-show="isFiltered" ng-click="resetFilter()">Сбросить фильтр</button>
         </div>
 
 
 
-        <div class="col-md-9 col-md-pull-3" ng-controller="mainPage">
-            <br class="hidden-lg hidden-md"><br class="hidden-lg hidden-md">
+        <div class="col-md-9 col-md-pull-3">
+                <div class="hidden-lg hidden-md hidden-xs">
+                    <br><br>
+                </div>
                 <h3 class="margin-top-null hidden-lg hidden-md"><strong>Популярные букеты</strong></h3>
                 <br class="hidden-lg hidden-md">
 
-                <div class="row" ng-cloak>
+                <div class="row" id="product_container" ng-cloak>
 
                     <div class="col-sm-4" ng-repeat="product in popularProduct">
                         <div class="media-item">
@@ -194,7 +199,7 @@
 
                 <h3 class="text-center"><strong>Вы представитель магазина?</strong></h3>
 
-                <h4 class="md-mb-40">Если Вы — представитель магазина цветов, а {{ $current_city->name }} — территория работы Вашей службы доставки,торегистрируйтесь прямо сейчас и получайте заказы уже завтра!</h4>
+                <h4 class="md-mb-40">Если Вы — представитель магазина цветов, а {{ $current_city->name }} — территория работы Вашей службы доставки,то <a href="{{ route('register') }}">регистрируйтесь</a> прямо сейчас и получайте заказы уже завтра!</h4>
             </div>
         </div>
     </div>
@@ -233,10 +238,11 @@
 @section('footer')
     <script type="text/javascript">
         jsonData.popularProduct = {!! $popularProduct->makeHidden('price')->toJson() !!};
+        routes.products = '{!! route('api.products.popular') !!}';
     </script>
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
-    <script src="{{ asset('assets/front/js/index.js') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/front/js/index.js?v=2') }}"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_1') }}" type="text/javascript"></script>
 @stop

@@ -16,9 +16,9 @@ use Image;
 class ProductsController extends Controller
 {
     //
-        public function index() {
+        public function index(Request $request) {
 
-                $popularProduct = Product::popular($this->current_city->id);
+                $popularProduct = Product::popular($this->current_city->id, $request);
 
 //                dd($popularProduct);
 
@@ -119,6 +119,8 @@ class ProductsController extends Controller
                 try{
                         if($this->user->admin) {
                                 $response['products'] = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->get();
+                                //$products = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->paginate(15);
+                                //dd($products->links());
                         } else {
                                 $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->orderBy('id', 'desc')->get();
                         }
@@ -204,13 +206,21 @@ class ProductsController extends Controller
                 $compositions = $request->input('compositions');
                 $newCompositions = [];
 
-                if(!empty($compositions)) {
+                if (!empty($compositions)) {
                         foreach ($compositions as $composition) {
-                                if(!empty($composition['flower_id'])) {
-                                        $newCompositions[] = [
-                                                'flower_id' => $composition['flower_id'],
-                                                'qty' => $composition['qty']
-                                        ];
+                                if (!empty($composition['flower_id'])) {
+                                        if (!empty($composition['qty'])) {
+                                                $newCompositions[] = [
+                                                        'flower_id' => $composition['flower_id'],
+                                                        'qty' => $composition['qty']
+                                                ];
+                                        } else {
+                                                return response()->json([
+                                                        'error' => true,
+                                                        'message' => 'Не указано кол-во в составе',
+                                                        'code' => 400
+                                                ], 400);
+                                        }
                                 }
                         }
 
@@ -230,5 +240,39 @@ class ProductsController extends Controller
                         'code' => 400
                 ], 400);
 
+        }
+
+        public function apiPopular(Request $request) {
+                $statusCode = 200;
+                $response = [
+                        'products' => []
+                ];
+
+                try{
+                        $response['products'] = Product::popular($this->current_city->id, $request, (!empty($request->page) ? $request->page : 1));
+                } catch (\Exception $e){
+                        $statusCode = 400;
+                }finally{
+                        return response()->json($response, $statusCode);
+                }
+        }
+        
+        public function filter($query = null, Request $request) {
+                $queries = explode('/', $query);
+                if(count($queries) == 2) {
+                        $request->product_type = $queries[0];
+                        if($queries[1] != 'vse-cvety') {
+                                $flower = Flower::where('slug', $queries[1])->first();
+                                if(count($flower)) {
+                                        if(empty($request->flowers)) {
+                                                $request->flowers = [];
+                                        }
+                                        $request->flowers = array_merge($request->flowers, [$flower->id]);
+                                }
+                        }
+                        return $this->index($request);
+                }
+
+                return redirect()->route('front.index');
         }
 }

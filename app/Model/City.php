@@ -152,6 +152,11 @@ class City extends MainModel
                 } else {
                         $model->inRandomOrder();
                 }
-                return $model->take($limit)->get();
+
+                if($limit) {
+                        $model->take($limit);
+                }
+
+                return $model->get();
         }
 }

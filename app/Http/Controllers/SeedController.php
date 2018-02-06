@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Model\City;
+use App\Model\Flower;
+use App\Model\ProductType;
 use App\Model\Region;
 use Illuminate\Http\Request;
 
@@ -90,6 +92,26 @@ class SeedController extends Controller
                 foreach ($cities as $city) {
                         $city->slug = str_slug($city->name, '-');
                         //$city->save();
+                }
+        }
+
+        function addProductTypesSlug() {
+
+                $productTypes = ProductType::all();
+
+                foreach ($productTypes as $item) {
+                        $item->slug = str_slug($item->name, '-');
+                        //$item->save();
+                }
+        }
+
+        function addFlowersSlug() {
+
+                $flowers = Flower::all();
+
+                foreach ($flowers as $item) {
+                        $item->slug = str_slug($item->name, '-');
+                        $item->save();
                 }
         }
 }

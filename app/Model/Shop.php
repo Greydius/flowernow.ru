@@ -47,4 +47,9 @@ class Shop extends MainModel
         function orders() {
                 return $this->hasMany('App\Model\Order');
         }
+
+        // relation for address
+        function address() {
+                return $this->hasMany('App\Model\ShopAddress');
+        }
 }

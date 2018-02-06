@@ -44,7 +44,33 @@ $(document).ready(function() {
                 $('input.f-typeahead').val(data.name);
                 changeCity(data);
         });
+
+        $(document).on('click', '.filter-product-checker ul li', function() {
+                var isActive = $(this).hasClass('active')
+                var $parent = $(this).parents('.filter-block');
+                $('li', $parent).removeClass('active');
+                if(!isActive) {
+                        $(this).addClass('active');
+                }
+                
+                applyFilter();
+        }).on('click', '.color-item', function() {
+                var isActive = $(this).hasClass('active')
+                $('.color-item').removeClass('active');
+                if(!isActive) {
+                        $(this).addClass('active');
+                }
+
+                applyFilter();
+        }).on('change', 'input[name="flowers[]"]', function() {
+                applyFilter();
+        });
+
 })
+
+function applyFilter() {
+        angular.element('#products-container').scope().getProducts();
+}
 
 function changeCity(data){
         /*
@@ -65,3 +91,27 @@ function changeCity(data){
 
         window.location = protocol+'//'+subdomain+'floristum.ru';
 }
+
+
+$.fn.preloader = function (action) {
+
+        return $(this).each(function () {
+                switch (action) {
+                        case 'show':
+                                //$('<div class="fl-preloader"><div class="spinner"></div></div>').appendTo($(this));
+                                $('<div class="preloader-wrapper"></div>').appendTo($('body'));
+                                break;
+                        case 'hide':
+                                //$(this).find('.fl-preloader').remove();
+                                $('body').find('.preloader-wrapper').remove();
+                                break;
+                        default:
+                                break;
+                }
+        });
+}
+
+
+window.onpopstate = function(event) {
+        //console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+};

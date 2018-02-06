@@ -5,6 +5,7 @@ namespace App\Model;
 use App\MainModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Http\Request;
 
 class Product extends MainModel
 {
@@ -85,17 +86,70 @@ class Product extends MainModel
                 return $this->hasMany('App\Model\ProductComposition');
         }
 
-        static function popular($city_id = null) {
+        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 12) {
 
-                $currentPage = 2;
+                $currentPage = $page;
+
+                $productRequest = self::with('shop')->whereHas('shop', function($query) use ($city_id) {
+                        $query->where('city_id', $city_id);
+                })->where('price', '>', 0);
+
+                if(!empty($request)) {
+                        if(!empty($request->productType)) {
+                                $productRequest->where('product_type_id', (int)$request->productType);
+                        }
+
+                        if(!empty($request->product_type) && $request->product_type != 'all') {
+                                $productRequest->whereHas('productType', function($query) use ($request) {
+                                        $query->where('slug', $request->product_type);
+                                });
+                        }
+
+                        if(!empty($request->productPrice)) {
+                                $price = Price::find($request->productPrice);
+                                if(!empty($price)) {
+                                        $productRequest->whereRaw('get_client_price(price, shop_id) BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                }
+                        }
+
+                        if(!empty($request->price_from)) {
+                                $productRequest->whereRaw('get_client_price(price, shop_id) >= '.(int)$request->price_from.' ');
+                        }
+
+                        if(!empty($request->price_to)) {
+                                $productRequest->whereRaw('get_client_price(price, shop_id) <= '.(int)$request->price_to.' ');
+                        }
+
+                        if(!empty($request->flowers)) {
+
+                                $productRequest->whereHas('compositions', function($query) use ($request) {
+                                        $query->whereIn('flower_id', $request->flowers);
+                                });
+                        }
+
+                        /*
+                        if(!empty($request->flower)) {
+                                $productRequest->whereHas('productType', function($query) use ($request) {
+                                        $query->where('slug', $request->product_type);
+                                });
+                        }
+                        */
+
+                        if(!empty($request->color)) {
+
+                                $productRequest->where('color_id', (int)$request->color);
+                        }
+                }
 
                 Paginator::currentPageResolver(function () use ($currentPage) {
                         return $currentPage;
                 });
 
-                return self::with('shop')->whereHas('shop', function($query) use ($city_id) {
-                        $query->where('city_id', $city_id);
-                })->where('price', '>', 0)->paginate(30);
+                //echo $productRequest->toSql(); exit();
+
+                $products = $productRequest->paginate(15);
+
+                return $products;
 
                 /*
                 return \DB::table('products')

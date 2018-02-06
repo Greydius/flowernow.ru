@@ -11,6 +11,14 @@
     <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветов, букетов, заказ, служба, дом, офис, '.$current_city->name)">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
+    <link rel="icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
+    <meta name="apple-mobile-web-app-title" content="Floristum">
+    <link rel="apple-touch-startup-image" href="{{ asset('images/icons/touch-icon-iphone.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icons/touch-icon-iphone.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/icons/touch-icon-ipad.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/touch-icon-iphone-retina.png') }}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icons/touch-icon-ipad-retina.png') }}">
+
     <meta property='og:image' content='{{ asset('assets/front/img/og_logo_floristum_ru_s.png') }}' />
     <meta property='og:title' content='@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')' />
     <meta property='og:description' content='@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')' />
@@ -33,9 +41,6 @@
     <![endif]-->
 
     @yield('head')
-
-    <link rel="apple-touch-icon-precomposed" href="{{ asset('assets/front/css/img/ico/apple-touch-icon-precomposed.png') }}">
-    <link rel="icon" href="{{ asset('assets/front/css/img/ico/favicon.ico') }}">
 
     <script type="text/javascript">
             var cityId = {{ $current_city ? $current_city->id : null }};
@@ -203,7 +208,7 @@
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="#">Все города…</a></p>
+                            <p><a href="{{ route('city.popular') }}">Все города…</a></p>
                         </div>
                     </div>
                 </div>
@@ -274,7 +279,7 @@
         <hr>
         <div class="row">
             <div class="col-sm-6">
-                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:cervice@floristum.ru"><strong>cervice@floristum.ru</strong></a> <br> <a href="tel:89119245792"><strong>8 (911) 924-57-92</strong></a></span></p>
+                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:cervice@floristum.ru"><strong>cervice@floristum.ru</strong></a> <br> <a href="tel:88129822383"><strong>8 (812) 982-23-83</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
                 <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов {{$current_city->name}}">

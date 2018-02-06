@@ -469,6 +469,10 @@ h5 + hr {
 .filter-block .row {
   margin: 0; }
 
+.filter-product-checker ul li.active {
+  background: #fff;
+}
+
 .rating {
   position: relative;
   float: left;
@@ -516,7 +520,14 @@ h5 + hr {
   .selected-color.black {
     background: #000; }
   .selected-color.white {
-    background: #fff; }
+    background: #fff;
+    border: 1px solid #eaeaea;
+  }
+
+  .color-item.active {
+    background-color: #fff;
+  }
+
   .selected-color.mix {
     background: url(../img/ico/rainbow.jpg) no-repeat center center;
     background-size: contain; }

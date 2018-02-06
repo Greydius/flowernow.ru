@@ -15,7 +15,18 @@ class ShopsController extends Controller
     //
         public function profile() {
 
-                return view('admin.shop.profile', [
+                return view('admin.shop.profile2', [
+
+                ]);
+        }
+
+        public function profile2() {
+
+                //$shop = $this->user->shops()->with('address')->first();
+
+                //dd($shop->address[0]->name);
+
+                return view('admin.shop.profile2', [
 
                 ]);
         }
@@ -73,6 +84,53 @@ class ShopsController extends Controller
                 $shop = $this->user->getShop();
 
                 $shop->logo = $fullFileName;
+
+                $shop->save();
+
+                return response()->json([
+                    'error' => false,
+                    'code'  => 200
+                ], 200);
+
+        }
+
+        public function uploadPhoto(Request $request) {
+
+                $photo = Input::all();
+
+                $validator = Validator::make($photo, Shop::$logoRules, Shop::$logoRulesMessages);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'message' => $validator->messages()->first(),
+                        'code' => 400
+                    ], 400);
+
+                }
+
+                $photo = $photo['file'];
+
+                $originalName = $photo->getClientOriginalName();
+                $extension = $photo->getClientOriginalExtension();
+                $originalNameWithoutExt = substr($originalName, 0, strlen($originalName) - strlen($extension) - 1);
+
+                //$filename = Slug::make($originalNameWithoutExt, '_');
+                $filename = str_slug($originalNameWithoutExt, '_').'.'.$extension;
+                $filename = 'photo_'.$this->user->id.'_'.time().'.'.$extension;
+                $filePath = Shop::$fileUrl.$this->user->id.'/';
+                $fullFileName = $filePath . $filename;
+
+                if(!file_exists(public_path($filePath))) {
+                        \File::makeDirectory(public_path($filePath));
+                }
+
+                Image::make($photo)->save( public_path($fullFileName ) );
+
+                $shop = $this->user->getShop();
+
+                $shop->photo = $fullFileName;
 
                 $shop->save();
 
