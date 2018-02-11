@@ -102,7 +102,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="m-grid__item m-grid__item--fluid m-grid m-grid--center m-grid--hor m-grid__item--order-tablet-and-mobile-1	m-login__content" style="background-image: url({{ asset('assets/admin/img/Purple-crocus-flowers-petals-macro-art-ink.jpg') }})">
+				<div class="m-grid__item m-grid__item--fluid m-grid m-grid--center m-grid--hor m-grid__item--order-tablet-and-mobile-1	m-login__content" style="display: inline-block; background-image: url({{ asset('assets/admin/img/Purple-crocus-flowers-petals-macro-art-ink.jpg') }})">
 					<div class="m-grid__item m-grid__item--middle">
 						<h3 class="m-login__welcome">
 							Новые клиенты без затрат для  Вашего цветочного магазина.

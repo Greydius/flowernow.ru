@@ -32,7 +32,7 @@ $(document).ready(function() {
           source: bestPictures,
           templates: {
             empty: [
-              '<div class="empty-message">Не могу найти</div>'
+              '<div class="empty-message">Этого города нет во Floristum.ru — попробуйте ввести ближайший.</div>'
             ].join('\n'),
 
             suggestion: function(data) {

@@ -41,8 +41,53 @@ $(document).ready(function() {
                         mins: 'мин',
                         hr: 'ч',
                         hrs: 'ч'
-                }
+                },
+                'disableTextInput': true
         });
 
         $('.datepair').datepair();
+
+        $(document).on('switchChange.bootstrapSwitch', '#delivery_out_city', function () {
+                if($(this).is(':checked')) {
+                        $('#delivery_out_city_container').show();
+                } else {
+                        $('#delivery_out_city_container').hide();
+                }
+        }).on('change', '#round-the-clock', function () {
+                if($(this).is(':checked')) {
+                        $('#round-the-clock-container').hide();
+                } else {
+                        $('#round-the-clock-container').show();
+                }
+        }).on('change', '.round-the-clock', function () {
+                 var $parent = $(this).parents('.datepair');
+                if($(this).is(':checked')) {
+                        $('.time', $parent).attr('disabled', 'disabled');
+                        $('.work-day', $parent).prop('checked', true);
+                } else {
+                        $('.time', $parent).removeAttr('disabled', 'disabled');
+
+                }
+        }).on('click', '#save_profile', function () {
+                var url = $(this).data('route');
+
+                $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: $('#profile-content :input').serialize(),
+                        success: function (response) {
+                                 toastr.success('Данные успешно сохранены!');
+                        },
+                        error: function (response) {
+
+                                if(response.responseJSON.message) {
+                                        toastr.error(response.responseJSON.message);
+                                } else {
+                                        toastr.error('Ошибка сохранения');
+                                }
+
+                        },
+                        dataType: 'json'
+                });
+        });
 })

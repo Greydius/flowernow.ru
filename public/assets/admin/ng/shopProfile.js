@@ -4,8 +4,8 @@ angular.module('flowApp').controller('shopProfile', function($scope, $element, $
 
         $scope.shop = jsonData.shop;
         $scope.address = jsonData.address;
-        $scope.usersDirector = [];
-        $scope.usersFlorist = [];
+        $scope.usersDirector = jsonData.workerDirector;
+        $scope.usersFlorist = jsonData.workerFlorist;
 
 
         $scope.getShop = function() {

@@ -90,7 +90,7 @@ class RegisterController extends Controller
     }
 
     protected function redirectTo() {
-            return route('admin.shop.profile');
+            return route('admin.products');
     }
 
     public function showRegistrationForm()

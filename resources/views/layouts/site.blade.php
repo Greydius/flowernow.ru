@@ -11,7 +11,7 @@
     <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветов, букетов, заказ, служба, дом, офис, '.$current_city->name)">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
-    <link rel="icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
     <meta name="apple-mobile-web-app-title" content="Floristum">
     <link rel="apple-touch-startup-image" href="{{ asset('images/icons/touch-icon-iphone.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/icons/touch-icon-iphone.png') }}">
@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/touch-icon-iphone-retina.png') }}">
     <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icons/touch-icon-ipad-retina.png') }}">
 
-    <meta property='og:image' content='{{ asset('assets/front/img/og_logo_floristum_ru_s.png') }}' />
+    <meta property='og:image' content='@yield('pageImage', asset('assets/front/img/og_logo_floristum_ru_s.png'))' />
     <meta property='og:title' content='@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')' />
     <meta property='og:description' content='@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')' />
     <meta property="og:locale" content="ru_RU" />
@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=1') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -267,10 +267,10 @@
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Правовая&nbsp;информация</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="#">Конфиденциальность</a></li>
-                            <li><a href="#">Персональные данные</a></li>
-                            <li><a href="#">Публичная оферта</a></li>
-                            <li><a href="#">Публичная оферта о заключении договора купли-продажи</a></li>
+                            <li><a href="{{ route('front.privacy') }}">Конфиденциальность</a></li>
+                            <li><a href="{{ route('front.personldata') }}">Персональные данные</a></li>
+                            <li><a href="{{ route('front.oferta') }}">Публичная оферта</a></li>
+                            <li><a href="{{ route('front.agreement') }}">Публичная оферта о заключении договора купли-продажи</a></li>
                         </ul>
                     </div>
                 </div>
@@ -279,7 +279,7 @@
         <hr>
         <div class="row">
             <div class="col-sm-6">
-                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:cervice@floristum.ru"><strong>cervice@floristum.ru</strong></a> <br> <a href="tel:88129822383"><strong>8 (812) 982-23-83</strong></a></span></p>
+                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:88129822383"><strong>8 (812) 982-23-83</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
                 <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов {{$current_city->name}}">

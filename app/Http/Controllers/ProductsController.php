@@ -7,6 +7,7 @@ use App\Model\Flower;
 use App\Model\Price;
 use App\Model\Product;
 use App\Model\ProductType;
+use App\Model\ProductPhoto;
 use App\Model\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -18,15 +19,33 @@ class ProductsController extends Controller
     //
         public function index(Request $request) {
 
-                $popularProduct = Product::popular($this->current_city->id, $request);
+                $productTypes = ProductType::where('show_on_main', '1')->get();
+                $currentType = null;
 
-//                dd($popularProduct);
+                $popularProducts = [];
+                $popularProduct = [];
+
+                if(empty($request->product_type)) {
+                        $item = [];
+                        foreach ($productTypes as $productType) {
+                                $request->product_type = $productType->slug;
+                                $item['productType'] = $productType;
+                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
+                                $item['popularProductCount'] = count($item['popularProduct']);
+                                $popularProducts[] = $item;
+                        }
+                } else {
+                        $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
+                        $currentType = ProductType::where('slug', $request->product_type)->first();
+                }
 
                 return view('front.index',[
                         'popularProduct' => $popularProduct,
+                        'popularProducts' => $popularProducts,
                         'prices' => Price::all(),
                         'sizes' => Size::all(),
-                        'productTypes' => ProductType::where('show_on_main', '1')->get(),
+                        'productTypes' => $productTypes,
+                        'currentType' => $currentType,
                         'colors' => Color::all(),
                         'flowers' => Flower::orderBy('popularity', 'desc')->limit(9)->get(),
                 ]);
@@ -36,6 +55,7 @@ class ProductsController extends Controller
                 $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->firstOrFail();
                 return view('front.product.show',[
                         'product' => $product,
+                        'pageImage' => $product->photoUrl,
                         'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
                         'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
@@ -52,6 +72,88 @@ class ProductsController extends Controller
                         'flowers' => Flower::orderBy('popularity', 'desc')->get(),
                         'times' => $times
                 ]);
+        }
+
+        public function products2() {
+
+                $times = \App\Helpers\Data::times();
+
+                return view('admin.products.list2', [
+                        'productTypes' => ProductType::all(),
+                        'colors' => Color::all(),
+                        'flowers' => Flower::orderBy('popularity', 'desc')->get(),
+                        'times' => $times
+                ]);
+        }
+
+        public function uploadPhoto($id, Request $request) {
+                $photo = Input::all();
+
+                $validator = Validator::make($photo, Product::$photoRules, Product::$photoRulesMessages);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'message' => $validator->messages()->first(),
+                        'code' => 400
+                    ], 400);
+
+                }
+
+                $shop = $this->user->getShop();
+
+                $photo = $photo['file'];
+
+                if($this->user->admin) {
+                        $product = Product::find($id);
+                } else {
+                        $product = $shop->products()->find($id);
+                }
+
+                if(!empty($product)) {
+
+                        $shop_id = $product->shop_id;
+
+                        $extension = $photo->getClientOriginalExtension();
+
+                        $filename = 'p'.$shop_id.'_'.time().'_'.rand(10000, 99999).'.'.$extension;
+                        $filePath = Product::$fileUrl.$shop_id.'/';
+                        $fullFileName = $filePath . $filename;
+
+                        if(!file_exists(public_path($filePath))) {
+                                \File::makeDirectory(public_path($filePath));
+                        }
+
+                        Image::make($photo)->save( public_path($fullFileName ) );
+
+                        $filePath = Product::$fileUrl.'632x632/'.$shop_id.'/';
+                        $fullFileName = $filePath . $filename;
+
+                        if(!file_exists(public_path($filePath))) {
+                                \File::makeDirectory(public_path($filePath));
+                        }
+
+                        Image::make($photo)->fit(632, 632)->save( public_path($fullFileName ) );
+
+                        $productPhoto = new ProductPhoto();
+                        $productPhoto->product_id = $id;
+                        $productPhoto->photo = $filename;
+                        $productPhoto->save();
+
+                        return response()->json([
+                            'error' => false,
+                            'photo' => ['photo' => $productPhoto->photo, 'id' => $productPhoto->id, 'product_id' => $productPhoto->product_id, 'priority' => ProductPhoto::where('product_id', $productPhoto->product_id)->count()],
+                            'id' => $id,
+                            'code'  => 200
+                        ], 200);
+                }
+
+                return response()->json([
+                        'error' => true,
+                        'message' => 'Товар не найден',
+                        'code' => 400
+                ], 400);
         }
 
         public function upload(Request $request) {
@@ -118,11 +220,11 @@ class ProductsController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $response['products'] = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->get();
+                                $response['products'] = Product::with('compositions.flower')->with('photos')->with('shop')->orderBy('id', 'desc')->get();
                                 //$products = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->paginate(15);
                                 //dd($products->links());
                         } else {
-                                $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->orderBy('id', 'desc')->get();
+                                $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->with('photos')->orderBy('id', 'desc')->get();
                         }
 
                 } catch (\Exception $e){
@@ -159,6 +261,98 @@ class ProductsController extends Controller
                                 'code' => $statusCode
                         ], $statusCode);
                 }
+        }
+
+        public function apiChangePriority($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        if($this->user->admin) {
+                                $product = Product::with('photos')->find($id);
+                        } else {
+                                $product = $this->user->getShop()->products()->with('photos')->where('id', $id)->first();
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                if(!empty($request->priority)) {
+                                        $i = 0;
+                                        foreach ($request->priority as $value) {
+                                                $photo = $product->photos()->find($value);
+                                                if(!empty($photo)) {
+                                                        $photo->priority = $i;
+                                                        if($photo->save() && $i == 0 && $photo->photo) {
+                                                                $product->photo = $photo->photo;
+                                                                $product->save();
+                                                        }
+                                                        $i++;
+                                                }
+                                        }
+                                }
+                        }
+
+                        $return['photos'] = $product->photos()->get();
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
+        public function apiDeletePhoto($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        if($this->user->admin) {
+                                $photo = ProductPhoto::find($id);
+                        } else {
+                                $shop_id = $this->user->getShop()->id;
+                                $photo = ProductPhoto::with('product')->whereHas('product', function($query) use ($shop_id) {
+                                        $query->where('shop_id', $shop_id);
+                                })->where('id', $id)->first();
+                        }
+
+                        if(empty($photo)) {
+                                throw new \Exception('Фото не найдено');
+                        } else {
+
+                                if(ProductPhoto::where('product_id', $photo->product_id)->count() > 1) {
+                                        $photo->delete();
+
+                                        $photos = ProductPhoto::where('product_id', $photo->product_id)->get();
+
+                                        if(!empty($photos)) {
+                                                $i = 0;
+                                                foreach ($photos as $photo) {
+                                                        $photo->priority = $i;
+                                                        $photo->save();
+                                                        $i++;
+                                                }
+                                        }
+                                }
+                        }
+
+                        $return['photos'] = ProductPhoto::where('product_id', $photo->product_id)->get();
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
         }
 
         public function update(Request $request) {

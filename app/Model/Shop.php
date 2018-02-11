@@ -52,4 +52,29 @@ class Shop extends MainModel
         function address() {
                 return $this->hasMany('App\Model\ShopAddress');
         }
+
+        // relation for work time
+        function workTime() {
+                return $this->hasMany('App\Model\ShopWorkTime')->orderBy('day');
+        }
+
+        // relation for work time
+        function workers() {
+                return $this->hasMany('App\Model\ShopWorker');
+        }
+        
+        public function getDeliveryTimeFormatAttribute() {
+
+                $return = '';
+
+                if($this->delivery_time) {
+                        $hours = floor($this->delivery_time / 60);
+                        $minutes = $this->delivery_time % 60;
+
+                        $return .= ($hours ? $hours : '00').':';
+                        $return .= ($minutes ? $minutes : '00');
+                }
+
+                return $return;
+        }
 }

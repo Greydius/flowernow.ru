@@ -91,6 +91,26 @@ Route::get('/cities', [
         'as' => 'city.popular'
 ]);
 
+Route::get('/info/agreement', [
+        'uses' => 'HomeController@agreement',
+        'as' => 'front.agreement'
+]);
+
+Route::get('/info/privacy', [
+        'uses' => 'HomeController@privacy',
+        'as' => 'front.privacy'
+]);
+
+Route::get('/info/personldata', [
+        'uses' => 'HomeController@personldata',
+        'as' => 'front.personldata'
+]);
+
+Route::get('/info/oferta', [
+        'uses' => 'HomeController@oferta',
+        'as' => 'front.oferta'
+]);
+
 /* API */
 Route::group(['prefix' => 'api/v1'], function() {
         /* PRODUCTS*/
@@ -125,6 +145,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.shop.profile'
         ]);
 
+        Route::post('shop', [
+                'uses' => 'ShopsController@update',
+                'as' => 'admin.shop.update'
+        ]);
+
         Route::get('shop2', [
                 'uses' => 'ShopsController@profile2',
                 'as' => 'admin.shop.profile2'
@@ -146,9 +171,19 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.products'
         ]);
 
+        Route::get('products2', [
+                'uses' => 'ProductsController@products2',
+                'as' => 'admin.products2'
+        ]);
+
         Route::post('products/upload', [
                 'uses' => 'ProductsController@upload',
                 'as' => 'admin.products.upload'
+        ]);
+
+        Route::post('products/uploadPhoto/{id}', [
+                'uses' => 'ProductsController@uploadPhoto',
+                'as' => 'admin.products.uploadPhoto'
         ]);
 
         Route::post('products/update', [
@@ -175,6 +210,16 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::post('product/delete/{id}', [
                         'uses' => 'ProductsController@apiProductDelete',
                         'as' => 'admin.api.product.delete'
+                ]);
+
+                Route::post('product/deletePhoto/{id}', [
+                        'uses' => 'ProductsController@apiDeletePhoto',
+                        'as' => 'admin.api.product.apiDeletePhoto'
+                ]);
+
+                Route::post('product/changePriority/{id}', [
+                        'uses' => 'ProductsController@apiChangePriority',
+                        'as' => 'admin.api.product.apiChangePriority'
                 ]);
 
                 /* ORDERS*/

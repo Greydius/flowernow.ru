@@ -86,7 +86,12 @@ class Product extends MainModel
                 return $this->hasMany('App\Model\ProductComposition');
         }
 
-        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 12) {
+        // relation for photos
+        function photos() {
+                return $this->hasMany('App\Model\ProductPhoto')->orderBy('priority');
+        }
+
+        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15) {
 
                 $currentPage = $page;
 
@@ -147,7 +152,7 @@ class Product extends MainModel
 
                 //echo $productRequest->toSql(); exit();
 
-                $products = $productRequest->paginate(15);
+                $products = $productRequest->paginate($perPage);
 
                 return $products;
 

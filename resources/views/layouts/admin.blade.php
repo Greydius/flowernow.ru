@@ -17,10 +17,11 @@
 		<!--begin::Base Styles -->
 		<link href="{{ asset('assets/admin/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('assets/admin/demo/default/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-		<link href="{{ asset('assets/admin/css/custom.css') }}" rel="stylesheet" type="text/css" />
+		<link href="{{ asset('assets/admin/css/custom.css?v=1') }}" rel="stylesheet" type="text/css" />
 		<!--end::Base Styles -->
 		@yield('head')
-		<link rel="shortcut icon" href="assets/demo/default/media/img/logo/favicon.ico" />
+		
+		<link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
 
 		<script type="text/javascript">
 			var jsonData={};
@@ -45,8 +46,8 @@
 						<div class="m-stack__item m-brand  m-brand--skin-dark ">
 							<div class="m-stack m-stack--ver m-stack--general">
 								<div class="m-stack__item m-stack__item--middle m-brand__logo">
-									<a href="index.html" class="m-brand__logo-wrapper">
-										<img alt="" src="assets/demo/default/media/img/logo/logo_default_dark.png"/>
+									<a href="/" class="m-brand__logo-wrapper">
+										<img alt="floristum.ru" src="{{ asset('images/logo_rectangle_white.png') }}">
 									</a>
 								</div>
 								<div class="m-stack__item m-stack__item--middle m-brand__tools">

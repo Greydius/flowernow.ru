@@ -18,7 +18,7 @@
     <br>
 </div>
 
-@if(count($popularProduct))
+@if(count($popularProducts))
 
 <div class="bg-white hidden-xs hidden-sm">
     <div class="container">
@@ -62,9 +62,10 @@
 
 <div class="container">
 
+@if(empty($popularProducts))
     <div class="row hidden-xs hidden-sm">
         <div class="col-md-5">
-            <h3 class="margin-top-null"><strong>Популярные букеты</strong></h3>
+            <h3 class="margin-top-null"><strong>{{ !empty($currentType) ? $currentType->alt_name : null }}</strong></h3>
         </div>
         <div class="col-md-7">
             <ul class="list-inline list-sort text-right">
@@ -77,7 +78,9 @@
 
     <br class="hidden-xs hidden-sm">
 
-    <div class="row" ng-controller="mainPage" id="products-container">
+@endif
+
+    <div class="row" id="products-container">
 
         <div class="col-md-3 col-md-push-9 hidden-xs hidden-sm">
                 <p class="h3 margin-top-null">Уточнить категорию</p>
@@ -142,6 +145,70 @@
 
 
         <div class="col-md-9 col-md-pull-3">
+
+                @if(!empty($popularProducts))
+                    @foreach($popularProducts as $item)
+                        @if($item['popularProductCount'] >= 3)
+                            <div class="hidden-lg hidden-md hidden-xs">
+                                <br><br>
+                            </div>
+                            <h3 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h3>
+                            <br class="hidden-lg hidden-md">
+
+                            <div class="row">
+                                @foreach($item['popularProduct'] as $key => $_item)
+                                    @if($key < 3 || $item['popularProductCount'] == 6)
+
+                                        @include('front.product.list-item')
+
+                                    @endif
+                                @endforeach
+
+                                @if($item['popularProduct']->total() > 6)
+                                    <div class="col-md-6 col-md-offset-3 bottom30">
+                                        <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
+
+                @if(!empty($popularProduct))
+                    @foreach($popularProduct as $_item)
+
+                        <div class="col-sm-4">
+                            <div class="media-item">
+                                <a href="/flowers/{{ $_item['slug'] }}">
+                                    <figure>
+                                        <img class="img-responsive" src="{{ $_item['photoUrl'] }}" alt="...">
+                                        <figcaption>
+                                            <ul class="list-inline text-center">
+                                                <li>Ширина {{ $_item['width'] }} см</li>
+                                                <li>Высота {{ $_item['height'] }} см</li>
+                                            </ul>
+                                        </figcaption>
+                                    </figure>
+                                </a>
+
+                                <div class="description-media-item">
+                                    <div class="row">
+                                        <div class="col-xs-11">
+                                            <p><strong class="price-media-item">{{ $_item['clientPrice'] }} руб.</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
+                                            <p>{{ $_item['shop_name'] }}> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    @endforeach
+                @endif
+
+
+<!--
                 <div class="hidden-lg hidden-md hidden-xs">
                     <br><br>
                 </div>
@@ -176,19 +243,16 @@
 
                         </div>
                     </div>
-
+-->
                 </div>
+
+
         </div>
 
 
     </div>
 
 
-
-
-    <br><br>
-
-</div>
 
 @else
 
@@ -237,12 +301,12 @@
 
 @section('footer')
     <script type="text/javascript">
-        jsonData.popularProduct = {!! $popularProduct->makeHidden('price')->toJson() !!};
+
         routes.products = '{!! route('api.products.popular') !!}';
     </script>
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
-    <script src="{{ asset('assets/front/js/index.js?v=2') }}"></script>
+    <script src="{{ asset('assets/front/js/index.js?v=2_1') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js?v=2_1') }}" type="text/javascript"></script>
 @stop

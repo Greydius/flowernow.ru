@@ -261,10 +261,10 @@
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Правовая&nbsp;информация</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="#">Конфиденциальность</a></li>
-                            <li><a href="#">Персональные данные</a></li>
-                            <li><a href="#">Публичная оферта</a></li>
-                            <li><a href="#">Публичная оферта о заключении договора купли-продажи</a></li>
+                            <li><a href="{{ route('front.privacy') }}">Конфиденциальность</a></li>
+                            <li><a href="{{ route('front.personldata') }}">Персональные данные</a></li>
+                            <li><a href="{{ route('front.oferta') }}">Публичная оферта</a></li>
+                            <li><a href="{{ route('front.agreement') }}">Публичная оферта о заключении договора купли-продажи</a></li>
                         </ul>
                     </div>
                 </div>

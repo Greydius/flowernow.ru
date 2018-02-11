@@ -1,17 +1,5 @@
 @extends('layouts.admin')
 
-@section('footer')
-    <script src="{{ asset('assets/admin/js/products-list.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/ng/productsList.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">
-        jsonData.productTypes = {!! $productTypes->toJson() !!};
-        jsonData.colors = {!! $colors->toJson() !!};
-        jsonData.flowers = {!! $flowers->toJson() !!};
-        jsonData.times = {!! json_encode($times) !!};
-        routes.productUpdate = '{{ route('admin.products.update')  }}';
-    </script>
-@stop
-
 @section('content')
 
     <div ng-controller="productsList" id="productsListContainer">
@@ -120,6 +108,29 @@
                     </div>
                     <div class="modal-body">
                         <form>
+
+                            <div class="form-group m-form__group">
+
+                                <span style="font-size: 10px; padding-bottom: 10px; display: block;" ng-show="photos.length > 1">Для изменения очередности - переставте фото в нужном порядке</span>
+
+                                <div class="row product-photos">
+                                    <div class="col-md-2 product-photos-container" style="width: 80px; height: 80px" ng-repeat="photo in photos | orderBy:'priority'">
+                                        <img ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                        <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
+                                    </div>
+
+                                    <div class="col-md-2" id="droparea">
+                                        <button class="btn btn-outline-metal m-btn m-btn--icon m-btn--icon-only- btn-block upload-photo-btn" style="height: 50px; line-height: 28px; ">
+                                            <i class="la la-plus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <input type="hidden" name="product_id" ng-model="item.id"  value="<% item.id %>">
+
                             <div class="form-group m-form__group">
                                 <label for="edit-product-name">
                                     Название
@@ -316,3 +327,38 @@
 
 
 @endsection
+
+@section('head')
+    <style>
+        .highlight {
+            border: 1px dashed #ebedf2;
+            font-weight: bold;
+            font-size: 45px;
+            background-color: #eaeaea;
+            height: 50px;
+            width: 50px;
+            margin-right: 15px;
+            margin-left: 15px;
+        }
+
+        .delete_photo {
+                position: absolute;
+                top: -5px;
+                right: 0;
+                cursor: pointer;
+        }
+    </style>
+@stop
+
+@section('footer')
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/js/products-list.js?v=2') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/productsList.js?v=3') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        jsonData.productTypes = {!! $productTypes->toJson() !!};
+        jsonData.colors = {!! $colors->toJson() !!};
+        jsonData.flowers = {!! $flowers->toJson() !!};
+        jsonData.times = {!! json_encode($times) !!};
+        routes.productUpdate = '{{ route('admin.products.update')  }}';
+    </script>
+@stop

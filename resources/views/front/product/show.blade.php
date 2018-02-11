@@ -1,16 +1,7 @@
+@section('pageImage', $pageImage)
 @section('pageTitle', $pageTitle)
 @section('pageDescription', $pageDescription)
 @section('pageKeywords', $pageKeywords)
-
-@extends('layouts.site')
-
-@section('head')
-
-@stop
-
-@section('footer')
-
-@stop
 
 @section('content')
 
@@ -25,10 +16,39 @@
 
     <div class="row media-item-opened">
         <div class="col-md-5">
-            <figure class="main-picture">
-                <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
-                <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
-            </figure>
+
+            @if(count($product->photos) == 1)
+
+                <figure class="main-picture">
+                    <img class="img-responsive" src="{{ asset($product->photoUrl) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                    <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
+                </figure>
+
+
+            @else
+
+
+                <figure class="main-picture main-picture2">
+
+
+                    <div class="demo">
+                        <ul id="lightSlider">
+                            <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}">
+                                <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" />
+                            </li>
+                            @foreach($product->photos as $photo)
+                                <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}">
+                                    <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}" />
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
+                </figure>
+
+            @endif
+
         </div>
         <div class="col-md-7">
             <div class="row">
@@ -164,3 +184,58 @@
 </div>
 
 @endsection
+
+
+@extends('layouts.site')
+
+@section('head')
+
+<link rel="stylesheet" href="{{ asset('assets/plugins/lightslider/css/lightslider.min.css') }}">
+
+<style>
+    .demo {
+        width:100%
+    }
+    .demo ul {
+        list-style: none outside none;
+        padding-left: 0;
+        margin-bottom:0;
+    }
+    .demo li {
+        display: block;
+        float: left;
+        margin-right: 6px;
+        cursor:pointer;
+    }
+    .demo img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+    }
+
+    .lSSlideOuter .lSPager.lSGallery li.active, .lSSlideOuter .lSPager.lSGallery li:hover {
+        border-radius: 0px !important;
+    }
+
+    .media-item-opened .main-picture2 figcaption {
+        bottom: 60px !important;
+    }
+</style>
+
+@stop
+
+@section('footer')
+    <script src="{{ asset('assets/plugins/lightslider/js/lightslider.min.js') }}" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function() {
+                $('#lightSlider').lightSlider({
+                        gallery: true,
+                        item: 1,
+                        loop: true,
+                        slideMargin: 0,
+                        thumbItem: 9
+                });
+        })
+    </script>
+@stop

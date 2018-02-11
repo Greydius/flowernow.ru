@@ -49,4 +49,20 @@ class HomeController extends Controller
     public function corporate() {
             return view('front.corporate');
     }
+
+    public function agreement() {
+            return view('front.agreement');
+    }
+    
+    public function privacy() {
+            return view('front.privacy');
+    }
+
+    public function personldata() {
+            return view('front.personldata');
+    }
+
+    public function oferta() {
+            return view('front.oferta');
+    }
 }
