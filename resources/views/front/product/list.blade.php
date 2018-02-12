@@ -1,84 +1,31 @@
 @extends('layouts.site')
 
+@section('pageImage', (!empty($meta) && !empty($meta['image']) ? $meta['image'] : null))
+@section('pageTitle', (!empty($meta) && !empty($meta['title']) ? $meta['title'] : null))
+@section('pageDescription', (!empty($meta) && !empty($meta['description']) ? $meta['description'] : null))
+@section('pageKeywords', (!empty($meta) && !empty($meta['keywords']) ? $meta['keywords'] : null))
+
 @section('content')
 
-<div class="container">
-    <h1 class="h2">Доставка цветов в {{ $current_city->name_prepositional }} <small>или <a href="#">укажите город</a>.</small></h1>
+<div class="container" ng-controller="mainPage">
 
-    <div class="adress-form">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="inputCity1">Город</label>
-                    <input type="text" class="form-control" id="inputCity" value="{{ $current_city ? $current_city->name : null }}">
-                </div>
-            </div>
+    <br class="hidden-xs hidden-sm">
+
+    <div class="row" ng-hide="isFiltered">
+        <div class="col-md-9">
+            <h3 class="margin-top-null"><strong>{{ !empty($title) ? $title : 'Популярные букеты' }}</strong></h3>
         </div>
-    </div>
-    <br>
-</div>
-
-@if(count($popularProducts))
-
-<div class="bg-white hidden-xs hidden-sm">
-    <div class="container">
-        <h3><strong>Преимущества доставки букетов floristum.ru:</strong></h3>
-        <br>
-        <div class="row text-center">
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/na-odnom-sayte.png') }}" alt="Все цветочные магазины г {{$current_city->name}}">
-                </figure>
-                <br>
-                <h4>Цветочные магазины<br>г. {{ $current_city->name }}<br>на одном сайте!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/dostavka.png') }}" alt="Быстрая доставка по г {{$current_city->name}}">
-                </figure>
-                <br>
-                <h4>Доставка цветов<br>от 15 минут!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
-                </figure>
-                <br>
-                <h4>Защита каждой<br>доставки цветов!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/otzivy.png') }}" alt="Отзывы о магазинах цветов">
-                </figure>
-                <br>
-                <h4>Рейтинги доставок букетов,<br>отзывы покупателей!</h4>
-            </div>
-        </div>
-    </div>
-    <br>
-</div>
-
-<br class="hidden-xs hidden-sm">
-
-<div class="container">
-
-@if(empty($popularProducts))
-    <div class="row hidden-xs hidden-sm">
-        <div class="col-md-5">
-            <h3 class="margin-top-null"><strong>{{ !empty($currentType) ? $currentType->alt_name : null }}</strong></h3>
-        </div>
-        <div class="col-md-7">
+        <div class="col-md-3">
             <ul class="list-inline list-sort text-right">
-                <li>Сортировать:</li>
+                <!-- <li>Сортировать:</li>
                 <li><a href="#">по цене</a></li>
                 <li><a href="#">по новизне</a></li>
+                -->
             </ul>
         </div>
     </div>
 
     <br class="hidden-xs hidden-sm">
-
-@endif
 
     <div class="row" id="products-container">
 
@@ -139,113 +86,37 @@
                     </div>
                 </div>
 
-                <button class="btn btn-info btn-block" ng-show="isFiltered" ng-click="resetFilter()">Сбросить фильтр</button>
+                <button class="btn btn-info btn-block" ng-click="resetFilter()">Сбросить фильтр</button>
         </div>
 
 
 
         <div class="col-md-9 col-md-pull-3">
 
-                @if(!empty($popularProducts))
-                    @foreach($popularProducts as $item)
-                        @if($item['popularProductCount'] >= 3)
-                            <div class="hidden-lg hidden-md hidden-xs">
-                                <br><br>
-                            </div>
-                            <h3 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h3>
-                            <br class="hidden-lg hidden-md">
 
-                            <div class="row">
-                                @foreach($item['popularProduct'] as $key => $_item)
-                                    @if($key < 3 || $item['popularProductCount'] == 6)
+            @include('front.product.search')
 
-                                        @include('front.product.list-item')
-
-                                    @endif
-                                @endforeach
-
-                                @if($item['popularProduct']->total() > 6)
-                                    <div class="col-md-6 col-md-offset-3 bottom30">
-                                        <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
-                    @endforeach
-                @endif
+            @if(count($popularProduct))
 
                 @if(!empty($popularProduct))
-                    @foreach($popularProduct as $_item)
+                    <div class="row">
+                        @foreach($popularProduct as $_item)
 
-                        <div class="col-sm-4">
-                            <div class="media-item">
-                                <a href="/flowers/{{ $_item['slug'] }}">
-                                    <figure>
-                                        <img class="img-responsive" src="{{ $_item['photoUrl'] }}" alt="...">
-                                        <figcaption>
-                                            <ul class="list-inline text-center">
-                                                <li>Ширина {{ $_item['width'] }} см</li>
-                                                <li>Высота {{ $_item['height'] }} см</li>
-                                            </ul>
-                                        </figcaption>
-                                    </figure>
-                                </a>
+                            @include('front.product.list-item')
 
-                                <div class="description-media-item">
-                                    <div class="row">
-                                        <div class="col-xs-11">
-                                            <p><strong class="price-media-item">{{ $_item['clientPrice'] }} руб.</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
-                                            <p>{{ $_item['shop_name'] }}> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    @endforeach
+                        @endforeach
+                    </div>
                 @endif
 
+                {{ $popularProduct->links() }}
 
-<!--
-                <div class="hidden-lg hidden-md hidden-xs">
-                    <br><br>
-                </div>
-                <h3 class="margin-top-null hidden-lg hidden-md"><strong>Популярные букеты</strong></h3>
-                <br class="hidden-lg hidden-md">
-
-                <div class="row" id="product_container" ng-cloak>
-
-                    <div class="col-sm-4" ng-repeat="product in popularProduct">
-                        <div class="media-item">
-                            <a href="/flowers/<% product.slug %>/">
-                                <figure>
-                                    <img class="img-responsive"  ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" alt="...">
-                                    <figcaption>
-                                        <ul class="list-inline text-center">
-                                            <li>Ширина <% product.width %> см</li>
-                                            <li>Высота <% product.height %> см</li>
-                                        </ul>
-                                    </figcaption>
-                                </figure>
-                            </a>
-
-                            <div class="description-media-item">
-                                <div class="row">
-                                    <div class="col-xs-11">
-                                        <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#" class="name"><% product.name %></a></p>
-                                        <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
+            @else
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>
                     </div>
--->
                 </div>
-
+            @endif
 
         </div>
 
@@ -253,50 +124,11 @@
     </div>
 
 
-
-
-    <br><br>
+    <br class="hidden-xs hidden-sm">
 
 </div>
 
-@else
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h4 class="md-mt-30 md-mb-50 text-center">В ближайшее время сервис доставки букетов Floristum.ru заработает в городе {{ $current_city->name_prepositional }}.</h4>
-
-                <h3 class="text-center"><strong>Вы представитель магазина?</strong></h3>
-
-                <h4 class="md-mb-40">Если Вы — представитель магазина цветов, а {{ $current_city->name }} — территория работы Вашей службы доставки,то <a href="{{ route('register') }}">регистрируйтесь</a> прямо сейчас и получайте заказы уже завтра!</h4>
-            </div>
-        </div>
-    </div>
-
-@endif
-
-<div class="container">
-
-<h3 class="text-center"><strong>О доставке цветов с Floristum.ru</strong></h3>
-    <br>
-    <hr>
-    <p>Floristum.ru - сервис доставки букетов из популярных цветочных магазинов вашего города. <br><br>
-        На Floristum.ru вы можете выбрать и заказать букет с доставкой с оптимальным соотношением цена-качество, сравнив его с предложениями многих магазинов цветов, представленных в Вашем городе. <br><br>
-        Заказывая букет у нас, Вы всегда получаете гарантировано свежие цветы с доставкой в кратчайшие сроки в полном соответствии с указанной на странице букета информацией и с фотографиями. Магазины представленные у нас заинтересованы в том, чтобы клиент был доволен и оставил хороший отзыв на страницах системы, отзывы влияют на рейтинг магазина и частоту заказов цветов.<br><br>
-        Каждая доставка защищена системой Floristum.ru с гарантией возврата оплаченной суммы покупателю в форсмажорных случаях при исполнении заказа цветов. Поэтому, не стесняйтесь обращаться в службу поддержки Флористум при возникновении вопросов.
-
-
-        <br><br>
-
-
-        Мы готовы доставить, практически, любые цветы для Вас и ваших близких: подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.
-
-    </p>
-
-
-    <br><br>
-
-</div>
 
 @endsection
 
@@ -312,6 +144,6 @@
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
-    <script src="{{ asset('assets/front/js/index.js?v=2_1') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_1') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_3') }}" type="text/javascript"></script>
 @stop

@@ -19,6 +19,11 @@ class ProductsController extends Controller
     //
         public function index(Request $request) {
 
+                $viewFile = 'front.index';
+
+                $title = '';
+                $meta = [];
+
                 $productTypes = ProductType::where('show_on_main', '1')->get();
                 $currentType = null;
 
@@ -34,12 +39,19 @@ class ProductsController extends Controller
                                 $item['popularProductCount'] = count($item['popularProduct']);
                                 $popularProducts[] = $item;
                         }
+
+                        unset($request->product_type);
                 } else {
+                        $title = $this->getTitle($request);
+                        $meta =  $this->getMeta($request);
+                        $viewFile = 'front.product.list';
                         $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
                         $currentType = ProductType::where('slug', $request->product_type)->first();
                 }
 
-                return view('front.index',[
+                return view($viewFile,[
+                        'title' => $title,
+                        'meta' => $meta,
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
                         'prices' => Price::all(),
@@ -439,16 +451,148 @@ class ProductsController extends Controller
         public function apiPopular(Request $request) {
                 $statusCode = 200;
                 $response = [
+                        'title' => '',
                         'products' => []
                 ];
 
                 try{
+                        $response['title'] = $this->getTitle($request);
                         $response['products'] = Product::popular($this->current_city->id, $request, (!empty($request->page) ? $request->page : 1));
+
+                        if(!$response['products']->total()) {
+                                $productTypes = ProductType::where('show_on_main', '1')->get();
+                                $item = [];
+                                $popularProducts = [];
+                                $_request = new Request();
+                                foreach ($productTypes as $productType) {
+                                        $_request->product_type = $productType->slug;
+                                        $item['productType'] = $productType;
+                                        //$item['popularProduct'] = Product::popular($this->current_city->id, $_request, 1, 6)->makeHidden(['price']);
+                                        $result = Product::popular($this->current_city->id, $_request, 1, 6);
+                                        $data = $result;
+                                        $result = $result->makeHidden(['price']);
+                                        $data->data = $result;
+
+                                        $item['popularProduct'] = $data;
+
+                                        $item['popularProductCount'] = count($item['popularProduct']);
+                                        $popularProducts[] = $item;
+                                }
+
+                                if(!empty($popularProducts)) {
+                                        $response['popularProducts'] = $popularProducts;
+                                }
+
+                                unset($_request->product_type);
+                        }
                 } catch (\Exception $e){
                         $statusCode = 400;
                 }finally{
                         return response()->json($response, $statusCode);
                 }
+        }
+
+        public function getTitle(Request $request) {
+                $title = [];
+                $title['type'] = 'Букеты и композиции';
+
+                if(!empty($request->productType)) {
+                        $productType = ProductType::find($request->productType);
+                        if(!empty($productType)) {
+                                $title['type'] = $productType->alt_name;
+                        }
+                } elseif(!empty($request->product_type)) {
+                        $productType = ProductType::where('slug', $request->product_type)->first();
+                        if(!empty($productType)) {
+                                $title['type'] = $productType->alt_name;
+                        }
+                }
+
+                //$title['color'] = null;
+                if(!empty($request->color)) {
+                        $color = Color::find($request->color);
+                        if(!empty($color)) {
+                                $title['color'] = 'цвет: '.mb_strtolower($color->name);
+                        }
+                }
+
+                //$title['flowers'] = null;
+                if(!empty($request->flowers) && is_array($request->flowers)) {
+                        $flowers = Flower::whereIn('id', $request->flowers)->get();
+                        if(!empty($flowers)) {
+                                $flowersName = [];
+                                foreach ($flowers as $flower) {
+                                        $flowersName[] = mb_strtolower($flower->name);
+                                }
+
+                                if(!empty($flowersName)) {
+                                        $title['flowers'] = 'с составом: '.implode(', ', $flowersName);
+                                }
+                        }
+                }
+
+                //$title['price'] = null;
+                if(!empty($request->productPrice)) {
+                        $price = Price::find($request->productPrice);
+                        if(!empty($price)) {
+                                $title['price'] = 'по цене '.mb_strtolower($price->name);
+                        }
+                } elseif(!empty($request->price_from) || !empty($request->price_to)) {
+                        $title['price'] = 'по цене ';
+                        if(!empty($request->price_from)) {
+                                $title['price'] .= (int)$request->price_from >= 2000 ? ((int)$request->price_from + 1).' - ' : null;
+                        }
+
+                        if(!empty($request->price_to)) {
+                                $title['price'] .= (int)$request->price_to < 9999999 ? ((int)$request->price_to == 1999 ? 'до ' : '') . ((int)$request->price_to + 1) : null;
+                        }
+
+                        $title['price'] .= ' руб';
+                }
+
+                return implode(', ', $title);
+        }
+
+        public function getMeta(Request $request) {
+
+                $meta = [];
+
+
+                $meta['title'] = 'Букеты и композиции';
+                $meta['description'] = 'Заказать ';
+                $meta['keywords'] = '';
+
+                if(!empty($request->product_type)) {
+                        $productType = ProductType::where('slug', $request->product_type)->first();
+                        if(!empty($productType)) {
+                                $meta['title'] = $productType->alt_name;
+                        }
+                }
+
+                $meta['description'] .= mb_strtolower($meta['title']);
+                $meta['description'] .= ' в г '.$this->current_city->name.' с доставкой';
+
+                $meta['keywords'] .= mb_strtolower($meta['title']);
+                
+                if(!empty($request->flowers) && is_array($request->flowers)) {
+                        $flowers = Flower::whereIn('id', $request->flowers)->get();
+                        if(!empty($flowers)) {
+                                $flowersName = [];
+                                foreach ($flowers as $flower) {
+                                        $flowersName[] = mb_strtolower($flower->name);
+                                }
+
+                                if(!empty($flowersName)) {
+                                        $meta['title'] .= ' состав: '.implode(', ', $flowersName);
+                                        $meta['keywords'] .= ', '. implode(', ', $flowersName);
+                                }
+                        }
+                }
+
+                $meta['title'] .= ' доставка в г '.$this->current_city->name;
+                $meta['keywords'] .= ', '.$this->current_city->name;
+
+                return $meta;
         }
         
         public function filter($query = null, Request $request) {

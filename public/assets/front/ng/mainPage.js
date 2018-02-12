@@ -4,8 +4,13 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
         $scope.popularProduct = jsonData.popularProduct;
         $scope.filters = {};
         $scope.isFiltered = false;
+        $scope.title = '';
+
+        $scope.otherPopularProducts = [];
 
         $scope.getProducts = function(page) {
+
+                $scope.title = '';
 
                 if(!page) {
                         page = 1;
@@ -22,6 +27,7 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 
                 }).then(function (response) {
+                        $scope.otherPopularProducts = [];
                         $('.preloader-wrapper').hide();
                         if(response.data.products && response.data.products.data) {
 
@@ -31,6 +37,13 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
                                         $scope.popularProduct = $scope.popularProduct.concat(response.data.products.data);
                                 }
                         }
+
+                        if(response.data.popularProducts) {
+                                $scope.otherPopularProducts = response.data.popularProducts;
+                        }
+
+                        $scope.title = response.data.title;
+
                 }, function (response) {
                         $('.preloader-wrapper').hide();
 

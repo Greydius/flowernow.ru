@@ -60,7 +60,7 @@
 
 <br class="hidden-xs hidden-sm">
 
-<div class="container">
+<div class="container" ng-controller="mainPage">
 
 @if(empty($popularProducts))
     <div class="row hidden-xs hidden-sm">
@@ -146,6 +146,9 @@
 
         <div class="col-md-9 col-md-pull-3">
 
+
+            @include('front.product.search')
+
                 @if(!empty($popularProducts))
                     @foreach($popularProducts as $item)
                         @if($item['popularProductCount'] >= 3)
@@ -206,44 +209,7 @@
 
                     @endforeach
                 @endif
-
-
-<!--
-                <div class="hidden-lg hidden-md hidden-xs">
-                    <br><br>
-                </div>
-                <h3 class="margin-top-null hidden-lg hidden-md"><strong>Популярные букеты</strong></h3>
-                <br class="hidden-lg hidden-md">
-
-                <div class="row" id="product_container" ng-cloak>
-
-                    <div class="col-sm-4" ng-repeat="product in popularProduct">
-                        <div class="media-item">
-                            <a href="/flowers/<% product.slug %>/">
-                                <figure>
-                                    <img class="img-responsive"  ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" alt="...">
-                                    <figcaption>
-                                        <ul class="list-inline text-center">
-                                            <li>Ширина <% product.width %> см</li>
-                                            <li>Высота <% product.height %> см</li>
-                                        </ul>
-                                    </figcaption>
-                                </figure>
-                            </a>
-
-                            <div class="description-media-item">
-                                <div class="row">
-                                    <div class="col-xs-11">
-                                        <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#" class="name"><% product.name %></a></p>
-                                        <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
--->
+            
                 </div>
 
 
@@ -308,5 +274,5 @@
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
     <script src="{{ asset('assets/front/js/index.js?v=2_1') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_1') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_2') }}" type="text/javascript"></script>
 @stop

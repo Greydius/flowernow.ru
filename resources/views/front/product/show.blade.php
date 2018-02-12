@@ -1,9 +1,9 @@
+@section('content')
+
 @section('pageImage', $pageImage)
 @section('pageTitle', $pageTitle)
 @section('pageDescription', $pageDescription)
 @section('pageKeywords', $pageKeywords)
-
-@section('content')
 
 <div class="container">
 

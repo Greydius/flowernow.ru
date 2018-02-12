@@ -95,9 +95,11 @@ class Product extends MainModel
 
                 $currentPage = $page;
 
-                $productRequest = self::with('shop')->whereHas('shop', function($query) use ($city_id) {
-                        $query->where('city_id', $city_id);
-                })->where('price', '>', 0);
+                $productRequest = self::with(['shop'  => function($query) {
+                            $query->select(['id', 'name']);
+                        }])->whereHas('shop', function($query) use ($city_id) {
+                                $query->where('city_id', $city_id);
+                        })->where('price', '>', 0);
 
                 if(!empty($request)) {
                         if(!empty($request->productType)) {
