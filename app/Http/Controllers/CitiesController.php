@@ -13,7 +13,7 @@ class CitiesController extends Controller
                 $cities = [];
 
                 if(!empty($request->txt) && mb_strlen($request->txt) >= 2) {
-                        $cities = City::where('name', 'like', $request->txt.'%')->orderBy('metro', 'desc')->with('region')->get();
+                        $cities = City::where('name', 'like', $request->txt.'%')->orderBy('population', 'desc')->with('region')->get();
 
                         /*
                         return $cities;

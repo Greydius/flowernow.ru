@@ -1,14 +1,9 @@
-@extends('layouts.site')
-
-@section('head')
-
-@stop
-
-@section('footer')
-
-@stop
-
 @section('content')
+
+@section('pageImage', $pageImage)
+@section('pageTitle', $pageTitle)
+@section('pageDescription', $pageDescription)
+@section('pageKeywords', $pageKeywords)
 
 <div class="container">
 
@@ -21,16 +16,49 @@
 
     <div class="row media-item-opened">
         <div class="col-md-5">
-            <figure class="main-picture">
-                <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
-                <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
-            </figure>
+
+            @if(count($product->photos) == 1)
+
+                <figure class="main-picture">
+                    <img class="img-responsive" src="{{ asset($product->photoUrl) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                    <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
+                </figure>
+
+
+            @else
+
+
+                <figure class="main-picture main-picture2">
+
+
+                    <div class="demo">
+                        <ul id="lightSlider">
+                            <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}">
+                                <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" />
+                            </li>
+                            @foreach($product->photos as $photo)
+                                <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}">
+                                    <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}" />
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
+                </figure>
+
+            @endif
+
         </div>
         <div class="col-md-7">
             <div class="row">
                 <div class="col-sm-6 col-md-7">
-                    <h1 class="h3 title-media-item-opened"><strong>{{ $product->name }}, {{ $product->price }} руб.</strong></h1>
 
+                    <h1 class="h3 title-media-item-opened"><strong>{{ $product->name }}</strong></h1>
+
+                    <p><strong>Доставка {{ ($product->deliveryTime ? '~'.$product->deliveryTime : '') }}</strong>, бесплатно в {{ $product->shop->city->name_prepositional }}</p>
+
+                    <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong>{{ $product->clientPrice }}</strong></p>
 
                     <br><br>
                     <a href="{{ route('order.add', ['product_id' => $product->id]) }}" target="_blank" class="btn btn-lg btn-warning btn-block"><strong>Оформить заказ</strong></a>
@@ -55,6 +83,10 @@
                         -->
                     </ul>
                     <br>
+
+                    <ul class="text-info">
+                        <li>Букет и исполнитель проверены</li>
+                    </ul>
 
                 </div>
                 <div class="col-sm-6 col-md-5">
@@ -100,31 +132,6 @@
 
             <br><br>
 
-            <ul class="nav nav-tabs links-media-item-open">
-                <li role="presentation"><a href="#ispolnitel">Исполнитель</a></li>
-                <li role="presentation"><a href="#opisanie">Описание</a></li>
-                <li role="presentation"><a href="#chto-posle">Что после?</a></li>
-            </ul>
-
-            <br><br>
-
-            <div class="media">
-                <div class="media-body">
-                    <p class="h3 margin-top-null" id="ispolnitel"><strong>Исполнитель <a href="#">{{ $product->shop->name }}</a></strong></p>
-                    <ul class="list-inline list-checked-shop">
-                        <li>Премиум</li>
-                        <li>Проверен</li>
-                    </ul>
-                    <p>Работает пн-пт с 8 ч до 22 ч, сб-вс с 9 ч до 21 ч</p>
-
-                </div>
-                <div class="media-right">
-                    <img class="media-object img-circle" src="{{ asset('assets/front/images/1490109791_54681584.jpg') }}" alt="...">
-                </div>
-            </div>
-
-            <br>
-
             <p class="h3" id="opisanie"><strong>Описание</strong></p>
             <p>{{ $product->description }}</p>
 
@@ -133,56 +140,102 @@
             <div class="white-block">
                 <div class="media">
                     <div class="media-left">
-                        <img class="media-object" src="{{ asset('assets/front/img/ico/secure.svg') }}" alt="...">
+                        <img class="media-object" src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
                     </div>
                     <div class="media-body media-middle">
-                        <p class="h4"><strong>Защита покупателя</strong> <br>100% возврат средств.</p>
+                        <p class="h4">Доставка каждого букета гарантирована Floristum.ru<br>Исполнитель не получит оплату, в случае притензии к качеству.<br>100% возврат средств</p>
                     </div>
                 </div>
             </div>
 
             <br><br>
 
-            <p class="h3" id="chto-posle"><strong>Что после оформления заказа?</strong></p>
+            <p class="h3" id="chto-posle"><strong>Что после оплаты заказа?</strong></p>
             <br>
             <div class="row">
                 <div class="col-xs-6 col-sm-3">
                     <figure class="after-ord-icn">
-                        <img src="{{ asset('assets/front/img/ico/timer.svg') }}" alt="...">
-                        <figcaption>Магазин примет ваш заказ</figcaption>
+                        <span class="digital one">1</span>
+                        <figcaption>Флорист отправит Вам подтверждение заказа</figcaption>
                     </figure>
                 </div>
                 <div class="col-xs-6 col-sm-3">
                     <figure class="after-ord-icn">
-                        <img src="{{ asset('assets/front/img/ico/buket.svg') }}" alt="...">
-                        <figcaption>Соберёт букет и пришлёт фото до доставки</figcaption>
+                        <span class="digital two">2</span>
+                        <figcaption>Соберёт букет из свежих цветов</figcaption>
                     </figure>
                 </div>
                 <div class="col-xs-6 col-sm-3">
                     <figure class="after-ord-icn">
-                        <img src="{{ asset('assets/front/img/ico/pointmap.svg') }}" alt="...">
-                        <figcaption>Увидите передвижение курьера на карте</figcaption>
+                        <span class="digital three">3</span>
+                        <figcaption>Доставка цветов получателю</figcaption>
                     </figure>
                 </div>
                 <div class="col-xs-6 col-sm-3">
                     <figure class="after-ord-icn">
-                        <img src="{{ asset('assets/front/img/ico/feeds.svg') }}" alt="...">
-                        <figcaption>Оставляете отзыв о работе исполнителя</figcaption>
+                        <span class="digital four">4</span>
+                        <figcaption>Пожалуйста, оставте отзыв о доставке цветов</figcaption>
                     </figure>
                 </div>
             </div>
-
-            <br><br>
-
-            <p>Поделитесь этим букетом</p>
-            <ul class="list-inline list-shared">
-                <li><a class="fb" href="#">Поделиться</a></li>
-                <li><a class="vk" href="#">Поделиться</a></li>
-                <li><a class="pn" href="#">Запинить</a></li>
-            </ul>
         </div>
     </div>
 
 </div>
 
 @endsection
+
+
+@extends('layouts.site')
+
+@section('head')
+
+<link rel="stylesheet" href="{{ asset('assets/plugins/lightslider/css/lightslider.min.css') }}">
+
+<style>
+    .demo {
+        width:100%
+    }
+    .demo ul {
+        list-style: none outside none;
+        padding-left: 0;
+        margin-bottom:0;
+    }
+    .demo li {
+        display: block;
+        float: left;
+        margin-right: 6px;
+        cursor:pointer;
+    }
+    .demo img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+    }
+
+    .lSSlideOuter .lSPager.lSGallery li.active, .lSSlideOuter .lSPager.lSGallery li:hover {
+        border-radius: 0px !important;
+    }
+
+    .media-item-opened .main-picture2 figcaption {
+        bottom: 60px !important;
+    }
+</style>
+
+@stop
+
+@section('footer')
+    <script src="{{ asset('assets/plugins/lightslider/js/lightslider.min.js') }}" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function() {
+                $('#lightSlider').lightSlider({
+                        gallery: true,
+                        item: 1,
+                        loop: true,
+                        slideMargin: 0,
+                        thumbItem: 9
+                });
+        })
+    </script>
+@stop

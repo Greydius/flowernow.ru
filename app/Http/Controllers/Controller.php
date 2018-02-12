@@ -26,14 +26,24 @@ class Controller extends BaseController
 
                     $cookieCityId = !empty($_COOKIE['city']) ? $_COOKIE['city'] : null;
 
+                    $this->current_city = $request->_city;
+
+                    /*
                     if(empty($cookieCityId) || (!empty($this->current_city) && $cookieCityId != $this->current_city->id)) {
 
                             try{
                                     $location = \SypexGeo::get(request()->ip());
                                     $this->current_city = City::where('name', $location['city']['name_ru'])->first();
+
+                                    if(empty($this->current_city)) {
+                                            $ids = [(int)$cookieCityId, 637640];
+                                            $this->current_city = City::whereIn('id',$ids)->orderByRaw("FIELD(id, ".implode(',', $ids).")")->first();
+                                    }
                             }
                             catch(\Exception $e){
 
+                                    $ids = [(int)$cookieCityId, 637640];
+                                    $this->current_city = City::whereIn('id',$ids)->orderByRaw("FIELD(id, ".implode(',', $ids).")")->first();
                             }
 
                     } else {
@@ -43,6 +53,13 @@ class Controller extends BaseController
                     }
 
                     View::share('current_city', $this->current_city);
+
+                    */
+
+                    View::share('current_city', $this->current_city);
+                    $popular_city = City::$popular;
+                    shuffle($popular_city);
+                    View::share('popular_city', array_slice($popular_city, 11));
 
                     $this->user = Auth::user();
                     View::share('user', $this->user);

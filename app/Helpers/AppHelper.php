@@ -29,4 +29,15 @@ class AppHelper {
         public static function getCode() {
                 return rand(1000, 9999);
         }
+
+        public static function formatTimeToMinutes($time) {
+                if(!empty($time)) {
+                        $times = explode(':', $time);
+                        if(count($times) == 2) {
+                                return (int)$times[0]*60 + (int)$times[1];
+                        }
+                }
+
+                return 0;
+        }
 }

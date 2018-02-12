@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Model\City;
+use App\Model\Flower;
+use App\Model\ProductType;
 use App\Model\Region;
 use Illuminate\Http\Request;
 
@@ -49,6 +51,67 @@ class SeedController extends Controller
                         $item->save();
                         echo $item->id.'<br>';
                         exit();
+                }
+        }
+        
+        function addCitySlug() {
+
+                $cities = City::popular(300, false);
+
+                foreach ($cities as $city) {
+                        //echo "['".$city->name."' => '".$city->slug."'],<br>";
+                        echo "['name' => '".$city->name."', 'slug' => '".$city->slug."'],<br>";
+                }
+
+                exit();
+
+                $host = strtolower(request()->getHost());
+                $shortHost = str_replace('floristum.ru', '', $host);
+                $shortHost = str_replace('flowenow.ru', '', $shortHost);
+
+                $subdomains = explode('.', $shortHost);
+                if(count($subdomains) > 2) {
+                        abort(404);
+                }
+
+                $subdomain = current($subdomains);
+
+                if(empty($subdomain) || $subdomain == 'www') {
+                        $subdomain = 'moskva';
+                }
+
+                $city = City::whereSlug($subdomain)->firstOrFail();
+
+                dd($city);
+
+                echo current(explode('.',  $shortHost)); exit();
+                //echo current(explode('.',  request()->getHost())); exit();
+
+                $cities = City::where('population', '>', 0)->get();
+
+                foreach ($cities as $city) {
+                        $city->slug = str_slug($city->name, '-');
+                        //$city->save();
+                }
+        }
+
+        function addProductTypesSlug() {
+
+                $productTypes = ProductType::all();
+
+                foreach ($productTypes as $item) {
+                        $item->slug = str_slug($item->name, '-');
+                        //$item->save();
+                }
+        }
+
+        function addFlowersSlug() {
+
+                $flowers = Flower::all();
+
+                foreach ($flowers as $item) {
+                        $item->slug = str_slug($item->name, '-');
+                        $item->save();
                 }
         }
 }

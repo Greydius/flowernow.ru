@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
 
-class ProductComposition extends Model
+class ProductComposition extends MainModel
 {
     //
         protected $fillable = ['flower_id', 'qty'];

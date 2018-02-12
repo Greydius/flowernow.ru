@@ -7,6 +7,7 @@ use App\Model\Flower;
 use App\Model\Price;
 use App\Model\Product;
 use App\Model\ProductType;
+use App\Model\ProductPhoto;
 use App\Model\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -16,134 +17,155 @@ use Image;
 class ProductsController extends Controller
 {
     //
-        public function index() {
+        public function index(Request $request) {
 
-                $popularProduct = Product::popular($this->current_city->id);
+                $viewFile = 'front.index';
 
-                return view('front.index',[
+                $title = '';
+                $meta = [];
+
+                $productTypes = ProductType::where('show_on_main', '1')->get();
+                $currentType = null;
+
+                $popularProducts = [];
+                $popularProduct = [];
+
+                if(empty($request->product_type)) {
+                        $item = [];
+                        foreach ($productTypes as $productType) {
+                                $request->product_type = $productType->slug;
+                                $item['productType'] = $productType;
+                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
+                                $item['popularProductCount'] = count($item['popularProduct']);
+                                $popularProducts[] = $item;
+                        }
+
+                        unset($request->product_type);
+                } else {
+                        $title = $this->getTitle($request);
+                        $meta =  $this->getMeta($request);
+                        $viewFile = 'front.product.list';
+                        $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
+                        $currentType = ProductType::where('slug', $request->product_type)->first();
+                }
+
+                return view($viewFile,[
+                        'title' => $title,
+                        'meta' => $meta,
                         'popularProduct' => $popularProduct,
+                        'popularProducts' => $popularProducts,
                         'prices' => Price::all(),
                         'sizes' => Size::all(),
-                        'productTypes' => ProductType::where('show_on_main', '1')->get(),
+                        'productTypes' => $productTypes,
+                        'currentType' => $currentType,
                         'colors' => Color::all(),
                         'flowers' => Flower::orderBy('popularity', 'desc')->limit(9)->get(),
                 ]);
         }
 
         public function show($slug) {
-                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->first();
+                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->firstOrFail();
                 return view('front.product.show',[
-                        'product' => $product
+                        'product' => $product,
+                        'pageImage' => $product->photoUrl,
+                        'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
+                        'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',
+                        'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
                 ]);
         }
 
         public function products() {
 
-                $times = [
-                        [
-                                'value' => 30,
-                                'name' => '30мин'
-                        ],
-                        [
-                                'value' => 60,
-                                'name' => '1ч'
-                        ],
-                        [
-                                'value' => 90,
-                                'name' => '1ч 30мин'
-                        ],
-                        [
-                                'value' => 120,
-                                'name' => '2ч'
-                        ],
-                        [
-                                'value' => 150,
-                                'name' => '2ч 30мин'
-                        ],
-                        [
-                                'value' => 180,
-                                'name' => '3ч'
-                        ],
-                        [
-                                'value' => 210,
-                                'name' => '3ч 30мин'
-                        ],
-                        [
-                                'value' => 240,
-                                'name' => '4ч'
-                        ],
-                        [
-                                'value' => 270,
-                                'name' => '4ч 30мин'
-                        ],
-                        [
-                                'value' => 300,
-                                'name' => '5ч'
-                        ],
-                        [
-                                'value' => 330,
-                                'name' => '5ч 30мин'
-                        ],
-                        [
-                                'value' => 360,
-                                'name' => '6ч'
-                        ],
-                        [
-                                'value' => 390,
-                                'name' => '6ч 30мин'
-                        ],
-                        [
-                                'value' => 420,
-                                'name' => '7ч'
-                        ],
-                        [
-                                'value' => 450,
-                                'name' => '7ч 30мин'
-                        ],
-                        [
-                                'value' => 480,
-                                'name' => '8ч'
-                        ],
-                        [
-                                'value' => 510,
-                                'name' => '8ч 30мин'
-                        ],
-                        [
-                                'value' => 540,
-                                'name' => '9ч'
-                        ],
-                        [
-                                'value' => 570,
-                                'name' => '9ч 30мин'
-                        ],
-                        [
-                                'value' => 600,
-                                'name' => '10ч'
-                        ],
-                        [
-                                'value' => 630,
-                                'name' => '10ч 30мин'
-                        ],
-                        [
-                                'value' => 660,
-                                'name' => '11ч'
-                        ],
-                        [
-                                'value' => 690,
-                                'name' => '11ч 30мин'
-                        ],
-                        [
-                                'value' => 720,
-                                'name' => '12ч'
-                        ],
-                ];
+                $times = \App\Helpers\Data::times();
 
                 return view('admin.products.list', [
                         'productTypes' => ProductType::all(),
                         'colors' => Color::all(),
-                        'flowers' => Flower::all(),
+                        'flowers' => Flower::orderBy('popularity', 'desc')->get(),
                         'times' => $times
                 ]);
+        }
+
+        public function products2() {
+
+                $times = \App\Helpers\Data::times();
+
+                return view('admin.products.list2', [
+                        'productTypes' => ProductType::all(),
+                        'colors' => Color::all(),
+                        'flowers' => Flower::orderBy('popularity', 'desc')->get(),
+                        'times' => $times
+                ]);
+        }
+
+        public function uploadPhoto($id, Request $request) {
+                $photo = Input::all();
+
+                $validator = Validator::make($photo, Product::$photoRules, Product::$photoRulesMessages);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'message' => $validator->messages()->first(),
+                        'code' => 400
+                    ], 400);
+
+                }
+
+                $shop = $this->user->getShop();
+
+                $photo = $photo['file'];
+
+                if($this->user->admin) {
+                        $product = Product::find($id);
+                } else {
+                        $product = $shop->products()->find($id);
+                }
+
+                if(!empty($product)) {
+
+                        $shop_id = $product->shop_id;
+
+                        $extension = $photo->getClientOriginalExtension();
+
+                        $filename = 'p'.$shop_id.'_'.time().'_'.rand(10000, 99999).'.'.$extension;
+                        $filePath = Product::$fileUrl.$shop_id.'/';
+                        $fullFileName = $filePath . $filename;
+
+                        if(!file_exists(public_path($filePath))) {
+                                \File::makeDirectory(public_path($filePath));
+                        }
+
+                        Image::make($photo)->save( public_path($fullFileName ) );
+
+                        $filePath = Product::$fileUrl.'632x632/'.$shop_id.'/';
+                        $fullFileName = $filePath . $filename;
+
+                        if(!file_exists(public_path($filePath))) {
+                                \File::makeDirectory(public_path($filePath));
+                        }
+
+                        Image::make($photo)->fit(632, 632)->save( public_path($fullFileName ) );
+
+                        $productPhoto = new ProductPhoto();
+                        $productPhoto->product_id = $id;
+                        $productPhoto->photo = $filename;
+                        $productPhoto->save();
+
+                        return response()->json([
+                            'error' => false,
+                            'photo' => ['photo' => $productPhoto->photo, 'id' => $productPhoto->id, 'product_id' => $productPhoto->product_id, 'priority' => ProductPhoto::where('product_id', $productPhoto->product_id)->count()],
+                            'id' => $id,
+                            'code'  => 200
+                        ], 200);
+                }
+
+                return response()->json([
+                        'error' => true,
+                        'message' => 'Товар не найден',
+                        'code' => 400
+                ], 400);
         }
 
         public function upload(Request $request) {
@@ -210,9 +232,11 @@ class ProductsController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $response['products'] = Product::with('compositions.flower')->orderBy('id', 'desc')->get();
+                                $response['products'] = Product::with('compositions.flower')->with('photos')->with('shop')->orderBy('id', 'desc')->get();
+                                //$products = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->paginate(15);
+                                //dd($products->links());
                         } else {
-                                $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->orderBy('id', 'desc')->get();
+                                $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->with('photos')->orderBy('id', 'desc')->get();
                         }
 
                 } catch (\Exception $e){
@@ -220,6 +244,127 @@ class ProductsController extends Controller
                 }finally{
                     return response()->json($response, $statusCode);
                 }
+        }
+
+        public function apiProductDelete($id) {
+
+                $statusCode = 200;
+                $message = '';
+
+                try{
+                        if($this->user->admin) {
+                                $product = Product::find($id);
+                        } else {
+                                $product = $this->user->getShop()->products()->where('id', $id)->first();
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->delete();
+                        }
+
+                } catch (\Exception $e){
+                        $statusCode = 400;
+                        $message = $e->getMessage();
+                }finally{
+                        return response()->json([
+                                'message' => $message,
+                                'code' => $statusCode
+                        ], $statusCode);
+                }
+        }
+
+        public function apiChangePriority($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        if($this->user->admin) {
+                                $product = Product::with('photos')->find($id);
+                        } else {
+                                $product = $this->user->getShop()->products()->with('photos')->where('id', $id)->first();
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                if(!empty($request->priority)) {
+                                        $i = 0;
+                                        foreach ($request->priority as $value) {
+                                                $photo = $product->photos()->find($value);
+                                                if(!empty($photo)) {
+                                                        $photo->priority = $i;
+                                                        if($photo->save() && $i == 0 && $photo->photo) {
+                                                                $product->photo = $photo->photo;
+                                                                $product->save();
+                                                        }
+                                                        $i++;
+                                                }
+                                        }
+                                }
+                        }
+
+                        $return['photos'] = $product->photos()->get();
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
+        public function apiDeletePhoto($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        if($this->user->admin) {
+                                $photo = ProductPhoto::find($id);
+                        } else {
+                                $shop_id = $this->user->getShop()->id;
+                                $photo = ProductPhoto::with('product')->whereHas('product', function($query) use ($shop_id) {
+                                        $query->where('shop_id', $shop_id);
+                                })->where('id', $id)->first();
+                        }
+
+                        if(empty($photo)) {
+                                throw new \Exception('Фото не найдено');
+                        } else {
+
+                                if(ProductPhoto::where('product_id', $photo->product_id)->count() > 1) {
+                                        $photo->delete();
+
+                                        $photos = ProductPhoto::where('product_id', $photo->product_id)->get();
+
+                                        if(!empty($photos)) {
+                                                $i = 0;
+                                                foreach ($photos as $photo) {
+                                                        $photo->priority = $i;
+                                                        $photo->save();
+                                                        $i++;
+                                                }
+                                        }
+                                }
+                        }
+
+                        $return['photos'] = ProductPhoto::where('product_id', $photo->product_id)->get();
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
         }
 
         public function update(Request $request) {
@@ -267,13 +412,21 @@ class ProductsController extends Controller
                 $compositions = $request->input('compositions');
                 $newCompositions = [];
 
-                if(!empty($compositions)) {
+                if (!empty($compositions)) {
                         foreach ($compositions as $composition) {
-                                if(!empty($composition['flower_id'])) {
-                                        $newCompositions[] = [
-                                                'flower_id' => $composition['flower_id'],
-                                                'qty' => $composition['qty']
-                                        ];
+                                if (!empty($composition['flower_id'])) {
+                                        if (!empty($composition['qty'])) {
+                                                $newCompositions[] = [
+                                                        'flower_id' => $composition['flower_id'],
+                                                        'qty' => $composition['qty']
+                                                ];
+                                        } else {
+                                                return response()->json([
+                                                        'error' => true,
+                                                        'message' => 'Не указано кол-во в составе',
+                                                        'code' => 400
+                                                ], 400);
+                                        }
                                 }
                         }
 
@@ -293,5 +446,171 @@ class ProductsController extends Controller
                         'code' => 400
                 ], 400);
 
+        }
+
+        public function apiPopular(Request $request) {
+                $statusCode = 200;
+                $response = [
+                        'title' => '',
+                        'products' => []
+                ];
+
+                try{
+                        $response['title'] = $this->getTitle($request);
+                        $response['products'] = Product::popular($this->current_city->id, $request, (!empty($request->page) ? $request->page : 1));
+
+                        if(!$response['products']->total()) {
+                                $productTypes = ProductType::where('show_on_main', '1')->get();
+                                $item = [];
+                                $popularProducts = [];
+                                $_request = new Request();
+                                foreach ($productTypes as $productType) {
+                                        $_request->product_type = $productType->slug;
+                                        $item['productType'] = $productType;
+                                        //$item['popularProduct'] = Product::popular($this->current_city->id, $_request, 1, 6)->makeHidden(['price']);
+                                        $result = Product::popular($this->current_city->id, $_request, 1, 6);
+                                        $data = $result;
+                                        $result = $result->makeHidden(['price']);
+                                        $data->data = $result;
+
+                                        $item['popularProduct'] = $data;
+
+                                        $item['popularProductCount'] = count($item['popularProduct']);
+                                        $popularProducts[] = $item;
+                                }
+
+                                if(!empty($popularProducts)) {
+                                        $response['popularProducts'] = $popularProducts;
+                                }
+
+                                unset($_request->product_type);
+                        }
+                } catch (\Exception $e){
+                        $statusCode = 400;
+                }finally{
+                        return response()->json($response, $statusCode);
+                }
+        }
+
+        public function getTitle(Request $request) {
+                $title = [];
+                $title['type'] = 'Букеты и композиции';
+
+                if(!empty($request->productType)) {
+                        $productType = ProductType::find($request->productType);
+                        if(!empty($productType)) {
+                                $title['type'] = $productType->alt_name;
+                        }
+                } elseif(!empty($request->product_type)) {
+                        $productType = ProductType::where('slug', $request->product_type)->first();
+                        if(!empty($productType)) {
+                                $title['type'] = $productType->alt_name;
+                        }
+                }
+
+                //$title['color'] = null;
+                if(!empty($request->color)) {
+                        $color = Color::find($request->color);
+                        if(!empty($color)) {
+                                $title['color'] = 'цвет: '.mb_strtolower($color->name);
+                        }
+                }
+
+                //$title['flowers'] = null;
+                if(!empty($request->flowers) && is_array($request->flowers)) {
+                        $flowers = Flower::whereIn('id', $request->flowers)->get();
+                        if(!empty($flowers)) {
+                                $flowersName = [];
+                                foreach ($flowers as $flower) {
+                                        $flowersName[] = mb_strtolower($flower->name);
+                                }
+
+                                if(!empty($flowersName)) {
+                                        $title['flowers'] = 'с составом: '.implode(', ', $flowersName);
+                                }
+                        }
+                }
+
+                //$title['price'] = null;
+                if(!empty($request->productPrice)) {
+                        $price = Price::find($request->productPrice);
+                        if(!empty($price)) {
+                                $title['price'] = 'по цене '.mb_strtolower($price->name);
+                        }
+                } elseif(!empty($request->price_from) || !empty($request->price_to)) {
+                        $title['price'] = 'по цене ';
+                        if(!empty($request->price_from)) {
+                                $title['price'] .= (int)$request->price_from >= 2000 ? ((int)$request->price_from + 1).' - ' : null;
+                        }
+
+                        if(!empty($request->price_to)) {
+                                $title['price'] .= (int)$request->price_to < 9999999 ? ((int)$request->price_to == 1999 ? 'до ' : '') . ((int)$request->price_to + 1) : null;
+                        }
+
+                        $title['price'] .= ' руб';
+                }
+
+                return implode(', ', $title);
+        }
+
+        public function getMeta(Request $request) {
+
+                $meta = [];
+
+
+                $meta['title'] = 'Букеты и композиции';
+                $meta['description'] = 'Заказать ';
+                $meta['keywords'] = '';
+
+                if(!empty($request->product_type)) {
+                        $productType = ProductType::where('slug', $request->product_type)->first();
+                        if(!empty($productType)) {
+                                $meta['title'] = $productType->alt_name;
+                        }
+                }
+
+                $meta['description'] .= mb_strtolower($meta['title']);
+                $meta['description'] .= ' в г '.$this->current_city->name.' с доставкой';
+
+                $meta['keywords'] .= mb_strtolower($meta['title']);
+                
+                if(!empty($request->flowers) && is_array($request->flowers)) {
+                        $flowers = Flower::whereIn('id', $request->flowers)->get();
+                        if(!empty($flowers)) {
+                                $flowersName = [];
+                                foreach ($flowers as $flower) {
+                                        $flowersName[] = mb_strtolower($flower->name);
+                                }
+
+                                if(!empty($flowersName)) {
+                                        $meta['title'] .= ' состав: '.implode(', ', $flowersName);
+                                        $meta['keywords'] .= ', '. implode(', ', $flowersName);
+                                }
+                        }
+                }
+
+                $meta['title'] .= ' доставка в г '.$this->current_city->name;
+                $meta['keywords'] .= ', '.$this->current_city->name;
+
+                return $meta;
+        }
+        
+        public function filter($query = null, Request $request) {
+                $queries = explode('/', $query);
+                if(count($queries) == 2) {
+                        $request->product_type = $queries[0];
+                        if($queries[1] != 'vse-cvety') {
+                                $flower = Flower::where('slug', $queries[1])->first();
+                                if(count($flower)) {
+                                        if(empty($request->flowers)) {
+                                                $request->flowers = [];
+                                        }
+                                        $request->flowers = array_merge($request->flowers, [$flower->id]);
+                                }
+                        }
+                        return $this->index($request);
+                }
+
+                return redirect()->route('front.index');
         }
 }

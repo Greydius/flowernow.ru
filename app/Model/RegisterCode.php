@@ -2,9 +2,9 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
 
-class RegisterCode extends Model
+class RegisterCode extends MainModel
 {
     //
         static function lastCode($phone) {

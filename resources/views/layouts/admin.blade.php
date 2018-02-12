@@ -17,17 +17,21 @@
 		<!--begin::Base Styles -->
 		<link href="{{ asset('assets/admin/vendors/base/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('assets/admin/demo/default/base/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-		<link href="{{ asset('assets/admin/css/custom.css') }}" rel="stylesheet" type="text/css" />
+		<link href="{{ asset('assets/admin/css/custom.css?v=1') }}" rel="stylesheet" type="text/css" />
 		<!--end::Base Styles -->
 		@yield('head')
-		<link rel="shortcut icon" href="assets/demo/default/media/img/logo/favicon.ico" />
+		
+		<link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
 
 		<script type="text/javascript">
 			var jsonData={};
 			var routes = {};
-			routes.shop = '{{ route('admin.api.shop.profile')  }}';
-			routes.products = '{{ route('admin.api.products.list')  }}';
+			routes.shop = '{{ route('admin.api.shop.profile') }}';
+			routes.products = '{{ route('admin.api.products.list') }}';
+			routes.productDelete = '/admin/api/v1/product/delete/';
+			routes.orders = '{{ route('admin.api.orders.list') }}';
 		</script>
+
 	</head>
 	<!-- end::Head -->
 	<!-- end::Body -->
@@ -42,8 +46,8 @@
 						<div class="m-stack__item m-brand  m-brand--skin-dark ">
 							<div class="m-stack m-stack--ver m-stack--general">
 								<div class="m-stack__item m-stack__item--middle m-brand__logo">
-									<a href="index.html" class="m-brand__logo-wrapper">
-										<img alt="" src="assets/demo/default/media/img/logo/logo_default_dark.png"/>
+									<a href="/" class="m-brand__logo-wrapper">
+										<img alt="floristum.ru" src="{{ asset('images/logo_rectangle_white.png') }}">
 									</a>
 								</div>
 								<div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -64,6 +68,18 @@
 						</div>
 
 						<div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
+							<div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark "  >
+								<ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+									<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">
+										<a  href="{{ route('logout') }}" class="m-menu__link">
+											<i class="m-menu__link-icon flaticon-logout"></i>
+											<span class="m-menu__link-text">
+												Выход
+											</span>
+										</a>
+									</li>
+								</ul>
+							</div>
 						</div>
 
 					</div>
@@ -85,7 +101,22 @@
 		 data-menu-scrollable="false" data-menu-dropdown-timeout="500"
 		>
 						<ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
-							<li class="m-menu__item  m-menu__item--active">
+
+							<li class="m-menu__item {{ in_array(\Request::route()->getName(), ['admin.orders', 'admin.order.view']) ? 'm-menu__item--active' : null }}">
+								<a  href="{{ route('admin.orders') }}" class="m-menu__link ">
+									<i class="m-menu__link-icon flaticon-cart"></i>
+									<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Заказы
+											</span>
+
+										</span>
+									</span>
+								</a>
+							</li>
+
+							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.products' ? 'm-menu__item--active' : null }}">
 								<a  href="{{ route('admin.products') }}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-open-box"></i>
 									<span class="m-menu__link-title">
@@ -99,7 +130,7 @@
 								</a>
 							</li>
 
-							<li class="m-menu__item" >
+							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.profile' ? 'm-menu__item--active' : null }}" >
 								<a  href="{{ route('admin.shop.profile') }}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-profile-1"></i>
 									<span class="m-menu__link-title">
@@ -190,8 +221,39 @@
 
 		<script type="text/javascript">
 			jsonData.shop = {!! $shop->toJson() !!};
+			angular.module("flowApp").constant("CSRF_TOKEN", '{{ csrf_token() }}');
     	</script>
 		<!--end::Base Scripts -->
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter47326329 = new Ya.Metrika({
+                    id:47326329,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/47326329" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 	</body>
 	<!-- end::Body -->
 </html>

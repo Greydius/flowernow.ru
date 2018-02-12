@@ -2,9 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Database\Eloquent\Model;
+use App\MainModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Price extends Model
+class Price extends MainModel
 {
-    //
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
 }
