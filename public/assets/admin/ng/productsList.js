@@ -5,16 +5,26 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
         $scope.products = [];
         $scope.flowers = jsonData.flowers;
         $rootScope.photos = [];
+        $scope.prev_page = "";
+        $scope.next_page = "";
+        $scope.product_url = routes.products;
 
         $scope.getProducts = function() {
+
+                $scope.prev_page = "";
+                $scope.next_page = "";
+
                 $http({
 
                         method: 'GET',
-                        url:  routes.products,
+                        url:  $scope.product_url,
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 
                 }).then(function (response) {
-                        $scope.products = response.data.products;
+                        //$scope.products = response.data.products;
+                        $scope.products = response.data.products.data;
+                        $scope.prev_page = response.data.products.prev_page_url;
+                        $scope.next_page = response.data.products.next_page_url;
                 }, function (response) {
 
 
@@ -23,6 +33,11 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 });
 
         };
+
+        $scope.getProductsPage = function(page) {
+                $scope.product_url = page;
+                $scope.getProducts();
+        }
 
         $scope.refreshPhoto = function (id, photo) {
 
@@ -217,6 +232,61 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 });
         }
 
+        $scope.approveProduct = function (item) {
+
+                var status = 1;
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/changeStatusProduct/'+item.id,
+                        data: {
+                                'status': status
+                        }
+
+                }).then(function (response) {
+                        item.status = status;
+                }, function (response) {
+
+
+                }).then(function (response) {
+
+                });
+        }
+
+        $scope.banProduct = function (item) {
+
+                var status = 1;
+
+                $scope.modalInstance = ModalService.showModal({
+                        templateUrl: 'ban-item-modal.html',
+                        controller: 'productBan',
+                        inputs: {
+                                item: item
+                        },
+                        scope: $scope
+                });
+                $scope.modalInstance.then(function(modal) {
+
+                        modal.element.modal();
+
+                        modal.element.on('shown.bs.modal', function() {
+
+                        });
+
+                        modal.close.then(function(result) {
+                                if(result) {
+                                        angular.forEach($scope.products, function(value, key) {
+                                                if(value.id == result.id) {
+                                                        value.status = 3;
+                                                        value.status_comment = result.status_comment;
+                                                }
+                                        });
+                                }
+                        });
+                });
+        }
+
         $scope.getProducts();
 });
 
@@ -254,6 +324,10 @@ angular.module('flowApp').controller('productEdit', function($scope, close, item
                                         result.photo = value.photo;
                                 }
                         })
+
+                        if(response.data.product) {
+                                result.status = response.data.product.status;
+                        }
 
                         close(result, 500);
 
@@ -295,6 +369,39 @@ angular.module('flowApp').controller('productDelete', function($scope, close, it
                         url:  routes.productDelete + $scope.item.id,
                         data: {'csrf-token': CSRF_TOKEN},
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+                }).then(function (response) {
+
+                        $element.modal('hide');
+                        close(result, 500);
+
+                }, function (response) {
+                        if(response.data.error && response.data.message) {
+                                    toastr.error(response.data.message);
+                        } else {
+                                    toastr.error('Ошибка!');
+                        }
+                }).then(function (response) {
+
+                });
+
+                /*
+                $element.modal('hide');
+                close(result, 500);
+                */
+        };
+})
+
+angular.module('flowApp').controller('productBan', function($scope, close, item, $element, $http, CSRF_TOKEN) {
+        $scope.item = angular.copy(item);
+
+        $scope.save = function(result) {
+
+                $http({
+
+                        method: 'POST',
+                        url:   '/admin/api/v1/product/changeStatusProduct/'+item.id,
+                        data: {'status': 3, 'status_comment': result.status_comment}
 
                 }).then(function (response) {
 

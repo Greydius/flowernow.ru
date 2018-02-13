@@ -232,7 +232,7 @@ class ProductsController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $response['products'] = Product::with('compositions.flower')->with('photos')->with('shop')->orderBy('id', 'desc')->get();
+                                $response['products'] = Product::with(['compositions.flower', 'photos', 'shop'])->orderBy('id', 'desc')->paginate(16);
                                 //$products = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->paginate(15);
                                 //dd($products->links());
                         } else {
@@ -367,6 +367,43 @@ class ProductsController extends Controller
 
         }
 
+        public function apiChangeStatusProduct($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        $product = null;
+
+                        if($this->user->admin) {
+                                $product = Product::find($id);
+                        }
+
+                        if(empty($product) || empty($request->status)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                if($request->status >= 1 && $request->status <= 3) {
+                                        $product->status = $request->status;
+
+                                        if($request->status == 3) {
+                                                $product->status_comment = !empty($request->status_comment) ? $request->status_comment : null;
+                                        }
+
+                                        $product->save();
+                                }
+                        }
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
         public function update(Request $request) {
 
                 $validator = Validator::make($request->all(), Product::$productRules, Product::$productRulesMessages);
@@ -433,10 +470,17 @@ class ProductsController extends Controller
                         $product->compositions()->createMany($newCompositions);
                 }
 
+                $updated_at = $product->updated_at;
+
                 if($product->save()) {
+                        if($updated_at != $product->updated_at) {
+                                $product->status = 2;
+                                $product->save();
+                        }
                         return response()->json([
-                            'error' => false,
-                            'code'  => 200
+                                'error' => false,
+                                'code' => 200,
+                                'product' => $product
                         ], 200);
                 }
 

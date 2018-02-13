@@ -43,3 +43,14 @@
     font-size: 22px;
     line-height: 14px;
 }
+
+.products-btns {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    display: none;
+}
+
+.products-img-wraper:hover .products-btns {
+    display: block;
+}

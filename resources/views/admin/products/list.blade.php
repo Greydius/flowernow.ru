@@ -47,10 +47,21 @@
 
                     <form class="m-form m-form--fit">
 
-                        <div class="m-portlet__body" style="padding-top: 0;">
+                        <div class="m-portlet__body" style="padding-top: 0; padding-bottom: 0;">
                             <div class="row">
-                                <div class="col-xl-12">
-                                    <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
+                                <div class="col-xl-12 products-img-wraper">
+                                    <div class="products-btns">
+                                        <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Бан">
+                                            <i class="fa flaticon-signs-2"></i>
+                                        </a>
+
+                                        <a href ng-click="approveProduct(product)" class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Одобрить" ng-show="product.status != 1">
+                                            <i class="fa flaticon-interface"></i>
+                                        </a>
+                                    </div>
+                                    <a href ng-click="editItem($event, product)" style="display: block">
+                                        <img ng-src="<% product.photoUrl %>" width="100%" />
+                                    </a>
                                 </div>
                             </div>
 
@@ -68,14 +79,45 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row" style="min-height: 40px;">
+                                <div class="col-xl-12">
+                                    <div style="    padding: 5px; font-size: 10px">
+                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 0">
+                                            <a href class="text-danger" ng-click="editItem($event, product)">
+                                                Не заполнены обязательные поля <span style="font-size: 20px">*</span>
+                                            </a>
+
+                                        </div>
+
+                                        <div class="m-widget4__ext text-success" ng-show="product.status == 2">
+                                            На проверке у администратора
+                                        </div>
+
+                                        <div class="m-widget4__ext text-success" ng-show="product.status == 1">
+                                            Опубликовано
+                                        </div>
+
+                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 3">
+                                            <a href class="text-danger" ng-click="editItem($event, product)">
+                                                Отклонено модератором
+                                            </a>
+
+                                            <span class="m-badge m-badge--danger" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>" ng-show="product.status_comment">?</span>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
-                            <div class="m-form__actions" style="    padding: 5px;">
+                            <div class="m-form__actions" style="padding: 5px;">
                                 <button type="reset" class="btn btn-secondary btn-sm" ng-click="editItem($event, product)">
                                     <i class="flaticon-edit"></i> Редактировать
                                 </button>
-                                <button type="reset" class="btn btn-secondary btn-sm" ng-click="deleteItem(product)">
+                                <button type="reset" class="btn btn-secondary btn-sm pull-right" ng-click="deleteItem(product)">
                                     <i class="flaticon-circle"></i> Удалить
                                 </button>
                             </div>
@@ -87,6 +129,17 @@
 
             </div>
 
+            <div class="col-md-12" style="min-height: 30px;">
+
+                <button ng-click="getProductsPage(prev_page)" title="Предыдущая страница" data-href="<% prev_page %>" type="button" class="btn m-btn--square  btn-outline-info btn-sm pull-left" ng-show="prev_page">
+                    <i class="la la-angle-left"></i>
+                </button>
+
+                <button ng-click="getProductsPage(next_page)" title="Следующая страница" type="button" class="btn m-btn--square  btn-outline-info btn-sm pull-right" ng-show="next_page">
+                    <i class="la la-angle-right"></i>
+                </button>
+
+            </div>
 
         </div>
     </div>
@@ -115,7 +168,7 @@
 
                                 <div class="row product-photos">
                                     <div class="col-md-2 product-photos-container" style="width: 80px; height: 80px" ng-repeat="photo in photos | orderBy:'priority'">
-                                        <img ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                        <img ng-src="<% item.photoUrl %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
                                         <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
                                     </div>
 
@@ -325,6 +378,36 @@
         </div>
     </script>
 
+    <script type="text/ng-template" id="ban-item-modal.html">
+        <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Забанить товар?
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea  class="form-control" ng-model="item.status_comment" rows="6" placeholder="Укажите причину бана товара"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Закрыть
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="save(item)">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
 
 @endsection
 
@@ -351,7 +434,7 @@
 @stop
 
 @section('footer')
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js" type="text/javascript"></script>
+    <script src="{{ asset('assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/products-list.js?v=2') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/ng/productsList.js?v=3') }}" type="text/javascript"></script>
     <script type="text/javascript">
