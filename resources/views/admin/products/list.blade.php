@@ -50,7 +50,7 @@
                         <div class="m-portlet__body" style="padding-top: 0; padding-bottom: 0;">
                             <div class="row">
                                 <div class="col-xl-12 products-img-wraper">
-                                    <div class="products-btns">
+                                    <div class="products-btns" ng-show="product.shop">
                                         <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Бан">
                                             <i class="fa flaticon-signs-2"></i>
                                         </a>
