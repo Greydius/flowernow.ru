@@ -115,7 +115,7 @@
                 </div>
 
                 <div class="filter-block filter-product-checker">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="false" aria-controls="filter1"><span class="pull-left">Цены</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="false" aria-controls="filter1"><span class="pull-left">Цена</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
                     <div class="collapse" id="filter-product-price">
                         <ul class="list-unstyled">
                             @foreach ($prices as $price)
@@ -127,7 +127,7 @@
 
 
                 <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="false" aria-controls="filter5"><span class="pull-left">Цвет</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="false" aria-controls="filter5"><span class="pull-left">Цветовая гамма</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
                     <div class="collapse" id="filter-product-color">
                         <div class="row">
                             @foreach ($colors as $color)
