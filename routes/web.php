@@ -140,12 +140,25 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         ]);
 
         /* SHOPS*/
+
+        Route::group(['middleware' => 'is-admin'], function () {
+                Route::get('shops', [
+                        'uses' => 'ShopsController@shops',
+                        'as' => 'admin.shop.list'
+                ]);
+
+                Route::get('shop/{id}', [
+                        'uses' => 'ShopsController@profile',
+                        'as' => 'admin.shop.profile_edit'
+                ]);
+        });
+
         Route::get('shop', [
                 'uses' => 'ShopsController@profile',
                 'as' => 'admin.shop.profile'
         ]);
 
-        Route::post('shop', [
+        Route::post('shop/{id}', [
                 'uses' => 'ShopsController@update',
                 'as' => 'admin.shop.update'
         ]);
@@ -155,12 +168,12 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.shop.profile2'
         ]);
 
-        Route::post('shop/uploadLogo', [
+        Route::post('shop/uploadLogo/{id}', [
                 'uses' => 'ShopsController@uploadLogo',
                 'as' => 'admin.shop.uploadLogo'
         ]);
 
-        Route::post('shop/uploadPhoto', [
+        Route::post('shop/uploadPhoto/{id}', [
                 'uses' => 'ShopsController@uploadPhoto',
                 'as' => 'admin.shop.uploadPhoto'
         ]);
@@ -196,10 +209,23 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         Route::group(['prefix' => 'api/v1'], function() {
 
                 /* SHOPS*/
+
+                Route::get('shop/{id}', [
+                        'uses' => 'ShopsController@apiProfile',
+                        'as' => 'admin.api.shop.profile'
+                ]);
+
                 Route::get('shop', [
                         'uses' => 'ShopsController@apiProfile',
                         'as' => 'admin.api.shop.profile'
                 ]);
+
+                Route::group(['middleware' => 'is-admin'], function () {
+                        Route::get('shops', [
+                                'uses' => 'ShopsController@apiList',
+                                'as' => 'admin.api.shops.list'
+                        ]);
+                });
 
                 /* PRODUCTS*/
                 Route::get('products', [

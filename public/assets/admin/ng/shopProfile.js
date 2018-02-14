@@ -12,7 +12,7 @@ angular.module('flowApp').controller('shopProfile', function($scope, $element, $
                 $http({
 
                         method: 'GET',
-                        url:  routes.shop,
+                        url:  routes.shop + '/' + $('input[name="id"]').val(),
                         //data: $.param(data),
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 

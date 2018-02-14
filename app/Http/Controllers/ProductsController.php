@@ -231,12 +231,11 @@ class ProductsController extends Controller
                 ];
 
                 try{
+                        $perPage = 16;
                         if($this->user->admin) {
-                                $response['products'] = Product::with(['compositions.flower', 'photos', 'shop'])->orderBy('id', 'desc')->paginate(16);
-                                //$products = Product::with('compositions.flower')->with('shop')->orderBy('id', 'desc')->paginate(15);
-                                //dd($products->links());
+                                $response['products'] = Product::with(['compositions.flower', 'photos', 'shop'])->orderBy('id', 'desc')->paginate($perPage);
                         } else {
-                                $response['products'] = $this->user->getShop()->products()->with('compositions.flower')->with('photos')->orderBy('id', 'desc')->get();
+                                $response['products'] = $this->user->getShop()->products()->with(['compositions.flower', 'photos'])->orderBy('id', 'desc')->paginate($perPage);
                         }
 
                 } catch (\Exception $e){

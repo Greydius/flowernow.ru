@@ -17,10 +17,23 @@ use Image;
 class ShopsController extends Controller
 {
     //
-        public function profile() {
+        public function shops() {
+
+                return view('admin.shop.list', [
+
+                ]);
+        }
+
+        public function profile($id = null) {
+
+                if(!empty($id)) {
+                        $shop = Shop::findOrFail($id);
+                } else {
+                        $shop = $this->user->getShop();
+                }
 
                 return view('admin.shop.profile', [
-
+                        'shop' => $shop
                 ]);
         }
 
@@ -35,15 +48,21 @@ class ShopsController extends Controller
                 ]);
         }
 
-        public function apiProfile() {
+        public function apiProfile($id = null) {
 
                 $statusCode = 200;
                 $response = [
                         'shop' => []
                 ];
 
+                if($this->user->admin) {
+                        $shop = Shop::findOrFail($id);
+                } else {
+                        $shop = $this->user->getShop();
+                }
+
                 try{
-                        $response['shop'] = $this->user->getShop();
+                        $response['shop'] = $shop;
                 } catch (\Exception $e){
                     $statusCode = 400;
                 }finally{
@@ -51,9 +70,24 @@ class ShopsController extends Controller
                 }
         }
 
-        public function uploadLogo(Request $request) {
+        public function uploadLogo($id, Request $request) {
 
                 $photo = Input::all();
+
+                $shop = Shop::with(['users'])->findOrFail($id);
+                $user_id = $this->user->id;
+
+                if(!$this->user->admin) {
+                        $user_shop = $this->user->getShop();
+                        if($user_shop->id != $shop->id) {
+                                return response()->json([
+                                    'error' => true,
+                                    'code'  => 403
+                                ], 403);
+                        }
+                } else {
+                        $user_id = $shop->users[0]->id;
+                }
 
                 $validator = Validator::make($photo, Shop::$logoRules, Shop::$logoRulesMessages);
 
@@ -75,8 +109,8 @@ class ShopsController extends Controller
 
                 //$filename = Slug::make($originalNameWithoutExt, '_');
                 $filename = str_slug($originalNameWithoutExt, '_').'.'.$extension;
-                $filename = 'logo_'.$this->user->id.'_'.time().'.'.$extension;
-                $filePath = Shop::$fileUrl.$this->user->id.'/';
+                $filename = 'logo_'.$user_id.'_'.time().'.'.$extension;
+                $filePath = Shop::$fileUrl.$user_id.'/';
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
@@ -84,8 +118,6 @@ class ShopsController extends Controller
                 }
 
                 Image::make($photo)->save( public_path($fullFileName ) );
-
-                $shop = $this->user->getShop();
 
                 $shop->logo = $fullFileName;
 
@@ -98,9 +130,25 @@ class ShopsController extends Controller
 
         }
 
-        public function uploadPhoto(Request $request) {
+        public function uploadPhoto($id, Request $request) {
 
                 $photo = Input::all();
+
+                $shop = Shop::with(['users'])->findOrFail($id);
+                $user_id = $this->user->id;
+
+                if(!$this->user->admin) {
+                        $user_shop = $this->user->getShop();
+                        if($user_shop->id != $shop->id) {
+                                return response()->json([
+                                    'error' => true,
+                                    'code'  => 403
+                                ], 403);
+                        }
+                } else {
+                        $user_id = $shop->users[0]->id;
+                }
+
 
                 $validator = Validator::make($photo, Shop::$logoRules, Shop::$logoRulesMessages);
 
@@ -122,8 +170,8 @@ class ShopsController extends Controller
 
                 //$filename = Slug::make($originalNameWithoutExt, '_');
                 $filename = str_slug($originalNameWithoutExt, '_').'.'.$extension;
-                $filename = 'photo_'.$this->user->id.'_'.time().'.'.$extension;
-                $filePath = Shop::$fileUrl.$this->user->id.'/';
+                $filename = 'photo_'.$user_id.'_'.time().'.'.$extension;
+                $filePath = Shop::$fileUrl.$user_id.'/';
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
@@ -131,8 +179,6 @@ class ShopsController extends Controller
                 }
 
                 Image::make($photo)->save( public_path($fullFileName ) );
-
-                $shop = $this->user->getShop();
 
                 $shop->photo = $fullFileName;
 
@@ -145,13 +191,17 @@ class ShopsController extends Controller
 
         }
 
-        public function update(Request $request) {
+        public function update($id, Request $request) {
 
                 $statusCode = 200;
                 $response = [];
 
                 try{
-                        $shop = $this->user->getShop();
+                        if(!$this->user->admin) {
+                                $shop = $this->user->getShop();
+                        } else {
+                                $shop = Shop::findOrFail($id);
+                        }
 
                         if(empty($request->name)) {
                                 return response()->json([
@@ -186,7 +236,7 @@ class ShopsController extends Controller
 
                         $shop->delivery_price = (int)$request->delivery_price;
                         $shop->delivery_time = AppHelper::formatTimeToMinutes($request->delivery_time_format);
-                        $shop->delivery_out = (int)$request->delivery_out;
+                        $shop->delivery_out = !empty($request->delivery_out) ? 1 : 0;
                         $shop->delivery_out_max = (int)$request->delivery_out_max;
                         $shop->delivery_out_price = (int)$request->delivery_out_price;
 
@@ -374,5 +424,38 @@ class ShopsController extends Controller
                 }
 
 
+        }
+
+        public function apiList(Request $request) {
+
+                $statusCode = 200;
+                $response = [
+                        'shops' => []
+                ];
+
+                try{
+                        $perPage = 50;
+                        $shop = Shop::with(['users', 'city'])->orderBy('id', 'desc');
+                        if(!empty($request->search)) {
+                             $shop->where('name', 'like', "%$request->search%");
+
+
+                             $shop->orWhereHas('city', function($query) use ($request) {
+                                $query->where('cities.name', 'like', "%$request->search%");
+                             });
+
+                             $shop->orWhereHas('users', function($query) use ($request) {
+                                $query->where('users.phone', 'like', "%$request->search%");
+                             });
+
+                        }
+                        //echo $shop->toSql(); exit();
+                        $response['shops'] = $shop->paginate($perPage);
+
+                } catch (\Exception $e){
+                    $statusCode = 400;
+                }finally{
+                    return response()->json($response, $statusCode);
+                }
         }
 }

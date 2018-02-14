@@ -3,6 +3,7 @@
 @section('content')
 
     <div class="row" ng-controller="shopProfile" id="shopProfileContainer">
+        <input type="hidden" name="id" value="{{ $shop->id }}">
         <div class="col-lg-12 m-form ">
 
             <div class="m-portlet m-portlet--tab">
@@ -10,7 +11,7 @@
                     <div class="m-portlet__head-caption">
                         <div class="m-portlet__head-title">
                             <h3 class="m-portlet__head-text">
-                                Профиль магазина
+                                Профиль магазина{{ $user->admin ? ' '.$shop->name.' (№'.$shop->id.')' : null }}
                             </h3>
                         </div>
                     </div>
@@ -100,7 +101,7 @@
 
                                                 <div class="col-lg-4 col-md-9 col-sm-12">
 
-                                                    <form action="{{ route('admin.shop.uploadLogo') }}" enctype="multipart/form-data" class="m-dropzone dropzone" id="myDropzone">
+                                                    <form action="{{ route('admin.shop.uploadLogo', ['id' => $shop->id]) }}" enctype="multipart/form-data" class="m-dropzone dropzone" id="myDropzone">
                                                         {{ csrf_field() }}
                                                         <div class="m-dropzone__msg dz-message needsclick">
                                                             <h3 class="m-dropzone__msg-title">
@@ -132,7 +133,7 @@
 
                                                 <div class="col-lg-4 col-md-9 col-sm-12">
 
-                                                    <form action="{{ route('admin.shop.uploadPhoto') }}" enctype="multipart/form-data" class="m-dropzone dropzone" id="myDropzone2">
+                                                    <form action="{{ route('admin.shop.uploadPhoto', ['id' => $shop->id]) }}" enctype="multipart/form-data" class="m-dropzone dropzone" id="myDropzone2">
                                                         {{ csrf_field() }}
                                                         <div class="m-dropzone__msg dz-message needsclick">
                                                             <h3 class="m-dropzone__msg-title">
@@ -871,7 +872,7 @@
 
                 <div class="m-portlet__foot m-portlet__foot--fit">
                     <div class="m-form__actions">
-                        <button type="reset" class="btn btn-primary" id="save_profile" data-route="{{ route('admin.shop.update') }}">
+                        <button type="reset" class="btn btn-primary" id="save_profile" data-route="{{ route('admin.shop.update', ['id' => $shop->id]) }}">
                             Сохранить
                         </button>
                     </div>

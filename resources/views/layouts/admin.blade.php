@@ -143,6 +143,22 @@
 									</span>
 								</a>
 							</li>
+
+							@if($user->admin)
+								<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.list' ? 'm-menu__item--active' : null }}">
+									<a href="{{ route('admin.shop.list') }}" class="m-menu__link ">
+										<i class="m-menu__link-icon flaticon-profile-1"></i>
+										<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Магазины
+											</span>
+
+										</span>
+									</span>
+									</a>
+								</li>
+							@endif
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->
