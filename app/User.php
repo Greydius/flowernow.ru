@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\Product;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -33,5 +34,19 @@ class User extends Authenticatable
 
     public function getShop() {
             return $this->shops->first();
+    }
+
+    public function totalProducts($status = []) {
+            $productsModel= Product::select('id');
+
+            if(!$this->admin) {
+                    $productsModel->whereIn('shop_id', $this->shops->pluck('id')->toArray());
+            }
+
+            if(!empty($status)) {
+                    $productsModel->whereIn('status', $status);
+            }
+
+            return $productsModel->count();
     }
 }

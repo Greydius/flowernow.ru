@@ -30,6 +30,37 @@
 
         <br>
 
+        <div class="row">
+            <div class="col-xl-12 order-2 order-xl-1">
+                <div class="form-group m-form__group row align-items-center">
+                    <div class="col-md-4">
+                        <div class="m-input-icon m-input-icon--left">
+                            <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
+                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                <span>
+                                    <i class="la la-search"></i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    @if($user->admin)
+
+                        <div class="col-md-4">
+
+                            <label class="m-checkbox m-checkbox--bold">
+                                <input type="checkbox" id="m_form_status" ng-change="changeStatusFilter()" ng-model="search_not_public">
+                                Не опубликованные
+                                <span></span>
+                            </label>
+
+                        </div>
+
+                    @endif
+                </div>
+            </div>
+        </div>
+
         <div class="row" ng-cloak>
 
             <div class="col-xl-3" ng-repeat="product in products" >
@@ -51,7 +82,7 @@
                             <div class="row">
                                 <div class="col-xl-12 products-img-wraper">
                                     <div class="products-btns" ng-show="product.shop">
-                                        <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Бан">
+                                        <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Отклонить">
                                             <i class="fa flaticon-signs-2"></i>
                                         </a>
 
@@ -59,6 +90,13 @@
                                             <i class="fa flaticon-interface"></i>
                                         </a>
                                     </div>
+
+                                    <span class="m-menu__link-badge product-id-badge">
+                                        <span class="m-badge m-badge--accent m-badge--wide">
+                                            id: <% product.id %>
+                                        </span>
+                                    </span>
+
                                     <a href ng-click="editItem($event, product)" style="display: block">
                                         <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
                                     </a>
@@ -82,7 +120,7 @@
 
                             <div class="row" style="min-height: 40px;">
                                 <div class="col-xl-12">
-                                    <div style="    padding: 5px; font-size: 10px">
+                                    <div style="    padding: 5px; font-size: 12px">
                                         <div class="m-widget4__ext text-danger" ng-show="product.status == 0">
                                             <a href class="text-danger" ng-click="editItem($event, product)">
                                                 Не заполнены обязательные поля <span style="font-size: 20px">*</span>
@@ -99,11 +137,11 @@
                                         </div>
 
                                         <div class="m-widget4__ext text-danger" ng-show="product.status == 3">
-                                            <a href class="text-danger" ng-click="editItem($event, product)">
-                                                Отклонено модератором
+                                            <a href class="text-danger" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>">
+                                                Отклонено модератором <span class="m-badge m-badge--danger">i</span>
                                             </a>
 
-                                            <span class="m-badge m-badge--danger" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>" ng-show="product.status_comment">?</span>
+
 
                                         </div>
 
@@ -114,12 +152,19 @@
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions" style="padding: 5px;">
-                                <button type="reset" class="btn btn-secondary btn-sm" ng-click="editItem($event, product)">
-                                    <i class="flaticon-edit"></i> Редактировать
-                                </button>
-                                <button type="reset" class="btn btn-secondary btn-sm pull-right" ng-click="deleteItem(product)">
-                                    <i class="flaticon-circle"></i> Удалить
-                                </button>
+                                <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
+                                    <i class="la la-pencil"></i>
+                                </a>
+                                <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажы)" ng-show="!product.pause">
+                                    <i class="la la-pause"></i>
+                                </a>
+                                <a href  class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" ng-click="pauseItem(0, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Возобновить продажу" ng-show="product.pause">
+                                    <i class="la la-play"></i>
+                                </a>
+
+                                <a href  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only pull-right" ng-click="deleteItem(product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Удалить">
+                                    <i class="la la-times-circle-o"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -141,6 +186,7 @@
 
             </div>
 
+
         </div>
     </div>
 
@@ -151,7 +197,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            Редактирование
+                            Редактирование — <% item.id %>
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -162,11 +208,12 @@
                     <div class="modal-body">
                         <form>
 
-                            <div class="form-group m-form__group">
+                            <div class="form-group m-form__group" style="position: relative">
 
                                 <span style="font-size: 10px; padding-bottom: 10px; display: block;" ng-show="photos.length > 1">Для изменения очередности - переставте фото в нужном порядке</span>
 
                                 <div class="row product-photos">
+                                    <div class="photo-preloader"><div></div></div>
                                     <div class="col-md-2 product-photos-container" style="width: 80px; height: 80px" ng-repeat="photo in photos | orderBy:'priority'">
                                         <img ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
                                         <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
@@ -186,7 +233,7 @@
 
                             <div class="form-group m-form__group">
                                 <label for="edit-product-name">
-                                    Название
+                                    Название <span class="text-danger must-have">*</span>
                                 </label>
                                 <input type="text" class="form-control form-control-sm m-input" id="edit-product-name" ng-model="item.name" placeholder="Название">
                             </div>
@@ -195,7 +242,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="edit-product-price">
-                                            Цена
+                                            Цена <span class="text-danger must-have">*</span>
                                         </label>
                                         <div class="m-input-icon m-input-icon--right">
                                             <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, руб." id="edit-product-price">
@@ -209,7 +256,7 @@
 
                                     <div class="col-md-6">
                                         <label for="edit-product-make-time">
-                                            Время изготовления
+                                            Время изготовления <span class="text-danger must-have">*</span>
                                         </label>
                                         <select class="form-control form-control-sm" ng-model="item.make_time" ng-options="time.value as time.name for time in times"></select>
                                     </div>
@@ -221,7 +268,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="edit-product-width">
-                                            Ширина, см
+                                            Ширина, см <span class="text-danger must-have">*</span>
                                         </label>
                                         <div class="m-input-icon m-input-icon--right">
                                             <input type="text" class="form-control form-control-sm m-input" ng-model="item.width" placeholder="см." id="edit-product-width">
@@ -235,7 +282,7 @@
 
                                     <div class="col-md-6">
                                         <label for="edit-product-height">
-                                            Высота, см
+                                            Высота, см <span class="text-danger must-have">*</span>
                                         </label>
                                         <div class="m-input-icon m-input-icon--right">
                                             <input type="text" class="form-control form-control-sm m-input" ng-model="item.height" placeholder="см." id="edit-product-height">
@@ -254,7 +301,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="edit-product-height">
-                                            Тип букета
+                                            Тип букета <span class="text-danger must-have">*</span>
                                         </label>
                                         <select class="form-control form-control-sm" ng-model="item.product_type_id" ng-options="productType.id as productType.name for productType in productTypes">
                                             <option value="">Укажите тип</option>
@@ -323,7 +370,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="edit-product-height">
-                                            Описание
+                                            Описание <span class="text-danger must-have">*</span>
                                         </label>
                                         <textarea class="form-control" ng-model="item.description" rows="6"></textarea>
                                     </div>
@@ -331,6 +378,18 @@
                                 </div>
 
                             </div>
+
+                            <div class="form-group m-form__group">
+                                <div class="row">
+                                    <div class="col-md-12 text-danger">
+                                         <span class="must-have">*</span> - поля обязательные к заполнению
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -384,7 +443,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                            Забанить товар?
+                            Отклонить товар?
                         </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">
@@ -393,7 +452,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <textarea  class="form-control" ng-model="item.status_comment" rows="6" placeholder="Укажите причину бана товара"></textarea>
+                        <textarea  class="form-control" ng-model="item.status_comment" rows="6" placeholder="Укажите причину отклонения товара"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">

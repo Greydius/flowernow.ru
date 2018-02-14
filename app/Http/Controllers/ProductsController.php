@@ -223,7 +223,7 @@ class ProductsController extends Controller
 
         }
 
-        public function apiList() {
+        public function apiList(Request $request) {
 
                 $statusCode = 200;
                 $response = [
@@ -233,10 +233,30 @@ class ProductsController extends Controller
                 try{
                         $perPage = 16;
                         if($this->user->admin) {
-                                $response['products'] = Product::with(['compositions.flower', 'photos', 'shop'])->orderBy('id', 'desc')->paginate($perPage);
+                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, id DESC");
+
+                                if(!empty($request->search)) {
+                                        $productRequestModel->orWhereHas('shop.city', function($query) use ($request) {
+                                                $query->where('cities.name', 'like', "%$request->search%");
+                                        });
+                                }
                         } else {
-                                $response['products'] = $this->user->getShop()->products()->with(['compositions.flower', 'photos'])->orderBy('id', 'desc')->paginate($perPage);
+                                $productRequestModel = $this->user->getShop()->products()->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
+
+                                if(!empty($request->search)) {
+                                        $productRequestModel->orWhere('cities.name', 'like', "%$request->search%");
+                                }
                         }
+
+                        if(!empty($request->search)) {
+                                $productRequestModel->orWhere('id', $request->search);
+                        }
+
+                        if(!empty((int)$request->status)) {
+                                $productRequestModel->where('status', '!=', 1);
+                        }
+
+                        $response['products'] = $productRequestModel->paginate($perPage);
 
                 } catch (\Exception $e){
                     $statusCode = 400;
@@ -403,6 +423,33 @@ class ProductsController extends Controller
 
         }
 
+        public function apiChangePauseProduct($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        $product = Product::find($id);
+                        $shop = $this->user->getShop();
+
+                        if(empty($product) || !isset($request->pause) || (!$this->user->admin && $shop->id != $product->shop_id)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->pause = (int)$request->pause ? 1 : 0;
+                                $product->save();
+                        }
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
         public function update(Request $request) {
 
                 $validator = Validator::make($request->all(), Product::$productRules, Product::$productRulesMessages);
@@ -472,10 +519,11 @@ class ProductsController extends Controller
                 $updated_at = $product->updated_at;
 
                 if($product->save()) {
-                        if($updated_at != $product->updated_at) {
+                        if($updated_at != $product->updated_at || $product->status == 0) {
                                 $product->status = 2;
                                 $product->save();
                         }
+
                         return response()->json([
                                 'error' => false,
                                 'code' => 200,

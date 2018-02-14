@@ -8,6 +8,13 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
         $scope.prev_page = "";
         $scope.next_page = "";
         $scope.product_url = routes.products;
+        $scope.route_product_url = routes.products;
+        $scope.search_str = '';
+        $scope.search_not_public = false;
+
+        $scope.totalPages = 0;
+        $scope.currentPage = 1;
+        $scope.range = [];
 
         $scope.getProducts = function() {
 
@@ -19,12 +26,27 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                         method: 'GET',
                         url:  $scope.product_url,
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        params: {
+                                'search': $scope.search_str,
+                                'status': $scope.search_not_public ? 1 : 0
+                        }
 
                 }).then(function (response) {
                         //$scope.products = response.data.products;
                         $scope.products = response.data.products.data;
                         $scope.prev_page = response.data.products.prev_page_url;
                         $scope.next_page = response.data.products.next_page_url;
+
+                              $scope.totalPages   = response.data.products.last_page;
+                              $scope.currentPage  = response.data.products.current_page;
+                              // Pagination Range
+                              var pages = [];
+
+                              for(var i=1;i<=response.data.products.last_page;i++) {
+                                pages.push(i);
+                              }
+
+                              $scope.range = pages;
                 }, function (response) {
 
 
@@ -284,6 +306,41 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                                         });
                                 }
                         });
+                });
+        }
+
+        $scope.search = function(keyEvent) {
+                if (keyEvent.which === 13) {
+                        $scope.search_str = $('#m_form_search').val();
+                        $scope.product_url = routes.products;
+                        $scope.getProducts();
+                }
+        }
+
+        $scope.changeStatusFilter = function() {
+
+                $scope.search_not_public = $('#m_form_status').is(':checked');
+                $scope.product_url = routes.products;
+                $scope.getProducts();
+        }
+
+        $scope.pauseItem = function(pause, item) {
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/changePauseProduct/'+item.id,
+                        data: {
+                                'pause': pause
+                        }
+
+                }).then(function (response) {
+                        item.pause = pause;
+                }, function (response) {
+
+
+                }).then(function (response) {
+
                 });
         }
 

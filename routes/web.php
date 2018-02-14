@@ -253,6 +253,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'as' => 'admin.api.product.apiChangeStatusProduct'
                 ]);
 
+                Route::post('product/changePauseProduct/{id}', [
+                        'uses' => 'ProductsController@apiChangePauseProduct',
+                        'as' => 'admin.api.product.apiChangePauseProduct'
+                ]);
+
                 /* ORDERS*/
                 Route::get('orders', [
                         'uses' => 'OrdersController@apiList',

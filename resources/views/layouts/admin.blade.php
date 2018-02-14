@@ -78,6 +78,14 @@
 											</span>
 										</a>
 									</li>
+
+									<li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"  data-menu-submenu-toggle="click" aria-haspopup="true">
+										<a  href="{{ route('admin.shop.profile') }}" class="m-menu__link">
+											<span class="m-menu__link-text">
+												Магазин: {{ $user->getShop()->name . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( id:'.$user->getShop()->id.')' }}
+											</span>
+										</a>
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -127,9 +135,21 @@
 
 										</span>
 									</span>
+									<span class="m-menu__link-badge">
+										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
+											{{$user->totalProducts()}}
+										</span>
+									</span>
+
+									<span class="m-menu__link-badge">
+										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
+											{{$user->totalProducts([0, 3])}}
+										</span>
+									</span>
 								</a>
 							</li>
 
+							<!--
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.profile' ? 'm-menu__item--active' : null }}" >
 								<a  href="{{ route('admin.shop.profile') }}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-profile-1"></i>
@@ -143,6 +163,7 @@
 									</span>
 								</a>
 							</li>
+							-->
 
 							@if($user->admin)
 								<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.list' ? 'm-menu__item--active' : null }}">

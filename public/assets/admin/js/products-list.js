@@ -41,10 +41,12 @@ var myDropzoneOptions = {
                         angular.element('#productsListContainer').scope().getProducts();
                         */
                         if(response.photo && response.id) {
+                                $('.photo-preloader').hide();
                                 angular.element('#productsListContainer').scope().refreshPhoto(response.id, response.photo);
                         }
 
                 }).on("addedfile", function (file) {
+                        $('.photo-preloader').show();
                         /*
                         mApp.block("#myDropzone", {overlayColor: "#000000", type: "loader", state: "success", size: "lg"})
                         */

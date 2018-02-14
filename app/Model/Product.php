@@ -32,6 +32,10 @@ class Product extends MainModel
                 'name' => 'required',
                 'price' => 'required | integer',
                 'product_type_id' => 'required | integer',
+                'make_time' => 'required',
+                'width' => 'required',
+                'height' => 'required',
+                'description' => 'required',
         ];
 
         public  static $productRulesMessages = [
@@ -39,7 +43,11 @@ class Product extends MainModel
                 'price.required' => 'Введите цену',
                 'price.integer' => 'Цена должна быть целым числом',
                 'product_type_id.required' => 'Укажите тип',
-                'product_type_id.integer' => 'Укажите тип'
+                'product_type_id.integer' => 'Укажите тип',
+                'make_time.required' => 'Выберите время изготовления',
+                'width.required' => 'Введите ширину',
+                'height.required' => 'Введите высоту',
+                'description.required' => 'Введите описание',
         ];
 
         public static $fileUrl = '/uploads/products/';
@@ -178,8 +186,8 @@ class Product extends MainModel
 
         public function getPhotoUrlAttribute() {
 
-                return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
-                //return asset('http://via.placeholder.com/600x600');
+                //return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                return asset('http://via.placeholder.com/600x600');
         }
 
         public function getDeliveryTimeAttribute() {
