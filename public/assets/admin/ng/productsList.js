@@ -301,6 +301,8 @@ angular.module('flowApp').controller('productEdit', function($scope, close, item
         //$scope.photos = $rootScope.photos;
         $scope.photos = photos;
 
+        console.log($scope.photos);
+
         $scope.productTypes = jsonData.productTypes;
         $scope.colors = jsonData.colors;
         $scope.times = jsonData.times;

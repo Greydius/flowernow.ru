@@ -60,7 +60,7 @@
                                         </a>
                                     </div>
                                     <a href ng-click="editItem($event, product)" style="display: block">
-                                        <img ng-src="<% product.photoUrl %>" width="100%" />
+                                        <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
                                     </a>
                                 </div>
                             </div>
@@ -168,7 +168,7 @@
 
                                 <div class="row product-photos">
                                     <div class="col-md-2 product-photos-container" style="width: 80px; height: 80px" ng-repeat="photo in photos | orderBy:'priority'">
-                                        <img ng-src="<% item.photoUrl %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                        <img ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
                                         <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
                                     </div>
 
