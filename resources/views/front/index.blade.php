@@ -152,26 +152,28 @@
                 @if(!empty($popularProducts))
                     @foreach($popularProducts as $item)
                         @if($item['popularProductCount'] >= 3)
-                            <div class="hidden-lg hidden-md hidden-xs">
-                                <br><br>
-                            </div>
-                            <h3 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h3>
-                            <br class="hidden-lg hidden-md">
+                            <div ng-hide="isFiltered">
+                                <div class="hidden-lg hidden-md hidden-xs">
+                                    <br><br>
+                                </div>
+                                <h3 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h3>
+                                <br class="hidden-lg hidden-md">
 
-                            <div class="row">
-                                @foreach($item['popularProduct'] as $key => $_item)
-                                    @if($key < 3 || $item['popularProductCount'] == 6)
+                                <div class="row">
+                                    @foreach($item['popularProduct'] as $key => $_item)
+                                        @if($key < 3 || $item['popularProductCount'] == 6)
 
-                                        @include('front.product.list-item')
+                                            @include('front.product.list-item')
 
+                                        @endif
+                                    @endforeach
+
+                                    @if($item['popularProduct']->total() > 6)
+                                        <div class="col-md-6 col-md-offset-3 bottom30">
+                                            <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
+                                        </div>
                                     @endif
-                                @endforeach
-
-                                @if($item['popularProduct']->total() > 6)
-                                    <div class="col-md-6 col-md-offset-3 bottom30">
-                                        <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
-                                    </div>
-                                @endif
+                                </div>
                             </div>
                         @endif
                     @endforeach

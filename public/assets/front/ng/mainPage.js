@@ -5,6 +5,7 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
         $scope.filters = {};
         $scope.isFiltered = false;
         $scope.title = '';
+        $scope.links = '';
 
         $scope.otherPopularProducts = [];
 
@@ -43,6 +44,8 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
                         }
 
                         $scope.title = response.data.title;
+
+                        $scope.links = response.data.links;
 
                 }, function (response) {
                         $('.preloader-wrapper').hide();

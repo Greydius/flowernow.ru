@@ -1,6 +1,6 @@
 (function(angular) {
         'use strict';
-        var myApp = angular.module('flowApp', ['angularModalService'], function($interpolateProvider) {
+        var myApp = angular.module('flowApp', ['angularModalService', 'ngSanitize'], function($interpolateProvider) {
                 $interpolateProvider.startSymbol('<%');
                 $interpolateProvider.endSymbol('%>');
         });

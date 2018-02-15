@@ -12,6 +12,10 @@
         @include('front.product.search-item')
     </div>
 
+    <div class="col-md-6 col-md-offset-3 bottom30" ng-show="links && !otherPopularProducts.length">
+        <a href="<% links %>" class="btn btn-block btn-more">Показать все</a>
+    </div>
+
     <div class="col-md-12 text-center top20" ng-show="!popularProduct.length && isFiltered">
 
         <strong>
@@ -30,11 +34,15 @@
     <div ng-repeat="items in otherPopularProducts">
 
         <div ng-show="items.popularProductCount >= 3">
-            <div class="hidden-lg hidden-md hidden-xs">
-                <br><br>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="hidden-lg hidden-md hidden-xs">
+                        <br><br>
+                    </div>
+                    <h3 class="margin-top-null"><strong><% items.productType.alt_name %></strong></h3>
+                    <br class="hidden-lg hidden-md">
+                </div>
             </div>
-            <h3 class="margin-top-null"><strong><% items.productType.alt_name %></strong></h3>
-            <br class="hidden-lg hidden-md">
 
             <div class="row">
 
@@ -48,6 +56,8 @@
                 </div>
 
             </div>
+
+
 
             <div class="col-md-12" ng-show="popularProduct.length">
                 <hr>

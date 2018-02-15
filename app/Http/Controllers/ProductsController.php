@@ -540,6 +540,7 @@ class ProductsController extends Controller
         }
 
         public function apiPopular(Request $request) {
+
                 $statusCode = 200;
                 $response = [
                         'title' => '',
@@ -549,6 +550,8 @@ class ProductsController extends Controller
                 try{
                         $response['title'] = $this->getTitle($request);
                         $response['products'] = Product::popular($this->current_city->id, $request, (!empty($request->page) ? $request->page : 1));
+
+                        $response['links'] = $request->server('HTTP_REFERER');
 
                         if(!$response['products']->total()) {
                                 $productTypes = ProductType::where('show_on_main', '1')->get();
@@ -567,7 +570,10 @@ class ProductsController extends Controller
                                         $item['popularProduct'] = $data;
 
                                         $item['popularProductCount'] = count($item['popularProduct']);
-                                        $popularProducts[] = $item;
+
+                                        if($item['popularProductCount']) {
+                                                $popularProducts[] = $item;
+                                        }
                                 }
 
                                 if(!empty($popularProducts)) {
