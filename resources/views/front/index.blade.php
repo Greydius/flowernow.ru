@@ -275,6 +275,6 @@
 
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
-    <script src="{{ asset('assets/front/js/index.js?v=2_1') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_2') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_3') }}" type="text/javascript"></script>
 @stop
