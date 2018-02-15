@@ -17,14 +17,14 @@ class DomainMiddleware
     public function handle($request, Closure $next)
     {
 
-            /*
         $host = strtolower(request()->getHost());
         $shortHost = str_replace('flownow.loc', '', $host);
-            */
 
+        /*
         $host = strtolower(request()->getHost());
         $shortHost = str_replace('floristum.ru', '', $host);
         $shortHost = str_replace('flowenow.ru', '', $shortHost);
+        */
 
         $subdomains = explode('.', $shortHost);
         if(count($subdomains) > 2) {
