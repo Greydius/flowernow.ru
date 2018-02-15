@@ -494,8 +494,8 @@
 
 @section('footer')
     <script src="{{ asset('assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/js/products-list.js?v=2') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/ng/productsList.js?v=3') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/js/products-list.js?v=2_3') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/productsList.js?v=2_3') }}" type="text/javascript"></script>
     <script type="text/javascript">
         jsonData.productTypes = {!! $productTypes->toJson() !!};
         jsonData.colors = {!! $colors->toJson() !!};
