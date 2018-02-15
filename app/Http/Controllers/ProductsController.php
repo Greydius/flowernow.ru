@@ -37,7 +37,9 @@ class ProductsController extends Controller
                                 $item['productType'] = $productType;
                                 $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
                                 $item['popularProductCount'] = count($item['popularProduct']);
-                                $popularProducts[] = $item;
+                                if($item['popularProductCount']) {
+                                        $popularProducts[] = $item;
+                                }
                         }
 
                         unset($request->product_type);
@@ -570,10 +572,7 @@ class ProductsController extends Controller
                                         $item['popularProduct'] = $data;
 
                                         $item['popularProductCount'] = count($item['popularProduct']);
-
-                                        if($item['popularProductCount']) {
-                                                $popularProducts[] = $item;
-                                        }
+                                        $popularProducts[] = $item;
                                 }
 
                                 if(!empty($popularProducts)) {
