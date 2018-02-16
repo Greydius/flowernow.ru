@@ -149,7 +149,7 @@
 								</a>
 							</li>
 
-							<!--
+							@if(!$user->admin)
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.profile' ? 'm-menu__item--active' : null }}" >
 								<a  href="{{ route('admin.shop.profile') }}" class="m-menu__link ">
 									<i class="m-menu__link-icon flaticon-profile-1"></i>
@@ -163,7 +163,7 @@
 									</span>
 								</a>
 							</li>
-							-->
+							@endif
 
 							@if($user->admin)
 								<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.list' ? 'm-menu__item--active' : null }}">
