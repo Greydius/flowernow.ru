@@ -58,8 +58,8 @@
 
                     @endif
 
-                    <div class="col-md-4 pull-right">
-                        <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon">
+                    <div class="col-md-4">
+                        <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon pull-right">
                             <span>
                                 <i class="la la-diamond"></i>
                                 <span>
