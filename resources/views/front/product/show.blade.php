@@ -10,7 +10,7 @@
     <br>
     <ol class="breadcrumb">
         <li><a href="#">Цветы в {{ $product->shop->city->name_prepositional }}</a></li>
-        <li><a href="#">Магазин {{ $product->shop->name }}</a></li>
+        <li><a href="{{ route('shop.products', ['id' => $product->shop->id]) }}">Магазин {{ $product->shop->name }}</a></li>
         <li class="active">{{ $product->name }}</li>
     </ol>
 

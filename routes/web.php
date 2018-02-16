@@ -17,6 +17,12 @@ Route::get('/', [
         'as' => 'front.index'
 ]);
 
+/*SHOP*/
+Route::get('shop/{id}', [
+        'uses' => 'ShopsController@products',
+        'as' => 'shop.products'
+]);
+
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::get('/flowers/{slug}', [

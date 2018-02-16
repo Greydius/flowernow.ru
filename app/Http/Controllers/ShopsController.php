@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AppHelper;
+use App\Model\Product;
 use App\Model\Shop;
 use App\Model\ShopAddress;
 use App\Model\ShopWorkTime;
@@ -457,5 +458,18 @@ class ShopsController extends Controller
                 }finally{
                     return response()->json($response, $statusCode);
                 }
+        }
+
+        public function products($id, Request $request) {
+                $shop = Shop::findOrFail($id);
+
+                $request->shop_id = $shop->id;
+
+                $products = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
+
+                return view('front.shop.products',[
+                        'products' => $products,
+                        'shop' => $shop
+                ]);
         }
 }

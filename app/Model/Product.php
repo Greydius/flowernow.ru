@@ -154,6 +154,11 @@ class Product extends MainModel
 
                                 $productRequest->where('color_id', (int)$request->color);
                         }
+
+                        if(!empty($request->shop_id)) {
+
+                                $productRequest->where('shop_id', (int)$request->shop_id);
+                        }
                 }
 
                 Paginator::currentPageResolver(function () use ($currentPage) {
