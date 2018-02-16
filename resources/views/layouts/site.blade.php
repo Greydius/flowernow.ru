@@ -262,6 +262,7 @@
                         <ul class="list-unstyled list-foot">
                             <li><a href="{{ route('front.registershop') }}">Магазинам цветов</a></li>
                             <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
+                            <li><a href="{{ route('login') }}">Вход в личный кабинет</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">

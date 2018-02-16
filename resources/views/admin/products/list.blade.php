@@ -57,6 +57,17 @@
                         </div>
 
                     @endif
+
+                    <div class="col-md-4 pull-right">
+                        <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon">
+                            <span>
+                                <i class="la la-diamond"></i>
+                                <span>
+                                    Витрина Ваших товаров
+                                </span>
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
