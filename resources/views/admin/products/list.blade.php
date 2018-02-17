@@ -166,7 +166,7 @@
                                 <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
                                     <i class="la la-pencil"></i>
                                 </a>
-                                <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажы)" ng-show="!product.pause">
+                                <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажи)" ng-show="!product.pause">
                                     <i class="la la-pause"></i>
                                 </a>
                                 <a href  class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" ng-click="pauseItem(0, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Возобновить продажу" ng-show="product.pause">
