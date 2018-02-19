@@ -235,9 +235,13 @@ class ProductsController extends Controller
                 try{
                         $perPage = 16;
                         if($this->user->admin) {
-                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, id DESC");
+                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
 
                                 if(!empty($request->search)) {
+                                        $productRequestModel->orWhereHas('shop', function($query) use ($request) {
+                                                $query->where('shops.name', 'like', "%$request->search%");
+                                        });
+
                                         $productRequestModel->orWhereHas('shop.city', function($query) use ($request) {
                                                 $query->where('cities.name', 'like', "%$request->search%");
                                         });
