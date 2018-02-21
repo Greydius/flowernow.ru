@@ -33,7 +33,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v='.rand(1, 9999)) }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v='.rand(1, 9999)) }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -58,11 +59,26 @@
         <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
     </div>
 </div>
-<header>
+<header class="mobile-city-confirm-showed">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
+
+                <div class="visible-xs visible-sm mobile-top-header static on-top">
+                    <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
+                        <span class="city-name">
+                            <!--googleoff: all--><!--noindex-->
+                            <a href="javascript:" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
+                                <i class="location-icon fa fa-map-marker"></i>Белгород
+                                <i class="icon-right" data-role="close-mobile-menu"></i>
+                            </a>
+                            <!--/noindex--><!--googleon: all-->
+                        </span>
+                        <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainMenu" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
@@ -77,13 +93,17 @@
             <div class="collapse navbar-collapse" id="mainMenu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown link-city">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ $current_city->name }}</a>
-                        <ul class="dropdown-menu dropdown-currency">
-                            <li><a href="#">Санкт-петербург</a></li>
-                            <li><a href="#">Самара</a></li>
-                            <li><a href="#">Ростов</a></li>
-                            <li><a href="#">Краснодар</a></li>
-                        </ul>
+                        <a href="#">{{ $current_city->name }}</a>
+                        <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
+                                <div class="arrow"></div>
+                                <div class="popover-content">
+                                        <div class="dropdown-city" id="dropdownCity">
+                                            <p>Ваш город <b><i class="fa fa-map-marker"></i>Белгород</b>?</p>
+                                            <a class="btn btn-info" href="javascript:" onclick="setCity()" rel="nofollow noopener">Да</a>
+                                            <a class="choose-link pull-right" href="#">Выбрать другой</a>
+                                        </div>
+                                </div>
+                        </div>
                     </li>
                     <li class="dropdown link-support">
                         <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
@@ -111,6 +131,7 @@
                         </div>
                         -->
                     </li>
+                    <!--
                     <li class="dropdown link-login">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
                         <div class="dropdown-menu dropdown-login">
@@ -126,9 +147,9 @@
                             <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
                             <br>
                             <p class="h6 text-muted">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
-                            -->
+
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div> <!-- /.container -->
@@ -136,12 +157,12 @@
 </header>
 
 <section>
-    @yield('content')
 
+    @yield('content')
 
     <div class="container">
 
-        
+
 
         <div class="row">
             <div class="col-md-8">

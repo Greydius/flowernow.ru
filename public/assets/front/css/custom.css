@@ -153,3 +153,136 @@ body.preloader-site {
     opacity:.8;
     color: #fff;
 }
+
+
+
+
+/*
+
+.mobile-top-header .confirm-city-mobile-widget .close-btn i:before {
+    font-family: font-icons!important;
+    font-style: normal!important;
+    font-weight: 400!important;
+    font-variant: normal!important;
+    text-transform: none!important;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+
+
+.mobile-top-header .confirm-city-mobile-widget .close-btn i:before {
+    content: "\39"
+}
+*/
+
+
+
+header.mobile-city-confirm-showed .mobile-top-header.static .confirm-city-mobile-widget {
+    display: block;
+    top: -40px;
+}
+
+
+
+.mobile-top-header .confirm-city-mobile-widget {
+    -webkit-transition: top .1s ease-in-out 0s;
+    -moz-transition: top .1s ease-in-out 0s;
+    -o-transition: top .1s ease-in-out 0s;
+    transition: top .1s ease-in-out 0s;
+    background: #424a54;
+    display: none;
+    height: 40px;
+    left: 0;
+    position: absolute;
+    top: -500px;
+    width: 100%
+}
+
+.mobile-top-header .confirm-city-mobile-widget:after {
+    border: solid 7px transparent;
+    border-top-color: #424a54;
+    bottom: -14px;
+    box-sizing: border-box;
+    color: transparent;
+    content: " ";
+    font-size: 0;
+    right: 31px;
+    position: absolute
+}
+
+.mobile-top-header .confirm-city-mobile-widget>span {
+    color: #fff;
+    display: inline-block;
+    height: 100%;
+    line-height: 40px;
+    vertical-align: top
+}
+
+.mobile-top-header .confirm-city-mobile-widget>span a {
+    color: #fff
+}
+
+.mobile-top-header .confirm-city-mobile-widget .city-name {
+    float: left;
+    font-size: 13px;
+    overflow: hidden;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: calc(100% - 40px)
+}
+
+.mobile-top-header .confirm-city-mobile-widget .city-name i {
+    color: #fff;
+    vertical-align: middle
+}
+
+.mobile-top-header .confirm-city-mobile-widget .city-name .icon-right {
+    display: none
+}
+
+.mobile-top-header .confirm-city-mobile-widget .close-btn {
+    text-align: center;
+    width: 40px
+}
+
+header .location-icon {
+    margin-right: 5px;
+}
+
+.dropdown-city {
+    min-width: 212px;
+}
+
+.dropdown-city .w-choose-city-widget {
+    position: relative;
+    top: 5px;
+}
+
+.dropdown-city i {
+    padding: 0 3px 0 7px;
+}
+
+.dropdown-city .btn{
+    padding: 6px 25px !important;
+}
+
+.dropdown-city .choose-link {
+    border-bottom: 1px dotted #0094d9;
+    color: #0094d9;
+    text-decoration: none;
+}
+
+#link-city-popover {
+    top: 50px;
+    left: 0;
+    display: block;
+    position: absolute;
+}
+
+#link-city-popover .arrow {
+    left: 60px !important;
+}

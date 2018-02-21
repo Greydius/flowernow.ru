@@ -43,15 +43,19 @@
                 <table style=" width: 100%">
                     <thead class="">
                         <tr class="m-datatable__row" style="height: 53px;">
-                            <th >Название</th>
+                            <th>#</th>
+                            <th>Название</th>
                             <th style="width: 110px;">Телефон</th>
+                            <th style="width: 160px;">Изменение товара</th>
                             <th style="width: 110px;">Действие</th>
                         </tr>
                     </thead>
                     <tbody class="" style="">
                         <tr ng-repeat="shop in shops" class="" style="height: 55px;" ng-cloak>
+                            <td><% $index + 1 %></td>
                             <td><a target="_blank" href="/admin/shop/<% shop.id %>"><% shop.name %></a><br><% shop.city.name %></td>
                             <td><% shop.users[0].phone %></td>
+                            <td><% shop.product_last_update %></td>
                             <td></td>
                         </tr>
                     </tbody>

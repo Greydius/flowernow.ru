@@ -66,7 +66,33 @@ $(document).ready(function() {
                 applyFilter();
         });
 
+        $('.link-city [rel="popover"]').popover({
+                container: 'body',
+                html: true,
+                content: function () {
+                        var clone = $($(this).data('popover-content')).clone(true).removeClass('hide');
+                        return clone;
+                },
+                placement: 'bottom'
+        }).click(function (e) {
+                e.preventDefault();
+        }).popover('show');
+
 })
+
+function cityPopover(action) {
+        if(action == 'hide') {
+                $('#link-city-popover').hide();
+        } else if(action == 'show') {
+                $('#link-city-popover').showe();
+        }
+}
+
+function setCity() {
+        cityPopover('hide');
+
+        return false;
+}
 
 function applyFilter() {
         angular.element('#products-container').scope().getProducts();

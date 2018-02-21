@@ -435,8 +435,8 @@ class ShopsController extends Controller
                 ];
 
                 try{
-                        $perPage = 50;
-                        $shop = Shop::with(['users', 'city'])->orderBy('id', 'desc');
+                        $perPage = 500;
+                        $shop = Shop::with(['users', 'city'])->select('shops.*', \DB::raw('(SELECT MAX(products.updated_at) FROM products WHERE products.shop_id = shops.id) AS product_last_update'))->orderBy('id', 'desc');
                         if(!empty($request->search)) {
                              $shop->where('name', 'like', "%$request->search%");
 
