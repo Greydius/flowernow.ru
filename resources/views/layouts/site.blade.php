@@ -103,7 +103,7 @@
                                     <div class="popover-content">
                                             <div class="dropdown-city" id="dropdownCity">
                                                 <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
-                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" onclick="setCity(); return false;" rel="nofollow noopener">Да</a>
+                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
                                                 <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
                                             </div>
                                     </div>
