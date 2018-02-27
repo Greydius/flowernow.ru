@@ -149,7 +149,7 @@
 
 
 
-        <div class="col-md-9 col-md-pull-3">
+        <div class="col-md-9 col-md-pull-3" style="background-color: #fff; padding-top: 10px;"  >
 
 
             @include('front.product.search')

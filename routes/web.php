@@ -17,6 +17,8 @@ Route::get('/', [
         'as' => 'front.index'
 ]);
 
+Route::get('/register ', '\App\Http\Controllers\Auth\RegisterController@showRegistrationForm');
+
 /*SHOP*/
 Route::get('shop/{id}', [
         'uses' => 'ShopsController@products',
