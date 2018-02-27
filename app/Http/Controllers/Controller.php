@@ -47,7 +47,7 @@ class Controller extends BaseController
                                     $this->detected_city = City::whereIn('id',$ids)->with(['region'])->orderByRaw("FIELD(id, ".implode(',', $ids).")")->first();
                             }
 
-                            setcookie('city', $this->detected_city->id, time() + (86400 * 30), "/");
+                            setcookie('city', $this->detected_city->id, time() + (86400 * 30), "/", \Config::get('app.domain'));
 
                     }
 

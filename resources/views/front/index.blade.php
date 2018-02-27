@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <h1 class="h2">Доставка цветов в {{ $current_city->name_prepositional }}</h1>
+        <h1 class="h2">Доставка цветов в <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name_prepositional }}</a></h1>
         <br>
     </div>
 <!--

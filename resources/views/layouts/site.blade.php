@@ -71,7 +71,7 @@
                         <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
                             <span class="city-name">
                                 <!--googleoff: all--><!--noindex-->
-                                <a href="javascript:" onclick="chooseCity()" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
+                                <a href="javascript:" onclick="chooseCity(); return false;" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
                                     <i class="location-icon fa fa-map-marker"></i><?=$detected_city->name?>
                                     <i class="icon-right" data-role="close-mobile-menu"></i>
                                 </a>
@@ -96,15 +96,15 @@
             <div class="collapse navbar-collapse" id="mainMenu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown link-city">
-                        <a href="#" onclick="chooseCity()">{{ $current_city->name }}</a>
+                        <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
                         @if(!empty($detected_city))
                             <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
                                     <div class="arrow"></div>
                                     <div class="popover-content">
                                             <div class="dropdown-city" id="dropdownCity">
-                                                <p>Ваш город <b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
-                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" onclick="setCity()" rel="nofollow noopener">Да</a>
-                                                <a class="choose-link pull-right" href="#" onclick="chooseCity()">Выбрать другой</a>
+                                                <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
+                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" onclick="setCity(); return false;" rel="nofollow noopener">Да</a>
+                                                <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
                                             </div>
                                     </div>
                             </div>
@@ -328,7 +328,7 @@
 <script src="{{ asset('assets/admin/ng/ngApp.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
 <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-<script src="{{ asset('assets/front/js/custom.js') }}"></script>
+<script src="{{ asset('assets/front/js/custom.js?v='.rand(1, 9999)) }}"></script>
 @yield('footer')
 
 <!-- Yandex.Metrika counter -->
