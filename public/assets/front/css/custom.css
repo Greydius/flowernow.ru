@@ -335,3 +335,12 @@ header .location-icon {
     position: absolute;
     right: 15px;
 }
+
+
+.choose-city-link {
+    border-bottom: 1px solid;
+}
+
+.choose-city-link:hover {
+    text-decoration: none;
+}
