@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://flownow.loc'),
 
+    'domain' => env('APP_DOMAIN'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

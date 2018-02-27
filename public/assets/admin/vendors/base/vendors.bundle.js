@@ -16052,8 +16052,8 @@ var _self = "undefined" != typeof window ? window : "undefined" != typeof Worker
                             return "Loading more resultsâ€¦"
                         },
                         maximumSelected: function(t) {
-                            var e = "You can only select " + t.maximum + " item";
-                            return 1 != t.maximum && (e += "s"), e
+                            var e = "Вы можете выбрать только " + t.maximum;
+                            return e
                         },
                         noResults: function() {
                             return "No results found"

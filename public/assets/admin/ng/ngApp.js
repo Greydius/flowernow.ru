@@ -9,7 +9,9 @@
                 return {
                         link: function(scope, element, attr) {
                                 $timeout(function() {
-                                        element.select2({});
+                                        element.select2({
+                                               //multiple: true,
+                                        });
                                 });
                         }
                 }

@@ -339,9 +339,8 @@
                                         <div class="row  m--margin-bottom-5" ng-repeat="composition in item.compositions">
                                             <div class="col-md-8">
                                                 <div class="input-group input-group-sm">
-                                                <select class="form-control form-control-sm input-sm m-select2 select2b" select2 ng-model="composition.flower_id" ng-options="flower.id as flower.name for flower in flowers">
-                                                    <option value="">Название</option>
-                                                </select>
+                                                    <select class="form-control form-control-sm input-sm m-select2 select2b" data--maximum-selection-length="1" select2 ng-model="composition.flower_id" ng-options="flower.id as flower.name for flower in flowers">
+                                                    </select>
                                                 </div>
                                             </div>
 

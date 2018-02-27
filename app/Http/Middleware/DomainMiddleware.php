@@ -38,7 +38,7 @@ class DomainMiddleware
                 $subdomain = 'moskva';
         }
 
-        $city = City::whereSlug($subdomain)->firstOrFail();
+        $city = City::whereSlug($subdomain)->with(['region'])->firstOrFail();
 
         $request->_city = $city;
 

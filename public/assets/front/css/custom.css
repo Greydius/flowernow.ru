@@ -286,3 +286,52 @@ header .location-icon {
 #link-city-popover .arrow {
     left: 60px !important;
 }
+
+#city-choose-popup ul {
+    position: relative;
+    min-height: 1px;
+    padding: 0;
+    float: left;
+    width: 100%;
+    border-right: solid 1px #d8d8d8;
+    overflow: auto;
+}
+
+#city-choose-popup ul li a {
+    color: #5bc0de;
+    font-size: 16px;
+}
+
+#city-choose-popup ul li a:hover {
+    color: #f60;
+}
+
+#city-choose-popup ul li a.active {
+    font-weight: 700;
+    color: #f60;
+    text-decoration: none;
+}
+
+#city-choose-popup li {
+    list-style: none;
+}
+
+#city-choose-popup ul.regions {
+    height: 500px;
+}
+
+#city-choose-popup ul.cities {
+    max-height: 500px;
+    border-right: none 0;
+}
+
+#city-choose-popup ul.cities li a i {
+    float: right;
+    line-height: 60px;
+}
+
+#city-choose-popup .modal-header .close {
+    z-index: 9999;
+    position: absolute;
+    right: 15px;
+}

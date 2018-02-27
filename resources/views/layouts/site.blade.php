@@ -45,6 +45,7 @@
 
     <script type="text/javascript">
             var cityId = {{ $current_city ? $current_city->id : null }};
+            var detectedCity = {!! !empty($detected_city) ? $detected_city->toJson() : $current_city->toJson() !!};
             var jsonData = {};
             var routes = {};
     </script>
@@ -59,25 +60,27 @@
         <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
     </div>
 </div>
-<header class="mobile-city-confirm-showed">
+<header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed' : null }}">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 
-                <div class="visible-xs visible-sm mobile-top-header static on-top">
-                    <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
-                        <span class="city-name">
-                            <!--googleoff: all--><!--noindex-->
-                            <a href="javascript:" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
-                                <i class="location-icon fa fa-map-marker"></i>Белгород
-                                <i class="icon-right" data-role="close-mobile-menu"></i>
-                            </a>
-                            <!--/noindex--><!--googleon: all-->
-                        </span>
-                        <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                @if(!empty($detected_city))
+                    <div class="visible-xs visible-sm mobile-top-header static on-top">
+                        <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
+                            <span class="city-name">
+                                <!--googleoff: all--><!--noindex-->
+                                <a href="javascript:" onclick="chooseCity()" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
+                                    <i class="location-icon fa fa-map-marker"></i><?=$detected_city->name?>
+                                    <i class="icon-right" data-role="close-mobile-menu"></i>
+                                </a>
+                                <!--/noindex--><!--googleon: all-->
+                            </span>
+                            <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </div>
                     </div>
-                </div>
+                @endif
 
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainMenu" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
@@ -93,17 +96,19 @@
             <div class="collapse navbar-collapse" id="mainMenu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown link-city">
-                        <a href="#">{{ $current_city->name }}</a>
-                        <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
-                                <div class="arrow"></div>
-                                <div class="popover-content">
-                                        <div class="dropdown-city" id="dropdownCity">
-                                            <p>Ваш город <b><i class="fa fa-map-marker"></i>Белгород</b>?</p>
-                                            <a class="btn btn-info" href="javascript:" onclick="setCity()" rel="nofollow noopener">Да</a>
-                                            <a class="choose-link pull-right" href="#">Выбрать другой</a>
-                                        </div>
-                                </div>
-                        </div>
+                        <a href="#" onclick="chooseCity()">{{ $current_city->name }}</a>
+                        @if(!empty($detected_city))
+                            <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                            <div class="dropdown-city" id="dropdownCity">
+                                                <p>Ваш город <b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
+                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" onclick="setCity()" rel="nofollow noopener">Да</a>
+                                                <a class="choose-link pull-right" href="#" onclick="chooseCity()">Выбрать другой</a>
+                                            </div>
+                                    </div>
+                            </div>
+                        @endif
                     </li>
                     <li class="dropdown link-support">
                         <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
@@ -157,6 +162,7 @@
 </header>
 
 <section>
+
 
     @yield('content')
 

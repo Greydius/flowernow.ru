@@ -97,6 +97,11 @@ Route::get('/cities', [
         'as' => 'city.popular'
 ]);
 
+Route::get('/choosePopup', [
+        'uses' => 'CityController@choosePopup',
+        'as' => 'city.choosePopup'
+]);
+
 Route::get('/info/agreement', [
         'uses' => 'HomeController@agreement',
         'as' => 'front.agreement'

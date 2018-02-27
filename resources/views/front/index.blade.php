@@ -2,6 +2,11 @@
 
 @section('content')
 
+    <div class="container">
+        <h1 class="h2">Доставка цветов в {{ $current_city->name_prepositional }}</h1>
+        <br>
+    </div>
+<!--
 <div class="container">
     <h1 class="h2">Доставка цветов в {{ $current_city->name_prepositional }} <small>или <a href="#">укажите город</a>.</small></h1>
 
@@ -17,7 +22,7 @@
     </div>
     <br>
 </div>
-
+-->
 @if(count($popularProducts))
 
 <div class="bg-white hidden-xs hidden-sm">

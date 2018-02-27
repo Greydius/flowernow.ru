@@ -28,6 +28,32 @@ class Controller extends BaseController
 
                     $this->current_city = $request->_city;
 
+                    $this->detected_city = null;
+
+                    if(empty($cookieCityId)) {
+
+                            try{
+                                    $location = \SypexGeo::get(request()->ip());
+                                    $this->detected_city = City::where('name', $location['city']['name_ru'])->with(['region'])->first();
+
+                                    if(empty($this->detected_city)) {
+                                            $ids = [(int)$cookieCityId, 637640];
+                                            $this->detected_city = City::whereIn('id',$ids)->with(['region'])->orderByRaw("FIELD(id, ".implode(',', $ids).")")->first();
+                                    }
+                            }
+                            catch(\Exception $e){
+
+                                    $ids = [(int)$cookieCityId, 637640];
+                                    $this->detected_city = City::whereIn('id',$ids)->with(['region'])->orderByRaw("FIELD(id, ".implode(',', $ids).")")->first();
+                            }
+
+                            setcookie('city', $this->detected_city->id, time() + (86400 * 30), "/");
+
+                    }
+
+                    View::share('detected_city', $this->detected_city);
+
+
                     /*
                     if(empty($cookieCityId) || (!empty($this->current_city) && $cookieCityId != $this->current_city->id)) {
 

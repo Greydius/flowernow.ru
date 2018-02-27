@@ -7,3 +7,27 @@
         top: 40px;
     }
 }
+
+@media (min-width: 992px) {
+    #city-choose-popup ul li {
+        padding-right: 1em;
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
+
+    #city-choose-popup ul.cities li a i {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    #city-choose-popup .regions_wrapper, #link-city-popover {
+            display: none;
+    }
+
+    #city-choose-popup ul li {
+        line-height: 60px;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 0 20px;
+    }
+}
