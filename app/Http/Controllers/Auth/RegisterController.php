@@ -71,7 +71,7 @@ class RegisterController extends Controller
     ];
 
     private  static $rules = [
-            'phone' => 'required|string|max:16|min:16',
+            'phone' => 'required|string|max:16|min:16|unique:users',
             'city_id' => 'required|integer',
             'shop_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -214,6 +214,13 @@ class RegisterController extends Controller
     public function checkData (Request $request) {
 
             $request->phone = !empty($request->phone) ? AppHelper::normalizePhone($request->phone) : null;
+
+
+            if(User::where('phone', $request->phone)->count()) {
+                    return response()->json([
+                        'errors' => ['phone' => ['Введенный номер телефона уже зарегистрирован в системе']]
+                    ], 422);
+            }
 
             $codeSend = config('app.debug') ? true : false;
             $validation = $this->validator($request->all());
