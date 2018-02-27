@@ -1,4 +1,4 @@
-@extends('layouts.site')
+﻿@extends('layouts.site')
 
 @section('content')
 
@@ -10,7 +10,7 @@
                 <p class="text-center"><img src="{{ asset('assets/front/img/key.png') }}" height="150px"></p>
             </div>
             <div class="col-md-9">
-                <h1 class="h2 margin-top-null m-b-1"><strong>Приглашаем магазины цветовна площадку Floristum.ru</strong></h1>
+                <h1 class="h2 margin-top-null m-b-1"><strong>Приглашаем магазины цветов на площадку Floristum.ru</strong></h1>
                 <h2>– новые клиенты без затрат!</h2>
 
             </div>
