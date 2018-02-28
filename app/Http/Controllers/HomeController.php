@@ -65,4 +65,8 @@ class HomeController extends Controller
     public function oferta() {
             return view('front.oferta');
     }
+
+    public function terms() {
+            return view('front.terms');
+    }
 }

@@ -129,6 +129,11 @@ Route::get('/info/oferta', [
         'as' => 'front.oferta'
 ]);
 
+Route::get('/info/terms', [
+        'uses' => 'HomeController@terms',
+        'as' => 'front.terms'
+]);
+
 /* API */
 Route::group(['prefix' => 'api/v1'], function() {
         /* PRODUCTS*/
