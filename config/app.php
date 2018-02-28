@@ -127,6 +127,12 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+
+
+
+
+    'google_app_key' => env('GOOGLE_APP_KEY'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

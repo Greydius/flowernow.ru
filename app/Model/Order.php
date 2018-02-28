@@ -16,6 +16,36 @@ class Order extends MainModel
 
         protected $appends = ['amount', 'amountShop'];
 
+        public static function boot() {
+                parent::boot();
+
+                self::creating(function ($model) {
+                        // ... code here
+                        $key = str_random(16);
+                        $model->key = $key;
+                });
+
+                self::created(function ($model) {
+                        // ... code here
+                });
+
+                self::updating(function ($model) {
+                        // ... code here
+                });
+
+                self::updated(function ($model) {
+                        // ... code here
+                });
+
+                self::deleting(function ($model) {
+                        // ... code here
+                });
+
+                self::deleted(function ($model) {
+                        // ... code here
+                });
+        }
+
     //
         public static $orderRules = [
                 'receiving_date' => 'required | date_format:"d.m.Y"',
@@ -94,5 +124,9 @@ class Order extends MainModel
                 }
 
                 return $name;
+        }
+
+        public function getDetailsLink() {
+                return route('order.details', ['key' => $this->key]);
         }
 }

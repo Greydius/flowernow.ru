@@ -181,7 +181,16 @@ class OrdersController extends Controller
                         }
 
                         if($order->phone) {
-                                Sms::instance()->send($order->phone, 'Спасибо за оплату. Номер вашего заказа '.$order->id);
+                                $txt = 'Ваш заказ '.$order->id.' оплачен! Отслеживание: ';
+                                $standartOrderLink = $order->getDetailsLink();
+
+                                try {
+                                        $shortOrderLink = \App\Helpers\AppHelper::urlShortener($standartOrderLink);
+                                } catch (\Exception $e) {
+                                        $shortOrderLink = $standartOrderLink;
+                                }
+                                $txt .= $shortOrderLink;
+                                Sms::instance()->send($order->phone, $txt);
                         }
 
                 } catch (\Exception $e) {
@@ -260,5 +269,17 @@ class OrdersController extends Controller
                 }
 
                 return back();
+        }
+
+        function details($key) {
+                $order = Order::where('key', $key)->firstOrFail();
+
+                //dd(\App\Helpers\AppHelper::urlShortener('https://floristum.ru/'));
+
+                //dd($order->getDetailsLink());
+
+                return view('front.order.details',[
+                        'order' => $order
+                ]);
         }
 }

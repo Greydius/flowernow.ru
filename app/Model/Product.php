@@ -191,8 +191,8 @@ class Product extends MainModel
 
         public function getPhotoUrlAttribute() {
 
-                return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
-                //return asset('http://via.placeholder.com/600x600');
+                //return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                return asset('http://via.placeholder.com/600x600');
         }
 
         public function getDeliveryTimeAttribute() {

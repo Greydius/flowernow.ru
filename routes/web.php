@@ -53,6 +53,11 @@ Route::post('cart', [
         'as' => 'order.create'
 ]);
 
+Route::get('order/{key}', [
+        'uses' => 'OrdersController@details',
+        'as' => 'order.details'
+]);
+
 Route::get('payment/success', [
         'uses' => 'OrdersController@success',
         'as' => 'payment.success'

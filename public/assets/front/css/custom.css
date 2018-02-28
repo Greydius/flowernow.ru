@@ -344,3 +344,29 @@ header .location-icon {
 .choose-city-link:hover {
     text-decoration: none;
 }
+
+.order-details .icon{
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #0f9ccc;
+    font-size: 58px;
+}
+
+.order-details figure{
+    padding: 40px 0 15px 0;
+}
+
+.order-details .pre {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857;
+    word-break: break-all;
+    word-wrap: break-word;
+    color: #333333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

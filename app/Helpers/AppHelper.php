@@ -40,4 +40,34 @@ class AppHelper {
 
                 return 0;
         }
+
+        public static function urlShortener($longUrl) {
+                $postData = ['longUrl' => $longUrl];
+                $jsonData = json_encode($postData);
+
+                //4
+                $curlObj = curl_init();
+                curl_setopt($curlObj, CURLOPT_URL, 'https://www.googleapis.com/urlshortener/v1/url?key='.\Config::get('app.google_app_key'));
+                curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($curlObj, CURLOPT_HEADER, 0);
+                curl_setopt($curlObj, CURLOPT_HTTPHEADER, ['Content-type:application/json']);
+                curl_setopt($curlObj, CURLOPT_POST, 1);
+                curl_setopt($curlObj, CURLOPT_POSTFIELDS, $jsonData);
+
+                //5
+                $response = curl_exec($curlObj);
+
+                $json = json_decode($response);
+                //6
+                curl_close($curlObj);
+
+                //7
+                return $json;
+                if (isset($json->error)) {
+                        echo $json->error->message;
+                } else {
+                        echo $json->id;
+                }
+        }
 }
