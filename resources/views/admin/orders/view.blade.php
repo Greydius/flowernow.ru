@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="m-content">
+
     <div class="row">
         <div class="col-lg-8">
             <!--begin::Portlet-->
@@ -346,13 +346,53 @@
                     </div>
                 </div>
 
+                @if($user->admin && $order->status != \App\Model\Order::$STATUS_COMPLETED)
+                    <div class="col-lg-12">
+                        <div class="m-portlet  m-portlet--border-bottom-brand ">
+                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                <div class="m-widget26">
+
+                                    <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                        {{ csrf_field() }}
+                                        <div class="form-group ">
+
+                                            <label class="" style="font-weight: bold">
+                                                Передать магазину:
+                                            </label>
+
+                                            <select class="form-control" name="shop_id">
+                                                @foreach($shops as $shop)
+                                                    <option value="{{ $shop->id }}">{{ $shop->id }} - {{ $shop->name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+
+                                        <div class="row">
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Сохранить
+                                                    </button>
+                                                </div>
+                                        </div>
+
+
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                @endif
+
             </div>
 
         </div>
 
 
     </div>
-</div>
+
 
 @endsection
 

@@ -157,6 +157,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.order.update'
         ]);
 
+        Route::post('order/changeShop/{id}', [
+                'uses' => 'OrdersController@changeShop',
+                'as' => 'admin.order.changeShop'
+        ]);
+
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {

@@ -6,6 +6,7 @@ use App\Model\Product;
 use App\Model\Order;
 use App\Model\OrderList;
 use App\Helpers\Sms;
+use App\Model\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -203,6 +204,7 @@ class OrdersController extends Controller
         }
 
         function orders() {
+
                 $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
 
                 return view('admin.orders.list', [
@@ -219,12 +221,12 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
-
+                                $orders = Order::with('orderLists.product')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
                         } else {
-
+                                $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
                         }
 
-                        $response['orders'] = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
+                        $response['orders'] = $orders;
 
                 } catch (\Exception $e){
                     $statusCode = 400;
@@ -234,15 +236,30 @@ class OrdersController extends Controller
         }
 
         public function view($id) {
-                $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+
+                $shops = [];
+
+                if($this->user->admin) {
+                        $order = Order::with('orderLists.product')->where('id', $id)->firstOrFail();
+                        $shop = $order->shop;
+                        $shops = Shop::where('id', '!=', $shop->id)->get();
+                } else {
+                        $shop = $this->user->getShop();
+                        $order = $shop->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                }
 
                 return view('admin.orders.view', [
-                        'order' => $order
+                        'order' => $order,
+                        'shops' => $shops
                 ]);
         }
 
         public function update($id, Request $request) {
-                $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                if($this->user->admin) {
+                        $order = Order::with('orderLists.product')->where('id', $id)->firstOrFail();
+                } else {
+                        $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                }
 
                 if(!empty($request->status) && $request->status != $order->status) {
                         switch ($request->status) {
@@ -265,6 +282,24 @@ class OrdersController extends Controller
                                                 $order->save();
                                         }
                                         break;
+                        }
+                }
+
+                if($this->user->admin) {
+                        if(!empty($request->shop_id) && $request->shop_id != $order->shop_id) {
+                                $order->shop_id = $request->shop_id;
+                                if($order->save()) {
+                                        $shop = $order->shop;
+                                        if($shop->phone) {
+                                                try {
+                                                        Sms::instance()->send($shop->phone, 'У Вас новый заказ!');
+                                                } catch(\Exception $e){
+
+                                                }
+                                        }
+
+                                        \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Заказ успешно передан другому магазину']);
+                                }
                         }
                 }
 
