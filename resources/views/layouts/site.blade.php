@@ -307,7 +307,7 @@
         <hr>
         <div class="row">
             <div class="col-sm-6">
-                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:88129822383"><strong>8 (812) 982-23-83</strong></a></span></p>
+                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
                 <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов {{$current_city->name}}">

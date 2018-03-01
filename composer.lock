@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "040908c58cb2f431f5e078cd87a949d9",
+    "content-hash": "d0939062b12a7e70b60211dc39542938",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2855,6 +2855,65 @@
                 "environment"
             ],
             "time": "2016-09-01T10:05:43+00:00"
+        },
+        {
+            "name": "watson/autologin",
+            "version": "0.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dwightwatson/autologin.git",
+                "reference": "a7e89ab16d92ee49b4eeb54a948c246d0454fe1b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dwightwatson/autologin/zipball/a7e89ab16d92ee49b4eeb54a948c246d0454fe1b",
+                "reference": "a7e89ab16d92ee49b4eeb54a948c246d0454fe1b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "5.*",
+                "illuminate/support": "5.*",
+                "nesbot/carbon": "1.*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Watson\\Autologin\\AutologinServiceProvider"
+                    ],
+                    "aliases": {
+                        "Autologin": "Watson\\Autologin\\Facades\\Autologin"
+                    }
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/controllers"
+                ],
+                "psr-4": {
+                    "Watson\\Autologin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dwight Watson",
+                    "email": "dwightwatson@studious.com.au"
+                }
+            ],
+            "description": "Autologin package for Laravel",
+            "keywords": [
+                "autologin",
+                "laravel"
+            ],
+            "time": "2017-12-01T02:05:06+00:00"
         }
     ],
     "packages-dev": [

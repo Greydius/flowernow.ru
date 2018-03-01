@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Product;
 use App\Model\Order;
+use App\User;
 use App\Model\OrderList;
 use App\Helpers\Sms;
 use App\Model\Shop;
@@ -128,7 +129,7 @@ class OrdersController extends Controller
                                 // catch code
                                 return response()->json([
                                         'error' => true,
-                                        'message' => 'Ошибка! Обратитесь в службу поддержки.('.$e->getMessage().')',
+                                        'message' => 'Ошибка! Обратитесь в службу поддержки.',
                                         'code' => 400
                                 ], 400);
                         }
@@ -178,7 +179,13 @@ class OrdersController extends Controller
                 try {
                         $shop = $order->shop;
                         if($shop->phone) {
-                                Sms::instance()->send($shop->phone, 'У Вас новый заказ!');
+                                $link = \Autologin::route($shop->users[0], 'admin.orders');
+                                try {
+                                        $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+                                } catch (\Exception $e) {
+                                        $shortLink = $link;
+                                }
+                                Sms::instance()->send($shop->phone, 'Примите заказ '.$order->id.' '.$shortLink);
                         }
 
                         if($order->phone) {
@@ -186,7 +193,7 @@ class OrdersController extends Controller
                                 $standartOrderLink = $order->getDetailsLink();
 
                                 try {
-                                        $shortOrderLink = \App\Helpers\AppHelper::urlShortener($standartOrderLink);
+                                        $shortOrderLink = \App\Helpers\AppHelper::urlShortener($standartOrderLink)->id;
                                 } catch (\Exception $e) {
                                         $shortOrderLink = $standartOrderLink;
                                 }
@@ -308,6 +315,11 @@ class OrdersController extends Controller
 
         function details($key) {
                 $order = Order::where('key', $key)->firstOrFail();
+
+
+                //$user = User::find(14);
+                                $link = \Autologin::route($order->shop->users[0], 'admin.orders');
+                                echo $link; exit();
 
                 //dd(\App\Helpers\AppHelper::urlShortener('https://floristum.ru/'));
 

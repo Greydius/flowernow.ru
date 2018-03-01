@@ -185,7 +185,7 @@ $(document).ready(function() {
                 },
                 function (reason, options) { // fail
                     //действие при неуспешной оплате
-                        $.notify("Неуспешной оплата. Попробуйте еще раз. ("+reason+")", "error")
+                        $.notify("Неуспешная оплата. Попробуйте еще раз. ("+reason+")", "error")
                 });
         };
 }) ;

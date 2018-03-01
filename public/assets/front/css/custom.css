@@ -354,7 +354,7 @@ header .location-icon {
 }
 
 .order-details figure{
-    padding: 40px 0 15px 0;
+    /*padding: 40px 0 15px 0;*/
 }
 
 .order-details .pre {
@@ -369,4 +369,20 @@ header .location-icon {
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.order-steps.order-step-first h4{
+    color: #da2a13;
+}
+
+.order-steps.order-step-second h4{
+    color: #01addf;
+}
+
+.order-steps.order-step-third h4{
+    color: #cee83f;
+}
+
+.order-steps.no-active h4, .order-steps.no-active span.digital {
+    color: #999 !important;
 }

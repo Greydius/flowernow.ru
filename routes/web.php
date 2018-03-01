@@ -328,3 +328,5 @@ Route::get('/seed/addProductTypesSlug', [
 Route::get('/seed/addFlowersSlug', [
         'uses' => 'SeedController@addFlowersSlug'
 ]);
+
+Route::get('autologin/{token}', ['as' => 'autologin', 'uses' => '\Watson\Autologin\AutologinController@autologin']);

@@ -188,7 +188,8 @@ return [
 
                 'IvanLemeshev\Laravel5CyrillicSlug\SlugServiceProvider',
                 Intervention\Image\ImageServiceProvider::class,
-                'Scriptixru\SypexGeo\SypexGeoServiceProvider'
+                'Scriptixru\SypexGeo\SypexGeoServiceProvider',
+                Watson\Autologin\AutologinServiceProvider::class
 
         ],
 
@@ -243,6 +244,7 @@ return [
                 'Slug' => 'IvanLemeshev\Laravel5CyrillicSlug\SlugFacade',
                 'Image' => Intervention\Image\Facades\Image::class,
                 'SypexGeo' => 'Scriptixru\SypexGeo\SypexGeoFacade',
+                'Autologin' => 'Watson\Autologin\Facades\Autologin'
 
         ],
 

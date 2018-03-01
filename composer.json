@@ -12,7 +12,8 @@
         "ivanlemeshev/laravel5-cyrillic-slug": "1.0.0",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "scriptixru/sypexgeo": "0.2.*@dev"
+        "scriptixru/sypexgeo": "0.2.*@dev",
+        "watson/autologin": "^0.5.3"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
