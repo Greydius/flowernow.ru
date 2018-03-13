@@ -91,6 +91,14 @@ $(document).ready(function() {
                 return false;
         }).on('shown.bs.tab', '#payment_methods_list a[data-toggle="tab"]', function () {
                 $('[name="payment"]').val($(this).data('payment'));
+        }).on('change', '[name="delivery_out"]', function () {
+                if($(this).is(':checked')) {
+                        $('#delivery_out_container').show();
+                } else {
+                        $('#delivery_out_container').hide()
+                }
+        }).on('input', '[name="delivery_out_distance"]', function () {
+                console.log('input');
         });
 
         function  fromValidate() {
@@ -194,9 +202,11 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
 
         $scope.product = jsonData.product;
         $scope.qty = 1;
+        $scope.delivery_out_distance = null;
+        $scope.delivery_out_price = $scope.product.shop.delivery_out_price;
 
         $scope.total = function () {
-                return parseInt($scope.product.clientPrice * $scope.qty);
+                return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
         }
 
         $scope.upQty = function () {

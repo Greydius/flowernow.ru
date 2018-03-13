@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('flowApp').controller('ordersList', function($scope, $element, $http) {
+angular.module('flowApp').controller('ordersList', function($scope, $element, $http, CSRF_TOKEN) {
 
         $scope.orders = [];
 
@@ -24,4 +24,28 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
 
 
         $scope.getOrders();
+
+        $scope.changeStatus = function(item, prev_status) {
+
+                var $controller =  $('#change-status-'+item.id);
+
+                $controller.prop('disabled', 'disabled');
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/order/'+item.id,
+                        data: {'status': item.status, 'csrf-token': CSRF_TOKEN}
+
+                }).then(function (response) {
+                        toastr.success('Статус изменен успешно');
+                }, function (response) {
+                        toastr.error('Ошибка');
+                        item.status = prev_status;
+
+                }).then(function (response) {
+                        $controller.prop('disabled', false);
+                });
+
+        };
 });

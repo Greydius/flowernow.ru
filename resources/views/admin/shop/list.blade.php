@@ -46,16 +46,23 @@
                             <th>#</th>
                             <th>Название</th>
                             <th style="width: 110px;">Телефон</th>
+                            <th style="width: 110px;">Доставка (руб.)</th>
                             <th style="width: 160px;">Изменение товара</th>
+                            <th style="width: 100px;">Статус</th>
                             <th style="width: 110px;">Действие</th>
                         </tr>
                     </thead>
                     <tbody class="" style="">
-                        <tr ng-repeat="shop in shops" class="" style="height: 55px;" ng-cloak>
+                        <tr ng-repeat="shop in shops" class="<% shop.delivery_price > 0 ? '' : 'bg-danger' %>" style="height: 55px;" ng-cloak>
                             <td><% $index + 1 %></td>
                             <td><a target="_blank" href="/admin/shop/<% shop.id %>"><% shop.name %></a><br><% shop.city.name %></td>
                             <td><% shop.users[0].phone %></td>
+                            <td><% shop.delivery_price %></td>
                             <td><% shop.product_last_update %></td>
+                            <td>
+                                <span class="m-badge m-badge--success m-badge--wide" ng-show="shop.active">вкл.</span>
+                                <span class="m-badge m-badge--danger m-badge--wide" ng-show="!shop.active">выкл.</span>
+                            </td>
                             <td></td>
                         </tr>
                     </tbody>

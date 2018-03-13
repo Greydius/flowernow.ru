@@ -91,7 +91,7 @@
 
 
 
-        <div class="col-md-9 col-md-pull-3">
+        <div class="col-md-9 col-md-pull-3"  style="background-color: #fff; padding-top: 20px;">
 
 
             @include('front.product.search')
@@ -108,7 +108,7 @@
                     </div>
                 @endif
 
-                {{ $popularProduct->links() }}
+                {{ $popularProduct->appends(request()->query())->links() }}
 
             @else
                 <div class="row">

@@ -33,7 +33,7 @@
         <div class="row">
             <div class="col-xl-12 order-2 order-xl-1">
                 <div class="form-group m-form__group row align-items-center">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="m-input-icon m-input-icon--left">
                             <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
                             <span class="m-input-icon__icon m-input-icon__icon--left">
@@ -44,21 +44,31 @@
                         </div>
                     </div>
 
-                    @if($user->admin)
 
-                        <div class="col-md-4">
-
+                    <div class="col-md-3">
+                        @if($user->admin)
                             <label class="m-checkbox m-checkbox--bold">
                                 <input type="checkbox" id="m_form_status" ng-change="changeStatusFilter()" ng-model="search_not_public">
                                 Не опубликованные
                                 <span></span>
                             </label>
+                        @endif
+                    </div>
 
-                        </div>
 
-                    @endif
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
+                            <span>
+                                <i class="la la-arrows-v"></i>
+                                <span>
+                                    Изменить все цены на...
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="col-md-3">
                         <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon pull-right">
                             <span>
                                 <i class="la la-diamond"></i>
@@ -92,6 +102,7 @@
                         <div class="m-portlet__body" style="padding-top: 0; padding-bottom: 0;">
                             <div class="row">
                                 <div class="col-xl-12 products-img-wraper">
+                                    @if($user->admin)
                                     <div class="products-btns" ng-show="product.shop">
                                         <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Отклонить">
                                             <i class="fa flaticon-signs-2"></i>
@@ -101,12 +112,21 @@
                                             <i class="fa flaticon-interface"></i>
                                         </a>
                                     </div>
+                                    @endif
 
                                     <span class="m-menu__link-badge product-id-badge">
                                         <span class="m-badge m-badge--accent m-badge--wide">
                                             id: <% product.id %>
                                         </span>
                                     </span>
+
+                                        @if($user->admin)
+                                            <span class="m-menu__link-badge product-spec-badge" ng-show="product.special_offer_id">
+                                                <span class="m-badge m-badge--warning m-badge--wide">
+                                                    Спец. предложение
+                                                </span>
+                                            </span>
+                                        @endif
 
                                     <a href ng-click="editItem($event, product)" style="display: block">
                                         <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
@@ -389,6 +409,29 @@
 
                             </div>
 
+                            @if($user->admin)
+                                <div class="form-group m-form__group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="edit-product-height">
+                                                Участвует в спец. предложении
+                                            </label>
+                                            <div class="m-checkbox-list">
+                                                <div ng-repeat="specialOffer in specialOffers">
+                                                    <label class="m-checkbox">
+                                                        <input type="checkbox" name="specialOffer[]" ng-checked="itemSpecialOffers.indexOf(specialOffer.id.toString()) >= 0" value="<% specialOffer.id %>">
+                                                        <% specialOffer.name %>
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            @endif
+
                             <div class="form-group m-form__group">
                                 <div class="row">
                                     <div class="col-md-12 text-danger">
@@ -477,6 +520,49 @@
         </div>
     </script>
 
+    <!--begin::Modal-->
+    <div class="modal fade" id="m_modal_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Изменение цены
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="m-form m-form--fit m-form--label-align-right" method="post" action="{{ route('admin.products.changePrice') }}">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <div class="input-group m-input-group m-input-group--square">
+                                <input type="text" class="form-control m-input" placeholder="" name="percent">
+                                <span class="input-group-addon" id="basic-addon1">
+                                    %
+                                </span>
+                            </div>
+                            <span class="m-form__help">
+                                Если значение со знаком минус - цена товаров уменьшится
+                            </span>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button type="button" class="btn btn-primary" id="change_price">
+                        Изменить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal-->
+
 
 @endsection
 
@@ -505,12 +591,13 @@
 @section('footer')
     <script src="{{ asset('assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/products-list.js?v=2_3') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/ng/productsList.js?v=2_3') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/productsList.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script type="text/javascript">
         jsonData.productTypes = {!! $productTypes->toJson() !!};
         jsonData.colors = {!! $colors->toJson() !!};
         jsonData.flowers = {!! $flowers->toJson() !!};
         jsonData.times = {!! json_encode($times) !!};
+        jsonData.specialOffers = {!! json_encode($specialOffers) !!};
         routes.productUpdate = '{{ route('admin.products.update')  }}';
     </script>
 @stop

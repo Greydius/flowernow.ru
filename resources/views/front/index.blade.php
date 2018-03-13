@@ -151,8 +151,49 @@
 
         <div class="col-md-9 col-md-pull-3" style="background-color: #fff; padding-top: 10px;"  >
 
+                @if(!empty($lowPriceProducts))
+                    <div ng-hide="isFiltered">
+                        <div class="hidden-lg hidden-md hidden-xs">
+                            <br><br>
+                        </div>
+                        <h3 class="margin-top-null"><strong>Самые низкие цены</strong></h3>
+                        <br class="hidden-lg hidden-md">
 
-            @include('front.product.search')
+                        @foreach($lowPriceProducts as $_item)
+                            @include('front.product.list-item')
+                        @endforeach
+
+                        <div class="col-md-6 col-md-offset-3 bottom30">
+                            <a href="/catalog/?order=price" class="btn btn-block btn-more">Смотреть все букеты с низкими ценами</a>
+                        </div>
+
+                        <br clear="all">
+                    </div>
+                @endif
+
+                @if(!empty($specialOffers) && !empty($specialOfferProducts))
+                    @foreach($specialOffers as $specialOffer)
+                        <div ng-hide="isFiltered">
+                            <div class="hidden-lg hidden-md hidden-xs">
+                                <br><br>
+                            </div>
+                            <h3 class="margin-top-null"><strong>{{ $specialOffer->name }}</strong></h3>
+                            <br class="hidden-lg hidden-md">
+
+                            @foreach($specialOfferProducts[$specialOffer->id] as $_item)
+                                @include('front.product.list-item')
+                            @endforeach
+
+                            <div class="col-md-6 col-md-offset-3 bottom30">
+                                <a href="/catalog/" class="btn btn-block btn-more">Перейти в каталог букетов</a>
+                            </div>
+                            @endforeach
+                            <br clear="all">
+                        </div>
+                @endif
+
+
+                @include('front.product.search')
 
                 @if(!empty($popularProducts))
                     @foreach($popularProducts as $item)

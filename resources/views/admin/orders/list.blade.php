@@ -22,9 +22,11 @@
                     <thead>
                         <tr>
                             <th style="width: 65px;">№</th>
-                            <th style="width: 125px;">Дата</th>
+                            <th style="width: 125px;">Дата оплаты</th>
+                            <th style="width: 125px;">Дата доставки</th>
+                            <th>Адрес</th>
                             <th>Состав</th>
-                            <th style="width: 110px;">Цена</th>
+                            <th style="width: 110px;">Оплачено, руб</th>
                             <th style="width: 150px;">Статус</th>
                             <th style="width: 50px;"></th>
                         </tr>
@@ -34,10 +36,16 @@
 
                         <tr ng-repeat="order in orders" >
                             <td><% order.id %></td>
+                            <td><% order.payed_at %></td>
                             <td>
                                 <% order.receiving_date %>
                                 <br>
                                 <% order.receiving_time %>
+                            </td>
+                            <td style="word-break: break-all;">
+                                <% order.recipient_address + (order.recipient_flat ? ', кв./оф. ' + order.recipient_flat : '') %>
+                                <br>
+                                <% order.delivery_out_distance ? 'доставка за город: ' + order.delivery_out_distance + ' км. оплачена' : '' %>
                             </td>
                             <td>
                                 <span ng-repeat="orderList in order.order_lists">
@@ -45,14 +53,22 @@
                                 </span>
                             </td>
                             <td>
-                                <b><% order.amount %></b>р.
-                                    <br>
-                                <span style="font-weight: bold;">Вам:</span> <% order.amountShop %>р.
+                                <% order.amountShop %>
                             </td>
                             <td>
-                                <span class="m-badge  m-badge--success m-badge--wide" ng-show="order.status == 'new'">Новый</span>
-                                <span class="m-badge  m-badge--warning m-badge--wide" ng-show="order.status == 'accepted'">Принят</span>
+                                <select class="form-control" id="change-status-<% order.id %>" ng-model="order.status" ng-change="changeStatus(order, '<% order.status %>')" ng-hide="order.status == 'completed'">
+                                    <option value="new" ng-show="order.status == 'new'">Новый</option>
+                                    <option value="accepted" ng-show="order.status == 'new' || order.status == 'accepted'">Принят</option>
+                                    <option value="completed" ng-show="order.status == 'completed' || order.status == 'accepted'">Выполнен</option>
+                                </select>
+
                                 <span class="m-badge  m-badge--info m-badge--wide" ng-show="order.status == 'completed'">Выполнен</span>
+
+                                <!--
+                                <span class="m-badge  m-badge--success m-badge--wide" ng-show="order.status == 'new'"><a href="#">Новый</a></span>
+                                <span class="m-badge  m-badge--warning m-badge--wide" ng-show="order.status == 'accepted'"><a href="#">Принят</a></span>
+
+                                -->
                             </td>
                             <td>
                                 <a href="/admin/order/<% order.id %>" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Просмотр">

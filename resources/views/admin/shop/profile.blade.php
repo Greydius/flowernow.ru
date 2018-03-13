@@ -71,6 +71,24 @@
 
                                     <div class="m-portlet__body">
 
+                                        @if($user->admin)
+
+
+                                            <div class="row">
+                                                <div class="col-3">
+                                                    <span class="m-switch m-switch--outline m-switch--success">
+                                                        <label class="col-form-label">
+                                                            Магазин включен:
+                                                        </label>
+                                                        <label>
+                                                            <input type="checkbox" {{ $shop->active ? 'checked="checked"' : null }} name="active">
+                                                            <span></span>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                         <div class="form-group m-form__group">
                                             <label for="shop_name">
                                                 Название магазина <span class="text-danger req-star">*</span>

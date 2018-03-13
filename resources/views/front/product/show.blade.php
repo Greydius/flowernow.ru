@@ -9,7 +9,7 @@
 
     <br>
     <ol class="breadcrumb">
-        <li><a href="#">Цветы в {{ $product->shop->city->name_prepositional }}</a></li>
+        <li><a href="/">Цветы в {{ $product->shop->city->name_prepositional }}</a></li>
         <li><a href="{{ route('shop.products', ['id' => $product->shop->id]) }}">Магазин {{ $product->shop->name }}</a></li>
         <li class="active">{{ $product->name }}</li>
     </ol>
@@ -92,6 +92,7 @@
                 <div class="col-sm-6 col-md-5">
                     @if($product->width || $product->height)
                         <ul class="list-unstyled">
+                            <li>ID: {{ $product->id }}</li>
                             @if($product->width)
                             <li>Ширина {{ $product->width }} см</li>
                             @endif

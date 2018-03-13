@@ -255,6 +255,10 @@ class ShopsController extends Controller
 
                         $shop->round_clock = (int)$request->shop_round_clock;
 
+                        if($this->user->admin) {
+                                $shop->active = !empty($request->active) ? 1 : 0;
+                        }
+
 
                         $shop->save();
 

@@ -66,20 +66,42 @@
 								</div>
 
 								<div class="row">
-									<div class="col-sm-8">
+									<div class="col-sm-12">
                                         <label>
                                             г. {{ $product->shop->city->name }}
                                         </label>
 										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Адрес доставки (улица и дом)" name="recipient_address">
+											<input type="text" class="form-control" placeholder="Адрес доставки (улица, дом, квартира/офис)" name="recipient_address">
 										</div>
 									</div>
+									@if($product->shop->delivery_out && $product->shop->delivery_out_price)
+										<div class="col-sm-12">
+											<div class="form-group">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" name="delivery_out"> Доставка за город
+													</label>
+												</div>
+												<div id="delivery_out_container" style="display: none">
+
+													<input type="text" class="form-control" placeholder="Км. от границы города" name="delivery_out_distance" ng-model="delivery_out_distance">
+													<p class="text-muted">{{ $product->shop->delivery_out_price }} руб/1 км</p>
+													@if($product->shop->delivery_out_max)
+														<p class="text-muted">Максимум {{ $product->shop->delivery_out_max }} км</p>
+													@endif
+
+												</div>
+											</div>
+										</div>
+									@endif
+									<!--
 									<div class="col-sm-4">
                                         <label>&nbsp;</label>
 										<div class="form-group">
 											<input type="text" class="form-control" placeholder="Квартира / Офис" name="recipient_flat">
 										</div>
 									</div>
+									-->
 								</div>
 								<div class="">
 									<label>
@@ -312,6 +334,6 @@
 	<script src="{{ asset('assets/plugins/moment/moment.min.js') }}" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
-    <script src="{{ asset('assets/front/ng/order.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/front/ng/order.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
 
 @stop

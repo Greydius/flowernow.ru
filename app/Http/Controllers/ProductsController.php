@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Image;
+use App\Model\SpecialOffer;
 
 class ProductsController extends Controller
 {
@@ -51,17 +52,52 @@ class ProductsController extends Controller
                         $currentType = ProductType::where('slug', $request->product_type)->first();
                 }
 
+                $specialOffers = \DB::table('special_offers')->whereRaw('? between date_from and date_to', [date('Y-m-d')])->get();
+
+                $specialOfferProducts = [];
+
+                if(!empty($specialOffers)) {
+                        foreach ($specialOffers as $specialOffer) {
+                                $city_id = $this->current_city->id;
+                                $specialOfferProduct = Product::whereHas('shop', function($query) use ($city_id) {
+                                        $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                                })->where('price', '>', 0)->where('status', 1)->where('pause', 0)->whereRaw('FIND_IN_SET(? ,special_offer_id)', [$specialOffer->id]);
+
+                                if($specialOfferProduct->count()) {
+                                        $specialOfferProducts[$specialOffer->id] = $specialOfferProduct->inRandomOrder()->take(9)->get();
+                                }
+                        }
+                }
+
+                $city_id = $this->current_city->id;
+                $lowPriceProducts = Product::whereHas('shop', function($query) use ($city_id) {
+                                $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                        })
+                        ->where('price', '>', 0)
+                        ->where('status', 1)
+                        ->where('pause', 0)
+                        ->whereNotIn('product_type_id', [7, 8, 9, 10])
+                        ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))')->take(9)->get();
+
+
+                if(!empty($this->user) && $this->user->admin) {
+                        //dd($lowPriceProducts);
+                }
+
                 return view($viewFile,[
                         'title' => $title,
                         'meta' => $meta,
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
+                        'lowPriceProducts' => $lowPriceProducts,
                         'prices' => Price::all(),
                         'sizes' => Size::all(),
                         'productTypes' => $productTypes,
                         'currentType' => $currentType,
                         'colors' => Color::all(),
                         'flowers' => Flower::orderBy('popularity', 'desc')->limit(9)->get(),
+                        'specialOffers' => $specialOffers,
+                        'specialOfferProducts' => $specialOfferProducts,
                 ]);
         }
 
@@ -81,8 +117,9 @@ class ProductsController extends Controller
                 $times = \App\Helpers\Data::times();
 
                 return view('admin.products.list', [
-                        'productTypes' => ProductType::all(),
+                        'productTypes' => ProductType::where('show_on_main', '1')->get(),
                         'colors' => Color::all(),
+                        'specialOffers' => SpecialOffer::all(),
                         'flowers' => Flower::orderBy('popularity', 'desc')->get(),
                         'times' => $times
                 ]);
@@ -495,6 +532,7 @@ class ProductsController extends Controller
                 $product->color_id = $request->input('color_id');
                 $product->make_time = $request->input('make_time');
                 $product->description = $request->input('description');
+                $product->special_offer_id = $request->input('special_offer_id');
 
                 $product->compositions()->delete();
 
@@ -525,7 +563,7 @@ class ProductsController extends Controller
                 $updated_at = $product->updated_at;
 
                 if($product->save()) {
-                        if($updated_at != $product->updated_at || $product->status == 0) {
+                        if(!$this->user->admin && ($updated_at != $product->updated_at || $product->status == 0)) {
                                 $product->status = 2;
                                 $product->save();
                         }
@@ -696,6 +734,11 @@ class ProductsController extends Controller
         }
         
         public function filter($query = null, Request $request) {
+
+                if(empty($query)) {
+                        return $this->catalog($request);
+                }
+
                 $queries = explode('/', $query);
                 if(count($queries) == 2) {
                         $request->product_type = $queries[0];
@@ -712,5 +755,61 @@ class ProductsController extends Controller
                 }
 
                 return redirect()->route('front.index');
+        }
+
+        private function catalog(Request $request) {
+
+                $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);;
+                $title = 'Каталог букетов';
+                $meta = [];
+
+                if(!empty($this->user) && $this->user->admin) {
+                        //dd($request->order);
+                }
+
+                if(!empty($request->order)) {
+                        if($request->order == 'price') {
+                                $title = 'Каталог букетов c низкими ценами';
+                        }
+                }
+
+                return view('front.product.list',[
+                        'title'                 => $title,
+                        'meta'                  => $meta,
+                        'popularProduct'        => $popularProduct,
+                        'prices'                => Price::all(),
+                        'sizes'                 => Size::all(),
+                        'productTypes'          => ProductType::where('show_on_main', '1')->get(),
+                        'currentType'           => null,
+                        'colors'                => Color::all(),
+                        'flowers'               => Flower::orderBy('popularity', 'desc')->limit(9)->get()
+                ]);
+        }
+
+        public function changePrice(Request $request) {
+                if(!empty($request->percent)) {
+
+                        $statusCode = 200;
+                        $message = '';
+
+                        try {
+                                $shop = $this->user->getShop();
+                                \DB::update('UPDATE products SET price = price + (price * (?/100)) WHERE shop_id = ?', [(int)$request->percent, $shop->id]);
+                                $message = "Цены успешно изменены";
+                        } catch (\Exception $e) {
+                                $statusCode = 400;
+                                $message = $e->getMessage();
+                        } finally {
+                                return response()->json([
+                                        'message' => $message,
+                                        'code' => $statusCode
+                                ], $statusCode);
+                        }
+                }
+
+                return response()->json([
+                        'message' => 'Укажите процент изменения цены',
+                        'code' => 200
+                ], 400);
         }
 }

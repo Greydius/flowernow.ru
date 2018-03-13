@@ -5,10 +5,23 @@
     <div class="container order-details bottom30">
 
         <br>
-        <ol class="breadcrumb">
-            <li><a href="#">Цветы в {{ $order->shop->city->name_prepositional }}</a></li>
-            <li><a href="{{ route('shop.products', ['id' => $order->shop->id]) }}">Магазин {{ $order->shop->name }}</a></li>
-        </ol>
+        @if($order->payed)
+            <div class="row bottom20">
+                <div class="col-md-12">
+                    <figure class="highlight">
+
+                        <div class="pre">
+                            <p class="text-danger"><strong>Заказ №{{ $order->id }} оплачен!</strong></p>
+                            <p>Отслеживание заказа: <a href="{{ $order->getDetailsLink() }}">{{ $order->getDetailsLink() }}</a></p>
+                            @if(!empty($order->email))
+                                <p>На Ваш email отправлено информационное сообщение о заказе.</p>
+                            @endif
+                        </div>
+
+                    </figure>
+                </div>
+            </div>
+        @endif
 
         <div class="row bottom20">
             <div class="col-md-12">
@@ -84,7 +97,7 @@
                             <p>Телефон горячей линии: <a href="tel:{{ config('site.phones.hot_normalized') }}" class="text-danger"><strong>{{ config('site.phones.hot') }}</strong></a> </p>
                             <p>- обращайтесь по любым вопросам заказа</p>
                         @else
-                            <p>Телефон, назначенного на Ваш заказ, флориста: <a href="tel:{{ config('site.phones.hot_normalized') }}" class="text-danger"><strong>{{ $order->shop->city->phone }}</strong></a> </p>
+                            <p>Телефон, назначенного на Ваш заказ, флориста: <a href="tel:{{ config('site.phones.hot_normalized') }}" class="text-danger"><strong>{{ $order->shop->getContactPhones()[0] }}</strong></a> </p>
                             <p>- обращайтесь по любым вопросам заказа</p>
                         @endif
                     </div>

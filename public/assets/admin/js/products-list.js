@@ -69,4 +69,41 @@ var myDropzoneOptions = {
 
 $(document).ready(function() {
         $('#myDropzone').dropzone();
+
+        $(document).on('click', '#change_price', function() {
+
+                var $btn = $(this);
+                var $form = $('#m_modal_5 form');
+                var url = $form.attr('action');
+
+
+                $btn.prop('disabled', true);
+                $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: $form.serialize(),
+                        success: function (response) {
+                                $btn.prop('disabled', false);
+                                if(response.message) {
+                                        toastr.success(response.message);
+                                } else {
+                                        toastr.success('Данные успешно сохранены!');
+                                }
+
+                                window.location = '/admin/products';
+                        },
+                        error: function (response) {
+
+                                $btn.prop('disabled', false);
+
+                                if(response.responseJSON.message) {
+                                        toastr.error(response.responseJSON.message);
+                                } else {
+                                        toastr.error('Ошибка сохранения');
+                                }
+
+                        },
+                        dataType: 'json'
+                });
+        })
 })

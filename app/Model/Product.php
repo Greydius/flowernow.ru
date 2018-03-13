@@ -104,10 +104,10 @@ class Product extends MainModel
                 $currentPage = $page;
 
                 $productRequest = self::with(['shop'  => function($query) {
-                            $query->select(['id', 'name']);
+                            $query->select(['id', 'name', 'delivery_price']);
                         }])->whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id);
-                        })->where('price', '>', 0);
+                                $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                        })->where('price', '>', 0)->where('status', 1)->where('pause', 0);
 
                 if(!empty($request)) {
                         if(!empty($request->productType)) {
@@ -159,6 +159,17 @@ class Product extends MainModel
 
                                 $productRequest->where('shop_id', (int)$request->shop_id);
                         }
+
+                        if(!empty($request->order)) {
+                                if($request->order == 'price') {
+                                        $productRequest->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
+                                        $productRequest->whereNotIn('product_type_id', [7, 8, 9, 10]);
+                                }
+
+                                //$productRequest->appends($request->order);
+                        } else {
+                                $productRequest->orderBy('sort', 'DESC');
+                        }
                 }
 
                 Paginator::currentPageResolver(function () use ($currentPage) {
@@ -181,7 +192,7 @@ class Product extends MainModel
         }
 
         public function getClientPriceAttribute() {
-                return ceil($this->price * 1.2);
+                return ceil(ceil($this->price * 1.2) + $this->shop->delivery_price);
         }
 
         public function getUrlAttribute() {

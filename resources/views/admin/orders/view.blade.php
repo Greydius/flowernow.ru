@@ -160,6 +160,12 @@
                                                             {{ $order->recipient_address.' '.$order->recipient_flat }}
                                                             </p>
 
+                                                            @if($order->delivery_out_distance)
+                                                                <p class="lead">
+                                                                    доставка за город: {{ $order->delivery_out_distance }} км.
+                                                                </p>
+                                                            @endif
+
 
                                                         </span>
                                                     </div>

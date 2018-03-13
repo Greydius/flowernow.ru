@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\MainModel;
 use App\Model\OrderList;
+use \App\Helpers\Sms;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends MainModel
@@ -85,7 +86,7 @@ class Order extends MainModel
                         $amount += $orderList->client_price;
                 }
 
-                return $amount;
+                return $amount + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
         }
 
         public function getAmountAttribute() {
@@ -99,7 +100,7 @@ class Order extends MainModel
                         $amount += $orderList->shop_price;
                 }
 
-                return $amount;
+                return $amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
         }
 
         public function getAmountShopAttribute() {
@@ -128,5 +129,17 @@ class Order extends MainModel
 
         public function getDetailsLink() {
                 return route('order.details', ['key' => $this->key]);
+        }
+        
+        public function changeStatusNotification() {
+                try {
+                        if($this->status ==  Order::$STATUS_ACCEPTED) {
+                                if(!empty($this->phone)) {
+                                        Sms::instance()->send($this->phone, "Ваш заказ в работе, тел. исполнителя: +".$this->shop->phone);
+                                }
+                        }
+                }  catch(\Exception $e){
+
+                }
         }
 }

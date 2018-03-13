@@ -5,7 +5,9 @@
                 $interpolateProvider.endSymbol('%>');
         });
 
-        myApp.directive('select2', ['$timeout', function($timeout) {
+        myApp.config(['$httpProvider', function($httpProvider) {
+              $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+        }]).directive('select2', ['$timeout', function($timeout) {
                 return {
                         link: function(scope, element, attr) {
                                 $timeout(function() {

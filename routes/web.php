@@ -18,6 +18,8 @@ Route::get('/', [
 ]);
 
 Route::get('/register ', '\App\Http\Controllers\Auth\RegisterController@showRegistrationForm');
+Route::get('/logi', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
+
 
 /*SHOP*/
 Route::get('shop/{id}', [
@@ -146,6 +148,37 @@ Route::group(['prefix' => 'api/v1'], function() {
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
+        /* SPECIAL OFFERS*/
+        Route::get('specialOffers', [
+                'uses' => 'SpecialOffersController@index',
+                'as' => 'admin.specialOffers.list'
+        ]);
+
+        Route::get('specialOffers/create', [
+                'uses' => 'SpecialOffersController@create',
+                'as' => 'admin.specialOffers.create'
+        ]);
+
+        Route::post('specialOffers/store', [
+                'uses' => 'SpecialOffersController@store',
+                'as' => 'admin.specialOffers.store'
+        ]);
+
+        Route::post('specialOffers/destroy/{id}', [
+                'uses' => 'SpecialOffersController@destroy',
+                'as' => 'admin.specialOffers.destroy'
+        ]);
+
+        Route::get('specialOffers/edit/{id}', [
+                'uses' => 'SpecialOffersController@edit',
+                'as' => 'admin.specialOffers.edit'
+        ]);
+
+        Route::post('specialOffers/update/{id}', [
+                'uses' => 'SpecialOffersController@update',
+                'as' => 'admin.specialOffers.update'
+        ]);
+
         /* ORDERS*/
         Route::get('orders', [
                 'uses' => 'OrdersController@orders',
@@ -230,6 +263,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         Route::post('products/update', [
                 'uses' => 'ProductsController@update',
                 'as' => 'admin.products.update'
+        ]);
+
+        Route::post('products/changePrice', [
+                'uses' => 'ProductsController@changePrice',
+                'as' => 'admin.products.changePrice'
         ]);
 
 

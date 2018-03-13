@@ -357,8 +357,9 @@ angular.module('flowApp').controller('productEdit', function($scope, close, item
         //$rootScope.photos = item.photos;
         //$scope.photos = $rootScope.photos;
         $scope.photos = photos;
+        $scope.specialOffers = jsonData.specialOffers;
 
-        console.log($scope.photos);
+        $scope.itemSpecialOffers = item.special_offer_id ? item.special_offer_id.split(',') : [];
 
         $scope.productTypes = jsonData.productTypes;
         $scope.colors = jsonData.colors;
@@ -367,6 +368,13 @@ angular.module('flowApp').controller('productEdit', function($scope, close, item
         $scope.item.make_time = $scope.item.make_time ? $scope.item.make_time : 90;
 
         $scope.save = function(result) {
+
+                var specialOffers = [];
+                $('[name="specialOffer[]"]:checked').each(function () {
+                        specialOffers.push($(this).val());
+                });
+
+                result.special_offer_id = specialOffers.join();
 
                 $http({
 

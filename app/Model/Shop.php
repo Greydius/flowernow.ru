@@ -77,4 +77,26 @@ class Shop extends MainModel
 
                 return $return;
         }
+
+        public function getContactPhones() {
+                $phones = [];
+
+                if(!empty($this->phone)) {
+                        $phones[] = $this->phone;
+                }
+
+                foreach ($this->workers()->where('position_id', 2)->get() as $worker) {
+                        if(!empty($worker->phone)) {
+                                $phones[] = $this->phone;
+                        }
+                }
+
+                foreach ($this->workers()->where('position_id', 1)->get() as $worker) {
+                        if(!empty($worker->phone)) {
+                                $phones[] = $this->phone;
+                        }
+                }
+
+                return $phones;
+        }
 }

@@ -240,6 +240,7 @@ return [
                 'Validator' => Illuminate\Support\Facades\Validator::class,
                 'View' => Illuminate\Support\Facades\View::class,
 
+                'Carbon' => 'Carbon\Carbon',
 
                 'Slug' => 'IvanLemeshev\Laravel5CyrillicSlug\SlugFacade',
                 'Image' => Intervention\Image\Facades\Image::class,
