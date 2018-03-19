@@ -101,7 +101,7 @@
                             @endif
                         </ul>
                     @endif
-                    @if(!empty($product->compositions))
+                    @if(count($product->compositions))
                         <p><strong>Состав</strong></p>
                         <ul class="list-unstyled">
                             @foreach($product->compositions as $composition)

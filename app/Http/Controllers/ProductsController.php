@@ -292,7 +292,7 @@ class ProductsController extends Controller
                         }
 
                         if(!empty($request->search)) {
-                                $productRequestModel->orWhere('id', $request->search);
+                                $productRequestModel->orWhere('id', $request->search)->orWhere('name', 'like', "%$request->search%");
                         }
 
                         if(!empty((int)$request->status)) {

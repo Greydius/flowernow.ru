@@ -246,18 +246,18 @@
                 <hr>
                 <div class="row">
                     <div class="col-xs-6">
-                        <p class="world-popular"><a href="#">Розы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Лилии</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Герберы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Тюльпаны</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Каллы</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/roza">Розы</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/liliya">Лилии</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/gerbera">Герберы</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/tyulpan">Тюльпаны</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/kalla-zantedeskhiya">Каллы</a>, <span class="text-muted"></span></p>
                     </div>
                     <div class="col-xs-6">
-                        <p class="world-popular"><a href="#">Ромашки</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Фиалки</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Хризантемы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Гибискус</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="#">Все цветы...</a></p>
+                        <p class="world-popular"><a href="/catalog/all/romashka-nivyanik">Ромашки</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/fialka-viola">Фиалки</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/khrizantema">Хризантемы</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/gibiskus-kitayskaya-roza">Гибискус</a>, <span class="text-muted"></span></p>
+                        <p class="world-popular"><a href="/catalog/all/vse-cvety">Все цветы...</a></p>
                     </div>
                 </div>
             </div>

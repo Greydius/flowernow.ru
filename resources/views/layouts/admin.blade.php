@@ -180,6 +180,20 @@
 									</a>
 								</li>
 							@endif
+
+							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.finance' ? 'm-menu__item--active' : null }}">
+								<a href="{{ $user->admin ?  route('admin.invoices') : route('admin.finance') }}" class="m-menu__link ">
+									<i class="m-menu__link-icon fa fa-money"></i>
+									<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Финансы
+											</span>
+
+										</span>
+									</span>
+								</a>
+							</li>
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->

@@ -65,6 +65,11 @@ Route::get('payment/success', [
         'as' => 'payment.success'
 ]);
 
+Route::get('payment/success-ur/{order_id}', [
+        'uses' => 'OrdersController@success',
+        'as' => 'payment.success_ur'
+]);
+
 /*Payment notifications*/
 Route::post('payment/cloudpayments/checkpayment', [
         'uses' => 'OrdersController@checkpayment',
@@ -147,6 +152,27 @@ Route::group(['prefix' => 'api/v1'], function() {
 
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
+        
+        Route::get('test/test', [
+                'uses' => 'HomeController@test',
+                'as' => 'admin.test'
+        ]);
+
+        /* FINANCE */
+        Route::get('finance', [
+                'uses' => 'FinanceController@index',
+                'as' => 'admin.finance'
+        ]);
+
+        Route::post('finance/request', [
+                'uses' => 'FinanceController@request',
+                'as' => 'admin.finance.request'
+        ]);
+
+        Route::get('invoices', [
+                'uses' => 'InvoicesController@index',
+                'as' => 'admin.invoices'
+        ]);
 
         /* SPECIAL OFFERS*/
         Route::get('specialOffers', [

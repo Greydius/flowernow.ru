@@ -4,6 +4,8 @@ namespace App\Model;
 
 use App\MainModel;
 use App\Model\OrderList;
+use App\Model\Transaction;
+use App\Model\Shop;
 use \App\Helpers\Sms;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -141,5 +143,43 @@ class Order extends MainModel
                 }  catch(\Exception $e){
 
                 }
+        }
+
+        public function createTransaction() {
+
+                if(!Transaction::where('action', 'order')->where('action_id', $this->id)->count()) {
+
+                        \DB::beginTransaction();
+
+                        try{
+                                $transaction = new Transaction();
+                                $transaction->shop_id = $this->shop_id;
+                                $transaction->action = 'order';
+                                $transaction->action_id = $this->id;
+                                $transaction->amount = $this->amountShop();
+                                $transaction->subtract = $this->amount() - $transaction->amount;
+
+                                if($transaction->save()) {
+                                        $shop = Shop::find($this->shop_id);
+                                        $shop->balance = $shop->balance + $transaction->amount;
+                                        if($shop->save()) {
+                                                \DB::commit();
+                                        }
+
+                                        return $transaction->id;
+                                }
+
+                                \DB::rollBack();
+
+                        } catch (\Exception $e) {
+
+                                \DB::rollBack();
+
+                                throw $e;
+                        }
+
+                }
+
+                return null;
         }
 }

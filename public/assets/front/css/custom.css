@@ -140,8 +140,8 @@ body.preloader-site {
 }
 
 .btn-more {
-    color: #f60;
-    border: 1px solid #f60;
+    color: #df291e ;
+    border: 1px solid #df291e ;
     width: 100%;
     background-color: #fff;
     border-radius: 0px;
@@ -149,7 +149,7 @@ body.preloader-site {
 }
 
 .btn-more:hover, .btn-more:focus {
-    background:#f60;
+    background:#df291e ;
     opacity:.8;
     color: #fff;
 }
@@ -385,4 +385,27 @@ header .location-icon {
 
 .order-steps.no-active h4, .order-steps.no-active span.digital {
     color: #999 !important;
+}
+
+.media-item .description-media-item .buy .btn {
+        border-radius: 0;
+        border-radius: 0;
+        padding: .1rem 1.9rem;
+}
+
+.media-item .description-media-item .buy .buy-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.media-item .description-media-item .btn-danger.btn-outline {
+    color: #df291e;
+    background-color: transparent;
+}
+
+.media-item .description-media-item .btn-danger.btn-outline:hover {
+    color: #fff;
+    background: #df291e;
+    border-color: #df291e;
 }

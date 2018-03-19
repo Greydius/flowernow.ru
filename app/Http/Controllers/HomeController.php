@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Order;
+use App\Model\Transaction;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -68,5 +70,15 @@ class HomeController extends Controller
 
     public function terms() {
             return view('front.terms');
+    }
+
+    public function test() {
+
+            $orders = Order::where('status', 'completed')->where('payed', '1')->get();
+            foreach ($orders as $order) {
+                    echo $order->createTransaction().'<br>';
+            }
+            echo "ds";
+            exit();
     }
 }

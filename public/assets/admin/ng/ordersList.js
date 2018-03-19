@@ -13,6 +13,11 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
 
                 }).then(function (response) {
                         $scope.orders = response.data.orders;
+                        angular.forEach($scope.orders, function(value, key) {
+                          value.payed_at_dt = new Date(value.payed_at);
+                          value.receiving_date_dt = new Date(value.receiving_date);
+                        });
+                        
                 }, function (response) {
 
 

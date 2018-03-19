@@ -111,10 +111,27 @@ class OrdersController extends Controller
 
                                 if($orderListCount) {
                                         \DB::commit();
-                                        return response()->json([
+
+                                        if($order->payment == Order::$PAYMENT_RS) {
+                                                Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                                        $message->to('nkornushin@gmail.com')
+                                                                ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
+                                                });
+                                        } else {
+                                                Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                                        $message->to('service@floristum.ru')
+                                                                ->subject('Создан новый заказ №'. $order->id);
+                                                });
+                                        }
+
+                                        $response = [
                                                 'order_id' => $order->id,
                                                 'message' => '',
-                                                'cloudpayments' => [
+                                                'code' => 200
+                                        ];
+
+                                        if($order->payment == Order::$PAYMENT_CARD) {
+                                                $cloudpaymentsDetails = [
                                                         'publicId'      => \Config::get('cloudpayments.publicId'),  //id из личного кабинета
                                                         'description'   => 'Заказ №'.$order->id, //назначение
                                                         'amount'        => $order->amount(), //сумма
@@ -124,9 +141,14 @@ class OrdersController extends Controller
                                                         'data'          => [
                                                                 'link' => $order->getDetailsLink()
                                                         ]
-                                                ],
-                                                'code' => 200
-                                        ], 200);
+                                                ];
+
+                                                $response['cloudpayments'] = $cloudpaymentsDetails;
+                                        } elseif($order->payment == Order::$PAYMENT_RS) {
+                                                $response['link'] = route('payment.success_ur', ['order_id' => $order->id]);
+                                        }
+
+                                        return response()->json($response, 200);
 
                                 } else {
                                         \DB::rollback();
@@ -255,8 +277,13 @@ class OrdersController extends Controller
                 }
         }
 
-        function success() {
-                return view('front.order.success',[]);
+        function success($order_id = null) {
+
+                if(empty($order_id)) {
+                        return view('front.order.success',[]);
+                } else {
+                        return view('front.order.success-ur',[]);
+                }
         }
 
         function orders() {
@@ -277,7 +304,7 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $orders = Order::with('orderLists.product')->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get()->toArray();
+                                $orders = Order::with('orderLists.product')->with('shop.city.region')->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get()->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
                         } else {
                                 $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
@@ -342,6 +369,7 @@ class OrdersController extends Controller
                                         if($order->status == Order::$STATUS_ACCEPTED) {
                                                 $order->status = Order::$STATUS_COMPLETED;
                                                 $order->save();
+                                                $order->createTransaction();
                                         }
                                         break;
                         }

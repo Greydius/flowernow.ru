@@ -77,7 +77,26 @@ $(document).ready(function() {
         }).on('click', '.create-order', function () {
                 var form = $(this).parents('form');
 
+                console.log(form.serialize());
+
                 if(fromValidate()) {
+                        $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
+                        $('[name="recipient_phone"]').val($('#recipient_phone').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
+
+                        submitForm(form);
+                } else {
+                        $('html, body').animate({
+                                scrollTop: $(".error", form).eq(0).offset().top - 80
+                        }, 500);
+                }
+
+                return false;
+        }).on('click', '.create-order-ur', function () {
+                var form = $(this).parents('form');
+
+                console.log(form.serialize());
+
+                if(fromValidateUr()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
                         $('[name="recipient_phone"]').val($('#recipient_phone').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
 
@@ -158,6 +177,23 @@ $(document).ready(function() {
                 return valid;
         }
 
+        function  fromValidateUr() {
+
+                var valid = fromValidate();
+
+                var phoneError = false;
+                var ur_name = $('[name="ur_name"]');
+                ur_name.removeClass('error');
+
+                if(ur_name.val() == '') {
+                        $.notify("Введите название юр. лица", "error");
+                        ur_name.addClass('error');
+                        valid = false;
+                }
+
+                return valid;
+        }
+
         function  submitForm($form) {
 
                 preloader('show');
@@ -175,6 +211,8 @@ $(document).ready(function() {
 
                                 if(data.cloudpayments) {
                                         pay(data.cloudpayments);
+                                } else if(data.link) {
+                                        window.location = data.link;
                                 }
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {

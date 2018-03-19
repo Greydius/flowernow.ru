@@ -5,6 +5,7 @@
     <div class="container">
         <br><br><br><br><br><br><br><br><br><br><br>
         <h1 class="h2 text-center">Спасибо за заказ...</h1>
+        <p class="text-center text-muted">В ближайшее время с Вами связется наш менеджер</p>
         <br><br><br><br><br><br><br><br><br><br><br>
     </div>
 

@@ -5,10 +5,12 @@ namespace App\Model;
 
 
 use App\MainModel;
+use App\Model\Transaction;
 
 class Shop extends MainModel
 {
     //
+        protected $fillable = ['balance'];
         protected $hidden = ['email', 'phone', 'phone_confirmed', 'email_confirmed', 'created_at', 'updated_at', 'deleted_at'];
 
         public static $logoRules = [
@@ -98,5 +100,17 @@ class Shop extends MainModel
                 }
 
                 return $phones;
+        }
+
+        public function frozenBalance() {
+                $amount = Transaction::where('id', '>', 103)->where('shop_id', $this->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))->sum('amount');
+
+                return $amount;
+        }
+
+        public function availableOutBalance() {
+
+                $outBalance = $this->balance - $this->frozenBalance();
+                return ($outBalance >= 0 ? $outBalance : 0);
         }
 }

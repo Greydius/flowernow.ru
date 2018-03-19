@@ -27,7 +27,43 @@
 				<h1 class="h2 margin-top-null"><strong>Оформление заказа на доставку</strong></h1>
 
 				<div class="row">
-					<div class="col-md-8">
+
+					<div class="col-md-4 col-md-push-8">
+						<div class="media order-total-cost">
+							<div class="media-left">
+								<img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
+							</div>
+							<div class="media-body">
+								<div class="row">
+									<div class="col-xs-6">{{ $product->name }}</div>
+									<div class="col-xs-6">
+										<div class="row">
+											<div class="col-xs-6">
+												<ul class="list-inline text-center">
+													<li><span class="glyphicon glyphicon-menu-left text-muted order-arrow"  ng-click="downQty()" aria-hidden="true"></span></li>
+													<li ng-cloak><% qty %></li>
+													<input type="hidden" name="qty" value="<% qty %>">
+													<li><span class="glyphicon glyphicon-menu-right text-muted order-arrow" ng-click="upQty()" aria-hidden="true"></span></li>
+												</ul>
+											</div>
+											<div class="col-xs-6 text-right" ng-cloak>
+												<% product.clientPrice %> <i class="fa fa-rub"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="row">
+									<div class="col-xs-6"><strong>Итого</strong></div>
+									<div class="col-xs-6 text-right" ng-cloak><strong><% total() %> <i class="fa fa-rub"></i></strong></div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-md-8 col-md-pull-4">
 						<div class="bg-white order-form">
 							<form id="order-frm" method="post" action="{{ route('order.create') }}">
 								{{ csrf_field() }}
@@ -180,44 +216,45 @@
 											<div class="text-center" ng-cloak>
 												<button type="button" class="btn btn-warning create-order">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
 											</div>
+											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
 										</div>
 										<div role="tabpanel" class="tab-pane" id="oplata3">
 											<br><br>
 											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Название юр. лица">
+												<input type="text" class="form-control" placeholder="Название юр. лица" name="ur_name">
 											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group">
-														<input type="text" class="form-control" placeholder="ИНН">
+														<input type="text" class="form-control" placeholder="ИНН" name="ur_inn">
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group">
-														<input type="text" class="form-control" placeholder="КПП">
+														<input type="text" class="form-control" placeholder="КПП" name="ur_kpp">
 													</div>
 												</div>
 											</div>
 											<div class="form-group">
-												<input type="text" class="form-control" placeholder="Юридический адрес">
+												<input type="text" class="form-control" placeholder="Юридический адрес" name="ur_address">
 											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<div class="form-group">
-														<input type="text" class="form-control" placeholder="Название банка">
+														<input type="text" class="form-control" placeholder="Название банка" name="ur_bank">
 													</div>
 												</div>
 												<div class="col-sm-6">
 													<div class="form-group">
-														<input type="text" class="form-control" placeholder="Ваш Email">
+														<input type="text" class="form-control" placeholder="Ваш Email" name="ur_email">
 													</div>
 												</div>
 											</div>
 											<hr>
 											<div class="text-center" ng-cloak>
-												<button type="button" class="btn btn-warning create-order">Выставить счёт <% total() %> <i class="fa fa-rub"></i></button>
+												<button type="button" class="btn btn-warning create-order-ur">Выставить счёт <% total() %> <i class="fa fa-rub"></i></button>
 											</div>
-											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
+											<p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
 										</div>
 									</div>
 								</div>
@@ -261,40 +298,7 @@
 						</div>
 
 					</div>
-					<div class="col-md-4">
-						<div class="media order-total-cost">
-							<div class="media-left">
-								<img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
-							</div>
-							<div class="media-body">
-								<div class="row">
-									<div class="col-xs-6">{{ $product->name }}</div>
-									<div class="col-xs-6">
-										<div class="row">
-											<div class="col-xs-6">
-												<ul class="list-inline text-center">
-													<li><span class="glyphicon glyphicon-menu-left text-muted order-arrow"  ng-click="downQty()" aria-hidden="true"></span></li>
-													<li ng-cloak><% qty %></li>
-													<input type="hidden" name="qty" value="<% qty %>">
-													<li><span class="glyphicon glyphicon-menu-right text-muted order-arrow" ng-click="upQty()" aria-hidden="true"></span></li>
-												</ul>
-											</div>
-											<div class="col-xs-6 text-right" ng-cloak>
-												<% product.clientPrice %> <i class="fa fa-rub"></i>
-											</div>
-										</div>
-									</div>
-								</div>
 
-
-								<div class="row">
-									<div class="col-xs-6"><strong>Итого</strong></div>
-									<div class="col-xs-6 text-right" ng-cloak><strong><% total() %> <i class="fa fa-rub"></i></strong></div>
-								</div>
-							</div>
-						</div>
-
-					</div>
 				</div>
 
 
