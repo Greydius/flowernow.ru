@@ -8,6 +8,7 @@ use App\User;
 use App\Model\OrderList;
 use App\Helpers\Sms;
 use App\Model\Shop;
+use App\Model\PromoCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -64,6 +65,9 @@ class OrdersController extends Controller
 
                                 if(!empty($productModel)) {
                                         $shop_id = $productModel[0]->shop_id;
+                                        if(!empty($request->promo_code)) {
+                                                $productModel[0]->setPromoCode($request->promo_code);
+                                        }
                                 }
 
                                 $shop = Shop::find($shop_id);
@@ -88,6 +92,12 @@ class OrdersController extends Controller
                                 $order->payment = $request->payment == 'cash' ? Order::$PAYMENT_CASH : $request->payment == 'rs' ? Order::$PAYMENT_RS : Order::$PAYMENT_CARD;
                                 $order->payed = $order->payment == Order::$PAYMENT_CASH ? 1 : 0;
                                 $order->delivery_price = $shop->delivery_price;
+                                $order->ur_name = $request->ur_name;
+                                $order->ur_inn = $request->ur_inn;
+                                $order->ur_kpp = $request->ur_kpp;
+                                $order->ur_address = $request->ur_address;
+                                $order->ur_bank = $request->ur_bank;
+                                $order->ur_email = $request->ur_email;
 
                                 if(!empty($request->delivery_out)) {
                                         $order->delivery_out_distance = (int)$request->delivery_out_distance;
@@ -106,6 +116,14 @@ class OrdersController extends Controller
                                                 $orderList->client_price = $item->clientPrice * $orderList->qty;
 
                                                 $orderListCount += (int)$orderList->save();
+
+                                                if(!empty($item->promoCode)) {
+                                                        $order->promo_code_id = $item->promoCode->id;
+                                                        $order->save();
+
+                                                        //$item->promoCode->used_on = \Carbon::now()->format('Y-m-d H:i:s');
+                                                        //$item->promoCode->save();
+                                                }
                                         }
                                 }
 
@@ -114,7 +132,7 @@ class OrdersController extends Controller
 
                                         if($order->payment == Order::$PAYMENT_RS) {
                                                 Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
-                                                        $message->to('nkornushin@gmail.com')
+                                                        $message->to('service@floristum.ru')
                                                                 ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
                                                 });
                                         } else {
@@ -202,6 +220,9 @@ class OrdersController extends Controller
                         $order->payed = 1;
                         $order->payed_at = \Carbon::now()->format('Y-m-d H:i:s');
                         if($order->save()) {
+                                if(!empty($order->promo_code_id)) {
+                                        PromoCode::where('id', $order->promo_code_id)->update(['used_on' => \Carbon::now()->format('Y-m-d H:i:s')]);
+                                }
                                 $this->sendSuccessSms($order);
                                 $this->sendSuccessEmails($order);
                         }
@@ -238,7 +259,9 @@ class OrdersController extends Controller
                                 } catch (\Exception $e) {
                                         $shortOrderLink = $standartOrderLink;
                                 }
-                                $txt .= $shortOrderLink;
+                                //$txt .= $shortOrderLink;
+                                $txt .= $standartOrderLink;
+
                                 Sms::instance()->send($order->phone, $txt);
                         }
 
@@ -304,7 +327,10 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $orders = Order::with('orderLists.product')->with('shop.city.region')->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get()->toArray();
+                                $orders = Order::with('orderLists.product')
+                                        ->with('shop.city.region')
+                                        ->with('promo')
+                                        ->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get()->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
                         } else {
                                 $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
@@ -397,6 +423,18 @@ class OrdersController extends Controller
                                         }
 
                                         \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Заказ успешно передан другому магазину']);
+                                }
+                        }
+
+                        if(isset($request->payed)) {
+                                $order->payed = (int)$request->payed;
+                                $order->payed_at = \Carbon::now()->format('Y-m-d H:i:s');
+
+                                if($order->save()) {
+                                        if($order->payed) {
+                                                $this->sendSuccessSms($order);
+                                                $this->sendSuccessEmails($order);
+                                        }
                                 }
                         }
                 }

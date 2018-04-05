@@ -66,6 +66,54 @@ var SnippetLogin = function() {
 
         o = function() {
             $("#m_login_forget_password_submit").click(function(a) {
+                 a.preventDefault();
+                var r = $(this),
+                    n = $(this).closest("form");
+
+                n.validate({
+                    rules: {
+                        recover_phone: {
+                            required: !0
+                        }
+                    },
+                    messages: {
+                            recover_phone: {
+                                    required: "Введите номер телефона"
+                            }
+                    },
+                });
+
+                if(n.valid()) {
+
+
+                    $.ajax({
+                            type: 'POST',
+                            url: n.attr('action'),
+                            data: n.serialize(),
+                            beforeSend: function () {
+                                    console.log('before');
+                                    r.addClass("m-loader m-loader--right m-loader--light").attr("disabled", !0)
+                            },
+                            success: function (data) {
+                                    var recover_frm = $('#recover_pwd_modal form');
+                                    $('input[name="phone"]', recover_frm).val(n.find('input[name="recover_phone"]').val());
+                                    $('#recover_pwd_modal').modal('show');
+                            },
+                            error: function (xhr, data) {
+                                var data = xhr.responseJSON;
+
+                                $.each(data.errors, function(index, item) {
+                                        i(n, "danger", item)
+                                })
+                            },
+                            complete: function () {
+                                    r.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1)
+                            },
+                            dataType: 'json'
+                    });
+                }
+
+                /*
                 a.preventDefault();
                 var r = $(this),
                     n = $(this).closest("form");
@@ -87,8 +135,76 @@ var SnippetLogin = function() {
                                 a.clearForm(), a.validate().resetForm(), i(a, "success", "Cool! Password recovery instruction has been sent to your email.")
                             }, 2e3)
                         }
-                    }))
-            })
+                    }))*/
+            });
+
+            $('#confirm_recover_code').click(function(e) {
+                e.preventDefault();
+
+                var m = $('#recover_pwd_modal');
+                var r = $(this);
+                //r.addClass("m-loader m-loader--right m-loader--light").attr("disabled", !0);
+                
+                var n = m.find("form");
+
+                n.validate({
+                    rules: {
+                        recover_code: {
+                            required: !0,
+                        },
+                        password: {
+                            required: !0,
+                            minlength: 6
+                        }
+                    },
+                    messages: {
+
+                        recover_code: {
+                            required: "Введите код"
+                        },
+                        password: {
+                            required: "Введите пароль",
+                            minlength: jQuery.validator.format("Пароль должен быть не менее {0} символов.")
+                        }
+                    }
+                });
+
+                if(n.valid()) {
+                    $.ajax({
+                            type: 'POST',
+                            url: n.attr('action'),
+                            data: n.serialize(),
+                            beforeSend: function () {
+                                    r.addClass("m-loader m-loader--right m-loader--light").attr("disabled", !0);
+                            },
+                            success: function (data) {
+                                n.clearForm(), n.validate().resetForm(), t();
+                                var a = $(".m-login__signin form");
+                                a.clearForm(), a.validate().resetForm();
+                                //console.log(data);
+
+                                $.each(data.messages, function(index, item) {
+                                        i(a, "success", item)
+                                })
+
+                            },
+                            error: function (xhr, data) {
+                                var data = xhr.responseJSON;
+
+                                $.each(data.errors, function(index, item) {
+                                        i(n, "danger", item)
+                                })
+                            },
+                            complete: function () {
+                                r.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1);
+                                m.modal('hide');
+                            },
+                            dataType: 'json'
+                    });
+                }
+
+
+            });
         };
     return {
         init: function() {
@@ -97,7 +213,7 @@ var SnippetLogin = function() {
     }
 }();
 jQuery(document).ready(function() {
-    SnippetLogin.init()
+    SnippetLogin.init();
 });
 /*
 

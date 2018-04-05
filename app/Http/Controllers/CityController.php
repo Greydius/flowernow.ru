@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class CityController extends Controller
 {
         public function popular() {
-                $cities = City::popular(0, true);
+                $cities = City::popular(0, false);
 
                 return view('front.city.popular',[
                         'cities' => $cities,

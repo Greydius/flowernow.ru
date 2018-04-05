@@ -89,5 +89,13 @@ $(document).ready(function() {
                         },
                         dataType: 'json'
                 });
+        }).on('change', 'input[name="delivery_free"]', function () {
+                var $input = $('input[name="delivery_price"]');
+                if($(this).is(':checked')) {
+                        $input.prop('disabled', true);
+                        $input.val('0.00');
+                } else {
+                        $input.prop('disabled', false);
+                }
         });
 })

@@ -6,6 +6,7 @@ use App\MainModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
+use App\Model\PromoCode;
 
 class Product extends MainModel
 {
@@ -16,7 +17,9 @@ class Product extends MainModel
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-        protected $appends = ['clientPrice', 'url', 'photoUrl'];
+        protected $appends = ['clientPrice', 'url', 'photoUrl', 'fullPrice'];
+
+        public $promoCode;
 
         public static $photoRules = [
                 'file' => 'required | mimes:jpeg,jpg,png,PNG,JPEG,JPG | max:15000',
@@ -106,7 +109,7 @@ class Product extends MainModel
                 $productRequest = self::with(['shop'  => function($query) {
                             $query->select(['id', 'name', 'delivery_price']);
                         }])->whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                                $query->where('city_id', $city_id)->available();
                         })->where('price', '>', 0)->where('status', 1)->where('pause', 0);
 
                 if(!empty($request)) {
@@ -192,6 +195,23 @@ class Product extends MainModel
         }
 
         public function getClientPriceAttribute() {
+
+                $price = $this->fullPrice;
+
+                if(!empty($this->promoCode)) {
+                        if($this->promoCode->code_type == 'sum') {
+                                return $price - $this->promoCode->value;
+                        }
+
+                        if($this->promoCode->code_type == 'percent') {
+                                return ceil($price * ((100 - $this->promoCode->value)/100) );
+                        }
+                }
+
+                return $price;
+        }
+
+        public function getFullPriceAttribute() {
                 return ceil(ceil($this->price * 1.2) + $this->shop->delivery_price);
         }
 
@@ -219,5 +239,13 @@ class Product extends MainModel
                 }
 
                 return $return;
+        }
+
+        public function setPromoCode($promoCode) {
+                if(!empty($promoCode)) {
+                        $this->promoCode = PromoCode::where('code', $promoCode)->whereNull('used_on')->first();
+                } else {
+                        $this->promoCode = null;
+                }
         }
 }

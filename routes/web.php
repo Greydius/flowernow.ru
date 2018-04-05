@@ -141,6 +141,11 @@ Route::get('/info/terms', [
         'as' => 'front.terms'
 ]);
 
+Route::get('/getPromoCodeinfo', [
+        'uses' => 'PromoCodesController@getInfo',
+        'as' => 'promoCodes.getInfo'
+]);
+
 /* API */
 Route::group(['prefix' => 'api/v1'], function() {
         /* PRODUCTS*/
@@ -229,6 +234,17 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {
+
+                Route::get('promoCodes/create', [
+                        'uses' => 'PromoCodesController@create',
+                        'as' => 'admin.promoCodes.create'
+                ]);
+
+                Route::post('promoCodes/store', [
+                        'uses' => 'PromoCodesController@store',
+                        'as' => 'admin.promoCodes.store'
+                ]);
+
                 Route::get('shops', [
                         'uses' => 'ShopsController@shops',
                         'as' => 'admin.shop.list'
@@ -237,6 +253,36 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::get('shop/{id}', [
                         'uses' => 'ShopsController@profile',
                         'as' => 'admin.shop.profile_edit'
+                ]);
+
+                Route::get('subscriptions', [
+                        'uses' => 'SubscriptionsController@index',
+                        'as' => 'admin.subscription.index'
+                ]);
+
+                Route::get('subscription/create', [
+                        'uses' => 'SubscriptionsController@create',
+                        'as' => 'admin.subscription.create'
+                ]);
+
+                Route::get('subscription/create2', [
+                        'uses' => 'SubscriptionsController@create2',
+                        'as' => 'admin.subscription.create2'
+                ]);
+
+                Route::post('subscription/store', [
+                        'uses' => 'SubscriptionsController@store',
+                        'as' => 'admin.subscription.store'
+                ]);
+
+                Route::post('subscription/run', [
+                        'uses' => 'SubscriptionsController@run',
+                        'as' => 'admin.subscription.run'
+                ]);
+
+                Route::post('subscription/pause', [
+                        'uses' => 'SubscriptionsController@pause',
+                        'as' => 'admin.subscription.pause'
                 ]);
         });
 
@@ -369,6 +415,17 @@ Route::get('/seed/regions', [
 
 Route::get('/seed/city', [
         'uses' => 'SeedController@insertCityData'
+]);
+
+
+Route::post('/recover/sendCode', [
+        'uses' => 'Auth\ForgotPasswordController@sendCode',
+        'as' => 'recover.sendCode'
+]);
+
+Route::post('/recover/setPassword', [
+        'uses' => 'Auth\ForgotPasswordController@setPassword',
+        'as' => 'recover.setPassword'
 ]);
 
 Route::get('/register/verify/{code}', [

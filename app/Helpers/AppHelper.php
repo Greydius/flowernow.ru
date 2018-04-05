@@ -41,6 +41,13 @@ class AppHelper {
                 return 0;
         }
 
+        public static function formatMinutesToTime($time) {
+
+                $_time = strtotime('2018-01-01 00:00:00') + ($time*60);
+
+                return date('H:i', $_time);
+        }
+
         public static function urlShortener($longUrl) {
                 $postData = ['longUrl' => $longUrl];
                 $jsonData = json_encode($postData);
@@ -69,5 +76,18 @@ class AppHelper {
                 } else {
                         echo $json->id;
                 }
+        }
+
+        public static function cleantel($tel) {
+                $tel = str_replace(" ", "", $tel);
+                $tel = str_replace("+", "", $tel);
+                $tel = str_replace("(", "", $tel);
+                $tel = str_replace(")", "", $tel);
+                $tel = str_replace("-", "", $tel);
+                $tel = str_replace(" ", "", $tel);
+                $tel = preg_replace("#^8#", "7", $tel);
+                //$tel = $tel * 1;
+                $tel = (int)$tel;
+                return $tel;
         }
 }

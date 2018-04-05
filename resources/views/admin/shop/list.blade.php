@@ -53,7 +53,7 @@
                         </tr>
                     </thead>
                     <tbody class="" style="">
-                        <tr ng-repeat="shop in shops" class="<% shop.delivery_price > 0 ? '' : 'bg-danger' %>" style="height: 55px;" ng-cloak>
+                        <tr ng-repeat="shop in shops" class="<% shop.delivery_price > 0 || shop.delivery_free ? '' : 'bg-danger' %>" style="height: 55px;" ng-cloak>
                             <td><% $index + 1 %></td>
                             <td><a target="_blank" href="/admin/shop/<% shop.id %>"><% shop.name %></a><br><% shop.city.name %></td>
                             <td><% shop.users[0].phone %></td>

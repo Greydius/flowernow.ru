@@ -150,7 +150,8 @@ class City extends MainModel
                 if($random) {
                         $model->orderBy('population', 'DESC');
                 } else {
-                        $model->inRandomOrder();
+                        //$model->inRandomOrder();
+                        $model->orderBy('name', 'ASC');
                 }
 
                 if($limit) {

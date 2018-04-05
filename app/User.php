@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Model\Product;
+use App\Model\Order;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -48,5 +49,19 @@ class User extends Authenticatable
             }
 
             return $productsModel->count();
+    }
+
+    public function totalNotCompletedOrders() {
+            $ordersModel= Order::select('id')->where('payed', 1);
+
+            if(!$this->admin) {
+                    $ordersModel->whereIn('shop_id', $this->shops->pluck('id')->toArray());
+            }
+
+            $status = ['new', 'accepted'];
+
+            $ordersModel->whereIn('status', $status);
+
+            return $ordersModel->count();
     }
 }

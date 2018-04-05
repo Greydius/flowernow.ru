@@ -61,7 +61,9 @@
                     <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong>{{ $product->clientPrice }}</strong></p>
 
                     <br><br>
-                    <a href="{{ route('order.add', ['product_id' => $product->id]) }}" target="_blank" class="btn btn-lg btn-warning btn-block"><strong>Оформить заказ</strong></a>
+                    @if($shopIsAvailable)
+                        <a href="{{ route('order.add', ['product_id' => $product->id]) }}" target="_blank" class="btn btn-lg btn-warning btn-block"><strong>Оформить заказ</strong></a>
+                    @endif
                     <ul class="list-inline">
                         <li>
                             <img src="{{ asset('assets/front/img/ico/visa.svg') }}" alt="visa">
@@ -87,6 +89,35 @@
                     <ul class="text-info">
                         <li>Букет и исполнитель проверены</li>
                     </ul>
+
+                    @if($product->id == 2461)
+                        @if($product->shop->workTimeIsSet())
+                            <p>График работы:</p>
+                        <ul class="text-info">
+                            <li class="{{ !$product->shop->workTime[0]->is_work ? 'text-danger' : '' }}">
+                                <span>Пн:</span> {{ !$product->shop->workTime[0]->is_work ? 'выходной' : ($product->shop->workTime[0]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[0]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[0]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[1]->is_work ? 'text-danger' : '' }}">
+                                <span>Вт:</span> {{ !$product->shop->workTime[1]->is_work ? 'выходной' : ($product->shop->workTime[1]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[1]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[1]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[2]->is_work ? 'text-danger' : '' }}">
+                                <span>Ср:</span> {{ !$product->shop->workTime[2]->is_work ? 'выходной' : ($product->shop->workTime[2]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[2]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[2]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[3]->is_work ? 'text-danger' : '' }}">
+                                <span>Чт:</span> {{ !$product->shop->workTime[3]->is_work ? 'выходной' : ($product->shop->workTime[3]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[3]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[3]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[4]->is_work ? 'text-danger' : '' }}">
+                                <span>Пт:</span> {{ !$product->shop->workTime[4]->is_work ? 'выходной' : ($product->shop->workTime[4]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[4]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[4]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[5]->is_work ? 'text-danger' : '' }}">
+                                <span>Сб:</span> {{ !$product->shop->workTime[5]->is_work ? 'выходной' : ($product->shop->workTime[5]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[5]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[5]->work_to)) }}
+                            </li>
+                            <li class="{{ !$product->shop->workTime[6]->is_work ? 'text-danger' : '' }}">
+                                <span>Вс:</span> {{ !$product->shop->workTime[6]->is_work ? 'выходной' : ($product->shop->workTime[6]->round_clock ? 'круглосуточно' : \App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[6]->work_from).'-'.\App\Helpers\AppHelper::formatMinutesToTime($product->shop->workTime[6]->work_to)) }}
+                            </li>
+                        </ul>
+                        @endif
+                    @endif
 
                 </div>
                 <div class="col-sm-6 col-md-5">

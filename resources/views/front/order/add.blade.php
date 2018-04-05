@@ -56,10 +56,26 @@
 
 								<div class="row">
 									<div class="col-xs-6"><strong>Итого</strong></div>
-									<div class="col-xs-6 text-right" ng-cloak><strong><% total() %> <i class="fa fa-rub"></i></strong></div>
+									<div class="col-xs-6 text-right" ng-cloak>
+										<span ng-show="product.fullPrice != product.clientPrice" class="text-danger"><strong><del><% totalFull() %></del> <i class="fa fa-rub"></i></strong><br/></span>
+										<strong><% total() %> <i class="fa fa-rub"></i></strong>
+										<p ng-show="promo" style="font-size: 8pt; color: grey;">Скидка <% promo.text %></p>
+									</div>
 								</div>
 							</div>
 						</div>
+
+
+						<br><br>
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Промо код" style="height: auto" ng-model="promo_code" name="promo_code">
+							<span class="input-group-btn">
+								<button class="btn btn-warning" type="button" ng-disabled="!promo_code" ng-click="getPromoCodeinfo($event)">
+									Применить
+								</button>
+							</span>
+						</div>
+
 
 					</div>
 

@@ -74,6 +74,18 @@ class HomeController extends Controller
 
     public function test() {
 
+            /*
+
+            $orders = \DB::select("SELECT id, custphone FROM `f_order` WHERE `custphone` != ''");
+
+            foreach ($orders as $order) {
+                    $sql = "UPDATE `f_order` SET phone_clean = '".\App\Helpers\AppHelper::cleantel($order->custphone)."' WHERE `id` = ".$order->id;
+                    \DB::update($sql);
+            }
+            */
+
+            exit();
+
             $orders = Order::where('status', 'completed')->where('payed', '1')->get();
             foreach ($orders as $order) {
                     echo $order->createTransaction().'<br>';

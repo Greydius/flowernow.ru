@@ -152,28 +152,29 @@
                             <div class="row" style="min-height: 40px;">
                                 <div class="col-xl-12">
                                     <div style="    padding: 5px; font-size: 12px">
-                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 0">
+                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 0 && product.pause == 0">
                                             <a href class="text-danger" ng-click="editItem($event, product)">
                                                 Не заполнены обязательные поля <span style="font-size: 20px">*</span>
                                             </a>
 
                                         </div>
 
-                                        <div class="m-widget4__ext text-success" ng-show="product.status == 2">
+                                        <div class="m-widget4__ext text-success" ng-show="product.status == 2 && product.pause == 0">
                                             На проверке у администратора
                                         </div>
 
-                                        <div class="m-widget4__ext text-success" ng-show="product.status == 1">
+                                        <div class="m-widget4__ext text-success" ng-show="product.status == 1 && product.pause == 0">
                                             Опубликовано
                                         </div>
 
-                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 3">
-                                            <a href class="text-danger" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>">
+                                        <div class="m-widget4__ext text-danger" ng-show="product.status == 3 && product.pause == 0">
+                                            <a href class="text-danger" ng-click="editItem($event, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>">
                                                 Отклонено модератором <span class="m-badge m-badge--danger">i</span>
                                             </a>
+                                        </div>
 
-
-
+                                        <div class="m-widget4__ext text-warning" ng-show="product.pause == 1">
+                                            На паузе
                                         </div>
 
                                     </div>
@@ -205,6 +206,8 @@
 
             </div>
 
+            <!--
+
             <div class="col-md-12" style="min-height: 30px;">
 
                 <button ng-click="getProductsPage(prev_page)" title="Предыдущая страница" data-href="<% prev_page %>" type="button" class="btn m-btn--square  btn-outline-info btn-sm pull-left" ng-show="prev_page">
@@ -215,6 +218,22 @@
                     <i class="la la-angle-right"></i>
                 </button>
 
+            </div>
+
+            -->
+
+            <div class="m-datatable--default m-datatable">
+                <div class="m-datatable__pager m-datatable--paging-loaded clearfix">
+
+                    <ul class="m-datatable__pager-nav">
+                        <li ng-show="currentPage > 1"><a ng-click="getProductsPage(currentPage-1)"  title="Previous" class="m-datatable__pager-link m-datatable__pager-link--prev" data-page="5"><i class="la la-angle-left"></i></a></li>
+                        <li ng-repeat="n in ranges(1,totalPages)">
+                            <a ng-click="getProductsPage(n)" class="m-datatable__pager-link m-datatable__pager-link-number <% currentPage == n ? 'm-datatable__pager-link--active' : '' %>" data-page="<% n %>"><% n %></a>
+                        </li>
+                        <li ng-show="currentPage < totalPages"><a ng-click="getProductsPage(currentPage+1)"  title="Next" class="m-datatable__pager-link m-datatable__pager-link--next" data-page="7"><i class="la la-angle-right"></i></a></li>
+                    </ul>
+
+                </div>
             </div>
 
 

@@ -177,60 +177,60 @@
                 <div class="row">
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[0]['slug']?>.floristum.ru"><?=$popular_city[0]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[0]->slug?>.floristum.ru"><?=$popular_city[0]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[1]['slug']?>.floristum.ru"><?=$popular_city[1]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[1]->slug?>.floristum.ru"><?=$popular_city[1]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[2]['slug']?>.floristum.ru"><?=$popular_city[2]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[2]->slug?>.floristum.ru"><?=$popular_city[2]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[3]['slug']?>.floristum.ru"><?=$popular_city[3]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[3]->slug?>.floristum.ru"><?=$popular_city[3]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[4]['slug']?>.floristum.ru"><?=$popular_city[4]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[4]->slug?>.floristum.ru"><?=$popular_city[4]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[5]['slug']?>.floristum.ru"><?=$popular_city[5]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[5]->slug?>.floristum.ru"><?=$popular_city[5]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[6]['slug']?>.floristum.ru"><?=$popular_city[6]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[6]->slug?>.floristum.ru"><?=$popular_city[6]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[7]['slug']?>.floristum.ru"><?=$popular_city[7]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[7]->slug?>.floristum.ru"><?=$popular_city[7]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[8]['slug']?>.floristum.ru"><?=$popular_city[8]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[8]->slug?>.floristum.ru"><?=$popular_city[8]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[9]['slug']?>.floristum.ru"><?=$popular_city[9]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[9]->slug?>.floristum.ru"><?=$popular_city[9]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
                         <div class="city-popular">
-                            <p><a href="http://<?=$popular_city[10]['slug']?>.floristum.ru"><?=$popular_city[10]['name']?></a></p>
+                            <p><a href="http://<?=$popular_city[10]->slug?>.floristum.ru"><?=$popular_city[10]->name?></a></p>
                             <p class="text-muted"></p>
                         </div>
 
@@ -279,26 +279,26 @@
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Клиентам</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="{{ route('front.delivery') }}">Доставка</a></li>
-                            <li><a href="{{ route('front.payment') }}">Оплата</a></li>
-                            <li><a href="{{ route('front.faq') }}">FAQ</a></li>
+                            <li><a href="https://floristum.ru/delivery">Доставка</a></li>
+                            <li><a href="https://floristum.ru/payment">Оплата</a></li>
+                            <li><a href="https://floristum.ru/faq">FAQ</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Организациям</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="{{ route('front.registershop') }}">Магазинам цветов</a></li>
-                            <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
-                            <li><a href="{{ route('login') }}">Вход в личный кабинет</a></li>
+                            <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
+                            <li><a href="https://floristum.ru/corporate">Корпоративным клиентам</a></li>
+                            <li><a href="https://floristum.ru/login">Вход в личный кабинет</a></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Правовая&nbsp;информация</strong></p>
                         <ul class="list-unstyled list-foot">
-                            <li><a href="{{ route('front.privacy') }}">Конфиденциальность</a></li>
-                            <li><a href="{{ route('front.personldata') }}">Персональные данные</a></li>
-                            <li><a href="{{ route('front.oferta') }}">Публичная оферта</a></li>
-                            <li><a href="{{ route('front.agreement') }}">Публичная оферта о заключении договора купли-продажи</a></li>
+                            <li><a href="https://floristum.ru/info/privacy">Конфиденциальность</a></li>
+                            <li><a href="https://floristum.ru/info/personldata">Персональные данные</a></li>
+                            <li><a href="https://floristum.ru/info/oferta">Публичная оферта</a></li>
+                            <li><a href="https://floristum.ru/info/agreement">Публичная оферта о заключении договора купли-продажи</a></li>
                         </ul>
                     </div>
                 </div>
@@ -310,8 +310,8 @@
                 <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
-                <img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Доставка цветов и букетов {{$current_city->name}}">
-            </div>
+                <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом">
+</a>          </div>
         </div>
         <br>
     </div>

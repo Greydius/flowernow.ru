@@ -409,3 +409,8 @@ header .location-icon {
     background: #df291e;
     border-color: #df291e;
 }
+
+.text-info span {
+    width: 30px;
+    display: inline-block;
+}

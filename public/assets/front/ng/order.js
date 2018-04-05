@@ -77,8 +77,6 @@ $(document).ready(function() {
         }).on('click', '.create-order', function () {
                 var form = $(this).parents('form');
 
-                console.log(form.serialize());
-
                 if(fromValidate()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
                         $('[name="recipient_phone"]').val($('#recipient_phone').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
@@ -93,8 +91,6 @@ $(document).ready(function() {
                 return false;
         }).on('click', '.create-order-ur', function () {
                 var form = $(this).parents('form');
-
-                console.log(form.serialize());
 
                 if(fromValidateUr()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
@@ -201,10 +197,9 @@ $(document).ready(function() {
                 $.ajax({
                         url: $form.attr('action'),
                         type: $form.attr('method'),
-                        data: $form.serialize(),
+                        data: $form.serialize() + '&promo_code=' + $('input[name="promo_code"]').val(),
                         success: function(data) {
                                 preloader('hide');
-                                console.log(data);
                                 if(data.order_id) {
                                         $('[name="order_id"]').val(data.order_id);
                                 }
@@ -242,9 +237,15 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         $scope.qty = 1;
         $scope.delivery_out_distance = null;
         $scope.delivery_out_price = $scope.product.shop.delivery_out_price;
+        $scope.promo_code = null;
+        $scope.promo = null;
 
         $scope.total = function () {
                 return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+        }
+
+        $scope.totalFull = function () {
+                return parseInt($scope.product.fullPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
         }
 
         $scope.upQty = function () {
@@ -256,4 +257,43 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
                         $scope.qty--;
                 }
         }
+
+        $scope.getPromoCodeinfo = function(e) {
+
+                if($scope.promo_code) {
+                        var $btn = angular.element(e.target);
+
+                        $btn.prop('disabled', true);
+
+                        $http({
+                                method: 'GET',
+                                url: '/getPromoCodeinfo',
+                                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                                params: {
+                                        'code': $scope.promo_code,
+                                        'productId': $scope.product.id
+                                }
+
+                        }).then(function (response) {
+                                var data = response.data;
+                                $scope.product = data.product;
+                                $scope.promo = data.promo;
+
+                        }, function (response) {
+                                if (response.data.error && response.data.message) {
+                                        $.notify(response.data.message, "error");
+                                } else {
+                                        $.notify('Ошибка!', "error");
+                                }
+
+                        }).then(function (response) {
+                                $btn.prop('disabled', false);
+                        });
+                }
+
+                $scope.applyPromoCode = function() {
+
+                }
+
+        };
 })

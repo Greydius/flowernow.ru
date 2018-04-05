@@ -15,6 +15,9 @@
         <div class="col-md-12">
             <h3 class="margin-top-null"><strong>{{ $shop->name }} г. {{ $shop->city->name }}</strong></h3>
         </div>
+        <div class="col-md-12">
+            <p>{!! nl2br(e($shop->about)) !!}</p>
+        </div>
     </div>
 
     <br class="hidden-xs hidden-sm">

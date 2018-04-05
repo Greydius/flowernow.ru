@@ -191,6 +191,33 @@
                                                     </div>
                                                 </div>
 
+                                                @if($user->admin && $order->payment == \App\Model\Order::$PAYMENT_RS)
+                                                    <div class="m-widget4__item">
+                                                        <span class="m-widget17__icon">
+                                                            <i class="flaticon-notes m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        </span>
+                                                        <div class="m-widget4__info">
+                                                            <span class="m-widget4__title">
+                                                                Данные Юр. лица
+                                                            </span>
+                                                            <br>
+                                                            <span class="m-widget4__sub">
+
+                                                                <ul>
+                                                                    <li>Название юр. лица: {{ $order->ur_name }}</li>
+                                                                    <li>ИНН: {{ $order->ur_inn }}</li>
+                                                                    <li>КПП: {{ $order->ur_kpp }}</li>
+                                                                    <li>Юридический адрес: {{ $order->ur_address }}</li>
+                                                                    <li>Название банка: {{ $order->ur_bank }}</li>
+                                                                    <li>Email: {{ $order->ur_email }}</li>
+                                                                </ul>
+
+
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
                                             </div>
 
 
@@ -352,44 +379,84 @@
                     </div>
                 </div>
 
-                @if($user->admin && $order->status != \App\Model\Order::$STATUS_COMPLETED)
-                    <div class="col-lg-12">
-                        <div class="m-portlet  m-portlet--border-bottom-brand ">
-                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
-                                <div class="m-widget26">
+                @if($user->admin)
+                    @if($order->status != \App\Model\Order::$STATUS_COMPLETED)
+                        <div class="col-lg-12">
+                            <div class="m-portlet  m-portlet--border-bottom-brand ">
+                                <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                    <div class="m-widget26">
 
-                                    <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
-                                        {{ csrf_field() }}
-                                        <div class="form-group ">
+                                        <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                            {{ csrf_field() }}
+                                            <div class="form-group ">
 
-                                            <label class="" style="font-weight: bold">
-                                                Передать магазину:
-                                            </label>
+                                                <label class="" style="font-weight: bold">
+                                                    Передать магазину:
+                                                </label>
 
-                                            <select class="form-control" name="shop_id">
-                                                @foreach($shops as $shop)
-                                                    <option value="{{ $shop->id }}">{{ $shop->id }} - {{ $shop->name }}</option>
-                                                @endforeach
-                                            </select>
+                                                <select class="form-control" name="shop_id">
+                                                    @foreach($shops as $shop)
+                                                        <option value="{{ $shop->id }}">{{ $shop->id }} - {{ $shop->name }}</option>
+                                                    @endforeach
+                                                </select>
 
-                                        </div>
+                                            </div>
 
-                                        <div class="row">
+                                            <div class="row">
                                                 <div class="col-lg-12">
                                                     <button type="submit" class="btn btn-primary">
                                                         Сохранить
                                                     </button>
                                                 </div>
-                                        </div>
+                                            </div>
 
 
-                                    </form>
+                                        </form>
 
+                                    </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
-                    </div>
+                    @endif
+
+                    @if($order->payment == \App\Model\Order::$PAYMENT_RS && !$order->payed)
+                        <div class="col-lg-12">
+                            <div class="m-portlet  m-portlet--border-bottom-brand ">
+                                <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                    <div class="m-widget26">
+
+                                        <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                            {{ csrf_field() }}
+                                            <div class="form-group ">
+
+                                                <label class="" style="font-weight: bold">
+                                                    Изменить статус оплаты на:
+                                                </label>
+
+                                                <select class="form-control" name="payed">
+                                                    <option value="1">Оплачен</option>
+                                                </select>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Сохранить
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endif
                 @endif
 
             </div>

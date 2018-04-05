@@ -81,6 +81,11 @@ class Order extends MainModel
                 return $this->belongsTo('App\Model\Shop');
         }
 
+        // relation for promo
+        function promo() {
+                return $this->belongsTo('App\Model\PromoCode', 'promo_code_id');
+        }
+
         //возвращает сумму заказа
         public function amount() {
                 $amount = 0;

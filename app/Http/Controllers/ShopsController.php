@@ -240,6 +240,7 @@ class ShopsController extends Controller
                         $shop->delivery_out = !empty($request->delivery_out) ? 1 : 0;
                         $shop->delivery_out_max = (int)$request->delivery_out_max;
                         $shop->delivery_out_price = (int)$request->delivery_out_price;
+                        $shop->delivery_free = !empty($request->delivery_free) ? 1 : 0;
 
                         $shop->org_name = $request->org_name;
                         $shop->rs = $request->rs;

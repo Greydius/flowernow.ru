@@ -96,6 +96,9 @@
                                     </span>
                                     <br>
                                     <% order.amount %> руб. / <% order.amountShop %> руб.
+                                    <div ng-show="order.promo_code_id" class="text-danger" style="font-size: 10px">
+                                        Скидка по промо: <% order.promo.text %>
+                                    </div>
                                 </td>
 
                                 <td>

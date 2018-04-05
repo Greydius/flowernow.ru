@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Color;
+use App\Model\Shop;
 use App\Model\Flower;
 use App\Model\Price;
 use App\Model\Product;
@@ -60,7 +61,7 @@ class ProductsController extends Controller
                         foreach ($specialOffers as $specialOffer) {
                                 $city_id = $this->current_city->id;
                                 $specialOfferProduct = Product::whereHas('shop', function($query) use ($city_id) {
-                                        $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                                        $query->where('city_id', $city_id)->available();
                                 })->where('price', '>', 0)->where('status', 1)->where('pause', 0)->whereRaw('FIND_IN_SET(? ,special_offer_id)', [$specialOffer->id]);
 
                                 if($specialOfferProduct->count()) {
@@ -71,7 +72,7 @@ class ProductsController extends Controller
 
                 $city_id = $this->current_city->id;
                 $lowPriceProducts = Product::whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id)->where('active', 1)->where('delivery_price', '>', 0);
+                                $query->where('city_id', $city_id)->available();
                         })
                         ->where('price', '>', 0)
                         ->where('status', 1)
@@ -103,8 +104,10 @@ class ProductsController extends Controller
 
         public function show($slug) {
                 $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->firstOrFail();
+
                 return view('front.product.show',[
                         'product' => $product,
+                        'shopIsAvailable' => Shop::where('id', $product->shop->id)->available()->count(),
                         'pageImage' => $product->photoUrl,
                         'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
                         'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',

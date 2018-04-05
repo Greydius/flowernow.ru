@@ -749,12 +749,22 @@
                                                 <h3 class="m-portlet__head-text">Доставка по городу {{ $shop->city->name }}</h3>
 
                                                 <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label class="m-checkbox m-checkbox--state-success">
+                                                            <input type="checkbox" name="delivery_free" {{ $shop->delivery_free ? 'checked' : '' }}>
+                                                            Бесплатно
+                                                            <span></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group m-form__group">
                                                             <label for="">
                                                                 Стоимость доставки по городу, руб <span class="text-danger req-star">*</span>
                                                             </label>
-                                                            <input type="text" class="form-control m-input" value="{{ $shop->delivery_price }}" name="delivery_price">
+                                                            <input type="text" class="form-control m-input" value="{{ $shop->delivery_price }}" name="delivery_price" {{ $shop->delivery_free ? 'disabled' : '' }}>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">

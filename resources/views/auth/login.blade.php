@@ -103,12 +103,13 @@
 									Забыли пароль ?
 								</h3>
 								<div class="m-login__desc">
-									Введите email для востановления пароля:
+									Введите номер телефона для востановления пароля:
 								</div>
 							</div>
-							<form class="m-login__form m-form" action="" id="">
+							<form class="m-login__form m-form" action="{{ route('recover.sendCode') }}" id="" method="post">
+								{{ csrf_field() }}
 								<div class="form-group m-form__group">
-									<input class="form-control m-input" type="text" placeholder="Email" name="email" id="m_email" autocomplete="off">
+									<input class="form-control m-input phone" type="text" placeholder="Номер телефона" name="recover_phone" id="m_phone" autocomplete="off">
 								</div>
 								<div class="m-login__form-action">
 									<button id="m_login_forget_password_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
@@ -125,6 +126,51 @@
 			</div>
 		</div>
 		<!-- end:: Page -->
+
+		<!--begin::Modal-->
+		<div class="modal fade" id="recover_pwd_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-sm" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">
+							Востановление пароля
+						</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">
+								&times;
+							</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form class="m-form" method="post" action="{{ route('recover.setPassword') }}" autocomplete="off">
+							<span class="m-form__help">
+								На Ваш телефон был выслан код, для востановления пароля
+							</span>
+							{{ csrf_field() }}
+							<input type="hidden" name="phone" value="">
+							<div class="form-group">
+								<label for="recover-code">Введите код</label>
+								<input type="text" class="form-control" id="recover-code" name="recover_code" placeholder="Код" autocomplete="nope">
+							</div>
+							<div class="form-group">
+								<label for="new-pwd">Введите новый пароль</label>
+								<input type="password" class="form-control" id="new-pwd" name="password" placeholder="Новый пароль" autocomplete="new-password">
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							Закрыть
+						</button>
+						<button type="button" class="btn btn-primary" id="confirm_recover_code">
+							Подтвердить
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--end::Modal-->
+
 		<!--begin::Base Scripts -->
 		<script src="{{ asset('assets/admin/vendors/base/vendors.bundle.js') }}" type="text/javascript"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js" type="text/javascript"  ></script>

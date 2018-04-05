@@ -11,7 +11,9 @@ class Shop extends MainModel
 {
     //
         protected $fillable = ['balance'];
-        protected $hidden = ['email', 'phone', 'phone_confirmed', 'email_confirmed', 'created_at', 'updated_at', 'deleted_at'];
+        protected $hidden = ['email', 'phone', 'phone_confirmed', 'email_confirmed',
+                'created_at', 'updated_at', 'deleted_at', 'org_name', 'rs', 'bank',
+                'bik', 'ks', 'inn', 'kpp', 'ogrn', 'org_address', 'director', 'osnovanie', 'balance'];
 
         public static $logoRules = [
                 'file' => 'required | mimes:jpeg,jpg,png,PNG,JPEG,JPG | max:10000',
@@ -112,5 +114,28 @@ class Shop extends MainModel
 
                 $outBalance = $this->balance - $this->frozenBalance();
                 return ($outBalance >= 0 ? $outBalance : 0);
+        }
+
+        //conditions for product
+        public static function scopeAvailable($query) {
+                return $query->where('active', 1)->where(function ($query) {
+                        $query->where('delivery_price', '>', 0)
+                                ->orWhere('delivery_free', '=', 1);
+                });
+        }
+
+        public function workTimeIsSet() {
+                $isSet = false;
+                $workTime = $this->workTime;
+
+                if(!empty($workTime)) {
+                        foreach ($workTime as $item) {
+                                if($item->is_work) {
+                                        $isSet = true;
+                                }
+                        }
+                }
+
+                return $isSet;
         }
 }

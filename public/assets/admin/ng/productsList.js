@@ -28,7 +28,8 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         params: {
                                 'search': $scope.search_str,
-                                'status': $scope.search_not_public ? 1 : 0
+                                'status': $scope.search_not_public ? 1 : 0,
+                                'page': $scope.currentPage
                         }
 
                 }).then(function (response) {
@@ -56,8 +57,15 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
 
         };
 
+        /*
         $scope.getProductsPage = function(page) {
                 $scope.product_url = page;
+                $scope.getProducts();
+        }
+        */
+
+        $scope.getProductsPage = function(page) {
+                $scope.currentPage = page;
                 $scope.getProducts();
         }
 
@@ -342,6 +350,15 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 }).then(function (response) {
 
                 });
+        }
+
+        $scope.ranges = function (min, max, step) {
+                step = step || 1;
+                var input = [];
+                for (var i = min; i <= max; i += step) {
+                        input.push(i);
+                }
+                return input;
         }
 
         $scope.getProducts();
