@@ -234,18 +234,26 @@ $(document).ready(function() {
 angular.module('flowApp').controller('order', function($scope, $element, $http) {
 
         $scope.product = jsonData.product;
-        $scope.qty = 1;
+        $scope.qty = jsonData.qty;
         $scope.delivery_out_distance = null;
         $scope.delivery_out_price = $scope.product.shop.delivery_out_price;
         $scope.promo_code = null;
         $scope.promo = null;
 
         $scope.total = function () {
-                return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                if(!$scope.product.single) {
+                        return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                } else {
+                        return parseInt($scope.product.clientPrice + $scope.delivery_out_distance*$scope.delivery_out_price);
+                }
         }
 
         $scope.totalFull = function () {
-                return parseInt($scope.product.fullPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                if(!$scope.product.single) {
+                        return parseInt($scope.product.fullPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                } else {
+                        return parseInt($scope.product.fullPrice + $scope.delivery_out_distance*$scope.delivery_out_price);
+                }
         }
 
         $scope.upQty = function () {
@@ -253,7 +261,7 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         }
 
         $scope.downQty = function () {
-                if($scope.qty >= 2) {
+                if($scope.qty >= (!$scope.product.single ? 2 : 8)) {
                         $scope.qty--;
                 }
         }
@@ -296,4 +304,30 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
                 }
 
         };
+
+        $scope.$watch('qty', function () {
+                $http({
+                        method: 'GET',
+                        url:  '/api/v1/singleProduct/getProductByQty/',
+                        headers: { 'Content-Type': 'application/json' },
+                        params: {
+                                qty: $scope.qty,
+                                product_id: $scope.product.id
+                        }
+
+                }).then(function (response) {
+                        var data = response.data;
+                        $scope.product = data.product;
+
+                }, function (response) {
+                        if (response.data.error && response.data.message) {
+                                $.notify(response.data.message, "error");
+                        } else {
+                                $.notify('Ошибка!', "error");
+                        }
+
+                }).then(function (response) {
+                        
+                });
+        });
 })

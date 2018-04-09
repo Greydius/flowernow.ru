@@ -153,10 +153,26 @@ Route::group(['prefix' => 'api/v1'], function() {
                 'uses' => 'ProductsController@apiPopular',
                 'as' => 'api.products.popular'
         ]);
+
+        Route::get('singleProduct/getProductByQty', [
+                'uses' => 'ProductsController@getProductByQty',
+                'as' => 'api.products.getProductByQty'
+        ]);
 });
 
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
+
+        /*SINGLE PRODUCTS*/
+        Route::get('single', [
+                'uses' => 'ProductsController@single',
+                'as' => 'products.single'
+        ]);
+
+        Route::get('single/{parent_id}', [
+                'uses' => 'ProductsController@singleCategory',
+                'as' => 'products.single.category'
+        ]);
         
         Route::get('test/test', [
                 'uses' => 'HomeController@test',
@@ -345,6 +361,13 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         /* API */
         Route::group(['prefix' => 'api/v1'], function() {
+
+                /* Single Products */
+
+                Route::post('singleProduct/savePrice/{id}', [
+                        'uses' => 'ProductsController@apiSingleProductSavePrice',
+                        'as' => 'admin.api.single-product.save-price'
+                ]);
 
                 /* SHOPS*/
 

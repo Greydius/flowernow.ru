@@ -84,6 +84,10 @@ class Product extends MainModel
                 return $this->belongsTo('App\Model\Shop');
         }
 
+        function singleProduct() {
+                return $this->belongsTo('App\Model\SingleProduct', 'single');
+        }
+
         function color() {
                 return $this->belongsTo('App\Model\Color');
         }
@@ -110,7 +114,10 @@ class Product extends MainModel
                             $query->select(['id', 'name', 'delivery_price']);
                         }])->whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
-                        })->where('price', '>', 0)->where('status', 1)->where('pause', 0);
+                        })->where('price', '>', 0)
+                        ->where('status', 1)
+                        ->where('pause', 0)
+                        ->whereNull('single');
 
                 if(!empty($request)) {
                         if(!empty($request->productType)) {
@@ -194,6 +201,32 @@ class Product extends MainModel
                 */
         }
 
+        static function popularSingle($city_id, $ids = []) {
+                $_products = self::with(['shop'  => function($query) {
+                            $query->select(['id', 'name', 'delivery_price']);
+                        }])->whereHas('shop', function($query) use ($city_id) {
+                                $query->where('city_id', $city_id)->available();
+                        })->where('price', '>', 0)
+                        ->where('status', 1)
+                        ->where('pause', 0)
+                        ->whereIn('single', $ids)
+                        ->orderBy('price')->get();
+
+                $products = [];
+                foreach ($_products as $item) {
+                        if(empty($products[$item->single])) {
+                                $products[$item->single] = $item;
+                        }
+                }
+
+                $returnProducts = [];
+                foreach ($_products as $item) {
+                        $returnProducts[] = $item;
+                }
+
+                return $returnProducts;
+        }
+
         public function getClientPriceAttribute() {
 
                 $price = $this->fullPrice;
@@ -212,7 +245,13 @@ class Product extends MainModel
         }
 
         public function getFullPriceAttribute() {
-                return ceil(ceil($this->price * 1.2) + $this->shop->delivery_price);
+                if(empty($this->single)) {
+                        return ceil(ceil($this->price * 1.2) + $this->shop->delivery_price);
+                }
+
+                $singleProduct = $this->singleProduct()->first();
+                $qty = !empty($this->qty) ? $this->qty : $singleProduct->qty_from;
+                return ceil(ceil($this->price * $qty * 1.1) + $this->shop->delivery_price);
         }
 
         public function getUrlAttribute() {
@@ -222,7 +261,11 @@ class Product extends MainModel
 
         public function getPhotoUrlAttribute() {
 
-                return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                if(empty($this->single)) {
+                        return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                }
+
+                return asset('/uploads/single/'.$this->photo.'');
                 //return asset('http://via.placeholder.com/600x600');
         }
 

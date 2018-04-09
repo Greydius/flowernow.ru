@@ -1,4 +1,4 @@
-﻿@extends('layouts.site')
+@extends('layouts.site')
 
 @section('content')
 
@@ -23,7 +23,7 @@
     <br>
 </div>
 -->
-@if(count($popularProducts))
+@if(count($popularProducts) || count($singleProducts))
 
 <div class="bg-white hidden-xs hidden-sm">
     <div class="container">
@@ -151,7 +151,25 @@
 
         <div class="col-md-9 col-md-pull-3" style="background-color: #fff; padding-top: 10px;"  >
 
-                @if(!empty($lowPriceProducts))
+                @if(!empty($singleProducts))
+                    <div ng-hide="isFiltered">
+                        <div class="hidden-lg hidden-md hidden-xs">
+                            <br><br>
+                        </div>
+                        <!--
+                        <h3 class="margin-top-null"><strong>Самые низкие цены</strong></h3>
+                        <br class="hidden-lg hidden-md">
+                        -->
+
+                        @foreach($singleProducts as $_item)
+                            @include('front.product.list-item')
+                        @endforeach
+
+                        <br clear="all">
+                    </div>
+                @endif
+
+                @if(count($lowPriceProducts))
                     <div ng-hide="isFiltered">
                         <div class="hidden-lg hidden-md hidden-xs">
                             <br><br>

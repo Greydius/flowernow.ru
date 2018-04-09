@@ -18,16 +18,24 @@ class OrdersController extends Controller
 {
     //
 
-        function add($productId) {
+        function add($productId, Request $request) {
 
-                $product = Product::with('shop.city')->with('compositions.flower')->findOrFail($productId);
+                $product = Product::with('shop.city')->with('compositions.flower')->with('singleProduct.parent')->findOrFail($productId);
 
-                return view('front.order.add',[
+                $params = [
                         'product' => $product,
+                        'qty' => 1,
                         'pageTitle' => 'Оплата доставки '.$product->name.' в г '.$product->shop->city->name,
                         'pageDescription' => 'Оплата доставки '.$product->name.' в г '.$product->shop->city->name.' и оформление заказа',
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name.', оплата',
-                ]);
+                ];
+
+                if(!empty($product->single)) {
+                        $qty = !empty($request->qty) ? $request->qty : $product->singleProduct->qty_from;
+                        $params['qty'] = $qty;
+                }
+
+                return view('front.order.add',$params);
         }
 
         function create(Request $request) {
@@ -60,7 +68,12 @@ class OrdersController extends Controller
                                 }
 
                                 foreach ($products as $product_id) {
-                                        $productModel[] = Product::find($product_id);
+                                        $_product = Product::with('singleProduct')->find($product_id);
+                                        if(!empty($_product->single)) {
+                                                $_product->qty = !empty((int)$request->qty) ? (int)$request->qty : $_product->singleProduct->qty_from;
+                                        }
+                                        
+                                        $productModel[] = $_product;
                                 }
 
                                 if(!empty($productModel)) {
@@ -110,10 +123,10 @@ class OrdersController extends Controller
                                                 $orderList = new OrderList();
                                                 $orderList->order_id = $order->id;
                                                 $orderList->product_id = $item->id;
-                                                $orderList->single = 0;
+                                                $orderList->single = empty($item->single) ? 0 : 1;
                                                 $orderList->qty = !empty((int)$request->qty) ? (int)$request->qty : 1;
                                                 $orderList->shop_price = $item->price;
-                                                $orderList->client_price = $item->clientPrice * $orderList->qty;
+                                                $orderList->client_price = $orderList->single ? $item->clientPrice : ($item->clientPrice * $orderList->qty);
 
                                                 $orderListCount += (int)$orderList->save();
 

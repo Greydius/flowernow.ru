@@ -7,6 +7,7 @@ use App\Model\Shop;
 use App\Model\Flower;
 use App\Model\Price;
 use App\Model\Product;
+use App\Model\SingleProduct;
 use App\Model\ProductType;
 use App\Model\ProductPhoto;
 use App\Model\Size;
@@ -31,6 +32,9 @@ class ProductsController extends Controller
 
                 $popularProducts = [];
                 $popularProduct = [];
+
+                $singleProductsIds = [2, 7, 9];
+                $singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
 
                 if(empty($request->product_type)) {
                         $item = [];
@@ -78,6 +82,7 @@ class ProductsController extends Controller
                         ->where('status', 1)
                         ->where('pause', 0)
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
+                        ->whereNull('single')
                         ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))')->take(9)->get();
 
 
@@ -91,6 +96,7 @@ class ProductsController extends Controller
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
                         'lowPriceProducts' => $lowPriceProducts,
+                        'singleProducts' => $singleProducts,
                         'prices' => Price::all(),
                         'sizes' => Size::all(),
                         'productTypes' => $productTypes,
@@ -103,16 +109,30 @@ class ProductsController extends Controller
         }
 
         public function show($slug) {
-                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->firstOrFail();
+                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
-                return view('front.product.show',[
+                $params = [
                         'product' => $product,
                         'shopIsAvailable' => Shop::where('id', $product->shop->id)->available()->count(),
                         'pageImage' => $product->photoUrl,
                         'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
                         'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
-                ]);
+                ];
+
+                if(!empty($product->single)) {
+                        $singleProductIds = [];
+                        $singleProducts = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->get();
+
+                        foreach ($singleProducts as $item) {
+                                $singleProductIds[] = $item->id;
+                        }
+
+                        $shopSingleProducts = Product::where('shop_id', $product->shop_id)->whereIn('single', $singleProductIds)->where('price', '>', 0)->with('singleProduct')->get();
+                        $params['shopSingleProducts'] = $shopSingleProducts;
+                }
+
+                return view('front.product.show', $params);
         }
 
         public function products() {
@@ -814,5 +834,97 @@ class ProductsController extends Controller
                         'message' => 'Укажите процент изменения цены',
                         'code' => 200
                 ], 400);
+        }
+
+        public function single() {
+                $products = SingleProduct::mainCategory();
+
+                return view('admin.products.single-categories',[
+                        'products' => $products
+                ]);
+        }
+
+        public function singleCategory($parent_id) {
+
+                /*
+                $products = $this->user->getShop()->products()->whereNotNull('single')->with(['single' => function ($query) use ($parent_id) {
+
+                    $query->where('parent_id', $parent_id);
+                }])->get();
+                */
+
+                $products = $this->user->getShop()->products()
+                        ->select('products.*', 'single_products.qty_from', 'single_products.qty_to')
+                        ->whereNotNull('products.single')
+                        ->join('single_products', 'single_products.id', '=', 'products.single')
+                        ->where('single_products.parent_id', $parent_id)
+                        ->get();
+
+                return view('admin.products.single-list',[
+                        'products' => $products
+                ]);
+        }
+
+        public function apiSingleProductSavePrice($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        if($this->user->admin) {
+                                $product = Product::find($id);
+                        } else {
+                                $product = $this->user->getShop()->products()->where('id', $id)->first();
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->price = $request->price;
+                                $product->save();
+                        }
+
+                        $return['product'] = $product;
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
+        public function getProductByQty(Request $request) {
+                $statusCode = 200;
+                $response = [
+                        'product' => []
+                ];
+
+                try{
+                        $product = Product::with('singleProduct')->findOrFail($request->product_id);
+
+                        if(!empty($product->single)) {
+                                $singleProduct = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->whereRaw((int)$request->qty." BETWEEN qty_from AND qty_to ")->with('parent')->first();
+
+                                $product = Product::where('shop_id', $product->shop_id)->where('single', $singleProduct->id)->first();
+
+                                if($singleProduct->qty_from != $request->qty) {
+                                        $product->name = $singleProduct->parent->name;
+                                }
+
+                                $product->qty = (int)$request->qty;
+                                $response['cart_link'] = route('order.add', ['product_id' => $product->id, 'qty' => $product->qty]);
+                        }
+
+                        $response['product'] = $product->makeHidden(['shop', 'price']);
+
+                } catch (\Exception $e){
+                    $statusCode = 400;
+                }finally{
+                    return response()->json($response, $statusCode);
+                }
         }
 }

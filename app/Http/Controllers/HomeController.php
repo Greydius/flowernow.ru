@@ -74,6 +74,8 @@ class HomeController extends Controller
 
     public function test() {
 
+            \App\Model\SingleProduct::copyProductsToShop(10);
+
             /*
 
             $orders = \DB::select("SELECT id, custphone FROM `f_order` WHERE `custphone` != ''");

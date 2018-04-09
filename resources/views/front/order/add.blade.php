@@ -31,18 +31,21 @@
 					<div class="col-md-4 col-md-push-8">
 						<div class="media order-total-cost">
 							<div class="media-left">
-								<img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
+								@if(empty($product->single))
+									<img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
+								@else
+									<img class="media-object img-circle" width="80" height="80" ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="...">
+								@endif
 							</div>
 							<div class="media-body">
 								<div class="row">
-									<div class="col-xs-6">{{ $product->name }}</div>
+									<div class="col-xs-6">{{ empty($product->single) ? $product->name : $product->singleProduct->parent->name }}</div>
 									<div class="col-xs-6">
 										<div class="row">
 											<div class="col-xs-6">
 												<ul class="list-inline text-center">
 													<li><span class="glyphicon glyphicon-menu-left text-muted order-arrow"  ng-click="downQty()" aria-hidden="true"></span></li>
 													<li ng-cloak><% qty %></li>
-													<input type="hidden" name="qty" value="<% qty %>">
 													<li><span class="glyphicon glyphicon-menu-right text-muted order-arrow" ng-click="upQty()" aria-hidden="true"></span></li>
 												</ul>
 											</div>
@@ -82,6 +85,7 @@
 					<div class="col-md-8 col-md-pull-4">
 						<div class="bg-white order-form">
 							<form id="order-frm" method="post" action="{{ route('order.create') }}">
+								<input type="hidden" name="qty" value="<% qty %>">
 								{{ csrf_field() }}
 								<div class="">
 									<label>
@@ -217,7 +221,7 @@
 								<input type="hidden" name="order_id" value="">
 								<input type="hidden" name="phone" value="">
 								<input type="hidden" name="payment" value="card">
-								<input type="hidden" name="products[]" value="{{ $product->id }}">
+								<input type="hidden" name="products[]" value="<% product.id %>">
 								<div class="order-tabs">
 									<ul class="nav nav-tabs" role="tablist" id="payment_methods_list">
 										<li role="presentation" class="active"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab" data-payment="card"><figure><img height="40" src="{{ asset('assets/front/img/karta.png') }}" alt="..."></figure>Банковская карта</a></li>
@@ -346,6 +350,7 @@
 
     <script type="text/javascript">
         jsonData.product = {!! $product->makeHidden('price')->toJson() !!};
+        jsonData.qty = {!! $qty !!};
     </script>
 
 	<script src="https://widget.cloudpayments.ru/bundles/cloudpayments" type="text/javascript"></script>
