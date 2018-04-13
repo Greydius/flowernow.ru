@@ -16,6 +16,14 @@ class AppServiceProvider extends ServiceProvider
     {
         //
             Schema::defaultStringLength(191);
+
+
+            if (Schema::hasTable('settings')) {
+                    foreach (\App\Model\Setting::all() as $setting) {
+                            \Config::set('settings.' . $setting->key, $setting->value);
+                    }
+            }
+
     }
 
     /**

@@ -185,6 +185,20 @@
 									</span>
 									</a>
 								</li>
+
+								<li class="m-menu__item {{ \Request::route()->getName() == 'admin.setting.index' ? 'm-menu__item--active' : null }}">
+									<a href="{{ route('admin.setting.index') }}" class="m-menu__link ">
+										<i class="m-menu__link-icon flaticon-settings"></i>
+										<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Настойки
+											</span>
+
+										</span>
+									</span>
+									</a>
+								</li>
 							@endif
 
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.finance' ? 'm-menu__item--active' : null }}">

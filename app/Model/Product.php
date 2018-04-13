@@ -246,12 +246,12 @@ class Product extends MainModel
 
         public function getFullPriceAttribute() {
                 if(empty($this->single)) {
-                        return ceil(ceil($this->price * 1.2) + $this->shop->delivery_price);
+                        return ceil(ceil($this->price * (1+(config('settings.product_commission')/100))) + $this->shop->delivery_price);
                 }
 
                 $singleProduct = $this->singleProduct()->first();
                 $qty = !empty($this->qty) ? $this->qty : $singleProduct->qty_from;
-                return ceil(ceil($this->price * $qty * 1.1) + $this->shop->delivery_price);
+                return ceil(ceil($this->price * $qty * (1+(config('settings.single_product_commission')/100))) + $this->shop->delivery_price);
         }
 
         public function getUrlAttribute() {

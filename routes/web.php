@@ -251,6 +251,16 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         Route::group(['middleware' => 'is-admin'], function () {
 
+                Route::get('setting', [
+                        'uses' => 'SettingController@index',
+                        'as' => 'admin.setting.index'
+                ]);
+
+                Route::post('setting', [
+                        'uses' => 'SettingController@store',
+                        'as' => 'admin.setting.store'
+                ]);
+
                 Route::get('feedback', [
                         'uses' => 'FeedbackController@index',
                         'as' => 'admin.feedback.list'

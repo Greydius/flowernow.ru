@@ -74,6 +74,8 @@ class HomeController extends Controller
 
     public function test() {
 
+            echo config('settings.single_product_commission'); exit();
+
             \App\Model\SingleProduct::copyProductsToShop(10);
 
             /*
