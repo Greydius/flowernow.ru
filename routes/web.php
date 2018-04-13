@@ -251,6 +251,41 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         Route::group(['middleware' => 'is-admin'], function () {
 
+                Route::get('feedback', [
+                        'uses' => 'FeedbackController@index',
+                        'as' => 'admin.feedback.list'
+                ]);
+
+                Route::get('feedback/create', [
+                        'uses' => 'FeedbackController@create',
+                        'as' => 'admin.feedback.create'
+                ]);
+
+                Route::get('feedback/edit/{id}', [
+                        'uses' => 'FeedbackController@edit',
+                        'as' => 'admin.feedback.edit'
+                ]);
+
+                Route::get('feedback/shop_products', [
+                        'uses' => 'FeedbackController@shop_products',
+                        'as' => 'admin.feedback.shop_products'
+                ]);
+
+                Route::post('feedback/store', [
+                        'uses' => 'FeedbackController@store',
+                        'as' => 'admin.feedback.store'
+                ]);
+
+                Route::post('feedback/update/{id}', [
+                        'uses' => 'FeedbackController@update',
+                        'as' => 'admin.feedback.update'
+                ]);
+
+                Route::get('feedback/destroy/{id}', [
+                        'uses' => 'FeedbackController@destroy',
+                        'as' => 'admin.feedback.destroy'
+                ]);
+
                 Route::get('promoCodes/create', [
                         'uses' => 'PromoCodesController@create',
                         'as' => 'admin.promoCodes.create'

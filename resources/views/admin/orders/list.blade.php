@@ -82,7 +82,7 @@
                                     <span ng-show="order.shop.city.region.tz != 'UTC+3:00'" style="font-weight: bold"><% order.shop.city.region.tz %></span>
                                 </td>
                                 <td>
-                                    <% order.receiving_date_dt | date:'MM.dd HH:mm' %>
+                                    <% order.receiving_date_dt | date:'MM.dd' %>
                                     <br>
                                     <% order.receiving_time %>
                                     <br>

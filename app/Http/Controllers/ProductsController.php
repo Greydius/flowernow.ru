@@ -295,7 +295,7 @@ class ProductsController extends Controller
                 try{
                         $perPage = 16;
                         if($this->user->admin) {
-                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
+                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->whereNull('single')->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
 
                                 if(!empty($request->search)) {
                                         $productRequestModel->orWhereHas('shop', function($query) use ($request) {
@@ -307,7 +307,7 @@ class ProductsController extends Controller
                                         });
                                 }
                         } else {
-                                $productRequestModel = $this->user->getShop()->products()->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
+                                $productRequestModel = $this->user->getShop()->products()->whereNull('single')->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
 
                                 if(!empty($request->search)) {
                                         $productRequestModel->orWhere('cities.name', 'like', "%$request->search%");
@@ -837,6 +837,9 @@ class ProductsController extends Controller
         }
 
         public function single() {
+
+                \App\Model\SingleProduct::copyProductsToShop($this->user->getShop()->id);
+
                 $products = SingleProduct::mainCategory();
 
                 return view('admin.products.single-categories',[
