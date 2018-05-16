@@ -3,6 +3,9 @@
 angular.module('flowApp').controller('ordersList', function($scope, $element, $http, CSRF_TOKEN) {
 
         $scope.orders = [];
+        $scope.dateFrom = "";
+        $scope.dateTo = "";
+        $scope.search_str = "";
 
         $scope.getOrders = function() {
                 $http({
@@ -10,6 +13,11 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                         method: 'GET',
                         url:  routes.orders,
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        params: {
+                                'dateFrom': $scope.dateFrom,
+                                'dateTo': $scope.dateTo,
+                                'search': $scope.search_str,
+                        }
 
                 }).then(function (response) {
                         $scope.orders = response.data.orders;
@@ -53,4 +61,12 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                 });
 
         };
+
+        $scope.search = function(keyEvent) {
+                if (keyEvent.which === 13) {
+                        $scope.currentPage = 1;
+                        $scope.search_str = $('#m_form_search').val();
+                        $scope.getOrders();
+                }
+        }
 });

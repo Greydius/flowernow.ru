@@ -64,6 +64,14 @@
                                         Реквизиты
                                     </a>
                                 </li>
+                                @if($user->admin)
+                                    <li class="nav-item m-tabs__item">
+                                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#pass" role="tab">
+                                            <i class="la la-lock"></i>
+                                            Смена пароля
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                             <div class="tab-content" id="profile-content">
                                 <div class="tab-pane active" id="m_name" role="tabpanel">
@@ -882,6 +890,20 @@
                                             </select>
                                         </div>
 
+                                    </div>
+
+                                </div>
+
+                                <div class="tab-pane" id="pass" role="tabpanel">
+
+                                    <div class="m-portlet__body">
+
+                                        <div class="form-group m-form__group">
+                                            <label for="new_pwd">
+                                                Новый пароль
+                                            </label>
+                                            <input type="text" class="form-control m-input" id="new_pwd" value="" name="new_pwd">
+                                        </div>
                                     </div>
 
                                 </div>

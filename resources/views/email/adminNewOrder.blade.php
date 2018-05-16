@@ -10,6 +10,7 @@
         <div style="font-size:10pt;font-family:Verdana,Geneva,sans-serif">
             <p>Здравствуйте!</p>
             <p>Создан новый заказ №{{ $order->id }}</p>
+            <p><a href="{{ route('admin.order.view', ['id' => $order->id]) }}">{{ route('admin.order.view', ['id' => $order->id]) }}</a></p>
 
 
             <p>С Уважением,<br>

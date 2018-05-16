@@ -38,7 +38,12 @@
                     <div class="collapse in" id="filter-product-type">
                         <ul class="list-unstyled filter">
                             @foreach ($productTypes as $type)
-                                <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type) && request()->product_type == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                @foreach($popularProducts as $item)
+                                    
+                                    @if($item['productType']->id == $type->id && $item['popularProductCount'])
+                                        <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type) && request()->product_type == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                    @endif
+                                @endforeach
                             @endforeach
                         </ul>
                     </div>

@@ -224,6 +224,12 @@ class ShopsController extends Controller
 
                         }
 
+                        if(!empty($request->new_pwd)) {
+                                $shop_user = $shop->users[0];
+                                $shop_user->password = bcrypt($request->new_pwd);
+                                $shop_user->save();
+                        }
+
                         $shop->name = $request->name;
                         $shop->about = $request->about;
                         $shop->contact_phone = $request->contact_phone;

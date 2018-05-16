@@ -30,7 +30,9 @@ class PromoCodesController extends Controller
     {
         //
             //echo PromoCode::getNewCode(); exit();
-            return view('admin.promo_codes.create', []);
+            return view('admin.promo_codes.create', [
+                    'promoCodes' => PromoCode::where('reusable', 1)->get()
+            ]);
     }
 
     /**
@@ -60,6 +62,7 @@ class PromoCodesController extends Controller
             $promoCode->code = $promo_code;
             $promoCode->code_type = $request->code_type;
             $promoCode->value = $request->value;
+            $promoCode->reusable = !empty($request->reusable) ? 1 : 0;
 
             if($promoCode->save()) {
 
@@ -128,6 +131,9 @@ class PromoCodesController extends Controller
     public function destroy($id)
     {
         //
+            PromoCode::destroy($id);
+
+            return back();
     }
 
     public function getInfo(Request $request) {
@@ -139,7 +145,7 @@ class PromoCodesController extends Controller
                                     'error' => true,
                                     'message' => 'Промо код не найден'
                             ], 400);
-                    } elseif(!empty($promoCode->used_on)) {
+                    } elseif(!empty($promoCode->used_on) && !$promoCode->reusable) {
                             return response()->json([
                                     'error' => true,
                                     'message' => 'Промо код уже использован'

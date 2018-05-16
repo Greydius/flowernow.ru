@@ -14,7 +14,7 @@ class SingleProduct extends MainModel
         }
 
         public static function mainCategory() {
-                return self::whereNull('parent_id')->get();
+                return self::whereNull('parent_id')->orderBy('priority')->get();
         }
 
         public static function copyProductsToShop($shopId) {
@@ -23,6 +23,19 @@ class SingleProduct extends MainModel
                         if(!Product::where('shop_id', $shopId)->where('single', $item->id)->count()) {
                                 $product = new Product();
                                 $product->shop_id = $shopId;
+                                $product->single = $item->id;
+                                $product->name = $item->name;
+                                $product->slug = $shopId.'-'.$item->slug;
+                                $product->description = $item->description;
+                                $product->photo = $item->photo;
+                                $product->width = $item->width;
+                                $product->height = $item->height;
+                                $product->color_id = $item->color_id;
+                                $product->product_type_id = $item->product_type_id;
+                                $product->status = 1;
+                                $product->save();
+                        } else {
+                                $product = Product::where('shop_id', $shopId)->where('single', $item->id)->first();
                                 $product->single = $item->id;
                                 $product->name = $item->name;
                                 $product->slug = $shopId.'-'.$item->slug;

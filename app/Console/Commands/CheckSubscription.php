@@ -66,7 +66,7 @@ class CheckSubscription extends Command
                             $promoCode = new PromoCode();
                             $promoCode->code = $promo_code;
                             $promoCode->code_type = 'percent';
-                            $promoCode->value = 15;
+                            $promoCode->value = 7;
 
                             if ($promoCode->save()) {
                                     $message = str_replace('[promo]', $promo_code, $message);

@@ -2,6 +2,27 @@
 
 $(document).ready(function() {
 
+        angular.element(document).ready(function () {
+                $('#dop-products-container .owl-carousel').owlCarousel({
+                        navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
+                        dots: false,
+                        loop: true,
+                        margin: 10,
+                        nav: true,
+                        responsive: {
+                                0: {
+                                        items: 1
+                                },
+                                600: {
+                                        items: 3
+                                },
+                                1000: {
+                                        items: 5
+                                }
+                        }
+                })
+        });
+
         $('.datepicker').datepicker({
                 format: 'dd.mm.yyyy',
                 language: 'ru',
@@ -308,7 +329,7 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         $scope.$watch('qty', function () {
                 $http({
                         method: 'GET',
-                        url:  '/api/v1/singleProduct/getProductByQty/',
+                        url:  '/api/v1/singleProduct/getProductByQty',
                         headers: { 'Content-Type': 'application/json' },
                         params: {
                                 qty: $scope.qty,

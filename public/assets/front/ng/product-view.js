@@ -13,7 +13,7 @@ angular.module('flowApp').controller('product-view', function($scope, $element, 
                 $http({
 
                         method: 'GET',
-                        url:  '/api/v1/singleProduct/getProductByQty/',
+                        url:  '/api/v1/singleProduct/getProductByQty',
                         headers: { 'Content-Type': 'application/json' },
                         params: {
                                 qty: qty,
@@ -39,7 +39,7 @@ angular.module('flowApp').controller('product-view', function($scope, $element, 
                 $scope.startcounting = setTimeout(function ()
                 {
                    $scope.changeQty($scope.qty);
-                }, 1000);
+                }, 300);
         }
 
         $scope.downQty = function () {
@@ -52,7 +52,7 @@ angular.module('flowApp').controller('product-view', function($scope, $element, 
                         $scope.startcounting = setTimeout(function ()
                         {
                            $scope.changeQty($scope.qty);
-                        }, 1000);
+                        }, 300);
                 }
         }
         
@@ -74,6 +74,6 @@ angular.module('flowApp').controller('product-view', function($scope, $element, 
                 $scope.startcounting = setTimeout(function ()
                 {
                    $scope.changeQty($scope.qty);
-                }, 1000);
+                }, 300);
         });
 })

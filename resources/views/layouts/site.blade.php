@@ -19,7 +19,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icons/touch-icon-iphone-retina.png') }}">
     <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icons/touch-icon-ipad-retina.png') }}">
 
-    <meta property='og:image' content='@yield('pageImage', asset('assets/front/img/og_logo_floristum_ru_s.png'))' />
+    <meta property='og:image' content='@yield('pageImage', 'https://floristum.ru/assets/front/img/og_logo_floristum_ru_s.png')' />
+    <meta property='og:image:width' content='@yield('pageImageWidth', 200)' />
+    <meta property='og:image:height' content='@yield('pageImageHeight', 200)' />
     <meta property='og:title' content='@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')' />
     <meta property='og:description' content='@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')' />
     <meta property="og:locale" content="ru_RU" />
@@ -33,8 +35,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v='.rand(1, 9999)) }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v='.rand(1, 9999)) }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20180508') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20180427') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -311,7 +313,7 @@
             </div>
             <div class="col-sm-6 text-right">
                 <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом">
-</a>          </div>
+</a></br><a href="https://floristum.ru"  style="color: grey">Доставка цветов</a>          </div>
         </div>
         <br>
     </div>
@@ -322,13 +324,13 @@
 <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
 <script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js" type="text/javascript"></script>
+<script src="{{ asset('assets/plugins/angular/angular.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/admin/ng/ngApp.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
 <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-<script src="{{ asset('assets/front/js/custom.js?v='.rand(1, 9999)) }}"></script>
+<script src="{{ asset('assets/front/js/custom.js?v=20180427') }}"></script>
 @yield('footer')
 
 <!-- Yandex.Metrika counter -->

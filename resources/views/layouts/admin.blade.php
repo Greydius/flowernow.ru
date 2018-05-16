@@ -155,6 +155,45 @@
 								</a>
 							</li>
 
+							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.dopProducts' ? 'm-menu__item--active' : null }}">
+								<a  href="{{ route('admin.dopProducts') }}" class="m-menu__link ">
+									<i class="m-menu__link-icon flaticon-background"></i>
+									<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Доп. товары
+											</span>
+
+										</span>
+									</span>
+									<span class="m-menu__link-badge">
+										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
+											{{$user->totalProducts([], 1)}}
+										</span>
+									</span>
+
+									<span class="m-menu__link-badge">
+										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
+											{{$user->totalProducts([0, 3], 1)}}
+										</span>
+									</span>
+								</a>
+							</li>
+
+							<li class="m-menu__item {{ \Request::route()->getName() == 'products.single' || \Request::route()->getName() == 'products.single.category' ? 'm-menu__item--active' : null }}">
+								<a  href="{{ route('products.single') }}" class="m-menu__link ">
+									<i class="m-menu__link-icon fa fa-pagelines"></i>
+									<span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Цветы поштучно
+											</span>
+
+										</span>
+									</span>
+								</a>
+							</li>
+
 							@if(!$user->admin)
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.profile' ? 'm-menu__item--active' : null }}" >
 								<a  href="{{ route('admin.shop.profile') }}" class="m-menu__link ">
@@ -186,18 +225,77 @@
 									</a>
 								</li>
 
-								<li class="m-menu__item {{ \Request::route()->getName() == 'admin.setting.index' ? 'm-menu__item--active' : null }}">
-									<a href="{{ route('admin.setting.index') }}" class="m-menu__link ">
+								<li class="m-menu__item  m-menu__item--submenu m-menu__item--open {{ in_array(\Request::route()->getName(), ['admin.articles', 'admin.setting.index', 'admin.subscription.index', 'admin.feedback.list', 'admin.promoCodes.create']) ? 'm-menu__item--expanded' : '' }}" aria-haspopup="true" data-menu-submenu-toggle="hover">
+									<a href="#" class="m-menu__link m-menu__toggle">
 										<i class="m-menu__link-icon flaticon-settings"></i>
-										<span class="m-menu__link-title">
-										<span class="m-menu__link-wrap">
-											<span class="m-menu__link-text">
-												Настойки
-											</span>
-
+										<span class="m-menu__link-text">
+											Настройки
 										</span>
-									</span>
+										<i class="m-menu__ver-arrow la la-angle-right"></i>
 									</a>
+									<div class="m-menu__submenu">
+										<span class="m-menu__arrow"></span>
+										<ul class="m-menu__subnav">
+											<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true" >
+												<a  href="#" class="m-menu__link ">
+													<span class="m-menu__link-text">
+														Настройки
+													</span>
+												</a>
+											</li>
+											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.setting.index' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+												<a href="{{ route('admin.setting.index') }}" class="m-menu__link ">
+													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
+														<span></span>
+													</i>
+													<span class="m-menu__link-text">
+													Системные настройки
+												</span>
+												</a>
+											</li>
+
+											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.subscription.index' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+												<a href="{{ route('admin.subscription.index') }}" class="m-menu__link ">
+													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
+														<span></span>
+													</i>
+													<span class="m-menu__link-text">
+													Рассылка
+												</span>
+												</a>
+											</li>
+											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.feedback.list' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+												<a href="{{ route('admin.feedback.list') }}" class="m-menu__link ">
+													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
+														<span></span>
+													</i>
+													<span class="m-menu__link-text">
+													Отзывы
+												</span>
+												</a>
+											</li>
+											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.promoCodes.create' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+												<a href="{{ route('admin.promoCodes.create') }}" class="m-menu__link ">
+													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
+														<span></span>
+													</i>
+													<span class="m-menu__link-text">
+													Промо коды
+												</span>
+												</a>
+											</li>
+											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.articles' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+												<a href="{{ route('admin.articles') }}" class="m-menu__link ">
+													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
+														<span></span>
+													</i>
+													<span class="m-menu__link-text">
+													Статьи
+												</span>
+												</a>
+											</li>
+										</ul>
+									</div>
 								</li>
 							@endif
 
@@ -283,7 +381,7 @@
 		<!--begin::Base Scripts -->
 		<script src="{{ asset('assets/admin/vendors/base/vendors.bundle.js') }}" type="text/javascript"></script>
 		<script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js" type="text/javascript"  ></script>
+		<script src="{{ asset('assets/plugins/angular/angular.min.js') }}" type="text/javascript"></script>
 		<script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}" type="text/javascript"></script>
 		<script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}" type="text/javascript"></script>
 		<script src="{{ asset('assets/admin/ng/ngApp.js') }}" type="text/javascript"></script>

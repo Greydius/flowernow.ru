@@ -11,6 +11,7 @@ class Shop extends MainModel
 {
     //
         protected $fillable = ['balance'];
+        //protected $appends = ['frozenBalance'];
         protected $hidden = ['email', 'phone', 'phone_confirmed', 'email_confirmed',
                 'created_at', 'updated_at', 'deleted_at', 'org_name', 'rs', 'bank',
                 'bik', 'ks', 'inn', 'kpp', 'ogrn', 'org_address', 'director', 'osnovanie', 'balance'];
@@ -52,6 +53,11 @@ class Shop extends MainModel
                 return $this->hasMany('App\Model\Order');
         }
 
+        // relation for Invoice
+        function invoices() {
+                return $this->hasMany('App\Model\Invoice');
+        }
+
         // relation for address
         function address() {
                 return $this->hasMany('App\Model\ShopAddress');
@@ -77,6 +83,21 @@ class Shop extends MainModel
 
                         $return .= ($hours ? $hours : '00').':';
                         $return .= ($minutes ? $minutes : '00');
+                }
+
+                return $return;
+        }
+
+        public function getDeliveryTimeFormat2Attribute() {
+
+                $return = '';
+
+                if($this->delivery_time) {
+                        $hours = floor($this->delivery_time / 60);
+                        $minutes = $this->delivery_time % 60;
+
+                        $return .= ($hours ? $hours.'ч ' : '');
+                        $return .= ($minutes ? $minutes.'мин' : '');
                 }
 
                 return $return;
@@ -110,10 +131,18 @@ class Shop extends MainModel
                 return $amount;
         }
 
+        public function getFrozenBalanceAttribute() {
+                return $this->frozenBalance();
+        }
+
         public function availableOutBalance() {
 
                 $outBalance = $this->balance - $this->frozenBalance();
                 return ($outBalance >= 0 ? $outBalance : 0);
+        }
+
+        public function getAvailableOutBalanceAttribute() {
+                return $this->availableOutBalance();
         }
 
         //conditions for product

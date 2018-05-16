@@ -1,3 +1,5 @@
+
+
 <div class="col-sm-{{ !empty($col) ? $col : '4' }}">
     <div class="media-item">
         <a href="/flowers/{{ $_item['slug'] }}">
@@ -17,7 +19,14 @@
                 <div class="col-xs-12 buy">
                     <a href="{{ route('order.add', ['product_id' => $_item['id']]) }}" class="btn btn-danger btn-outline buy-btn">Заказать</a>
                     <p><strong class="price-media-item">{{ $_item['clientPrice'] }} руб.</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
-                    <p>{{ $_item['shop_name'] }} &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
+                    <p><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> доставка
+                        @if($_item['deliveryTime'] || $_item->shop->deliveryTimeFormat2)
+                        {{ $_item['deliveryTime'] ? $_item['deliveryTime'] : $_item->shop->deliveryTimeFormat2 }}
+                        @else
+                            от 2ч.
+                        @endif
+                    </p>
+
                 </div>
 
             </div>

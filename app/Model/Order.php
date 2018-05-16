@@ -104,7 +104,7 @@ class Order extends MainModel
         public function amountShop() {
                 $amount = 0;
                 foreach ($this->orderLists()->get() as $orderList) {
-                        $amount += $orderList->shop_price;
+                        $amount += ($orderList->shop_price * $orderList->qty);
                 }
 
                 return $amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);

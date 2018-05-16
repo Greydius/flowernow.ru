@@ -25,46 +25,6 @@
 -->
 @if(count($popularProducts) || count($singleProducts))
 
-<div class="bg-white hidden-xs hidden-sm">
-    <div class="container">
-        <h3><strong>Преимущества доставки букетов floristum.ru:</strong></h3>
-        <br>
-        <div class="row text-center">
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/na-odnom-sayte.png') }}" alt="Все цветочные магазины г {{$current_city->name}}">
-                </figure>
-                <br>
-                <h4>Цветочные магазины<br>г. {{ $current_city->name }}<br>на одном сайте!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/dostavka.png') }}" alt="Быстрая доставка по г {{$current_city->name}}">
-                </figure>
-                <br>
-                <h4>Доставка цветов<br>от 15 минут!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
-                </figure>
-                <br>
-                <h4>Защита каждой<br>доставки цветов!</h4>
-            </div>
-            <div class="col-sm-3">
-                <figure>
-                    <img src="{{ asset('assets/front/img/otzivy.png') }}" alt="Отзывы о магазинах цветов">
-                </figure>
-                <br>
-                <h4>Рейтинги доставок букетов,<br>отзывы покупателей!</h4>
-            </div>
-        </div>
-    </div>
-    <br>
-</div>
-
-<br class="hidden-xs hidden-sm">
-
 <div class="container" ng-controller="mainPage">
 
 @if(empty($popularProducts))
@@ -96,7 +56,11 @@
                     <div class="collapse in" id="filter-product-type">
                         <ul class="list-unstyled filter">
                             @foreach ($productTypes as $type)
-                                <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type) && request()->product_type == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                @foreach($popularProducts as $item)
+                                    @if($item['productType']->id == $type->id && $item['popularProductCount'])
+                                        <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type) && request()->product_type == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                    @endif
+                                @endforeach
                             @endforeach
                         </ul>
                     </div>
@@ -151,19 +115,22 @@
 
         <div class="col-md-9 col-md-pull-3" style="background-color: #fff; padding-top: 10px;"  >
 
-                @if(!empty($singleProducts))
+                @if(count($singleProducts))
                     <div ng-hide="isFiltered">
                         <div class="hidden-lg hidden-md hidden-xs">
                             <br><br>
                         </div>
-                        <!--
-                        <h3 class="margin-top-null"><strong>Самые низкие цены</strong></h3>
+
+                        <h3 class="margin-top-null"><strong>Букеты цветов поштучно</strong></h3>
                         <br class="hidden-lg hidden-md">
-                        -->
 
                         @foreach($singleProducts as $_item)
                             @include('front.product.list-item')
                         @endforeach
+
+                        <div class="col-md-6 col-md-offset-3 bottom30">
+                            <a href="/catalog/single" class="btn btn-block btn-more">Смотреть все букеты поштучно</a>
+                        </div>
 
                         <br clear="all">
                     </div>
@@ -302,7 +269,49 @@
 
 @endif
 
-<div class="container"></br></br>
+<br class="hidden-xs hidden-sm">
+
+    <div class="bg-white hidden-xs hidden-sm">
+    <div class="container">
+        <h3><strong>Преимущества доставки букетов floristum.ru:</strong></h3>
+        <br>
+        <div class="row text-center">
+            <div class="col-sm-3">
+                <figure>
+                    <img src="{{ asset('assets/front/img/na-odnom-sayte.png') }}" alt="Все цветочные магазины г {{$current_city->name}}">
+                </figure>
+                <br>
+                <h4>Цветочные магазины<br>г. {{ $current_city->name }}<br>на одном сайте!</h4>
+            </div>
+            <div class="col-sm-3">
+                <figure>
+                    <img src="{{ asset('assets/front/img/dostavka.png') }}" alt="Быстрая доставка по г {{$current_city->name}}">
+                </figure>
+                <br>
+                <h4>Доставка цветов<br>от 15 минут!</h4>
+            </div>
+            <div class="col-sm-3">
+                <figure>
+                    <img src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
+                </figure>
+                <br>
+                <h4>Защита каждой<br>доставки цветов!</h4>
+            </div>
+            <div class="col-sm-3">
+                <figure>
+                    <img src="{{ asset('assets/front/img/otzivy.png') }}" alt="Отзывы о магазинах цветов">
+                </figure>
+                <br>
+                <h4>Рейтинги доставок букетов,<br>отзывы покупателей!</h4>
+            </div>
+        </div>
+    </div>
+    <br>
+</div>
+
+
+
+<div class="container">
 
 <h3 class="text-left"><strong>О доставке цветов с Floristum.ru</strong></h3>
 <hr>

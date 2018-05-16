@@ -29,7 +29,8 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                         params: {
                                 'search': $scope.search_str,
                                 'status': $scope.search_not_public ? 1 : 0,
-                                'page': $scope.currentPage
+                                'page': $scope.currentPage,
+                                'dop': $('#isDop').val()
                         }
 
                 }).then(function (response) {
@@ -284,6 +285,26 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 });
         }
 
+        $scope.toDopProduct = function (item) {
+
+                var status = 1;
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/toDop/'+item.id
+
+                }).then(function (response) {
+                        //item.status = status;
+                        $scope.getProducts();
+                }, function (response) {
+
+
+                }).then(function (response) {
+
+                });
+        }
+
         $scope.banProduct = function (item) {
 
                 var status = 1;
@@ -319,6 +340,7 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
 
         $scope.search = function(keyEvent) {
                 if (keyEvent.which === 13) {
+                        $scope.currentPage = 1;
                         $scope.search_str = $('#m_form_search').val();
                         $scope.product_url = routes.products;
                         $scope.getProducts();

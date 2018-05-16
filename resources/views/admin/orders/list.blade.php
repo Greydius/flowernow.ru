@@ -17,6 +17,42 @@
         </div>
         <div class="m-portlet__body">
 
+            @if($user->admin)
+                <form class="m-form m-form--fit m-form--label-align-right" method="get" action="">
+                    <div class="col-md-12">
+                        <div class="m-input-icon m-input-icon--left">
+                            <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
+                            <span class="m-input-icon__icon m-input-icon__icon--left">
+                                <span>
+                                    <i class="la la-search"></i>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group m-form__group row">
+                        <label class="col-form-label col-lg-3 col-sm-12">
+                            Период
+                        </label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <div class="input-daterange input-group" id="m_datepicker_5">
+                                <input type="text" class="form-control m-input" name="dateFrom" ng-model="dateFrom" value="{{ app('request')->input('dateFrom') }}"/>
+                                <span class="input-group-addon">
+                                 <i class="la la-ellipsis-h"></i>
+                             </span>
+                                <input type="text" class="form-control" name="dateTo" ng-model="dateTo" value="{{ app('request')->input('dateTo') }}"/>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <button type="button" class="btn btn-info" ng-click="getOrders()">
+                                Применить
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <br><br>
+            @endif
+
             <div class="table-responsive" ng-cloak>
                 <table class="table table-bordered table-hover" style="min-width: 972px;">
                     <thead>
@@ -44,7 +80,7 @@
                             @if(!$user->admin)
                                 <td><span style="font-weight: bold"><% order.id %></span><br><% order.payed_at_dt | date:'MM.dd HH:mm' %></td>
                                 <td>
-                                    <% order.receiving_date_dt | date:'MM.dd HH:mm' %>
+                                    <% order.receiving_date_dt | date:'MM.dd' %>
                                     <br>
                                     <% order.receiving_time %>
                                     <br>
@@ -132,6 +168,7 @@
 @endsection
 
 @section('footer')
-    <script src="{{ asset('assets/admin/ng/ordersList.js?v=2') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/ordersList.js?v=3') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/orders-list.js') }}" type="text/javascript"></script>
 @stop

@@ -53,12 +53,23 @@ class Product extends MainModel
                 'description.required' => 'Введите описание',
         ];
 
+        public static $productDopRules = [
+                'name' => 'required',
+                'price' => 'required | integer'
+        ];
+
+        public  static $productDopRulesMessages = [
+                'name.required' => 'Имя не может быть пустым',
+                'price.required' => 'Введите цену',
+                'price.integer' => 'Цена должна быть целым числом'
+        ];
+
         public static $fileUrl = '/uploads/products/';
 
-        public static function getNewProductName($shop_id) {
+        public static function getNewProductName($shop_id, $dop = 0) {
 
                 $productsCount = self::where('shop_id', $shop_id)->count();
-                $productName = 'Букет №'.($productsCount+1);
+                $productName = (!$dop ? 'Букет №' : 'Товар №').($productsCount+1);
 
                 return $productName;
         }
@@ -68,10 +79,10 @@ class Product extends MainModel
                 $productSlug = '';
 
                 while (!$slugExist) {
-                        $productSlug = str_slug($productName);
+                        $productSlug = str_slug($productName).'-'.rand(100, 999);
                         $productsCount = self::where('slug', $productSlug)->count();
                         if($productsCount) {
-                                $productName = $productName.'_'.time();
+                                $productName = $productName.'-'.time().rand(100, 999);
                         } else {
                                 $slugExist = true;
                         }
@@ -110,11 +121,27 @@ class Product extends MainModel
 
                 $currentPage = $page;
 
+                if(!empty($request->single)) {
+                        $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
+                        105, //красных тюльпанов
+                        97, //красных гвоздик
+                        116, //красных пионов
+                        130, //разноцветных ирисов
+                        //138, //белых калл
+                        171, //белых фрезий
+                        183, //белых гортензий
+                        166 //белых анемонов
+                        ];
+                        $request->product_type = 'klassika';
+                        return self::popularSingle2($city_id, $singleProductsIds)->paginate($perPage);
+                }
+
                 $productRequest = self::with(['shop'  => function($query) {
-                            $query->select(['id', 'name', 'delivery_price']);
+                            $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
                         }])->whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
                         })->where('price', '>', 0)
+                        ->where('dop', 0)
                         ->where('status', 1)
                         ->where('pause', 0)
                         ->whereNull('single');
@@ -201,7 +228,48 @@ class Product extends MainModel
                 */
         }
 
+        static function popularSingle2($city_id, $ids = [], $orderRand = false) {
+                $_products = Product::with(['shop' => function ($query) {
+                        $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                }])->join(\DB::raw('
+                (SELECT MIN(p.id) AS id, p.single FROM products p  
+                INNER JOIN shops ON shops.id = p.shop_id
+                INNER JOIN 
+                (SELECT products.single, MIN(products.price + shops.delivery_price) AS min_price
+                FROM products 
+                INNER JOIN shops ON shops.id = products.shop_id
+                WHERE shops.city_id = ' . (int)$city_id . '
+                AND products.status = 1 
+                AND products.pause = 0 
+                AND products.price > 0 
+                AND products.single IN (' . implode(',', $ids) . ')                
+                GROUP BY single) AS single ON single.single = p.single AND single.min_price = (p.price + shops.delivery_price)
+                WHERE shops.city_id = ' . (int)$city_id . '
+                AND p.status = 1 
+                AND p.pause = 0 
+                AND p.price > 0 
+                AND p.single IN (' . implode(',', $ids) . ') GROUP BY p.single) AS single2
+            '), function ($join) {
+                        $join->on('products.id', '=', 'single2.id');
+                })->whereHas('shop', function ($query) use ($city_id) {
+                        $query->where('city_id', $city_id)->available();
+                });
+                
+                if($orderRand) {
+                        $_products->orderBy(\DB::raw('RAND()'));
+                } else {
+                        $_products->orderByRaw(\DB::raw("FIELD(products.single, " . implode(',', $ids) . ")"));
+                }
+
+             return $_products;
+        }
+
         static function popularSingle($city_id, $ids = []) {
+
+
+
+
+
                 $_products = self::with(['shop'  => function($query) {
                             $query->select(['id', 'name', 'delivery_price']);
                         }])->whereHas('shop', function($query) use ($city_id) {
@@ -210,7 +278,26 @@ class Product extends MainModel
                         ->where('status', 1)
                         ->where('pause', 0)
                         ->whereIn('single', $ids)
-                        ->orderBy('price')->get();
+                        ->orderBy(\DB::raw('RAND()'))->limit(6)->get();
+
+
+
+                return $_products;
+
+/*
+                $_products = Product::with(['shop' => function ($query) {
+                        $query->select(['id', 'name', 'delivery_price']);
+                }])->join(\DB::raw('
+                        (SELECT products.id, products.single, MIN(products.price)
+                        FROM products 
+                        INNER JOIN shops ON shops.id = products.shop_id  and shops.`city_id` = '.(int)$city_id.'
+                        WHERE products.status = 1 AND products.pause = 0 AND products.price > 0 AND products.single IN (' . implode(',', $ids) . ')
+                        GROUP BY products.single) AS single
+                    '), function ($join) {
+                        $join->on('products.id', '=', 'single.id');
+                })->get();
+*/
+
 
                 $products = [];
                 foreach ($_products as $item) {
@@ -286,7 +373,9 @@ class Product extends MainModel
 
         public function setPromoCode($promoCode) {
                 if(!empty($promoCode)) {
-                        $this->promoCode = PromoCode::where('code', $promoCode)->whereNull('used_on')->first();
+                        $this->promoCode = PromoCode::where('code', $promoCode)->where(function ($query) {
+                            $query->whereNull('used_on')->orWhere('reusable', 1);
+                        })->first();
                 } else {
                         $this->promoCode = null;
                 }

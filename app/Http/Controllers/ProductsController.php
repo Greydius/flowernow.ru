@@ -6,11 +6,13 @@ use App\Model\Color;
 use App\Model\Shop;
 use App\Model\Flower;
 use App\Model\Price;
+use App\Model\Feedback;
 use App\Model\Product;
 use App\Model\SingleProduct;
 use App\Model\ProductType;
 use App\Model\ProductPhoto;
 use App\Model\Size;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -33,8 +35,20 @@ class ProductsController extends Controller
                 $popularProducts = [];
                 $popularProduct = [];
 
-                $singleProductsIds = [2, 7, 9];
-                $singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
+                $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
+                        /*
+                        105, //красных тюльпанов
+                        97, //красных гвоздик
+                        116, //красных пионов
+                        130, //разноцветных ирисов
+                        //138, //белых калл
+                        171, //белых фрезий
+                        183, //белых гортензий
+                        166 //белых анемонов
+                        */
+                        ];
+                //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
+                $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(6)->get();
 
                 if(empty($request->product_type)) {
                         $item = [];
@@ -50,11 +64,25 @@ class ProductsController extends Controller
 
                         unset($request->product_type);
                 } else {
+
                         $title = $this->getTitle($request);
                         $meta =  $this->getMeta($request);
                         $viewFile = 'front.product.list';
                         $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
                         $currentType = ProductType::where('slug', $request->product_type)->first();
+
+                        $item = [];
+                        foreach ($productTypes as $productType) {
+                                $request->product_type = $productType->slug;
+                                $item['productType'] = $productType;
+                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 1);
+                                $item['popularProductCount'] = count($item['popularProduct']);
+                                if($item['popularProductCount']) {
+                                        $popularProducts[] = $item;
+                                }
+                        }
+
+                        unset($request->product_type);
                 }
 
                 $specialOffers = \DB::table('special_offers')->whereRaw('? between date_from and date_to', [date('Y-m-d')])->get();
@@ -120,6 +148,12 @@ class ProductsController extends Controller
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
                 ];
 
+                $size = getimagesize($product->photoUrl);
+                if($size) {
+                        $params['pageImageWidth'] = $size[0];
+                        $params['pageImageHeight'] = $size[1];
+                }
+
                 if(!empty($product->single)) {
                         $singleProductIds = [];
                         $singleProducts = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->get();
@@ -132,6 +166,11 @@ class ProductsController extends Controller
                         $params['shopSingleProducts'] = $shopSingleProducts;
                 }
 
+                $feedbacksCount = Feedback::where('shop_id', $product->shop_id)->count();
+                $feedbacks = Feedback::where('shop_id', $product->shop_id)->orderBy('feedback_date', 'desc')->take(5)->get();
+                $params['feedbacksCount'] = $feedbacksCount;
+                $params['feedbacks'] = $feedbacks;
+
                 return view('front.product.show', $params);
         }
 
@@ -140,6 +179,21 @@ class ProductsController extends Controller
                 $times = \App\Helpers\Data::times();
 
                 return view('admin.products.list', [
+                        'isDop' => false,
+                        'productTypes' => ProductType::where('show_on_main', '1')->get(),
+                        'colors' => Color::all(),
+                        'specialOffers' => SpecialOffer::all(),
+                        'flowers' => Flower::orderBy('name', 'asc')->get(),
+                        'times' => $times
+                ]);
+        }
+
+        public function dopProducts() {
+
+                $times = \App\Helpers\Data::times();
+
+                return view('admin.products.list', [
+                        'isDop' => true,
                         'productTypes' => ProductType::where('show_on_main', '1')->get(),
                         'colors' => Color::all(),
                         'specialOffers' => SpecialOffer::all(),
@@ -272,7 +326,8 @@ class ProductsController extends Controller
                 Image::make($photo)->fit(632, 632)->save( public_path($fullFileName ) );
 
                 $product = new Product();
-                $product->name = Product::getNewProductName($shop->id);
+                $product->dop = !empty($request->isDop) ? 1 : 0;
+                $product->name = Product::getNewProductName($shop->id, $product->dop);
                 $product->slug = Product::getNewProductSlug($product->name);
                 $product->photo = $filename;
                 $product->shop_id = $shop->id;
@@ -295,9 +350,28 @@ class ProductsController extends Controller
                 try{
                         $perPage = 16;
                         if($this->user->admin) {
+                                $perPage = 40;
                                 $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->whereNull('single')->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
 
+                                //$productSearchModel = \Connection::query();
+                                //$builder = Model::query();
+
+                                //dd($builder);
+
                                 if(!empty($request->search)) {
+/*
+                                        $productSearchModel->orWhereHas('shop', function($query) use ($request) {
+                                                $query->where('shops.name', 'like', "%$request->search%");
+                                        });
+
+                                        $productSearchModel->orWhereHas('shop.city', function($query) use ($request) {
+                                                $query->where('cities.name', 'like', "%$request->search%");
+                                        });
+*/
+
+                                        //$productRequestModel->merge($productRequestModel);
+
+/*
                                         $productRequestModel->orWhereHas('shop', function($query) use ($request) {
                                                 $query->where('shops.name', 'like', "%$request->search%");
                                         });
@@ -305,18 +379,37 @@ class ProductsController extends Controller
                                         $productRequestModel->orWhereHas('shop.city', function($query) use ($request) {
                                                 $query->where('cities.name', 'like', "%$request->search%");
                                         });
+*/
                                 }
+
+                               // echo $productRequestModel->toSql(); exit();
                         } else {
                                 $productRequestModel = $this->user->getShop()->products()->whereNull('single')->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
+                        }
+
+                        if(!empty((int)$request->dop)) {
+                                $productRequestModel->where('dop', 1);
+                        } else {
+                                $productRequestModel->where('dop', 0);
+                        }
+
+                        $productRequestModel->where(function($query) use ($request) {
 
                                 if(!empty($request->search)) {
-                                        $productRequestModel->orWhere('cities.name', 'like', "%$request->search%");
-                                }
-                        }
 
-                        if(!empty($request->search)) {
-                                $productRequestModel->orWhere('id', $request->search)->orWhere('name', 'like', "%$request->search%");
-                        }
+                                        if($this->user->admin) {
+                                                $query->orWhereHas('shop', function ($query) use ($request) {
+                                                        $query->where('shops.name', 'like', "%$request->search%");
+                                                });
+
+                                                $query->orWhereHas('shop.city', function ($query) use ($request) {
+                                                        $query->where('cities.name', 'like', "%$request->search%");
+                                                });
+                                        }
+
+                                        $query->orWhere('products.id', $request->search)->orWhere('products.name', 'like', "%$request->search%");
+                                }
+                        });
 
                         if(!empty((int)$request->status)) {
                                 $productRequestModel->where('status', '!=', 1);
@@ -518,7 +611,9 @@ class ProductsController extends Controller
 
         public function update(Request $request) {
 
-                $validator = Validator::make($request->all(), Product::$productRules, Product::$productRulesMessages);
+                $product = Product::findOrFail($request->input('id'));
+
+                $validator = Validator::make($request->all(), $product->dop ? Product::$productDopRules : Product::$productRules, $product->dop ? Product::$productDopRulesMessages : Product::$productDopRulesMessages);
 
                 if ($validator->fails()) {
 
@@ -531,8 +626,6 @@ class ProductsController extends Controller
                 }
 
                 $shop = $this->user->getShop();
-
-                $product = Product::find($request->input('id'));
 
                 if(empty($product) || (!$this->user->admin && $shop->id != $product->shop_id)) {
                         return response()->json([
@@ -549,8 +642,8 @@ class ProductsController extends Controller
                 $product->name = $request->input('name');
                 $product->shop_id = $request->input('shop_id');
                 $product->price = $request->input('price');
-                $product->width = $request->input('width');
-                $product->height = $request->input('height');
+                $product->width = (int)$request->input('width');
+                $product->height = (int)$request->input('height');
                 $product->product_type_id = $request->input('product_type_id');
                 $product->color_id = $request->input('color_id');
                 $product->make_time = $request->input('make_time');
@@ -763,6 +856,7 @@ class ProductsController extends Controller
                 }
 
                 $queries = explode('/', $query);
+
                 if(count($queries) == 2) {
                         $request->product_type = $queries[0];
                         if($queries[1] != 'vse-cvety') {
@@ -775,6 +869,11 @@ class ProductsController extends Controller
                                 }
                         }
                         return $this->index($request);
+                } elseif(count($queries) == 1) {
+                        if($queries[0] == 'single') {
+                                $request->single = true;
+                                return $this->catalog($request);
+                        }
                 }
 
                 return redirect()->route('front.index');
@@ -796,16 +895,39 @@ class ProductsController extends Controller
                         }
                 }
 
+                if($request->single) {
+                        $title = 'Букеты цветов поштучно';
+                }
+
+                $productTypes = ProductType::where('show_on_main', '1')->get();
+                $item = $popularProducts =[];
+
+                foreach ($productTypes as $productType) {
+                        $request->product_type = $productType->slug;
+                        $item['productType'] = $productType;
+                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
+                        $item['popularProductCount'] = count($item['popularProduct']);
+                        if($item['popularProductCount']) {
+                                $popularProducts[] = $item;
+                        }
+                }
+
+                if($request->single) {
+                        $title = 'Букеты цветов поштучно';
+                }
+
+
                 return view('front.product.list',[
                         'title'                 => $title,
                         'meta'                  => $meta,
                         'popularProduct'        => $popularProduct,
                         'prices'                => Price::all(),
                         'sizes'                 => Size::all(),
-                        'productTypes'          => ProductType::where('show_on_main', '1')->get(),
+                        'productTypes'          => $productTypes,
                         'currentType'           => null,
                         'colors'                => Color::all(),
-                        'flowers'               => Flower::orderBy('popularity', 'desc')->limit(9)->get()
+                        'flowers'               => Flower::orderBy('popularity', 'desc')->limit(9)->get(),
+                        'popularProducts'       => $popularProducts
                 ]);
         }
 
@@ -929,5 +1051,54 @@ class ProductsController extends Controller
                 }finally{
                     return response()->json($response, $statusCode);
                 }
+        }
+
+        function singleStat() {
+
+                $shops = Shop::with(['city', 'products' => function($q) {
+                        $q->select('id', 'shop_id', 'single', 'price')->whereNotNull('single');
+                }])->simplePaginate(15);
+
+                $products = [];
+
+                foreach ($shops as $shop) {
+                        foreach ($shop->products as $product) {
+                                $products[$shop->id][$product->single] = $product->price;
+                        }
+                }
+
+                return view('admin.products.single-stat',[
+                        'singles' => SingleProduct::where('parent_id', '>', 0)->get(),
+                        'shops' => $shops,
+                        'products' => $products
+                ]);
+        }
+
+        public function apiToDopProduct($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        $product = null;
+
+                        $product = Product::find($id);
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                 $product->dop = $product->dop ? 0 : 1;
+                                 $product->save();
+                        }
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
         }
 }

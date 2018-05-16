@@ -11,12 +11,13 @@
 
                 <form action="{{ route('admin.products.upload') }}" enctype="multipart/form-data" class="m-dropzone dropzone" id="myDropzone" style="min-height: auto">
                     {{ csrf_field() }}
+                    <input type="hidden" id="isDop" name="isDop" value="<?=(int)$isDop?>">
                     <div class="m-dropzone__msg dz-message needsclick" style="    margin: 10px 0;">
                         <h3 class="m-dropzone__msg-title">
                             <div class="m-demo-icon__preview">
                                 <i class="flaticon-add"></i>
                                 <br>
-                                Добавить новый товар
+                                Добавить новый <?=$isDop ? 'дополнительный' : ''?> товар
                             </div>
                         </h3>
                         <span class="m-dropzone__msg-desc">Нажмите сюда или перетащите картинку</span>
@@ -44,40 +45,41 @@
                         </div>
                     </div>
 
+                    @if(!$isDop)
 
-                    <div class="col-md-3">
-                        @if($user->admin)
-                            <label class="m-checkbox m-checkbox--bold">
-                                <input type="checkbox" id="m_form_status" ng-change="changeStatusFilter()" ng-model="search_not_public">
-                                Не опубликованные
-                                <span></span>
-                            </label>
-                        @endif
-                    </div>
+                        <div class="col-md-3">
+                            @if($user->admin)
+                                <label class="m-checkbox m-checkbox--bold">
+                                    <input type="checkbox" id="m_form_status" ng-change="changeStatusFilter()" ng-model="search_not_public">
+                                    Не опубликованные
+                                    <span></span>
+                                </label>
+                            @endif
+                        </div>
 
-
-
-                    <div class="col-md-3">
-                        <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
-                            <span>
-                                <i class="la la-arrows-v"></i>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
                                 <span>
-                                    Изменить все цены на...
+                                    <i class="la la-arrows-v"></i>
+                                    <span>
+                                        Изменить все цены на...
+                                    </span>
                                 </span>
-                            </span>
-                        </button>
-                    </div>
+                            </button>
+                        </div>
 
-                    <div class="col-md-3">
-                        <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon pull-right">
-                            <span>
-                                <i class="la la-diamond"></i>
+                        <div class="col-md-3">
+                            <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon pull-right">
                                 <span>
-                                    Витрина Ваших товаров
+                                    <i class="la la-diamond"></i>
+                                    <span>
+                                        Витрина Ваших товаров
+                                    </span>
                                 </span>
-                            </span>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
+
+                    @endif
                 </div>
             </div>
         </div>
@@ -111,6 +113,16 @@
                                         <a href ng-click="approveProduct(product)" class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Одобрить" ng-show="product.status != 1">
                                             <i class="fa flaticon-interface"></i>
                                         </a>
+
+                                        @if(!$isDop)
+                                            <a href ng-click="toDopProduct(product)" class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="В доп. товар">
+                                                <i class="flaticon-background"></i>
+                                            </a>
+                                        @else
+                                            <a href ng-click="toDopProduct(product)" class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="В основные товар">
+                                                <i class="flaticon-background"></i>
+                                            </a>
+                                        @endif
                                     </div>
                                     @endif
 
@@ -206,37 +218,21 @@
 
             </div>
 
-            <!--
 
-            <div class="col-md-12" style="min-height: 30px;">
+        </div>
 
-                <button ng-click="getProductsPage(prev_page)" title="Предыдущая страница" data-href="<% prev_page %>" type="button" class="btn m-btn--square  btn-outline-info btn-sm pull-left" ng-show="prev_page">
-                    <i class="la la-angle-left"></i>
-                </button>
+        <div class="m-datatable--default m-datatable" ng-cloak>
+            <div class="m-datatable__pager m-datatable--paging-loaded clearfix" style="margin-top: 0">
 
-                <button ng-click="getProductsPage(next_page)" title="Следующая страница" type="button" class="btn m-btn--square  btn-outline-info btn-sm pull-right" ng-show="next_page">
-                    <i class="la la-angle-right"></i>
-                </button>
+                <ul class="m-datatable__pager-nav">
+                    <li ng-show="currentPage > 1"><a ng-click="getProductsPage(currentPage-1)" title="Previous" class="m-datatable__pager-link m-datatable__pager-link--prev" data-page="5"><i class="la la-angle-left"></i></a></li>
+                    <li ng-repeat="n in ranges(1,totalPages)">
+                        <a ng-click="getProductsPage(n)" class="m-datatable__pager-link m-datatable__pager-link-number <% currentPage == n ? 'm-datatable__pager-link--active' : '' %>" data-page="<% n %>"><% n %></a>
+                    </li>
+                    <li ng-show="currentPage < totalPages"><a ng-click="getProductsPage(currentPage+1)" title="Next" class="m-datatable__pager-link m-datatable__pager-link--next" data-page="7"><i class="la la-angle-right"></i></a></li>
+                </ul>
 
             </div>
-
-            -->
-
-            <div class="m-datatable--default m-datatable">
-                <div class="m-datatable__pager m-datatable--paging-loaded clearfix">
-
-                    <ul class="m-datatable__pager-nav">
-                        <li ng-show="currentPage > 1"><a ng-click="getProductsPage(currentPage-1)"  title="Previous" class="m-datatable__pager-link m-datatable__pager-link--prev" data-page="5"><i class="la la-angle-left"></i></a></li>
-                        <li ng-repeat="n in ranges(1,totalPages)">
-                            <a ng-click="getProductsPage(n)" class="m-datatable__pager-link m-datatable__pager-link-number <% currentPage == n ? 'm-datatable__pager-link--active' : '' %>" data-page="<% n %>"><% n %></a>
-                        </li>
-                        <li ng-show="currentPage < totalPages"><a ng-click="getProductsPage(currentPage+1)"  title="Next" class="m-datatable__pager-link m-datatable__pager-link--next" data-page="7"><i class="la la-angle-right"></i></a></li>
-                    </ul>
-
-                </div>
-            </div>
-
-
         </div>
     </div>
 
@@ -269,11 +265,13 @@
                                         <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
                                     </div>
 
-                                    <div class="col-md-2" id="droparea">
-                                        <button class="btn btn-outline-metal m-btn m-btn--icon m-btn--icon-only- btn-block upload-photo-btn" style="height: 50px; line-height: 28px; ">
-                                            <i class="la la-plus"></i>
-                                        </button>
-                                    </div>
+                                    @if(!$isDop)
+                                        <div class="col-md-2" id="droparea">
+                                            <button class="btn btn-outline-metal m-btn m-btn--icon m-btn--icon-only- btn-block upload-photo-btn" style="height: 50px; line-height: 28px; ">
+                                                <i class="la la-plus"></i>
+                                            </button>
+                                        </div>
+                                    @endif
 
                                 </div>
 
@@ -290,7 +288,7 @@
 
                             <div class="form-group m-form__group">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-{{ !$isDop ? '6' : '12' }}">
                                         <label for="edit-product-price">
                                             Цена <span class="text-danger must-have">*</span>
                                         </label>
@@ -304,151 +302,160 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label for="edit-product-make-time">
-                                            Время изготовления <span class="text-danger must-have">*</span>
-                                        </label>
-                                        <select class="form-control form-control-sm" ng-model="item.make_time" ng-options="time.value as time.name for time in times"></select>
-                                    </div>
-                                </div>
+                                    @if(!$isDop)
 
-                            </div>
-
-                            <div class="form-group m-form__group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="edit-product-width">
-                                            Ширина, см <span class="text-danger must-have">*</span>
-                                        </label>
-                                        <div class="m-input-icon m-input-icon--right">
-                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.width" placeholder="см." id="edit-product-width">
-                                            <span class="m-input-icon__icon m-input-icon__icon--right">
-                                                <span>
-                                                    <i class="fa fa-arrows-h"></i>
-                                                </span>
-                                            </span>
+                                        <div class="col-md-6">
+                                            <label for="edit-product-make-time">
+                                                Время изготовления <span class="text-danger must-have">*</span>
+                                            </label>
+                                            <select class="form-control form-control-sm" ng-model="item.make_time" ng-options="time.value as time.name for time in times"></select>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <label for="edit-product-height">
-                                            Высота, см <span class="text-danger must-have">*</span>
-                                        </label>
-                                        <div class="m-input-icon m-input-icon--right">
-                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.height" placeholder="см." id="edit-product-height">
-                                            <span class="m-input-icon__icon m-input-icon__icon--right">
-                                                <span>
-                                                    <i class="fa fa-arrows-v"></i>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    @endif
                                 </div>
 
                             </div>
 
-                            <div class="form-group m-form__group">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="edit-product-height">
-                                            Тип букета <span class="text-danger must-have">*</span>
-                                        </label>
-                                        <select class="form-control form-control-sm" ng-model="item.product_type_id" ng-options="productType.id as productType.name for productType in productTypes">
-                                            <option value="">Укажите тип</option>
-                                        </select>
-                                    </div>
+                            @if(!$isDop)
 
-                                    <div class="col-md-6">
-                                        <label for="edit-product-height">
-                                            Цвет
-                                        </label>
-                                        <select class="form-control form-control-sm" ng-model="item.color_id" ng-options="color.id as color.name for color in colors"></select>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group form-group-sm m-form__group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="edit-product-price">
-                                            Состав
-                                        </label>
-
-                                        <div class="row  m--margin-bottom-5" ng-repeat="composition in item.compositions">
-                                            <div class="col-md-8">
-                                                <div class="input-group input-group-sm">
-                                                    <select class="form-control form-control-sm input-sm m-select2 select2b" data--maximum-selection-length="1" select2 ng-model="composition.flower_id" ng-options="flower.id as flower.name for flower in flowers">
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-
-                                                <div class="input-group input-group-sm">
-                                                    <input type="text" class="form-control m-input" ng-model="composition.qty" placeholder="Кол-во">
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger" type="button" ng-click="deleteComposition(composition)">
-                                                            <i class="fa fa-close"></i>
-                                                        </button>
+                                <div class="form-group m-form__group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="edit-product-width">
+                                                Ширина, см <span class="text-danger must-have">*</span>
+                                            </label>
+                                            <div class="m-input-icon m-input-icon--right">
+                                                <input type="text" class="form-control form-control-sm m-input" ng-model="item.width" placeholder="см." id="edit-product-width">
+                                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                    <span>
+                                                        <i class="fa fa-arrows-h"></i>
                                                     </span>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="edit-product-height">
+                                                Высота, см <span class="text-danger must-have">*</span>
+                                            </label>
+                                            <div class="m-input-icon m-input-icon--right">
+                                                <input type="text" class="form-control form-control-sm m-input" ng-model="item.height" placeholder="см." id="edit-product-height">
+                                                <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                    <span>
+                                                        <i class="fa fa-arrows-v"></i>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group m-form__group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="edit-product-height">
+                                                Тип букета <span class="text-danger must-have">*</span>
+                                            </label>
+                                            <select class="form-control form-control-sm" ng-model="item.product_type_id" ng-options="productType.id as productType.name for productType in productTypes">
+                                                <option value="">Укажите тип</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="edit-product-height">
+                                                Цвет
+                                            </label>
+                                            <select class="form-control form-control-sm" ng-model="item.color_id" ng-options="color.id as color.name for color in colors"></select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group form-group-sm m-form__group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="edit-product-price">
+                                                Состав
+                                            </label>
+
+                                            <div class="row  m--margin-bottom-5" ng-repeat="composition in item.compositions">
+                                                <div class="col-md-8">
+                                                    <div class="input-group input-group-sm">
+                                                        <select class="form-control form-control-sm input-sm " data--maximum-selection-length="1"  ng-model="composition.flower_id" ng-options="flower.id as flower.name for flower in flowers">
+                                                            <option value="">Выбрать состав</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control m-input" ng-model="composition.qty" placeholder="Кол-во">
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-danger" type="button" ng-click="deleteComposition(composition)">
+                                                                <i class="fa fa-close"></i>
+                                                            </button>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <hr>
+                                    <hr>
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <a class="btn btn-outline-success btn-sm 	m-btn m-btn--icon" ng-click="addComposition()">
-                                            <span>
-                                                <i class="la la-plus"></i>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-outline-success btn-sm 	m-btn m-btn--icon" ng-click="addComposition()">
                                                 <span>
-                                                    Добавить в состав
+                                                    <i class="la la-plus"></i>
+                                                    <span>
+                                                        Добавить в состав
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group m-form__group">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="edit-product-height">
-                                            Описание <span class="text-danger must-have">*</span>
-                                        </label>
-                                        <textarea class="form-control" ng-model="item.description" rows="6"></textarea>
+                                            </a>
+                                        </div>
                                     </div>
 
                                 </div>
 
-                            </div>
-
-                            @if($user->admin)
                                 <div class="form-group m-form__group">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label for="edit-product-height">
-                                                Участвует в спец. предложении
+                                                Описание <span class="text-danger must-have">*</span>
                                             </label>
-                                            <div class="m-checkbox-list">
-                                                <div ng-repeat="specialOffer in specialOffers">
-                                                    <label class="m-checkbox">
-                                                        <input type="checkbox" name="specialOffer[]" ng-checked="itemSpecialOffers.indexOf(specialOffer.id.toString()) >= 0" value="<% specialOffer.id %>">
-                                                        <% specialOffer.name %>
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            <textarea class="form-control" ng-model="item.description" rows="6"></textarea>
                                         </div>
 
                                     </div>
 
                                 </div>
+
+                                @if($user->admin)
+                                    <div class="form-group m-form__group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="edit-product-height">
+                                                    Участвует в спец. предложении
+                                                </label>
+                                                <div class="m-checkbox-list">
+                                                    <div ng-repeat="specialOffer in specialOffers">
+                                                        <label class="m-checkbox">
+                                                            <input type="checkbox" name="specialOffer[]" ng-checked="itemSpecialOffers.indexOf(specialOffer.id.toString()) >= 0" value="<% specialOffer.id %>">
+                                                            <% specialOffer.name %>
+                                                            <span></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                @endif
+
                             @endif
 
                             <div class="form-group m-form__group">
@@ -609,7 +616,7 @@
 
 @section('footer')
     <script src="{{ asset('assets/plugins/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/js/products-list.js?v=2_3') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/js/products-list.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/ng/productsList.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script type="text/javascript">
         jsonData.productTypes = {!! $productTypes->toJson() !!};

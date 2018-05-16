@@ -46,7 +46,7 @@ class FinanceController extends Controller
                                         try {
                                                 
                                                 Mail::send('email.adminNewInvoice', ['shop' => $this->user->getShop(), ], function ($message) {
-                                                        $message->to('service@floristum.ru')
+                                                        $message->to(['service@floristum.ru', 'koot.89@mail.ru'])
                                                                 ->subject('Создан новый запрос на вывод средств');
                                                 });
 

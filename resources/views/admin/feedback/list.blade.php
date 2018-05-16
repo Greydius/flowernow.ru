@@ -32,7 +32,13 @@
 
                     <tbody>
 
+                        <?php $city_id = ''; ?>
+
                         @foreach($feedbacks as $feedback)
+                            @if($city_id != $feedback->shop->city_id)
+                                <?php $city_id = $feedback->shop->city_id; ?>
+                                <tr><td colspan="6" style="text-align: center; font-weight: bold">{{ $feedback->shop->city->name }}</td></tr>
+                            @endif
                             <tr>
                                 <td>{{ $feedback->shop->name }}</td>
                                 <td>{{ $feedback->product ? $feedback->product->name : ''}}</td>

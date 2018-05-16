@@ -27,7 +27,8 @@ var myDropzoneOptions = {
         //url: '.',
         //clickable: false,
         params: {
-                 _token: $('meta[name="csrf-token"]').attr('content')
+                 _token: $('meta[name="csrf-token"]').attr('content'),
+                isDop: $('#isDop').val()
         },
         createImageThumbnails: false,
         acceptedFiles: 'image/*',

@@ -17,7 +17,7 @@ class FeedbackController extends Controller
     public function index()
     {
         //
-            $feedbacks = Feedback::with('shop')->with('product')->orderBy('id', 'desc')->get();
+            $feedbacks = Feedback::select('feedback.*')->join('shops', 'shops.id', '=', 'feedback.shop_id')->with('shop.city')->with('product')->orderBy('shops.city_id')->orderBy('feedback.shop_id')->orderBy('feedback.id', 'desc')->get();
             return view('admin.feedback.list', [
                     'feedbacks' => $feedbacks
             ]);

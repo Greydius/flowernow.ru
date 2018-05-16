@@ -35,12 +35,14 @@
                                                         <div class="m-widget4__item">
 
                                                             <div class="m-widget4__img m-widget4__img--logo">
-                                                                <img src="{{ $item->product->photoUrl }}" alt="">
+                                                                <a href="/flowers/{{ $item->product->slug }}" target="_blank">
+                                                                    <img src="{{ $item->product->photoUrl }}" alt="">
+                                                                </a>
                                                             </div>
 
                                                             <div class="m-widget4__info">
                                                                 <span class="m-widget4__title">
-                                                                    {{ $item->product->name }}
+                                                                    {{ $item->product->name }} (id: {{ $item->product->id }})
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -315,6 +317,33 @@
                         </div>
                     </div>
                 </div>
+
+                @if($user->admin)
+
+                <div class="col-lg-12">
+                    <div class="m-portlet  m-portlet--border-bottom-brand ">
+                        <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                            <div class="m-widget26">
+                                Доставка: {{ $order->delivery_price }}<br>
+                                @if($order->delivery_out_distance)
+                                    Доставка за город: {{ $order->delivery_out_distance * $order->delivery_out_price }}<br>
+                                @endif
+
+                                @foreach($order->orderLists as $key => $item)
+                                    @if($item->product)
+
+                                        Товар: {{ $item->product->name }} - {{ $item->client_price - $order->delivery_price - ($order->delivery_out_distance * (int)$order->delivery_out_price) }}
+
+                                    @endif
+                                @endforeach
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                @endif
 
                 <div class="col-lg-12">
                     <div class="m-portlet  m-portlet--border-bottom-brand ">

@@ -2,7 +2,16 @@
 
 @section('content')
 
-    <div class="row" ng-cloak>
+    @if($user->admin)
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{ route('admin.product.single-stat') }}" class="btn btn-info">Заполненность поштучных</a>
+                <br><br>
+            </div>
+        </div>
+    @endif
+
+    <div class="row">
 
         @foreach($products as $product)
             <div class="col-xl-3">

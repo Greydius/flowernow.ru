@@ -37,8 +37,8 @@ class User extends Authenticatable
             return $this->shops->first();
     }
 
-    public function totalProducts($status = []) {
-            $productsModel= Product::select('id');
+    public function totalProducts($status = [], $dop = 0) {
+            $productsModel= Product::select('id')->whereNull('single')->where('dop', $dop);
 
             if(!$this->admin) {
                     $productsModel->whereIn('shop_id', $this->shops->pluck('id')->toArray());

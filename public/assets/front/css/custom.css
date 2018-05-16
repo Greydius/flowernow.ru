@@ -414,3 +414,14 @@ header .location-icon {
     width: 30px;
     display: inline-block;
 }
+
+
+#dop-products-container .owl-carousel .item {
+    height: 10rem;
+    background: #4DC7A0;
+    padding: 1rem;
+}
+
+.media-item {
+    min-height: 340px;
+}

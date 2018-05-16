@@ -190,11 +190,6 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.finance.request'
         ]);
 
-        Route::get('invoices', [
-                'uses' => 'InvoicesController@index',
-                'as' => 'admin.invoices'
-        ]);
-
         /* SPECIAL OFFERS*/
         Route::get('specialOffers', [
                 'uses' => 'SpecialOffersController@index',
@@ -251,6 +246,56 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         Route::group(['middleware' => 'is-admin'], function () {
 
+                Route::get('articles', [
+                        'uses' => 'ArticleController@index',
+                        'as' => 'admin.articles'
+                ]);
+
+                Route::get('article/create', [
+                        'uses' => 'ArticleController@create',
+                        'as' => 'admin.article.create'
+                ]);
+
+                Route::get('article/edit/{id}', [
+                        'uses' => 'ArticleController@edit',
+                        'as' => 'admin.article.edit'
+                ]);
+
+                Route::post('article/store', [
+                        'uses' => 'ArticleController@store',
+                        'as' => 'admin.article.store'
+                ]);
+
+                Route::post('article/update/{id}', [
+                        'uses' => 'ArticleController@update',
+                        'as' => 'admin.article.update'
+                ]);
+
+                Route::get('article/destroy/{id}', [
+                        'uses' => 'ArticleController@destroy',
+                        'as' => 'admin.article.destroy'
+                ]);
+
+                Route::get('invoices', [
+                        'uses' => 'InvoicesController@index',
+                        'as' => 'admin.invoices'
+                ]);
+
+                Route::get('invoices2', [
+                        'uses' => 'InvoicesController@index2',
+                        'as' => 'admin.invoices2'
+                ]);
+
+                Route::post('invoices/changeStatus/{id}', [
+                        'uses' => 'InvoicesController@changeStatus',
+                        'as' => 'admin.changeStatus'
+                ]);
+
+                Route::get('singleStat', [
+                        'uses' => 'ProductsController@singleStat',
+                        'as' => 'admin.product.single-stat'
+                ]);
+
                 Route::get('setting', [
                         'uses' => 'SettingController@index',
                         'as' => 'admin.setting.index'
@@ -306,6 +351,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'as' => 'admin.promoCodes.store'
                 ]);
 
+                Route::post('promoCodes/delete/{id}', [
+                        'uses' => 'PromoCodesController@destroy',
+                        'as' => 'admin.promoCodes.delete'
+                ]);
+
                 Route::get('shops', [
                         'uses' => 'ShopsController@shops',
                         'as' => 'admin.shop.list'
@@ -345,6 +395,18 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'uses' => 'SubscriptionsController@pause',
                         'as' => 'admin.subscription.pause'
                 ]);
+
+                Route::group(['prefix' => 'api/v1'], function() {
+                        Route::post('product/toDop/{id}', [
+                                'uses' => 'ProductsController@apiToDopProduct',
+                                'as' => 'admin.api.product.apiToDopProduct'
+                        ]);
+
+                        Route::get('invoices', [
+                                'uses' => 'InvoicesController@apiList',
+                                'as' => 'admin.api.invoices.list'
+                        ]);
+                });
         });
 
         Route::get('shop', [
@@ -403,6 +465,10 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.products.changePrice'
         ]);
 
+        Route::get('products/dop', [
+                'uses' => 'ProductsController@dopProducts',
+                'as' => 'admin.dopProducts'
+        ]);
 
         /* API */
         Route::group(['prefix' => 'api/v1'], function() {
@@ -519,3 +585,13 @@ Route::get('/seed/addFlowersSlug', [
 ]);
 
 Route::get('autologin/{token}', ['as' => 'autologin', 'uses' => '\Watson\Autologin\AutologinController@autologin']);
+
+/*Articles*/
+
+Route::get('/articles/{slug}', [
+        'uses' => 'ArticleController@show',
+        'as' => 'article.show'
+]);
+
+/*Sitemap*/
+Route::get('/sitemap.xml', 'SitemapController@index');

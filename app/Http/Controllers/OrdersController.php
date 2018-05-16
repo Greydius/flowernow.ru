@@ -35,6 +35,8 @@ class OrdersController extends Controller
                         $params['qty'] = $qty;
                 }
 
+                $params['dopProducts'] = Product::where('dop', 1)->limit(10)->get();
+
                 return view('front.order.add',$params);
         }
 
@@ -143,16 +145,25 @@ class OrdersController extends Controller
                                 if($orderListCount) {
                                         \DB::commit();
 
-                                        if($order->payment == Order::$PAYMENT_RS) {
-                                                Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
-                                                        $message->to('service@floristum.ru')
-                                                                ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
-                                                });
-                                        } else {
-                                                Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
-                                                        $message->to('service@floristum.ru')
-                                                                ->subject('Создан новый заказ №'. $order->id);
-                                                });
+
+                                        try {
+                                                if($order->payment == Order::$PAYMENT_RS) {
+                                                        Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                                                $message->to('service@floristum.ru')
+                                                                        ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
+                                                        });
+
+                                                        //sms for admins
+                                                        Sms::instance()->send('+79119245792', 'Поступил заказ для ЮР. ЛИЦА №'.$order->id  );
+                                                        Sms::instance()->send('+79052122383', 'Поступил заказ для ЮР. ЛИЦА №'.$order->id  );
+                                                } else {
+                                                        Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                                                $message->to('service@floristum.ru')
+                                                                        ->subject('Создан новый заказ №'. $order->id);
+                                                        });
+                                                }
+                                        } catch(\Exception $e){
+
                                         }
 
                                         $response = [
@@ -318,7 +329,9 @@ class OrdersController extends Controller
                 if(empty($order_id)) {
                         return view('front.order.success',[]);
                 } else {
-                        return view('front.order.success-ur',[]);
+                        return view('front.order.success-ur',[
+                                'order' => Order::with('orderLists.product')->where('id', $order_id)->first()
+                        ]);
                 }
         }
 
@@ -331,7 +344,7 @@ class OrdersController extends Controller
                 ]);
         }
 
-        public function apiList() {
+        public function apiList(Request $request) {
 
                 $statusCode = 200;
                 $response = [
@@ -340,13 +353,38 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $orders = Order::with('orderLists.product')
+                                $orderModel = Order::with('orderLists.product')
                                         ->with('shop.city.region')
                                         ->with('promo')
-                                        ->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get()->toArray();
+                                        //->orderBy('payed_at', 'desc')
+                                        ->orderBy('created_at', 'desc')
+                                        ->orderBy('receiving_date', 'asc')
+                                        ->orderBy('receiving_time', 'asc');
+
+                                if(!empty($request->dateFrom)) {
+                                        $orderModel->where('created_at', '>=', \Carbon\Carbon::parse($request->dateFrom)->format('Y-m-d 00:00:00'));
+                                        //echo \Carbon\Carbon::parse($request->dateFrom)->format('Y-m-d 00:00:00'); exit();
+                                }
+
+                                if(!empty($request->dateTo)) {
+                                        $orderModel->where('created_at', '<=', \Carbon\Carbon::parse($request->dateTo)->format('Y-m-d 23:59:59'));
+                                }
+
+                                if(!empty($request->search)) {
+
+                                        $orderModel->whereHas('shop', function($query) use ($request) {
+                                                $query->where('shops.name', 'like', "%$request->search%");
+                                        });
+                                }
+
+                                $orders = $orderModel->get()->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
                         } else {
-                                $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('payed_at', 'desc')->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
+                                $orders = $this->user->getShop()->orders()->with('orderLists.product')
+                                        ->where('payed', 1)
+                                        ->orderBy('payed_at', 'desc')
+                                        ->orderBy('receiving_date', 'asc')
+                                        ->orderBy('receiving_time', 'asc')->get();
                         }
 
                         $response['orders'] = $orders;

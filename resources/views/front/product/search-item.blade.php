@@ -13,9 +13,10 @@
 
     <div class="description-media-item">
         <div class="row">
-            <div class="col-xs-11">
+            <div class="col-xs-12 buy">
+                <a href="/cart/<% product.id %>" class="btn btn-danger btn-outline buy-btn">Заказать</a>
                 <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#" class="name"><% product.name %></a></p>
-                <p><% product.shop_name %> &nbsp;<img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
+                <p><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> 2 ч 20 мин</p>
             </div>
 
         </div>

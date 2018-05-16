@@ -4,7 +4,8 @@
 
     <div class="container">
         <br><br><br><br><br><br><br><br><br><br><br>
-        <h1 class="h2 text-center">Спасибо за заказ...</h1>
+        <h1 class="h2 text-center">Спасибо за покупку. Заказ оплачен!</h1>
+        <p class="text-center text-muted">На Ваш телефон отправлены сообщения со ссылками для отслеживания выполнения доставки и контактами. Если у флориста или курьера возникнут вопросы — с Вами обязательно свяжутся</p>
         <br><br><br><br><br><br><br><br><br><br><br>
     </div>
 
@@ -15,6 +16,6 @@
     <script type="text/javascript">
         setTimeout(function () {
                 window.location = '/';
-        }, 3000);
+        }, 4500);
     </script>
 @stop

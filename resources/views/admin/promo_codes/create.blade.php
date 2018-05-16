@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
+
 <div ng-controller="promo-create">
     <div class="row">
         <div class="col-md-6">
@@ -39,6 +40,13 @@
                         </div>
                         <div class="form-group m-form__group">
                             <label class="m-checkbox">
+                                <input type="checkbox" ng-model="promo.reusable">
+                                Постоянный
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="form-group m-form__group">
+                            <label class="m-checkbox">
                                 <input type="checkbox" ng-model="promo.send">
                                 Отправить на телефон
                                 <span></span>
@@ -73,6 +81,41 @@
                 <div class="m-portlet__body text-center" ng-show="code" ng-cloak="">
                     <h1 class="display-1"><% code %></h1>
                 </div>
+                <!--end::Form-->
+            </div>
+            <!--end::Portlet-->
+        </div>
+
+        <div class="col-md-6">
+            <div class="m-portlet m-portlet--tab">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <span class="m-portlet__head-icon m--hide">
+                                <i class="la la-gear"></i>
+                            </span>
+                            <h3 class="m-portlet__head-text">
+                                Постоянные промо коды
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <!--begin::Form-->
+
+                    <div class="m-portlet__body">
+                        @foreach($promoCodes as $item)
+                            <div>
+                                {{ $item->code }} - {{ $item->value . ($item->code_type == 'percent' ? '%' : 'руб.')}}
+                                <form class="m-form m-form--fit m-form--label-align-right" method="post" action="{{ route('admin.promoCodes.delete', ['id' => $item->id]) }}" style="float: right;">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                    {{ csrf_field() }}
+                                </form>
+                                <br>
+                                <br clear="all">
+                            </div>
+                        @endforeach
+                    </div>
+
                 <!--end::Form-->
             </div>
             <!--end::Portlet-->
