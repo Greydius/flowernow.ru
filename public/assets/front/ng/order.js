@@ -6,7 +6,7 @@ $(document).ready(function() {
                 $('#dop-products-container .owl-carousel').owlCarousel({
                         navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
                         dots: false,
-                        loop: true,
+                        loop: false,
                         margin: 10,
                         nav: true,
                         responsive: {
@@ -215,10 +215,16 @@ $(document).ready(function() {
 
                 preloader('show');
 
+                var dopProducts = '';
+
+                $.each(angular.element(document.getElementById('order-container')).scope().selectedDopProducts, function(index, value) {
+                        dopProducts += 'dop_products['+value.id+']='+value.qty+'&';
+                })
+
                 $.ajax({
                         url: $form.attr('action'),
                         type: $form.attr('method'),
-                        data: $form.serialize() + '&promo_code=' + $('input[name="promo_code"]').val(),
+                        data: $form.serialize() + '&promo_code=' + $('input[name="promo_code"]').val() + '&' + dopProducts,
                         success: function(data) {
                                 preloader('hide');
                                 if(data.order_id) {
@@ -260,20 +266,36 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         $scope.delivery_out_price = $scope.product.shop.delivery_out_price;
         $scope.promo_code = null;
         $scope.promo = null;
+        $scope.selectedDopProducts = [];
+        $scope.allDopProducts = jsonData.dopProducts;
 
         $scope.total = function () {
+
+                var dopTotalPrice = 0;
+
+                angular.forEach($scope.selectedDopProducts, function (v, k) {
+                        dopTotalPrice += parseInt(v.clientPrice)*v.qty;
+                });
+
                 if(!$scope.product.single) {
-                        return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                        return parseInt($scope.product.clientPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price + dopTotalPrice);
                 } else {
-                        return parseInt($scope.product.clientPrice + $scope.delivery_out_distance*$scope.delivery_out_price);
+                        return parseInt($scope.product.clientPrice + $scope.delivery_out_distance*$scope.delivery_out_price + dopTotalPrice);
                 }
         }
 
         $scope.totalFull = function () {
+
+                var dopTotalPrice = 0;
+
+                angular.forEach($scope.selectedDopProducts, function (v, k) {
+                        dopTotalPrice += parseInt(v.clientPrice)*v.qty;
+                });
+
                 if(!$scope.product.single) {
-                        return parseInt($scope.product.fullPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price);
+                        return parseInt($scope.product.fullPrice * $scope.qty + $scope.delivery_out_distance*$scope.delivery_out_price + dopTotalPrice);
                 } else {
-                        return parseInt($scope.product.fullPrice + $scope.delivery_out_distance*$scope.delivery_out_price);
+                        return parseInt($scope.product.fullPrice + $scope.delivery_out_distance*$scope.delivery_out_price + dopTotalPrice);
                 }
         }
 
@@ -284,6 +306,16 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         $scope.downQty = function () {
                 if($scope.qty >= (!$scope.product.single ? 2 : 8)) {
                         $scope.qty--;
+                }
+        }
+
+        $scope.upQtyDop = function ($item) {
+                $item.qty++;
+        }
+
+        $scope.downQtyDop = function ($item) {
+                if($item.qty >= 2) {
+                        $item.qty--;
                 }
         }
 
@@ -351,4 +383,52 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
                         
                 });
         });
+
+        $scope.addDopProduct = function ($item) {
+
+                var exist = false;
+                angular.forEach($scope.selectedDopProducts, function (v, k) {
+                        if (v.id == $item.id) {
+                                exist = true;
+                        }
+                });
+                if (!exist) {
+                        $item.qty = 1;
+                        $scope.selectedDopProducts.push($item);
+                } else {
+                        var index = $scope.selectedDopProducts.indexOf($item);
+                        $scope.selectedDopProducts.splice(index, 1);
+                }
+
+                /*
+                angular.forEach($scope.allDopProducts, function(value, key) {
+                        if(value.id == $id) {
+                                var exist = false;
+                                angular.forEach($scope.selectedDopProducts, function(v, k) {
+                                        if(v.id == $item.id) {
+                                                exist = true;
+                                        }
+                                });
+                                if(!exist) {
+                                        $scope.selectedDopProducts.push(value);
+                                } else {
+                                        var index = $scope.selectedDopProducts.indexOf(value);
+                                        $scope.selectedDopProducts.splice(index, 1);
+                                }
+                        }
+                });
+                */
+        }
+
+        $scope.btnDopClass = function ($item) {
+                var $return = 'warning';
+
+                angular.forEach($scope.selectedDopProducts, function(value, key) {
+                        if(value.id == $item.id) {
+                                $return = 'success';
+                        }
+                })
+
+                return $return;
+        }
 })

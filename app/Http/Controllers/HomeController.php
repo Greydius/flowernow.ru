@@ -76,14 +76,40 @@ class HomeController extends Controller
             return view('front.terms');
     }
 
-    public function test() {
+    public function test(Request $request) {
 
-            $order = Order::where('status', 'completed')->where('payed', '1')->first();
 
-            Mail::send('email.clientNewOrder', ['order' => $order, ], function ($message) use ($order) {
-                                $message->to(['nkornushin@gmail.com', 'n.n.kornushin@yandex.ru'])
-                                        ->subject('Заказ №'. $order->id .' оплачен!');
-                        });
+            $location = \SypexGeo::get('213.87.150.43');
+
+            dd($location);
+
+            exit();
+
+            $client = new \GuzzleHttp\Client();
+            $res = $client->request('POST', 'https://api.cloudpayments.ru/orders/create', [
+                    'auth' => [
+                            \Config::get('cloudpayments.publicId'),
+                            \Config::get('cloudpayments.pwd')
+                    ],
+                    'form_params' => [
+                            //'Amount' => 100,
+                            'Currency' => 'RUB',
+                            'Description' => 'Тестовый счет',
+                            'InvoiceId' => '32055-8',
+                            'Email' => 'nkornushin@gmail.com',
+                            'SendEmail' => 'true'
+                    ]
+            ]);
+
+            //echo $res->getStatusCode();
+
+            //echo $res->getHeaderLine('content-type');
+
+            $decoded_traces=json_decode($res->getBody());
+
+            echo $decoded_traces->Message;
+
+            dd($decoded_traces);
 
             //$this->syncSingle();
 

@@ -417,11 +417,31 @@ header .location-icon {
 
 
 #dop-products-container .owl-carousel .item {
+    /*
     height: 10rem;
     background: #4DC7A0;
+    */
+    border: 1px solid #ccc;
     padding: 1rem;
 }
 
 .media-item {
     min-height: 340px;
+}
+
+.dop-name {
+    text-align: center;
+    padding: 5px;
+    height: 40px;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    width: 110px;
+    clear: both;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#dop-products-container .owl-carousel {
+    padding-bottom: 40px;
 }

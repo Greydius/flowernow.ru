@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AppHelper;
 use App\Model\Product;
 use App\Model\Order;
+use App\Model\OrderCharge;
 use App\User;
 use App\Model\OrderList;
 use App\Helpers\Sms;
@@ -35,7 +37,7 @@ class OrdersController extends Controller
                         $params['qty'] = $qty;
                 }
 
-                $params['dopProducts'] = Product::where('dop', 1)->limit(10)->get();
+                $params['dopProducts'] = Product::where('dop', 1)->where('shop_id', $product->shop_id)->get();
 
                 return view('front.order.add',$params);
         }
@@ -121,12 +123,23 @@ class OrdersController extends Controller
 
                                 if($order->save()) {
                                         $order->fresh();
+
+                                        $dopProducts = $request->dop_products;
+                                        if(!empty($dopProducts)) {
+                                                foreach ($dopProducts as $key => $value) {
+                                                        $_product = Product::where('dop', 1)->find($key);
+                                                        $_product->qty = $value;
+
+                                                        $productModel[] = $_product;
+                                                }
+                                        }
+
                                         foreach ($productModel as $item) {
                                                 $orderList = new OrderList();
                                                 $orderList->order_id = $order->id;
                                                 $orderList->product_id = $item->id;
                                                 $orderList->single = empty($item->single) ? 0 : 1;
-                                                $orderList->qty = !empty((int)$request->qty) ? (int)$request->qty : 1;
+                                                $orderList->qty = $item->dop ? $item->qty : (!empty((int)$request->qty) ? (int)$request->qty : 1);
                                                 $orderList->shop_price = $item->price;
                                                 $orderList->client_price = $orderList->single ? $item->clientPrice : ($item->clientPrice * $orderList->qty);
 
@@ -206,7 +219,7 @@ class OrdersController extends Controller
                                 // catch code
                                 return response()->json([
                                         'error' => true,
-                                        'message' => 'Ошибка! Обратитесь в службу поддержки.',
+                                        'message' => 'Ошибка! Обратитесь в службу поддержки.'.$e->getMessage(),
                                         'code' => 400
                                 ], 400);
                         }
@@ -506,5 +519,62 @@ class OrdersController extends Controller
                 return view('front.order.details',[
                         'order' => $order
                 ]);
+        }
+        
+        function charge($order_id, Request $request) {
+
+                $charge = Input::all();
+
+                $validator = Validator::make($charge, OrderCharge::$chargeRules, OrderCharge::$chargeRulesMessages);
+
+                if ($validator->fails()) {
+
+                    return response()->json([
+                        'error' => true,
+                        'message' => $validator->messages()->first(),
+                        'code' => 400
+                    ], 400);
+
+                }
+
+                $charge = new OrderCharge();
+                $charge->amount = $request->input('amount');
+                $charge->order_id = $request->input('order_id');
+                $charge->description = $request->input('description');
+
+                if(!empty($request->input('phone'))) {
+                        $charge->phone = AppHelper::normalizePhone($request->input('phone'));
+                }
+
+                if(!empty($request->input('email'))) {
+                        $charge->email = $request->input('email');
+                }
+
+                if(!empty($request->input('comment'))) {
+                        $charge->comment = $request->input('comment');
+                }
+
+                if($charge->save()) {
+                        $createBillResult = $charge->createBill();
+                        if($createBillResult['success']) {
+                                return response()->json([
+                                        'error' => false,
+                                        'message' => 'Счет на оплату успешно создан:<br>'.$charge->url,
+                                        'code' => 200
+                                ], 200);
+                        } else {
+                                return response()->json([
+                                        'error' => true,
+                                        'message' => $createBillResult['message'],
+                                        'code' => 400
+                                ], 400);
+                        }
+                }
+
+                return response()->json([
+                        'error' => true,
+                        'message' => 'Ошибка. Попробуйте позже или обратитесь к администратору',
+                        'code' => 400
+                ], 400);
         }
 }

@@ -5,9 +5,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('pageTitle', 'Доставка цветов в г '.$current_city->name.'. Заказ букетов на дом, в офис.')</title>
+    <title>@yield('pageTitle', 'Доставка цветов в '.$current_city->name_prepositional.'. Заказ букетов на дом, в офис.')</title>
 
-    <meta name="description" content="@yield('pageDescription', 'Служба доставки цветов в г '.$current_city->name.'. Заказ букетов от лучших флористов из каталога.')">
+    <meta name="description" content="@yield('pageDescription', 'Служба доставки цветов в '.$current_city->name_prepositional.'. Заказ букетов от лучших флористов из каталога.')">
     <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветов, букетов, заказ, служба, дом, офис, '.$current_city->name)">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
@@ -62,14 +62,14 @@
         <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
     </div>
 </div>
-<header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed' : null }}">
+<header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed-' : null }}">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
 
                 @if(!empty($detected_city))
-                    <div class="visible-xs visible-sm mobile-top-header static on-top">
+                    <div class="visible-xs visible-sm mobile-top-header static on-top" style="display: none !important;">
                         <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
                             <span class="city-name">
                                 <!--googleoff: all--><!--noindex-->

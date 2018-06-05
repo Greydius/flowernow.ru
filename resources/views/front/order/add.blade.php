@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="container" ng-controller="order">
+    <div class="container" ng-controller="order" id="order-container">
 
 
         <br>
@@ -42,6 +42,26 @@
                             </div>
                         </div>
 
+                        <div class="row" ng-cloak ng-repeat="dopProduct in selectedDopProducts">
+                            <div class="col-xs-6"><% dopProduct.name %></div>
+                            <div class="col-xs-6">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <ul class="list-inline text-center">
+                                            <li><span class="glyphicon glyphicon-menu-left text-muted order-arrow" ng-click="downQtyDop(dopProduct)" aria-hidden="true"></span></li>
+                                            <li ng-cloak><% dopProduct.qty %></li>
+                                            <li><span class="glyphicon glyphicon-menu-right text-muted order-arrow" ng-click="upQtyDop(dopProduct)" aria-hidden="true"></span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-xs-6 text-right" ng-cloak>
+                                        <% dopProduct.clientPrice %> <i class="fa fa-rub"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
 
                         <div class="row">
                             <div class="col-xs-6"><strong>Итого</strong></div>
@@ -72,19 +92,64 @@
                 <div class="bg-white order-form">
 
                     @if(!empty($user) && $user->id == 13)
+
+                        <section id="dop-products-container">
+                            <div class="row">
+                                <div class="large-12 columns col-md-12">
+                                    <div class="owl-carousel owl-theme">
+                                        <div class="item" title="<% dopProduct.name %>" ng-cloak ng-repeat="dopProduct in allDopProducts">
+                                            <div class="media-item-dop">
+                                                <figure>
+                                                    <img class="img-responsive" ng-src="/uploads/products/632x632/<% dopProduct.shop_id %>/<% dopProduct.photo %>" alt="...">
+
+                                                </figure>
+
+                                                <div class="dop-name">
+                                                    <% dopProduct.name %>
+                                                </div>
+
+                                                <div class="text-center">
+                                                    <button class="btn btn-<% btnDopClass(dopProduct) %> btn-xs" ng-click="addDopProduct(dopProduct)"><% dopProduct.clientPrice %> руб.</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+
+
+<!--
                         <section id="dop-products-container">
                             <div class="row">
                                 <div class="large-12 columns">
                                     <div class="owl-carousel owl-theme">
                                         @foreach($dopProducts as $item)
-                                            <div class="item">
-                                                {{ $item->name }}
+                                            <div class="item" title="{{ $item->name }}">
+                                                <div class="media-item-dop">
+                                                    <figure>
+                                                        <img class="img-responsive" src="{{ $item->photoUrl }}" alt="...">
+
+                                                    </figure>
+
+                                                    <div class="dop-name">
+                                                        {{ $item->name }}
+                                                    </div>
+
+                                                    <div class="text-center">
+                                                        <button class="btn btn-<% btnDopClass({{ $item->id }}) %> btn-xs" ng-click="addDopProduct({{ $item->id }})">{{ $item->clientPrice }} руб.</button>
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                         </section>
+-->
                     @endif
 
                     <form id="order-frm" method="post" action="{{ route('order.create') }}">
@@ -347,6 +412,7 @@
 
     <script type="text/javascript">
             jsonData.product = {!! $product->makeHidden('price')->toJson() !!};
+            jsonData.dopProducts = {!! $dopProducts !!};
             jsonData.qty = {!! $qty !!};
     </script>
 

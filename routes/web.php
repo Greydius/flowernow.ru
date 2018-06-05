@@ -246,6 +246,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         Route::group(['middleware' => 'is-admin'], function () {
 
+                Route::post('order/charge/{order_id}', [
+                        'uses' => 'OrdersController@charge',
+                        'as' => 'admin.order.charge'
+                ]);
+
                 Route::get('articles', [
                         'uses' => 'ArticleController@index',
                         'as' => 'admin.articles'

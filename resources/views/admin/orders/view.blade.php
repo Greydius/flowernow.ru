@@ -332,8 +332,11 @@
                                 @foreach($order->orderLists as $key => $item)
                                     @if($item->product)
 
-                                        Товар: {{ $item->product->name }} - {{ $item->client_price - $order->delivery_price - ($order->delivery_out_distance * (int)$order->delivery_out_price) }}
-
+                                        @if(!$item->product->dop)
+                                            Товар: {{ $item->product->name }} - {{ $item->client_price - $order->delivery_price - ($order->delivery_out_distance * (int)$order->delivery_out_price) }}<br>
+                                        @else
+                                            Товар: {{ $item->product->name }} - {{ $item->shop_price * $item->qty }}<br>
+                                        @endif
                                     @endif
                                 @endforeach
 
@@ -409,6 +412,77 @@
                 </div>
 
                 @if($user->admin)
+                    @if($order->payed)
+                        <div class="col-lg-12">
+                            <div class="m-portlet  m-portlet--border-bottom-brand ">
+                                <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                    <div class="m-widget26">
+
+                                        <h2>Выставить доплату</h2>
+
+                                        <form method="post" action="{{ route('admin.order.charge', ['order_id' => $order->id]) }}" class="m-form" id="order-charge-frm">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="order_id" value="{{ $order->id }}">
+                                            <div class="form-group">
+                                                <label class="col-md-12" for="charge_ammount">
+                                                    Сумма<span class="text-danger">*</span>:
+                                                </label>
+                                                <div class="col-md-12">
+                                                    <input type="text" id="charge_ammount" name="amount" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-12" for="charge_desc">
+                                                    Назначение платежа<span class="text-danger">*</span>:
+                                                </label>
+                                                <div class="col-md-12">
+                                                    <input type="text" id="charge_desc" name="description" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-12" for="charge_email">
+                                                    Email:
+                                                </label>
+                                                <div class="col-md-12">
+                                                    <input type="email" id="charge_email" name="email" class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-12" for="charge_phone">
+                                                    Телефон:
+                                                </label>
+                                                <div class="col-md-12">
+                                                    <input type="phone" id="charge_phone" name="phone" class="form-control phone">
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12 errors text-danger" >
+
+                                                </div>
+                                                <div class="col-lg-12 success text-success" style="font-size: 10px;" >
+
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        Сохранить
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endif
+
                     @if($order->status != \App\Model\Order::$STATUS_COMPLETED)
                         <div class="col-lg-12">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
@@ -501,4 +575,5 @@
 @section('footer')
     <script src="{{ asset('assets/admin/ng/ordersList.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/orders-list.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/js/order-view.js') }}" type="text/javascript"></script>
 @stop

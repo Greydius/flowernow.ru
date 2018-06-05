@@ -332,6 +332,10 @@ class Product extends MainModel
         }
 
         public function getFullPriceAttribute() {
+                if($this->dop) {
+                        return $this->price;
+                }
+
                 if(empty($this->single)) {
                         return ceil(ceil($this->price * (1+(config('settings.product_commission')/100))) + $this->shop->delivery_price);
                 }
