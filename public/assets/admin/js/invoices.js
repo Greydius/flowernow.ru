@@ -24,5 +24,27 @@ $(document).ready(function() {
                         }
                 });
                 return false;
-        })
+        });
+
+        $('#info_modal').on('show.bs.modal', function (e) {
+                var $form = $('form', this);
+                var $button = $(e.relatedTarget);
+
+                $('.modal-body', $form).html();
+
+                $.ajax({
+                        url: $form.attr('action'),
+                        type: 'get',
+                        data: {
+                                shop_id: $button.data('shop_id'),
+                                type: $button.data('type')
+                        },
+                        success: function (data) {
+                                $('.modal-body', $form).html(data);
+                        },
+                        error: function (data) {
+                                toastr.error('Ошибка');
+                        }
+                });
+        });
 });

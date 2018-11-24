@@ -8,11 +8,14 @@ use App\Model\Shop;
 use App\Model\ShopAddress;
 use App\Model\ShopWorkTime;
 use App\Model\ShopWorker;
+use App\Model\Feedback;
+use App\Model\Banner;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
 use Image;
 
 class ShopsController extends Controller
@@ -447,7 +450,14 @@ class ShopsController extends Controller
 
                 try{
                         $perPage = 500;
-                        $shop = Shop::with(['users', 'city'])->select('shops.*', \DB::raw('(SELECT MAX(products.updated_at) FROM products WHERE products.shop_id = shops.id) AS product_last_update'))->orderBy('id', 'desc');
+                        $shop = Shop::with(['users', 'city'])->select('shops.*',
+                                \DB::raw('(SELECT MAX(products.updated_at) FROM products WHERE products.shop_id = shops.id) AS product_last_update'),
+                                \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 0 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_0'),
+                                \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 1 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_1'),
+                                \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 2 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_2'),
+                                \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 3 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_3'),
+                                \DB::raw('(SELECT COUNT(*) FROM feedback WHERE feedback.shop_id = shops.id) AS feedbacks_count')
+                        )->orderBy('id', 'desc');
                         if(!empty($request->search)) {
                              $shop->where('name', 'like', "%$request->search%");
 
@@ -472,7 +482,7 @@ class ShopsController extends Controller
         }
 
         public function products($id, Request $request) {
-                $shop = Shop::findOrFail($id);
+                $shop = Shop::with(['address.city', 'workTime'])->findOrFail($id);
 
                 $request->shop_id = $shop->id;
 
@@ -480,7 +490,115 @@ class ShopsController extends Controller
 
                 return view('front.shop.products',[
                         'products' => $products,
-                        'shop' => $shop
+                        'shop' => $shop,
+                        'feedbacks' => Feedback::where('shop_id', $shop->id)->orderBy('feedback_date', 'desc')->take(10)->get(),
+                        'meta' => [
+                                'title' => 'Доставка цветов в '.$this->current_city->name_prepositional.' | '.$shop->name,
+                                'description' => null,
+                                'keywords' => null
+                        ]
+                ]);
+        }
+
+        public function sendProductEmail($shop_id) {
+
+                /*
+                $products = Shop::find($shop_id)->products()->whereIn('status', [0, 3])->with(['shop'])->get();
+
+                if(count($products) && $products[0]->shop->email) {
+                        Mail::send('email.shopProductBan', ['products' => $products], function ($message) use ($products) {
+                                $message->to([$products[0]->shop->email])
+                                        ->subject('Внимание от Floristum.ru');
+                        });
+                }
+                */
+
+                $shop = Shop::find($shop_id);
+
+                $products = Product::where('shop_id', $shop->id)->whereIn('status', [0, 3])->whereNull('single')->get();
+                $totalProductsCount = Product::where('shop_id', $shop->id)->whereNull('single')->count();
+
+                if($shop->email) {
+                        Mail::send('email.shopProductBan2', ['products' => $products, 'shop' => $shop, 'totalProductsCount' => $totalProductsCount], function ($message) use ($shop) {
+                                $message->to([$shop->email])
+                                        ->subject('Уведомление для '.$shop->name.' на Floristum.ru');
+                        });
+                }
+
+                return response()->json([], 200);
+        }
+
+        public function partnership() {
+
+                $shop = $this->user->getShop();
+
+                $banner = Banner::where('shop_id', $shop->id)->first();
+
+                $href = route('shop.products', [
+                        'id' => $shop->id
+                ]);
+
+                $src = "https://floristum.ru/assets/front/img/logo_floristum_mini.png";
+
+                $banners = [
+                        '<a href="'.$href.'">
+<img src="'.$src.'" alt="доставка цветов в '.$shop->city->name_prepositional.'">
+Наши букеты на floristum.ru
+</a>',
+                        '<a href="'.$href.'">
+<img src="'.$src.'" alt="Букеты в '.$shop->city->name_prepositional.'">
+Наши цветы на floristum.ru
+</a>',
+                        '<a href="'.$href.'">
+<img src="'.$src.'" alt="доставка цветов в '.$shop->city->name_prepositional.'">
+Мы на floristum.ru
+</a>',
+                        '<a href="'.$href.'">
+<img src="'.$src.'" alt="цветы в '.$shop->city->name_prepositional.'">
+Наша доставка на floristum.ru
+</a>',
+                        '<a href="'.$href.'">
+<img src="'.$src.'" alt="цветы с доставкой в '.$shop->city->name_prepositional.'">
+Наша витрина на  floristum.ru
+</a>',
+                ];
+
+                return view('admin.shop.partnership', [
+                        'bannerCode' => $banners[rand(0,4)],
+                        'shop' => $shop,
+                        'banner' => $banner
+                ]);
+        }
+
+        public function partnershipAdd(Request $request) {
+                if(empty($request->url) || filter_var($request->url, FILTER_VALIDATE_URL) === FALSE) {
+                        \Session::flash('layoutWarning', ['type' => 'warning', 'text' => 'Введите правильный адрес страницы']);
+                } else {
+
+                        $shop = $this->user->getShop();
+
+                        $banner = Banner::where('shop_id', $shop->id)->first();
+
+                        if(empty($banner)) {
+                                $banner = new Banner();
+                                $banner->shop_id = $shop->id;
+                        }
+
+                        $banner->url = $request->url;
+                        $banner->checked_on = null;
+                        $banner->save();
+
+                        \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Адрес страницы, на которой размещен код кнопки, успешно сохранен! После успешной проверки ссылки, Ваши товары будут иметь преимущество в выводе на Floristum.ru']);
+                }
+
+                return redirect()->route('shops.partnership');
+        }
+
+        public function partnershipList() {
+                $banners = Banner::get();
+
+                return view('admin.shop.partnership-list', [
+                        'banners' => $banners
                 ]);
         }
 }

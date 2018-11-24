@@ -146,7 +146,7 @@ class City extends MainModel
         }
 
         public static function popular($limit = 10, $random = true) {
-                $model = self::where('population', '>', 0);
+                $model = self::where('popular', 1);
                 if($random) {
                         $model->orderBy('population', 'DESC');
                 } else {

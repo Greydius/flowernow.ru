@@ -36,7 +36,7 @@
                 <div class="form-group m-form__group row align-items-center">
                     <div class="col-md-3">
                         <div class="m-input-icon m-input-icon--left">
-                            <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
+                            <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)" value="" ng-model="search_str">
                             <span class="m-input-icon__icon m-input-icon__icon--left">
                                 <span>
                                     <i class="la la-search"></i>
@@ -625,5 +625,6 @@
         jsonData.times = {!! json_encode($times) !!};
         jsonData.specialOffers = {!! json_encode($specialOffers) !!};
         routes.productUpdate = '{{ route('admin.products.update')  }}';
+        jsonData.searchStr = {!! json_encode(app('request')->input('s')) !!};
     </script>
 @stop

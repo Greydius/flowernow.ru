@@ -34,7 +34,7 @@ angular.module('flowApp').controller('shopsList', function($scope, $element, $ht
 
         };
 
-        $scope.search = function(keyEvent       ) {
+        $scope.search = function(keyEvent) {
                 if (keyEvent.which === 13) {
                         $scope.search_str = $('#m_form_search').val();
                         $scope.getShops();
@@ -42,4 +42,21 @@ angular.module('flowApp').controller('shopsList', function($scope, $element, $ht
         }
 
         $scope.getShops();
+
+        $scope.sendProductEmail = function(shop) {
+                toastr.warning('Подождите. Идет формирование уведомления!');
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/shop/sendProductEmail/' + shop.id,
+                        data: {'csrf-token': CSRF_TOKEN}
+
+                }).then(function (response) {
+                        toastr.success('Уведомление успешно отправлено!');
+                }, function (response) {
+                        toastr.error('Ошибка!');
+                }).then(function (response) {
+
+                });
+        }
 });

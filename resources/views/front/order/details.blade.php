@@ -11,11 +11,42 @@
                     <figure class="highlight">
 
                         <div class="pre">
-                            <p class="text-danger"><strong>Заказ №{{ $order->id }} оплачен!</strong></p>
+                            <p class="text-danger">
+                                <strong>
+                                    @if($order->payment != App\Model\Order::$PAYMENT_CASH)
+                                        Заказ №{{ $order->id }} оплачен!
+                                    @else
+                                        Заказ №{{ $order->id }} оформлен!
+                                    @endif
+                                </strong>
+                            </p>
                             <p>Отслеживание заказа: <a href="{{ $order->getDetailsLink() }}">{{ $order->getDetailsLink() }}</a></p>
                             @if(!empty($order->email))
                                 <p>На Ваш email отправлено информационное сообщение о заказе.</p>
                             @endif
+                            @if($order->payment == App\Model\Order::$PAYMENT_CASH)
+                                <p><strong>Пожалуйста, по возможности, приготовьте деньги для оплаты курьеру без сдачи.</strong></p>
+                            @endif
+                        </div>
+
+                    </figure>
+                </div>
+            </div>
+        @endif
+
+        @if($order->payment == App\Model\Order::$PAYMENT_RS && $order->invoicePath)
+            <div class="row bottom20">
+                <div class="col-md-12">
+                    <figure class="highlight">
+
+                        <div class="pre">
+                            <p>
+                                @if($order->email || $order->ur_email)
+                                    <h3>Счет на оплату отправлен на указанный Вами e-mail</h3> также
+                                @endif
+                                Вы можете скачать счет здесь
+                            </p>
+                            <p><a class="text-danger" style="font-size: 18px;" href="{{ route('order.getInvoice', ['key' => $order->key]) }}">Скачать счет на оплату</a></p>
                         </div>
 
                     </figure>

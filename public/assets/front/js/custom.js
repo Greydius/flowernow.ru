@@ -80,9 +80,6 @@ function selectCityByDetected() {
 
         $('ul.regions li a').removeClass('active');
         $region.addClass('active');
-
-        console.log(city_id);
-        console.log(region_id);
 }
 
 function selectRegion(region_id) {

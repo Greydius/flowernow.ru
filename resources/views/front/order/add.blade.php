@@ -91,7 +91,7 @@
             <div class="col-md-8 col-md-pull-4">
                 <div class="bg-white order-form">
 
-                    @if(!empty($user) && $user->id == 13)
+                    @if(!empty($user) && $user->admin)
 
                         <section id="dop-products-container">
                             <div class="row">
@@ -185,7 +185,10 @@
                                 <input type="text" class="form-control" placeholder="Ваше имя" name="name">
                             </div>
                             <div class="form-group">
-                                <input type="tel" class="form-control phone_input customer_phone" data-placeholder="Ваш телефон" name="phone">
+                                <input type="tel" class="form-control phone_input customer_phone" data-placeholder="Ваш телефон" ng-model="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control order-email" placeholder="Эл. почта">
                             </div>
                         </div>
 
@@ -248,6 +251,9 @@
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
                                         <option value="Время согласовать">Согласовать</option>
+                                        <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
+                                        <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
+                                        <option value="с 10:00 до 11:00">с 10:00 до 11:00</option>
                                         <option value="с 11:00 до 12:00">с 11:00 до 12:00</option>
                                         <option value="с 12:00 до 13:00">с 12:00 до 13:00</option>
                                         <option value="с 13:00 до 14:00">с 13:00 до 14:00</option>
@@ -259,6 +265,8 @@
                                         <option value="с 19:00 до 20:00">с 19:00 до 20:00</option>
                                         <option value="с 20:00 до 21:00">с 20:00 до 21:00</option>
                                         <option value="с 21:00 до 22:00">с 21:00 до 22:00</option>
+                                        <option value="с 22:00 до 23:00">с 22:00 до 23:00</option>
+                                        <option value="с 23:00 до 24:00">с 23:00 до 24:00</option>
                                     </select>
                                 </div>
                             </div>
@@ -279,7 +287,7 @@
                                 <input type="tel" class="form-control phone_input customer_phone" required data-placeholder="Телефон">
                             </div>
                             <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Эл. почта" name="email">
+                                <input type="email" class="form-control order-email" placeholder="Эл. почта">
                             </div>
 
                         </div>
@@ -288,16 +296,27 @@
                         <p class="h4"><strong>Выберите способ оплаты</strong></p>
                         <input type="hidden" name="order_id" value="">
                         <input type="hidden" name="phone" value="">
+                        <input type="hidden" name="email" value="">
                         <input type="hidden" name="payment" value="card">
                         <input type="hidden" name="products[]" value="<% product.id %>">
                         <div class="order-tabs">
                             <ul class="nav nav-tabs" role="tablist" id="payment_methods_list">
                                 <li role="presentation" class="active"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab" data-payment="card">
                                         <figure><img height="40" src="{{ asset('assets/front/img/karta.png') }}" alt="..."></figure>
-                                        Банковская карта</a></li>
+                                        Банковская карта</a>
+                                </li>
+
+                                <li role="presentation">
+                                    <a href="#oplata2" aria-controls="profile" role="oplata2" data-toggle="tab" data-payment="cash">
+                                        <figure><img  height="40" src="{{ asset('assets/front/img/nal.png') }}" alt="..."></figure>
+                                        Наличные
+                                    </a>
+                                </li>
+
                                 <li role="presentation"><a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs">
                                         <figure><img height="40" src="{{ asset('assets/front/img/beznal.png') }}" alt="..."></figure>
-                                        Безнал для юр.</a></li>
+                                        Безнал для юр.</a>
+                                </li>
                             </ul>
 
                             <br>
@@ -309,6 +328,35 @@
                                         <button type="button" class="btn btn-warning create-order">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
                                     </div>
                                     <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="oplata2">
+                                    <br>
+                                    <p class="text-center">Оплата наличными курьеру при доставке</p>
+                                    <div ng-if="!sms_send">
+                                        <p class="h6 text-center">На Ваш телефон <b><% phone %></b> будет выслано SMS с кодом подтверждения заказа</p>
+                                        <br>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-warning create-order">Заказать за <% total() %> <i class="fa fa-rub"></i></button>
+                                        </div>
+                                        <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
+                                    </div>
+                                    <div ng-show="sms_send">
+                                        <p class="text-center">Чтобы завершить заказ, введите код-подтверждение, который вам придёт по SMS</p>
+                                        <div class="row">
+                                            <div class="col-md-4 col-md-offset-4">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Введите код" id="sms_code" ng-model="sms_code">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4 col-md-offset-4">
+                                                <div class="form-group">
+                                                    <button type="button" class="btn btn-warning btn-block" ng-click="confirmSmsCode()">Подтвердить</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="oplata3">
                                     <br><br>
@@ -331,16 +379,18 @@
                                         <input type="text" class="form-control" placeholder="Юридический адрес" name="ur_address">
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <div class="form-group">
                                                 <input type="text" class="form-control" placeholder="Название банка" name="ur_bank">
                                             </div>
                                         </div>
+                                        <!--
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <input type="text" class="form-control" placeholder="Ваш Email" name="ur_email">
                                             </div>
                                         </div>
+                                        -->
                                     </div>
                                     <hr>
                                     <div class="text-center" ng-cloak>
@@ -382,7 +432,7 @@
                             <div class="col-xs-6 col-sm-3">
                                 <figure class="after-ord-icn">
                                     <span class="digital four">4</span>
-                                    <figcaption>Пожалуйста, оставте отзыв о доставке цветов</figcaption>
+                                    <figcaption>Пожалуйста, оставьте отзыв о доставке цветов</figcaption>
                                 </figure>
                             </div>
                         </div>

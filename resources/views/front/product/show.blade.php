@@ -221,7 +221,7 @@
                             <img class="media-object" width="54" height="54" src="{{ asset('assets/front/img/reviews-5.png') }}" alt="...">
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading"><strong>Заказчик букета {{ $feedback->name }}</strong> <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><span class="text-muted">{{ Carbon\Carbon::parse($feedback->feedback_date)->format('d-m-Y') }}</span><? } ?></h4>
+                            <h4 class="media-heading"><strong>Заказчик букета {{ $feedback->name }}</strong> <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><span class="text-muted feedback-date">{{ Carbon\Carbon::parse($feedback->feedback_date)->format('d-m-Y') }}</span><? } ?></h4>
                             <p>{{ $feedback->feedback }}</p>
                             <ul class="list-inline">
                                 <li>
@@ -244,7 +244,7 @@
                         <img class="media-object" src="{{ asset('assets/front/img/zashita.png') }}" alt="Каждая доставка цветов страхуется">
                     </div>
                     <div class="media-body media-middle">
-                        <p class="h4">Доставка каждого букета гарантирована Floristum.ru<br>Исполнитель не получит оплату, в случае притензии к качеству.<br>100% возврат средств</p>
+                        <p class="h4">Доставка каждого букета гарантирована Floristum.ru<br>Исполнитель не получит оплату, в случае претензии к качеству.<br>100% возврат средств</p>
                     </div>
                 </div>
             </div>
@@ -275,7 +275,7 @@
                 <div class="col-xs-6 col-sm-3">
                     <figure class="after-ord-icn">
                         <span class="digital four">4</span>
-                        <figcaption>Пожалуйста, оставте отзыв о доставке цветов</figcaption>
+                        <figcaption>Пожалуйста, оставьте отзыв о доставке цветов</figcaption>
                     </figure>
                 </div>
             </div>

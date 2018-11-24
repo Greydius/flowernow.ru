@@ -60,12 +60,22 @@ Route::get('order/{key}', [
         'as' => 'order.details'
 ]);
 
+Route::get('/order/getInvoice/{key}', [
+        'uses' => 'OrdersController@getInvoice',
+        'as' => 'order.getInvoice'
+]);
+
+Route::get('/order/confirmSmsCode/{id}', [
+        'uses' => 'OrdersController@confirmSmsCode',
+        'as' => 'order.confirmSmsCode'
+]);
+
 Route::get('payment/success', [
         'uses' => 'OrdersController@success',
         'as' => 'payment.success'
 ]);
 
-Route::get('payment/success-ur/{order_id}', [
+Route::get('payment/success-ur/{key}', [
         'uses' => 'OrdersController@success',
         'as' => 'payment.success_ur'
 ]);
@@ -163,6 +173,17 @@ Route::group(['prefix' => 'api/v1'], function() {
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
+        /*Партнерка*/
+        Route::get('partnership', [
+                'uses' => 'ShopsController@partnership',
+                'as' => 'shops.partnership'
+        ]);
+
+        Route::post('partnershipAdd', [
+                'uses' => 'ShopsController@partnershipAdd',
+                'as' => 'shops.partnership.add'
+        ]);
+
         /*SINGLE PRODUCTS*/
         Route::get('single', [
                 'uses' => 'ProductsController@single',
@@ -245,6 +266,17 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {
+
+                Route::get('invoices/balance', [
+                        'uses' => 'InvoicesController@balance',
+                        'as' => 'admin.shop.balance'
+                ]);
+
+                /*Партнерка*/
+                Route::get('partnership-list', [
+                        'uses' => 'ShopsController@partnershipList',
+                        'as' => 'shops.partnership.list'
+                ]);
 
                 Route::post('order/charge/{order_id}', [
                         'uses' => 'OrdersController@charge',
@@ -369,6 +401,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::get('shop/{id}', [
                         'uses' => 'ShopsController@profile',
                         'as' => 'admin.shop.profile_edit'
+                ]);
+
+                Route::post('shop/sendProductEmail/{shop_id}', [
+                        'uses' => 'ShopsController@sendProductEmail',
+                        'as' => 'admin.shop.sendProductEmail'
                 ]);
 
                 Route::get('subscriptions', [

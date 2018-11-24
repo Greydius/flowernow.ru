@@ -84,7 +84,7 @@ class Controller extends BaseController
 
                     View::share('current_city', $this->current_city);
                     //$popular_city = City::$popular;
-                    $popular_city = City::popular(11, true);
+                    $popular_city = City::popular(0, false);
                     //shuffle($popular_city);
                     //View::share('popular_city', array_slice($popular_city, 11));
                     View::share('popular_city', $popular_city);

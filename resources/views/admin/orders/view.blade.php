@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <div class="row">
+    <div class="row" ng-controller="orderView">
         <div class="col-lg-8">
             <!--begin::Portlet-->
             <div class="m-portlet">
@@ -28,6 +28,23 @@
 
 
                                 <div class="m-widget4">
+
+                                                <div class="m-widget4__item">
+
+                                                    <div class="m-widget4__img m-widget4__img--logo">&nbsp;</div>
+
+                                                    <div class="m-widget4__info">
+                                                        <span class="m-widget4__title">
+                                                            @if($order->payment == 'cash' && $order->confirmed && $order->status != 'completed')
+                                                                <span class="text-danger"><strong>Получите {{ $order->amount() }} руб. наличными с заказчика!</strong></span>
+                                                            @endif
+
+                                                            @if($order->payment != 'cash')
+                                                                <span class="text-success"><strong>Заказ оплачен онлайн.</strong></span>
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                </div>
 
                                                 @foreach($order->orderLists as $key => $item)
                                                     @if($item->product)
@@ -60,11 +77,34 @@
                                                         </span>
                                                         <br>
                                                         <span class="m-widget4__sub">
-                                                            <p class="lead">
+                                                            <p class="lead" ng-show="mode == 'view'">
                                                             {!! $order->receiving_date ?  $order->receiving_date.'<br>' : '' !!}
                                                             {!! $order->receiving_time ?  $order->receiving_time : '' !!}
                                                             </p>
 
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <input type="text" class="form-control" ng-model="order.receiving_date">
+                                                                <br>
+                                                                <select class="form-control" name="receiving_time" ng-model="order.receiving_time">
+                                                                    <option value="Время согласовать">Согласовать</option>
+                                                                    <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
+                                                                    <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
+                                                                    <option value="с 10:00 до 11:00">с 10:00 до 11:00</option>
+                                                                    <option value="с 11:00 до 12:00">с 11:00 до 12:00</option>
+                                                                    <option value="с 12:00 до 13:00">с 12:00 до 13:00</option>
+                                                                    <option value="с 13:00 до 14:00">с 13:00 до 14:00</option>
+                                                                    <option value="с 14:00 до 15:00">с 14:00 до 15:00</option>
+                                                                    <option value="с 15:00 до 16:00">с 15:00 до 16:00</option>
+                                                                    <option value="с 16:00 до 17:00">с 16:00 до 17:00</option>
+                                                                    <option value="с 17:00 до 18:00">с 17:00 до 18:00</option>
+                                                                    <option value="с 18:00 до 19:00">с 18:00 до 19:00</option>
+                                                                    <option value="с 19:00 до 20:00">с 19:00 до 20:00</option>
+                                                                    <option value="с 20:00 до 21:00">с 20:00 до 21:00</option>
+                                                                    <option value="с 21:00 до 22:00">с 21:00 до 22:00</option>
+                                                                    <option value="с 22:00 до 23:00">с 22:00 до 23:00</option>
+                                                                    <option value="с 23:00 до 24:00">с 23:00 до 24:00</option>
+                                                                </select>
+                                                            </div>
 
                                                         </span>
                                                     </div>
@@ -81,12 +121,20 @@
                                                         </span>
                                                         <br>
                                                         <span class="m-widget4__sub">
-                                                            <p class="lead">
+                                                            <p class="lead" ng-show="mode == 'view'">
                                                             {!! $order->name ?  $order->name.'<br>' : '' !!}
                                                             {!! $order->phone ?  $order->phone.'<br>' : '' !!}
                                                             {{ $user->admin && $order->email ?  $order->email.' ' : ''}}
                                                             </p>
 
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <input type="text" class="form-control" ng-model="order.name" placeholder="Имя">
+                                                                <br>
+                                                                <input type="text" class="form-control" ng-model="order.phone" placeholder="Телефон">
+                                                                <br>
+                                                                <input type="text" class="form-control" ng-model="order.email" placeholder="Email">
+
+                                                            </div>
 
                                                         </span>
                                                     </div>
@@ -105,14 +153,31 @@
                                                         <br>
                                                         <span class="m-widget4__sub">
 
-                                                            @if($order->recipient_self)
-                                                                <p class="lead">сам отправитель</p>
-                                                            @else
-                                                                <p class="lead">
-                                                                {!! $order->recipient_name ?  $order->recipient_name.'<br>' : '' !!}
-                                                                {!! $order->recipient_phone ?  $order->recipient_phone : '' !!}
-                                                                </p>
-                                                            @endif
+                                                            <div ng-show="mode == 'view'">
+                                                                @if($order->recipient_self)
+                                                                    <p class="lead">сам отправитель</p>
+                                                                @else
+                                                                    <p class="lead">
+                                                                    {!! $order->recipient_name ?  $order->recipient_name.'<br>' : '' !!}
+                                                                    {!! $order->recipient_phone ?  $order->recipient_phone : '' !!}
+                                                                    </p>
+                                                                @endif
+                                                            </div>
+
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <label class="m-checkbox">
+                                                                    <input type="checkbox" ng-model="order.recipient_self" ng-true-value="1" ng-false-value="0">
+                                                                    сам отправитель
+                                                                    <span></span>
+                                                                </label>
+
+                                                                <div ng-show="!order.recipient_self">
+                                                                    <br>
+                                                                    <input type="text" class="form-control" ng-model="order.recipient_name" placeholder="Имя">
+                                                                    <br>
+                                                                    <input type="text" class="form-control" ng-model="order.recipient_phone" placeholder="Телефон">
+                                                                </div>
+                                                            </div>
 
 
 
@@ -133,11 +198,17 @@
                                                         <br>
                                                         <span class="m-widget4__sub">
 
-                                                            @if(!$order->text)
-                                                                <p class="lead">НЕТ</p>
-                                                            @else
-                                                                <p class="lead">{{ $order->text }}</p>
-                                                            @endif
+                                                            <div ng-show="mode == 'view'">
+                                                                @if(!$order->text)
+                                                                    <p class="lead">НЕТ</p>
+                                                                @else
+                                                                    <p class="lead">{{ $order->text }}</p>
+                                                                @endif
+                                                            </div>
+
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <textarea class="form-control" ng-model="order.text" placeholder="Текст открытки"></textarea>
+                                                            </div>
 
 
 
@@ -158,15 +229,22 @@
                                                         <br>
                                                         <span class="m-widget4__sub">
 
-                                                            <p class="lead">
-                                                            {{ $order->recipient_address.' '.$order->recipient_flat }}
-                                                            </p>
-
-                                                            @if($order->delivery_out_distance)
+                                                            <div ng-show="mode == 'view'">
                                                                 <p class="lead">
-                                                                    доставка за город: {{ $order->delivery_out_distance }} км.
+                                                                    {{ $order->shop->city->name }}<br>
+                                                                    {{ $order->recipient_address.' '.$order->recipient_flat }}
                                                                 </p>
-                                                            @endif
+
+                                                                @if($order->delivery_out_distance)
+                                                                    <p class="lead">
+                                                                        доставка за город: {{ $order->delivery_out_distance }} км.
+                                                                    </p>
+                                                                @endif
+                                                            </div>
+
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <input type="text" class="form-control" ng-model="order.recipient_address">
+                                                            </div>
 
 
                                                         </span>
@@ -184,9 +262,14 @@
                                                         <br>
                                                         <span class="m-widget4__sub">
 
-                                                            <p class="lead">
+                                                            <p class="lead" ng-show="mode == 'view'">
                                                             {{ $order->recipient_info ? $order->recipient_info : 'НЕТ' }}
                                                             </p>
+
+
+                                                            <div ng-show="mode == 'edit'" ng-cloak>
+                                                                <textarea class="form-control" ng-model="order.recipient_info"></textarea>
+                                                            </div>
 
 
                                                         </span>
@@ -232,7 +315,7 @@
                     <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
                         <div class="m-form__actions m-form__actions--solid">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <a href="{{ route('admin.orders') }}" class="btn btn-info m-btn m-btn--icon m-btn--wide">
                                         <span>
                                             <i class="la la-angle-left"></i>
@@ -242,6 +325,29 @@
                                         </span>
                                     </a>
                                 </div>
+                                @if($user->admin)
+                                    <div class="col-lg-6" ng-show="mode == 'view'">
+                                        <button class="btn btn-info m-btn m-btn--icon m-btn--wide" ng-click="mode='edit'">
+                                            <span>
+                                                <i class="la la-pencil"></i>
+                                                <span>
+                                                    Редактировать
+                                                </span>
+                                            </span>
+                                        </button>
+                                    </div>
+
+                                    <div class="col-lg-6" ng-show="mode == 'edit'" ng-cloak>
+                                        <button class="btn btn-success m-btn m-btn--icon m-btn--wide" ng-click="save()">
+                                            <span>
+                                                <i class="la la-check"></i>
+                                                <span>
+                                                    Сохранить
+                                                </span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -333,7 +439,7 @@
                                     @if($item->product)
 
                                         @if(!$item->product->dop)
-                                            Товар: {{ $item->product->name }} - {{ $item->client_price - $order->delivery_price - ($order->delivery_out_distance * (int)$order->delivery_out_price) }}<br>
+                                            Товар: {{ $item->product->name }} - {{ $item->client_price - $order->delivery_price }}<br>
                                         @else
                                             Товар: {{ $item->product->name }} - {{ $item->shop_price * $item->qty }}<br>
                                         @endif
@@ -345,6 +451,38 @@
 
                     </div>
                 </div>
+
+                @endif
+
+                @if(!$order->recipient_self)
+
+                    <div class="col-lg-12">
+                        <div class="m-portlet  m-portlet--border-bottom-brand ">
+                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                <div class="m-widget26">
+                                    <p class="text-warning">Клиент просил, при возможности, сделать фото вручения букета: клиент будет рад, а у Вас улучшится выдача товаров</p>
+                                    @if($order->photo)
+                                        <figure>
+                                            <img class="img-responsive" src="{{ \Storage::disk('orders')->url($order->photo) }}" alt="..." width="100%">
+                                        </figure>
+                                    @endif
+                                    <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form" enctype="multipart/form-data" >
+                                        {{ csrf_field() }}
+                                        <input type="file" class="form-control" name="order_photo">
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Сохранить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
                 @endif
 
@@ -576,4 +714,11 @@
     <script src="{{ asset('assets/admin/ng/ordersList.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/orders-list.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/order-view.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/order-view.js') }}" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+        jsonData.order = {!! $user->admin ? $order->toJson() : "{}" !!};
+        jsonData.orderUpdateUrl = '{{ route('admin.order.update', ['id' => $order->id]) }}';
+    </script>
 @stop

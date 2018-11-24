@@ -3,7 +3,11 @@
 @section('content')
 
     <div class="container">
-        <h1 class="h2">Доставка цветов в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">{{ $current_city->name_prepositional }}</a></h1>
+        <div class="logo-container-wraper visible-sm visible-xs">
+            <a class="logo-container" href="/"></a>
+        </div>
+        <h1 class="h2 sm-h2">Доставка цветов в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">{{ $current_city->name_prepositional }}</a></h1>
+        <span id="filtr" name="filtr"></span>
         <br>
     </div>
 <!--
@@ -30,7 +34,7 @@
 @if(empty($popularProducts))
     <div class="row hidden-xs hidden-sm">
         <div class="col-md-5">
-            <h3 class="margin-top-null"><strong>{{ !empty($currentType) ? $currentType->alt_name : null }}</strong></h3>
+            <h2 class="margin-top-null"><strong>{{ !empty($currentType) ? $currentType->alt_name : null }}</strong></h2>
         </div>
         <div class="col-md-7">
             <ul class="list-inline list-sort text-right">
@@ -115,19 +119,51 @@
 
         <div class="col-md-9 col-md-pull-3" style="background-color: #fff; padding-top: 10px;"  >
 
+                @if(!empty($popularProducts))
+                    @foreach($popularProducts as $item)
+                        @if($item['productType']->id == 2 && $item['popularProductCount'] >= 3)
+                            <div ng-hide="isFiltered">
+                                <div class="hidden-lg hidden-md hidden-xs">
+                                    <br><br>
+                                </div>
+                                <h2 class="margin-top-null"><strong>{{ $item['productType']->alt_name }} с доставкой в {{ $current_city->name_prepositional }}</strong></h2>
+                                <br class="hidden-lg hidden-md">
+
+                                <div class="row">
+                                    @foreach($item['popularProduct'] as $key => $_item)
+                                        @if($key < 3 || $item['popularProductCount'] == 6)
+
+                                            @include('front.product.list-item')
+
+                                        @endif
+                                    @endforeach
+
+                                    <br clear="all">
+                                    @if($item['popularProduct']->total() > 6)
+                                        <div class="col-md-6 col-md-offset-3 bottom30">
+                                            <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
+
                 @if(count($singleProducts))
                     <div ng-hide="isFiltered">
                         <div class="hidden-lg hidden-md hidden-xs">
                             <br><br>
                         </div>
 
-                        <h3 class="margin-top-null"><strong>Букеты цветов поштучно</strong></h3>
+                        <h2 class="margin-top-null"><strong>Букеты цветов поштучно</strong></h2>
                         <br class="hidden-lg hidden-md">
 
                         @foreach($singleProducts as $_item)
                             @include('front.product.list-item')
                         @endforeach
 
+                        <br clear="all">
                         <div class="col-md-6 col-md-offset-3 bottom30">
                             <a href="/catalog/single" class="btn btn-block btn-more">Смотреть все букеты поштучно</a>
                         </div>
@@ -141,13 +177,14 @@
                         <div class="hidden-lg hidden-md hidden-xs">
                             <br><br>
                         </div>
-                        <h3 class="margin-top-null"><strong>Самые низкие цены</strong></h3>
+                        <h2 class="margin-top-null"><strong>Самые низкие цены</strong></h2>
                         <br class="hidden-lg hidden-md">
 
                         @foreach($lowPriceProducts as $_item)
                             @include('front.product.list-item')
                         @endforeach
 
+                        <br clear="all">
                         <div class="col-md-6 col-md-offset-3 bottom30">
                             <a href="/catalog/?order=price" class="btn btn-block btn-more">Смотреть все букеты с низкими ценами</a>
                         </div>
@@ -162,13 +199,14 @@
                             <div class="hidden-lg hidden-md hidden-xs">
                                 <br><br>
                             </div>
-                            <h3 class="margin-top-null"><strong>{{ $specialOffer->name }}</strong></h3>
+                            <h2 class="margin-top-null"><strong>{{ $specialOffer->name }}</strong></h2>
                             <br class="hidden-lg hidden-md">
 
                             @foreach($specialOfferProducts[$specialOffer->id] as $_item)
                                 @include('front.product.list-item')
                             @endforeach
 
+                            <br clear="all">
                             <div class="col-md-6 col-md-offset-3 bottom30">
                                 <a href="/catalog/" class="btn btn-block btn-more">Перейти в каталог букетов</a>
                             </div>
@@ -182,12 +220,12 @@
 
                 @if(!empty($popularProducts))
                     @foreach($popularProducts as $item)
-                        @if($item['popularProductCount'] >= 3)
+                        @if($item['productType']->id != 2 && $item['popularProductCount'] >= 3)
                             <div ng-hide="isFiltered">
                                 <div class="hidden-lg hidden-md hidden-xs">
                                     <br><br>
                                 </div>
-                                <h3 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h3>
+                                <h2 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h2>
                                 <br class="hidden-lg hidden-md">
 
                                 <div class="row">
@@ -199,6 +237,7 @@
                                         @endif
                                     @endforeach
 
+                                    <br clear="all">
                                     @if($item['popularProduct']->total() > 6)
                                         <div class="col-md-6 col-md-offset-3 bottom30">
                                             <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
@@ -260,7 +299,7 @@
             <div class="col-md-12">
                 <h4 class="md-mt-30 md-mb-50 text-left"><strong>В ближайшее время сервис доставки букетов Флористум (floristum.ru) заработает и в {{ $current_city->name_prepositional }}.</strong></h4>
 
-                <h3 class="text-left"><strong>Вы представитель магазина?</strong></h3>
+                <h2 class="text-left"><strong>Вы представитель магазина?</strong></h2>
 
                 <h4 class="md-mb-40">Если Вы — представитель магазина цветов, а {{ $current_city->name }} — территория работы Вашей службы доставки, то <a href="{{ route('register') }}">регистрируйтесь</a> прямо сейчас и получайте заказы уже завтра!</h4>
             </div>
@@ -314,18 +353,19 @@
 <div class="container">
  <br><br>
  <img src="http://floristum.ru/images/dostavka_tsvetov_v_ofis1.png" alt="Доставка цветов и букетов" align="left" 
-  vspace="20" hspace="25"><h3 class="text-left">О доставке цветов с Floristum.ru</h3>
+  vspace="20" hspace="25"><h3 class="text-left">О доставке цветов в {{ $current_city->name_prepositional }} с Floristum.ru</h3>
  
-    <p><b>Флористум — сервис заказа доставки цветов в {{ $current_city->name_prepositional }} и по всей России</b>.  </br>   На Флористум.ру вы можете заказать букеты в офис или на дом из популярных цветочных магазинов с оптимальным соотношением цена—качество, сравнив предложение с аналогичными композициями флористов и магазинов, представленных в {{ $current_city->name_prepositional }}. <br><br>
+    <p><b>Флористум — сервис заказа доставки цветов в {{ $current_city->name_prepositional }} и по всей России</b>.  </br>   На Флористум.ру вы можете заказать букеты в офис или на дом из популярных цветочных магазинов с оптимальным соотношением цена — качество, сравнив предложение с аналогичными композициями флористов и магазинов, представленных в {{ $current_city->name_prepositional }}. <br><br>
         Заказывая букет у нас, Вы всегда получаете гарантировано свежие цветы с доставкой в кратчайшие сроки в полном соответствии с указанной на странице букета информацией и фотографиями. Цветочные магазины и флористы, представленные у нас, заинтересованы в том, чтобы клиент был доволен и оставил хороший отзыв на страницах системы, который повлияет на рейтинг магазина и частоту заказов цветов у флориста.<br><br>
-        Каждая доставка защищена системой Флористум с гарантией возврата оплаченной суммы покупателю в форсмажорных случаях при исполнении заказа цветов. Поэтому, незамедлительно обращайтесь в службу поддержки Флористум при возникновении любых вопросов. Мы готовы доставить, практически, любые цветы для Вас и ваших близких: подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.
+        Каждая доставка защищена системой Флористум с гарантией возврата оплаченной суммы покупателю в форсмажорных случаях при исполнении заказа цветов. Поэтому, незамедлительно обращайтесь в службу поддержки Флористум при возникновении любых вопросов. Мы готовы доставить, практически, любые цветы для Вас и ваших близких от недорогих (дешевых) до элитных (VIP): подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.
 
     </p>
 <p> <br><br>
 <img src="http://floristum.ru/images/dostavka_tsvetov_po_beznalu1.png" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h3>Доставка цветов для юр лиц по безналичному расчету</h3>
 
  
- <b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сторудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. <br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="https://floristum.ru/corporate">Доставка цветов по безналу.</a></p>
+ <b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сторудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц.<br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в {{ $current_city->name_prepositional }}.</p>
+
 
 
     <br><br>

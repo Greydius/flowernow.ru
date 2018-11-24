@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Mail;
 
 class Handler extends ExceptionHandler
 {
@@ -36,7 +37,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        parent::report($exception);
+            //$this->sendEmail($exception);
+
+            parent::report($exception);
     }
 
     /**
@@ -49,5 +52,13 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    public function sendEmail(Exception $exception) {
+            // sending email
+            Mail::send('email.system.exception', ['msg' => $exception], function ($message) {
+                    $message->to('nkornushin@gmail.com')
+                            ->subject('Floristum.ru exception ' . date('Y-m-d H:i:s'));
+            });
     }
 }

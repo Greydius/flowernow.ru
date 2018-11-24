@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Model\Order;
 use App\Model\Shop;
 use App\Model\Product;
+use App\Model\CashVoucher;
 use App\Model\Feedback;
 use App\Model\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class HomeController extends Controller
 {
@@ -53,7 +56,14 @@ class HomeController extends Controller
     }
     
     public function corporate() {
-            return view('front.corporate');
+            $city_id = $this->current_city->id;
+            $lowPriceProducts = Product::lowPriceProducts($city_id)->take(9)->get();
+            return view('front.corporate', [
+                    'lowPriceProducts' => $lowPriceProducts,
+                    'pageTitle' => ('Доставка цветов для юр лиц по безналичному расчету в '.$this->current_city->name_prepositional.' | Оплата с расчетного счета организации'),
+                    'pageDescription' => ('Доставка цветов и букетов для юр лиц в '.$this->current_city->name_prepositional.' по безналичному расчету. Федеральная курьерская служба доставки букетов цветов. Оплата с расчетного счета организации. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 руб.'),
+                    'pageKeywords' => ('доставка, цветы, юридическое лицо, безнал, расчетный счет, '.$this->current_city->name.', область, заказать, онлайн, круглосуточно, бесплатная, на дом, в офис, интернет, магазин, растения, россии, букеты'),
+            ]);
     }
 
     public function agreement() {
@@ -79,6 +89,244 @@ class HomeController extends Controller
     public function test(Request $request) {
 
 
+            $orderId = 37302;
+
+            $order = Order::find($orderId);
+            echo $order->orderLists[0]->product->name;
+            
+
+            exit();
+
+            $shop_id = 351;
+
+
+            $shop = Shop::find($shop_id);
+
+            $products = Product::where('shop_id', $shop->id)->whereIn('status', [0, 3])->whereNull('single')->get();
+            $totalProductsCount = Product::where('shop_id', $shop->id)->whereNull('single')->count();
+
+            if($shop->email) {
+                    Mail::send('email.shopProductBan2', ['products' => $products, 'shop' => $shop, 'totalProductsCount' => $totalProductsCount], function ($message) use ($shop) {
+                            $message->to(['nkornushin@gmail.com'])
+                                    ->subject('Уведомление для '.$shop->name.' на Floristum.ru');
+                    });
+            }
+
+            return response()->json([], 200);
+            exit();
+
+            //$products = Shop::find(397)->products()->where('status_comment_at', '>', \Carbon::now()->subDays(10))->get();
+            $shop = Shop::find(351);
+
+
+
+            $products = Product::where('shop_id', $shop->id)->whereIn('status', [0, 3])->whereNull('single')->get();
+            $totalProductsCount = Product::where('shop_id', $shop->id)->whereNull('single')->count();
+
+
+
+            Mail::send('email.shopProductBan', ['products' => $products,], function ($message) use ($products) {
+                    $message->to(['nkornushin@gmail.com', 'a.elcheninov@mail.ru', 'service@Floristum.ru'])
+                            ->subject('Внимание от Floristum.ru');
+            });
+
+
+
+
+            return view('email.shopProductBan2',[
+                    'products' => $products,
+                    'shop' => $shop,
+                    'totalProductsCount' => $totalProductsCount
+            ]);
+
+
+            exit();
+
+            $client = new \Platron\Atol\clients\PostClient();
+
+            $tokenService = new \Platron\Atol\services\GetTokenRequest('floristum-ru', '6iabjyA0K');
+            $tokenResponse = new \Platron\Atol\services\GetTokenResponse($client->sendRequest($tokenService));
+
+
+            //$getStatusService = new \Platron\Atol\services\GetStatusRequest('floristum-ru_8783', '89607369-7854-4ec5-8e89-34299fced39a', $tokenResponse->token);
+            $getStatusService = new \Platron\Atol\services\GetStatusRequest('floristum-ru_8783', '0cea1763-03e8-4ef5-a2e9-2ff2a091edd1', $tokenResponse->token);
+            $getStatusResponse = new \Platron\Atol\services\GetStatusResponse($client->sendRequest($getStatusService));
+
+            print_r($getStatusResponse); exit();
+
+
+            //$orders = Order::with(['orderLists.product'])->where('id', '=', '37389')->where('payment', Order::$PAYMENT_CARD)->where('payed', 1)->doesntHave('cashVouchers')->get();
+            $orders = Order::with(['orderLists.product'])->where('id', '=', '37394')->get();
+
+            $client = new \Platron\Atol\clients\PostClient();
+
+            $tokenService = new \Platron\Atol\services\GetTokenRequest('floristum-ru', '6iabjyA0K');
+            $tokenResponse = new \Platron\Atol\services\GetTokenResponse($client->sendRequest($tokenService));
+            
+
+            foreach($orders as $order) {
+                    
+                    $createDocumentService = (new \Platron\Atol\services\CreateDocumentRequest($tokenResponse->token));
+                    $i = 0;
+                    foreach($order->orderLists as $orderList) {
+                            $receiptPosition = new \Platron\Atol\data_objects\ReceiptPosition($orderList->product->name.($orderList->single ? ' ('.$orderList->qty.' шт.)' : ''), $orderList->client_price + ($i == 0 ? ($orderList->single ? $order->delivery_price : 0) + ($order->delivery_out_distance ? $order->delivery_out_distance*$order->delivery_out_price : 0) : 0), 1, \Platron\Atol\data_objects\ReceiptPosition::TAX_NONE);
+                            $createDocumentService->addReceiptPosition($receiptPosition);
+                            $i++;
+                    }
+
+                    $createDocumentService->addCustomerEmail('nkornushin@gmail.com')
+                            ->addCustomerPhone('79803888394')
+                            ->addGroupCode('floristum-ru_8783')
+                            ->addInn('7807189999')
+                            ->addCompanyEmail('info@floristum.ru')
+                            ->addMerchantAddress('https://floristum.ru/')
+                            ->addOperationType(\Platron\Atol\services\CreateDocumentRequest::OPERATION_TYPE_SELL)
+                            ->addPaymentType(\Platron\Atol\services\CreateDocumentRequest::PAYMENT_TYPE_ELECTRON)
+                            ->addSno(\Platron\Atol\services\CreateDocumentRequest::SNO_USN_INCOME_OUTCOME)
+                            ->addExternalId($order->id);
+
+                    $createDocumentResponse = new \Platron\Atol\services\CreateDocumentResponse($client->sendRequest($createDocumentService));
+
+
+                    $cashVoucher = new CashVoucher();
+                    $cashVoucher->order_id = $order->id;
+                    $cashVoucher->uuid = $createDocumentResponse->uuid;
+                    $cashVoucher->save();
+
+                    print_r($createDocumentResponse);
+                    exit();
+
+
+            }
+
+
+
+
+            exit();
+
+            $client = new \Platron\Atol\clients\PostClient();
+
+            $tokenService = new \Platron\Atol\services\GetTokenRequest('floristum-ru', '6iabjyA0K');
+            $tokenResponse = new \Platron\Atol\services\GetTokenResponse($client->sendRequest($tokenService));
+
+
+            //$getStatusService = new \Platron\Atol\services\GetStatusRequest('floristum-ru_8783', '89607369-7854-4ec5-8e89-34299fced39a', $tokenResponse->token);
+            $getStatusService = new \Platron\Atol\services\GetStatusRequest('floristum-ru_8783', '0303c126-264e-40c6-8558-a732e4255c28', $tokenResponse->token);
+            $getStatusResponse = new \Platron\Atol\services\GetStatusResponse($client->sendRequest($getStatusService));
+
+            print_r($getStatusResponse); exit();
+
+
+
+            $client = new \Platron\Atol\clients\PostClient();
+            $receiptPosition = new \Platron\Atol\data_objects\ReceiptPosition('TestOff', 1.00, 1, \Platron\Atol\data_objects\ReceiptPosition::TAX_NONE);
+
+            $createDocumentService = (new \Platron\Atol\services\CreateDocumentRequest($tokenResponse->token))
+                    ->addCustomerEmail('nkornushin@gmail.com')
+                    ->addCustomerPhone('79803888394')
+                    ->addGroupCode('floristum-ru_8783')
+                    ->addInn('7807189999')
+                    ->addCompanyEmail('info@floristum.ru')
+                    ->addMerchantAddress('https://floristum.ru/')
+                    ->addOperationType(\Platron\Atol\services\CreateDocumentRequest::OPERATION_TYPE_SELL)
+                    ->addPaymentType(\Platron\Atol\services\CreateDocumentRequest::PAYMENT_TYPE_ELECTRON)
+                    ->addSno(\Platron\Atol\services\CreateDocumentRequest::SNO_USN_INCOME_OUTCOME)
+                    ->addExternalId(3005)
+                    ->addReceiptPosition($receiptPosition);
+            //print_r($createDocumentService->getParameters()); exit();
+
+            $createDocumentResponse = new \Platron\Atol\services\CreateDocumentResponse($client->sendRequest($createDocumentService));
+
+
+
+            print_r($createDocumentResponse);
+            exit();
+
+            exit();
+
+            // reference the Dompdf namespace
+
+            //$contents = \Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix('file.ff');
+
+            //dd($contents);
+
+            //\Storage::disk('local')->put('file.txt', 'Contents');
+            //exit();
+
+            $orderId = 37302;
+
+            $order = Order::find($orderId);
+
+            $order->generateInvoice();
+
+            if($order->invoicePath) {
+                    Mail::send('email.rsNewOrder', ['order' => $order,], function ($message) use ($order) {
+                            $message->to(['nkornushin@gmail.com'])
+                                    ->subject('Счет от Floristum.ru №' . $order->id)
+                                    ->attach($order->invoicePath);
+                    });
+            }
+
+
+            exit();
+
+            /*
+            Mail::send('email.rsNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                        $message->to('nkornushin@gmail.com')
+                                ->subject('Счет от Floristum.ru №'. $order->id);
+            });
+
+            exit();
+*/
+
+            try {
+
+                    throw new \Exception('Деление на ноль.');
+                        // instantiate and use the dompdf class
+                        $dompdf = new Dompdf();
+                    $dompdf->set_option('isRemoteEnabled', true);
+                    $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                        $date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+
+                        $view = view('invoices.invoice', [
+                                'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                                'order' => $order
+                        ])->render();
+
+                        //echo $view; exit();
+
+                        $dompdf->loadHtml($view, 'UTF-8');
+
+                        // (Optional) Setup the paper size and orientation
+                        //$dompdf->setPaper('A4', 'landscape');
+
+                        // Render the HTML as PDF
+                        $dompdf->render();
+
+                        // Output the generated PDF to Browser
+                        //$dompdf->stream();
+
+                    $fileName = 'invoice_'.$order->id.'.pdf';
+                    $filePath = '/invoices/'.$fileName;
+
+                    \Storage::disk('local')->put($filePath, $dompdf->output());
+
+                    Mail::send('email.rsNewOrder', ['order' => $order, ], function ($message) use ($order, $filePath) {
+                                $message->to(['nkornushin@gmail.com', 'finance@floristum.ru'])
+                                        ->subject('Счет от Floristum.ru №'. $order->id)
+                                        ->attach(\Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($filePath));
+                    });
+
+            }  catch(\Exception $e){
+                        \Log::error($e);
+                        Mail::send('email.system.exception', ['msg' => $e->getMessage() ], function ($message) {
+                                $message->to('nkornushin@gmail.com')
+                                        ->subject('floristum.ru exception '.date('Y-m-d H:i:s'));
+                        });
+            }
+
+exit();
             $location = \SypexGeo::get('213.87.150.43');
 
             dd($location);

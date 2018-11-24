@@ -78,7 +78,16 @@
 
                         <tr ng-repeat="order in orders" >
                             @if(!$user->admin)
-                                <td><span style="font-weight: bold"><% order.id %></span><br><% order.payed_at_dt | date:'MM.dd HH:mm' %></td>
+                                <td>
+                                    <span style="font-weight: bold"><% order.id %></span>
+                                    <div ng-show="order.payed_at != ''">
+                                        <br>
+                                        <% order.payed_at_dt | date:'MM.dd HH:mm' %>
+                                    </div>
+                                    <br>
+                                    <span class="text-success" ng-show="order.payment == 'card'">Карта</span>
+                                    <span class="text-danger font-weight-bold" ng-show="order.payment == 'cash'">Наличные</span>
+                                </td>
                                 <td>
                                     <% order.receiving_date_dt | date:'MM.dd' %>
                                     <br>
@@ -111,7 +120,23 @@
 
                                 </td>
                             @else
-                                <td><span style="font-weight: bold"><% order.id %></span><br><% order.payed_at_dt | date:'MM.dd HH:mm' %></td>
+                                <td>
+                                    <span style="font-weight: bold"><% order.id %></span>
+                                    <br>
+                                    <div ng-show="order.payed_at != ''">
+                                        <br>
+                                        <% order.payed_at_dt | date:'MM.dd HH:mm' %>
+                                    </div>
+                                    <div ng-show="order.payment == 'cash' && order.confirmed == 0">
+                                        <br>
+                                        <span class="text-danger">Нал.-не подтвержден</span>
+                                    </div>
+                                    <br>
+                                    <span class="text-success" ng-show="order.payment == 'card'">Карта</span>
+                                    <span class="text-danger font-weight-bold" ng-show="order.payment == 'rs' && !order.payed">Юрлицо</span>
+                                    <span class="text-danger" ng-show="order.payment == 'rs' && order.payed">Юрлицо</span>
+                                    <span class="text-danger font-weight-bold" ng-show="order.payment == 'cash' && order.confirmed == 1">Наличные</span>
+                                </td>
                                 <td style="font-size: 12px">
                                     <a href="/admin/shop/<% order.shop.id %>" target="_blank"><% order.shop.name %></a>
                                     <br><% order.shop.city.name %>

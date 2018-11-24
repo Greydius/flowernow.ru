@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class CityController extends Controller
 {
         public function popular() {
-                $cities = City::popular(0, false);
+                //$cities = City::popular(0, false);
+                $cities = City::where('population', '>', '0')->orderby('name')->get();
 
                 return view('front.city.popular',[
                         'cities' => $cities,

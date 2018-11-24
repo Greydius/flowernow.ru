@@ -12,6 +12,7 @@
         @include('front.product.search-item')
     </div>
 
+    <br clear="all">
     <div class="col-md-6 col-md-offset-3 bottom30" ng-show="links && !otherPopularProducts.length">
         <a href="<% links %>" class="btn btn-block btn-more">Показать все</a>
     </div>
@@ -50,6 +51,7 @@
                     @include('front.product.search-item')
                 </div>
 
+                <br clear="all">
 
                 <div class="col-md-6 col-md-offset-3 bottom30" ng-show="items.popularProduct.total > 6">
                     <a href="/catalog/<% items.productType.slug %>/vse-cvety" class="btn btn-block btn-more">Показать все <% items.productType.alt_name | lowercase %></a>

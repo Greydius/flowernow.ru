@@ -225,7 +225,7 @@
 									</a>
 								</li>
 
-								<li class="m-menu__item  m-menu__item--submenu m-menu__item--open {{ in_array(\Request::route()->getName(), ['admin.articles', 'admin.setting.index', 'admin.subscription.index', 'admin.feedback.list', 'admin.promoCodes.create']) ? 'm-menu__item--expanded' : '' }}" aria-haspopup="true" data-menu-submenu-toggle="hover">
+								<li class="m-menu__item  m-menu__item--submenu m-menu__item--open {{ in_array(\Request::route()->getName(), ['admin.articles', 'admin.setting.index', 'admin.subscription.index', 'admin.feedback.list', 'admin.promoCodes.create', 'shops.partnership.list']) ? 'm-menu__item--expanded' : '' }}" aria-haspopup="true" data-menu-submenu-toggle="hover">
 									<a href="#" class="m-menu__link m-menu__toggle">
 										<i class="m-menu__link-icon flaticon-settings"></i>
 										<span class="m-menu__link-text">
@@ -294,9 +294,20 @@
 												</span>
 												</a>
 											</li>
+                                            <li class="m-menu__item  {{ \Request::route()->getName() == 'shops.partnership.list' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+                                                <a href="{{ route('shops.partnership.list') }}" class="m-menu__link ">
+                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="m-menu__link-text">
+													SEO программа
+												</span>
+                                                </a>
+                                            </li>
 										</ul>
 									</div>
 								</li>
+
 							@endif
 
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.finance' ? 'm-menu__item--active' : null }}">
@@ -312,6 +323,20 @@
 									</span>
 								</a>
 							</li>
+
+                            <li class="m-menu__item {{ \Request::route()->getName() == 'shops.partnership' ? 'm-menu__item--active' : null }}">
+                                <a href="{{ route('shops.partnership') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon fa fa-eye"></i>
+                                    <span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Получите преимущество в показах
+											</span>
+
+										</span>
+									</span>
+                                </a>
+                            </li>
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->

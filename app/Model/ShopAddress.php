@@ -15,4 +15,8 @@ class ShopAddress extends Model
         public function shop() {
                 return $this->belongsTo('App\Model\Shop');
         }
+
+        public function city() {
+                return $this->belongsTo('App\Model\City');
+        }
 }

@@ -72,6 +72,11 @@ class Shop extends MainModel
         function workers() {
                 return $this->hasMany('App\Model\ShopWorker');
         }
+
+        // relation for feedbacks
+        function feedbacks() {
+                return $this->hasMany('App\Model\Feedback');
+        }
         
         public function getDeliveryTimeFormatAttribute() {
 

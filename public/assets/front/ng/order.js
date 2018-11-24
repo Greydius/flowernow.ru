@@ -101,6 +101,7 @@ $(document).ready(function() {
                 if(fromValidate()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
                         $('[name="recipient_phone"]').val($('#recipient_phone').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
+                        $('[name="email"]').val($('.order-email:visible').val());
 
                         submitForm(form);
                 } else {
@@ -116,6 +117,7 @@ $(document).ready(function() {
                 if(fromValidateUr()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
                         $('[name="recipient_phone"]').val($('#recipient_phone').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
+                        $('[name="email"]').val($('.order-email:visible').val());
 
                         submitForm(form);
                 } else {
@@ -229,6 +231,7 @@ $(document).ready(function() {
                                 preloader('hide');
                                 if(data.order_id) {
                                         $('[name="order_id"]').val(data.order_id);
+                                        angular.element(document.getElementById('order-container')).scope().order_id = data.order_id;
                                 }
 
                                 if(data.cloudpayments) {
@@ -236,6 +239,13 @@ $(document).ready(function() {
                                 } else if(data.link) {
                                         window.location = data.link;
                                 }
+
+                                if(data.sms_send) {
+                                        angular.element(document.getElementById('order-container')).scope().sms_send = data.sms_send;
+                                }
+
+                                angular.element(document.getElementById('order-container')).scope().$apply();
+
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                                 preloader('hide');
@@ -268,6 +278,10 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
         $scope.promo = null;
         $scope.selectedDopProducts = [];
         $scope.allDopProducts = jsonData.dopProducts;
+        $scope.sms_send = false;
+        $scope.sms_code = '';
+        $scope.phone = '';
+        $scope.order_id = null;
 
         $scope.total = function () {
 
@@ -431,4 +445,40 @@ angular.module('flowApp').controller('order', function($scope, $element, $http) 
 
                 return $return;
         }
+
+        $scope.confirmSmsCode = function () {
+                if($scope.sms_code == '') {
+                        $('#sms_code').addClass('error');
+                } else {
+                        preloader('show');
+
+                        $http({
+                                method: 'GET',
+                                url: '/order/confirmSmsCode/'+$scope.order_id,
+                                headers: {'Content-Type': 'application/json'},
+                                params: {
+                                        sms_code: $scope.sms_code
+                                }
+
+                        }).then(function (response) {
+                                var data = response.data;
+
+                                if(data.link) {
+                                        window.location = data.link;
+                                }
+
+                        }, function (response) {
+                                if (response.data.error) {
+                                        $('#sms_code').addClass('error');
+                                }
+
+                        }).then(function (response) {
+                                preloader('hide');
+                        });
+                }
+        }
+
+        $scope.$watch('sms_code', function(newValue, oldValue) {
+                $('#sms_code').removeClass('error');
+        });
 })

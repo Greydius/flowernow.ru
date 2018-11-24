@@ -19,6 +19,8 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 
                 $scope.filter();
 
+                return;
+
                 $('.preloader-wrapper').show();
 
                 $http({
@@ -119,6 +121,47 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
         }
 
         $scope.changeUrl = function(path) {
+                /*
+                var url = '/catalog/';
+                var getParams = {};
+
+                url += path.productType;
+
+                if(path.flowers.length) {
+                        url += '/' + path.flower[0];
+                        if(path.flowers.length > 1) {
+                                getParams.flowers = path.flowers.slice(1)
+                        }
+                } else {
+                        url += '/vse-cvety';
+                }
+
+                if(path.price_from) {
+                        getParams.price_from = path.price_from;
+                }
+
+                if(path.price_to) {
+                        getParams.price_to = path.price_to;
+                }
+
+                if(path.color) {
+                        getParams.color = path.color;
+                }
+
+                var serializeGetParams = $httpParamSerializerJQLike(getParams);
+
+                var newurl = window.location.protocol + "//" + window.location.host + url;
+
+                newurl += serializeGetParams ? '?'+serializeGetParams : '';
+                */
+
+                var newurl = $scope.prepareUrl(path);
+
+                //window.history.pushState({path:newurl},'',newurl);
+                window.location = newurl;
+        }
+
+        $scope.prepareUrl = function(path) {
                 var url = '/catalog/';
                 var getParams = {};
 
@@ -151,6 +194,78 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 
                 newurl += serializeGetParams ? '?'+serializeGetParams : '';
 
-                window.history.pushState({path:newurl},'',newurl);
+                return newurl;
+        }
+
+        $scope.mobileFilter = function() {
+
+                var $productType = $('[name="m-filter-product-type"]:checked');
+                var $productFlower = $('input[name="m-flowers[]"]:checked');
+                var $productPrice = $('[name="m-price"]:checked');
+                var $productColor = $('[name="m-filter-color"]:checked');
+
+                var path = {};
+
+                $scope.filters = {};
+
+                path.productType = 'all';
+                if($productType.length) {
+                        $scope.filters.productType = $productType.data('id');
+                        path.productType = $productType.data('slug');
+                }
+
+                path.flowers = [];
+                path.flower = [];
+                if($productFlower.length) {
+                        var flowersIds = [];
+                        $productFlower.each(function() {
+                                flowersIds.push($(this).val());
+                                path.flower.push($(this).data('slug'));
+                        });
+
+                        $scope.filters.flowers = flowersIds;
+                        path.flowers = flowersIds;
+                }
+
+                if($productPrice.length) {
+                        $scope.filters.productPrice = $productPrice.data('id');
+                        path.price_from = $productPrice.data('from');
+                        path.price_to = $productPrice.data('to');
+                }
+
+                if($productColor.length) {
+                        $scope.filters.color = $productColor.val();
+                        path.color = $productColor.val();
+                }
+
+                if(Object.keys($scope.filters).length) {
+                        $scope.isFiltered = true;
+                } else {
+                        $scope.isFiltered = false;
+                }
+
+                $scope.mobileChangeUrl(path);
+        }
+
+        $scope.mobileChangeUrl = function(path) {
+                var newurl = $scope.prepareUrl(path);
+
+                console.log(newurl);
+
+                window.location = newurl;
+        }
+
+        $scope.mobileFilterReset = function () {
+                window.location = '/';
+        }
+
+        $scope.closeMobileFilter = function () {
+                $('.filters-container').removeClass('active');
+                $('body').removeClass('blocked');
+        }
+
+        $scope.showMobileFilter = function () {
+                $('.filters-container').addClass('active');
+                $('body').addClass('blocked');
         }
 })

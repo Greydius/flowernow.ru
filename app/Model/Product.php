@@ -17,7 +17,7 @@ class Product extends MainModel
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
-        protected $appends = ['clientPrice', 'url', 'photoUrl', 'fullPrice'];
+        protected $appends = ['clientPrice', 'url', 'photoUrl', 'fullPrice', 'deliveryTime'];
 
         public $promoCode;
 
@@ -368,8 +368,8 @@ class Product extends MainModel
                         $hours = floor($this->make_time / 60);
                         $minutes = $this->make_time % 60;
 
-                        $return .= ($hours ? $hours .'ч. ' : '');
-                        $return .= ($minutes ? $minutes .'мин.' : '');
+                        $return .= ($hours ? $hours .'ч.' : '');
+                        $return .= ($minutes ? ' '.$minutes .'мин.' : '');
                 }
 
                 return $return;
@@ -383,5 +383,17 @@ class Product extends MainModel
                 } else {
                         $this->promoCode = null;
                 }
+        }
+
+        public static function lowPriceProducts($city_id) {
+                return Product::whereHas('shop', function($query) use ($city_id) {
+                        $query->where('city_id', $city_id)->available();
+                })
+                        ->where('price', '>', 0)
+                        ->where('status', 1)
+                        ->where('pause', 0)
+                        ->whereNotIn('product_type_id', [7, 8, 9, 10])
+                        ->whereNull('single')
+                        ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
         }
 }

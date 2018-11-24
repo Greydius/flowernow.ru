@@ -1,14 +1,20 @@
 
 
-<div class="col-sm-{{ !empty($col) ? $col : '4' }}">
+<div class="col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6">
     <div class="media-item">
         <a href="/flowers/{{ $_item['slug'] }}">
             <figure>
                 <img class="img-responsive" src="{{ $_item['photoUrl'] }}" alt="...">
                 <figcaption>
+                    <p>
+                        @foreach($_item->compositions as $composition)
+                            {{ $composition->flower->name }} {{ $composition->qty ? ' - '.$composition->qty.' шт.' : null }}<br>
+                        @endforeach
+                        {{ $_item['description'] }}
+                    </p>
                     <ul class="list-inline text-center">
-                        <li>Ширина {{ $_item['width'] }} см</li>
-                        <li>Высота {{ $_item['height'] }} см</li>
+                        <li><span class="glyphicon glyphicon-resize-horizontal"></span> {{ $_item['width'] }} см</li>
+                        <li><span class="glyphicon glyphicon-resize-vertical"></span> {{ $_item['height'] }} см</li>
                     </ul>
                 </figcaption>
             </figure>
@@ -19,9 +25,12 @@
                 <div class="col-xs-12 buy">
                     <a href="{{ route('order.add', ['product_id' => $_item['id']]) }}" class="btn btn-danger btn-outline buy-btn">Заказать</a>
                     <p><strong class="price-media-item">{{ $_item['clientPrice'] }} руб.</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
-                    <p><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> доставка
+                    @if(!empty($isNeedShopName))
+                        <p>{{ $_item['shop']->name }}</p>
+                    @endif
+                    <p class="delivery-line"><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> доставка цветов
                         @if($_item['deliveryTime'] || $_item->shop->deliveryTimeFormat2)
-                        {{ $_item['deliveryTime'] ? $_item['deliveryTime'] : $_item->shop->deliveryTimeFormat2 }}
+                            {{ $_item['deliveryTime'] ? $_item['deliveryTime'] : $_item->shop->deliveryTimeFormat2 }}
                         @else
                             от 2ч.
                         @endif

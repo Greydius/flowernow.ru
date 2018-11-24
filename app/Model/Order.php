@@ -8,6 +8,9 @@ use App\Model\Transaction;
 use App\Model\Shop;
 use \App\Helpers\Sms;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Helpers\AppHelper;
 
 class Order extends MainModel
 {
@@ -15,7 +18,7 @@ class Order extends MainModel
 
         protected $dates = ['deleted_at'];
 
-        protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+        protected $hidden = ['created_at', 'updated_at', 'deleted_at', 'sms_code', 'sms_send_at'];
 
         protected $appends = ['amount', 'amountShop'];
 
@@ -86,6 +89,11 @@ class Order extends MainModel
                 return $this->belongsTo('App\Model\PromoCode', 'promo_code_id');
         }
 
+        // relation for cash vouchers
+        function cashVouchers() {
+                return $this->hasMany('App\Model\CashVoucher');
+        }
+
         //возвращает сумму заказа
         public function amount() {
                 $amount = 0;
@@ -100,11 +108,19 @@ class Order extends MainModel
                 return $this->amount();
         }
 
+        public function getAmountFAttribute() {
+                return number_format($this->amount(), 2, '.', ' ');
+        }
+
         //возвращает сумму заказа
         public function amountShop() {
                 $amount = 0;
                 foreach ($this->orderLists()->get() as $orderList) {
                         $amount += ($orderList->shop_price * $orderList->qty);
+                }
+
+                if($this->payment == Order::$PAYMENT_CASH) {
+                        return (-1)*($this->amount() - $amount - ($this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0)));
                 }
 
                 return $amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
@@ -162,7 +178,11 @@ class Order extends MainModel
                                 $transaction->action = 'order';
                                 $transaction->action_id = $this->id;
                                 $transaction->amount = $this->amountShop();
-                                $transaction->subtract = $this->amount() - $transaction->amount;
+                                if($this->payment == Order::$PAYMENT_CASH) {
+                                        $transaction->subtract = (-1)*$transaction->amount;
+                                } else {
+                                        $transaction->subtract = $this->amount() - $transaction->amount;
+                                }
 
                                 if($transaction->save()) {
                                         $shop = Shop::find($this->shop_id);
@@ -186,5 +206,72 @@ class Order extends MainModel
                 }
 
                 return null;
+        }
+
+        private function invoiceFileName() {
+                return 'invoice_' . $this->id . '.pdf';
+        }
+
+        private function invoiceFilePath() {
+                return '/invoices/' . $this->invoiceFileName();
+        }
+
+        public function generateInvoice() {
+                try {
+                        $dompdf = new Dompdf();
+                        $dompdf->set_option('isRemoteEnabled', true);
+                        $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                        $date = date('d') . ' ' . \App\Helpers\AppHelper::ruMonth(date('m')) . ' ' . date('Y') . ' г.';
+
+                        $view = view('invoices.invoice', [
+                                'header' => 'Счет на оплату № ' . $this->id . ' от ' . $date,
+                                'order' => $this
+                        ])->render();
+
+                        $dompdf->loadHtml($view, 'UTF-8');
+
+                        // Render the HTML as PDF
+                        $dompdf->render();
+                        \Storage::disk('local')->put($this->invoiceFilePath(), $dompdf->output());
+                }  catch(\Exception $e){
+                        \Log::error($e);
+                }
+        }
+
+        public function getInvoicePathAttribute() {
+                $path = '';
+
+                if($this->payment == Order::$PAYMENT_RS && \Storage::disk('local')->exists($this->invoiceFilePath())) {
+                        $path = \Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($this->invoiceFilePath());
+                }
+
+                return $path;
+        }
+        
+        public function sendSms() {
+                $code = AppHelper::getCode();
+                Sms::instance()->send($this->phone, 'Код-подтверждение заказа: '.$code);
+                return $code;
+                //if(!empty($this->sms_send_at) && AppHelper::diffInMinutes($this->sms_send_at) < 1)
+        }
+
+        public function createSuccessCompletedMsg() {
+                $message = new Message();
+
+                if(!empty($this->email)) {
+                        $message->message_type = 'email';
+                        $message->send_to = $this->email;
+                        $message->msg = json_encode(['text' => view('email.clientCompletedOrder', [
+                                'order' => $this
+                        ])->render(),
+                                'subject' => 'Заказ №'.$this->id.' выполнен']);
+                        $message->save();
+                } elseif(!empty($this->phone)) {
+                        $message->message_type = 'sms';
+                        $message->send_to = $this->phone;
+                        $message->msg = json_encode(['text' => 'Заказ №'.$this->id.' выполнен']);
+                        $message->save();
+                }
         }
 }

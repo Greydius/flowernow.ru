@@ -5,10 +5,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('pageTitle', 'Доставка цветов в '.$current_city->name_prepositional.'. Заказ букетов на дом, в офис.')</title>
+    <title>@yield('pageTitle', 'Доставка цветов в '.$current_city->name_prepositional.' | Заказать цветы с круглосуточной бесплатной доставкой в '.$current_city->name_prepositional.' | Интернет магазин цветов')</title>
 
-    <meta name="description" content="@yield('pageDescription', 'Служба доставки цветов в '.$current_city->name_prepositional.'. Заказ букетов от лучших флористов из каталога.')">
-    <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветов, букетов, заказ, служба, дом, офис, '.$current_city->name)">
+    <meta name="description" content="@yield('pageDescription', 'Доставка цветов и букетов в '.$current_city->name_prepositional.', области, России. Федеральная курьерская служба доставки букетов цветов. Выбор букетов и подарков. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 руб.')">
+    <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветы, '.$current_city->name.', область, заказать, онлайн, круглосуточно, бесплатная, на дом, в офис, интернет, магазин, растения, россии, букеты')">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
     <link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20180508') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20180427') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20180820') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20180829') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -84,37 +84,49 @@
                     </div>
                 @endif
 
+                <!--
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainMenu" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                -->
+
+                <div class="link-city hidden-md hidden-lg">
+                    <a href="#" onclick="chooseCity(); return false;">
+                        <i class="fa fa-map-marker"></i>
+                        {{ $current_city->name }}
+                    </a>
+                </div>
+
+                    <!--
+                <button type="button" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                -->
+
+                <div class="link-filter hidden-md hidden-lg">
+                    <a href="#" onclick="$('.filters-container').addClass('active'); $('body').addClass('blocked'); return false;">
+                        Фильтр букетов
+                        <i class="fa fa-reorder"></i>
+                    </a>
+                </div>
+
                 <a class="navbar-brand logo" href="/"></a>
-                <div class="slogan text-primary hidden-xs">Доставка цветов везде и всегда!</div>
+                <div class="slogan text-primary hidden-xs hidden-sm">Федеральная служба доставки цветов</div>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="mainMenu">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown link-city">
-                        <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
-                        @if(!empty($detected_city))
-                            <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
-                                    <div class="arrow"></div>
-                                    <div class="popover-content">
-                                            <div class="dropdown-city" id="dropdownCity">
-                                                <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
-                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
-                                                <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
-                                            </div>
-                                    </div>
-                            </div>
-                        @endif
-                    </li>
-                    <li class="dropdown link-support">
+                   
+                    <!--<li class="dropdown link-support">
                         <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
-                        <!--
+                        
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
                         <div class="dropdown-menu dropdown-support">
                             <form class="form-support-search">
@@ -138,6 +150,24 @@
                         </div>
                         -->
                     </li>
+                        <li class="dropdown link-support">
+                            <a href="/#filtr" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Фильтр букетов</a>
+                        </li>
+                        <li class="dropdown link-city">
+                            <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
+                            @if(!empty($detected_city))
+                                <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <div class="dropdown-city" id="dropdownCity">
+                                            <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
+                                            <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
+                                            <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </li>
                     <!--
                     <li class="dropdown link-login">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
@@ -163,6 +193,248 @@
     </nav>
 </header>
 
+
+<div class="filters-container" ng-controller="mainPage">
+    <div class="mobile-crumbs">
+            <a href="javascript:" ng-click="closeMobileFilter()" rel="nofollow noopener" rel="nofollow noopener">
+                <span class="fa fa-times" aria-hidden="true"></span>
+                <span>Скрыть фильтры</span>
+            </a>
+    </div>
+    <form method="get" name="filter-list-shop-catalog" data-role="filter-list-form">
+        <div class="filter-list" data-role="filter-list" id="shop-catalog">
+            <div class="filter-block">
+                <label class="filter-block-title spoiler ">
+                    <a href="#_filter-product-type" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                        <span>Тип букета</span>
+                    </a>
+                </label>
+                <div class="filter-block-items collapse" id="_filter-product-type" aria-expanded="false">
+                    <ul class="list-unstyled filter">
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="1" data-slug="klassika" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'klassika' ? 'checked' : null }}> Классика
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="2" data-slug="avtorskie" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'avtorskie' ? 'checked' : null }}> Авторские
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="3" data-slug="korobki" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korobki' ? 'checked' : null }}> Коробки
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="4" data-slug="korziny" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korziny' ? 'checked' : null }}> Корзины
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="9" data-slug="frukty" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'frukty' ? 'checked' : null }}> Фрукты
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="filter-block">
+                <label class="filter-block-title spoiler ">
+                    <a href="#_filter-flowers" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                        <span>Цветы в букете</span>
+                    </a>
+                </label>
+                <div class="filter-block-items collapse" id="_filter-flowers" aria-expanded="false">
+                    <ul class="list-unstyled filter">
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="228" data-slug="roza" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(228, request()->flowers) ? 'checked' : null }}> Роза
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="267" data-slug="tyulpan" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(267, request()->flowers) ? 'checked' : null }}> Тюльпан
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="612" data-slug="pion" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(612, request()->flowers) ? 'checked' : null }}> Пион
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="781" data-slug="gerbera" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(781, request()->flowers) ? 'checked' : null }}> Гербера
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="407" data-slug="gvozdika" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(407, request()->flowers) ? 'checked' : null }}> Гвоздика
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="464" data-slug="iris" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(464, request()->flowers) ? 'checked' : null }}> Ирис
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="336" data-slug="anemona-vetrenitsa" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(336, request()->flowers) ? 'checked' : null }}> Анемона
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="753" data-slug="alstromeriya" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(753, request()->flowers) ? 'checked' : null }}> Альстромерия
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="checkbox" value="19" data-slug="amarillis" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(19, request()->flowers) ? 'checked' : null }}> Амариллис
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="filter-block">
+                <label class="filter-block-title spoiler ">
+                    <a href="#_filter-price" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                        <span>Цена</span>
+                    </a>
+                </label>
+                <div class="filter-block-items collapse" id="_filter-price" aria-expanded="false">
+                    <ul class="list-unstyled filter">
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="1" data-from="100" data-to="1999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 100 && request()->price_to == 1999 ? 'checked' : null }}> До 2000 руб
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="2" data-from="2000" data-to="2999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 2000 && request()->price_to == 2999 ? 'checked' : null }}> 2 000 - 3 000 руб
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="3" data-from="3000" data-to="4999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 3000 && request()->price_to == 4999 ? 'checked' : null }}> 3 000 - 5 000 руб
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="4" data-from="5000" data-to="8999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 5000 && request()->price_to == 8999 ? 'checked' : null }}> 5 000 - 9 000 руб
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="5" data-from="9000" data-to="12999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 9000 && request()->price_to == 12999 ? 'checked' : null }}> 9 000 - 13 000 руб
+                            </label>
+                        </li>
+                        <li class="checkbox">
+                            <label>
+                                <input type="radio" value="6" data-from="13000" data-to="9999999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 13000 && request()->price_to == 9999999 ? 'checked' : null }}> От 13000 руб
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="filter-block">
+                <label class="filter-block-title spoiler ">
+                    <a href="#_filter-color" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                        <span>Цветовая гамма</span>
+                    </a>
+                </label>
+                <div class="filter-block-items collapse" id="_filter-color" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color red"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="1" {{ !empty(request()->color) && request()->color == 1 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color pink"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="2" {{ !empty(request()->color) && request()->color == 2 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color orange"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="3" {{ !empty(request()->color) && request()->color == 3 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color yellow"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="4" {{ !empty(request()->color) && request()->color == 4 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color green"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="5" {{ !empty(request()->color) && request()->color == 5 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color blue"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="6" {{ !empty(request()->color) && request()->color == 6 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color purple"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="7" {{ !empty(request()->color) && request()->color == 7 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color black"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="8" {{ !empty(request()->color) && request()->color == 8 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color white"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="9" {{ !empty(request()->color) && request()->color == 9 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                        <div class="col-2-5 color-item">
+                            <label>
+                                <div class="selected-color mix"></div>
+                                <br>
+                                <input type="radio" name="m-filter-color" value="10" {{ !empty(request()->color) && request()->color == 10 ? 'checked' : null }}>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+    <div class="mobile-filter-buttons">
+        <button class="btn btn-default"  ng-click="mobileFilterReset()"><span>Сбросить</span></button>
+        <button class="btn btn-additional" ng-click="mobileFilter()"><span>Показать</span></button>
+    </div>
+</div>
+
+
+
 <section>
 
 
@@ -174,9 +446,32 @@
 
         <div class="row">
             <div class="col-md-8">
-                <h5><strong>Популярные города доставки цветов:</strong></h5>
+                <strong>Популярные города доставки цветов:</strong>
                 <hr>
                 <div class="row">
+                    @if(count($popular_city))
+                        <div class="col-xs-6 col-md-3">
+                    @endif
+
+                    @foreach($popular_city as $key => $city_item)
+                        <div class="city-popular">
+                            <p><a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a></p>
+                            <p class="text-muted"></p>
+                        </div>
+
+                        @if(($key + 1) == count($popular_city) || ($key + 1) % 3 == 0)
+                                    @if(($key + 1) == count($popular_city))
+                                        <div class="city-popular">
+                                            <p><a href="{{ route('city.popular') }}">Все города…</a></p>
+                                        </div>
+                                    @endif
+                        </div>
+                        @endif
+                        @if(($key + 1) < count($popular_city) && ($key + 1) % 3 == 0)
+                            <div class="col-xs-6 col-md-3">
+                        @endif
+                    @endforeach
+                                <!--
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
                             <p><a href="http://<?=$popular_city[0]->slug?>.floristum.ru"><?=$popular_city[0]->name?></a></p>
@@ -240,11 +535,12 @@
                             <p><a href="{{ route('city.popular') }}">Все города…</a></p>
                         </div>
                     </div>
+                    -->
                 </div>
                 <br class="hidden-lg hidden-md hidden-sm">
             </div>
             <div class="col-md-4">
-                <h5><strong>Популярные цветы:</strong></h5>
+                <strong>Популярные цветы:</strong>
                 <hr>
                 <div class="row">
                     <div class="col-xs-6">
@@ -276,8 +572,11 @@
                 <div class="row">
                     <div class="col-md-3">
                         <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
-                        <br>
-                    </div>
+<ul class="list-unstyled list-foot">
+    <li><a href="https://www.instagram.com/moscow.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/moscow.floristum.ru/">Instagram</a></li>
+<li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                   </li>
+                        </ul> </div>
                     <div class="col-md-3">
                         <p class="foot-h"><strong>Клиентам</strong></p>
                         <ul class="list-unstyled list-foot">
@@ -290,7 +589,7 @@
                         <p class="foot-h"><strong>Организациям</strong></p>
                         <ul class="list-unstyled list-foot">
                             <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
-                            <li><a href="https://floristum.ru/corporate">Корпоративным клиентам</a></li>
+                            <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
                             <li><a href="https://floristum.ru/login">Вход в личный кабинет</a></li>
                         </ul>
                     </div>
@@ -330,7 +629,8 @@
 <script src="{{ asset('assets/admin/ng/ngApp.js') }}" type="text/javascript"></script>
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
 <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-<script src="{{ asset('assets/front/js/custom.js?v=20180427') }}"></script>
+<script src="{{ asset('assets/front/js/custom.js?v=20180618-2') }}"></script>
+<script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}" type="text/javascript"></script>
 @yield('footer')
 
 <!-- Yandex.Metrika counter -->

@@ -11,6 +11,8 @@
             <p>Здравствуйте{{ !empty($order->name) ? ', '.$order->name : null }}</p>
             @if($order->payment != 'cash')
                 <p>Заказ №{{ $order->id  }} оплачен.</p>
+            @else
+                <p>Заказ №{{ $order->id  }} оформлен.</p>
             @endif
             <p>Отслеживание  и информация о заказе: <a href="{{ $order->getDetailsLink() }}">{{ $order->getDetailsLink() }}</a></p>
 

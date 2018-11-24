@@ -54,9 +54,9 @@ $(document).ready(function() {
                 }
                 
                 applyFilter();
-        }).on('click', '.color-item', function() {
+        }).on('click', '#filter-product-color .color-item', function() {
                 var isActive = $(this).hasClass('active')
-                $('.color-item').removeClass('active');
+                $('#filter-product-color .color-item').removeClass('active');
                 if(!isActive) {
                         $(this).addClass('active');
                 }

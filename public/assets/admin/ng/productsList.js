@@ -9,7 +9,7 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
         $scope.next_page = "";
         $scope.product_url = routes.products;
         $scope.route_product_url = routes.products;
-        $scope.search_str = '';
+        $scope.search_str = jsonData.searchStr;
         $scope.search_not_public = false;
 
         $scope.totalPages = 0;

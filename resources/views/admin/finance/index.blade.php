@@ -65,7 +65,6 @@
                             </div>
 
                             @if($outputAvailable)
-
                                 <div class="m-widget1__item">
                                     <div class="row m-row--no-padding align-items-center">
 
@@ -73,7 +72,6 @@
 
                                     </div>
                                 </div>
-
                             @endif
                         </div>
                         <!--end:: Widgets/Stats2-1 -->
@@ -99,8 +97,9 @@
                                 </div>
                             </div>
                             <div class="m-widget6__body">
-                                <div class="m-widget6__item">
-                                    @foreach($invoices as $invoice)
+                                @foreach($invoices as $invoice)
+                                    <div class="m-widget6__item">
+
                                         <span class="m-widget6__text">
                                             {{ $invoice->created_at }}
                                         </span>
@@ -108,18 +107,25 @@
                                             {{ $invoice->amount }}
                                         </span>
                                         <span class="m-widget6__text m--align-right m--font-boldest m--font-brand">
-                                            @if($invoice->status)
+
+
+                                            @if($invoice->realized == 1)
                                                 <span class="m-badge m-badge--success m-badge--wide">
-                                                    Выполнен
+                                                        Выполнен
                                                 </span>
-                                            @else
+                                            @elseif($invoice->realized == 2)
                                                 <span class="m-badge m-badge--warning m-badge--wide">
-                                                    Новый
+                                                        Отклонен
+                                                </span>
+                                            @elseif(empty($invoice->realized))
+                                                <span class="m-badge m-badge--warning m-badge--wide">
+                                                        Новый
                                                 </span>
                                             @endif
+
                                         </span>
-                                    @endforeach
-                                </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -151,12 +157,9 @@
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="amount" class="form-control-label">
-                                    Сумма:
+                                    Сумма: {{ number_format($outputAvailable, 2) }} руб.
                                 </label>
-                                <input type="text" class="form-control" id="amount" name="amount" required>
-                                <span class="m-form__help">
-                                    Максимальная сумма {{ number_format($outputAvailable, 2) }} руб.
-                                </span>
+                                <input type="hidden" name="amount" value="{{ number_format($outputAvailable, 2) }}">
                             </div>
                         </form>
                     </div>

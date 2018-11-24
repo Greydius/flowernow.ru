@@ -39,6 +39,7 @@
 
 
 
+                <p class="text-mute">Кол-во товара: всего / одобрено / на проверке / не заполнены поля / бан</p>
 
                 <table style=" width: 100%">
                     <thead class="">
@@ -47,7 +48,9 @@
                             <th>Название</th>
                             <th style="width: 110px;">Телефон</th>
                             <th style="width: 110px;">Доставка (руб.)</th>
-                            <th style="width: 160px;">Изменение товара</th>
+                            <th style="width: 160px;">Изм. товара</th>
+                            <th style="width: 160px;">Кол-во товара</th>
+                            <th style="width: 160px;">Кол-во отзывов</th>
                             <th style="width: 100px;">Статус</th>
                             <th style="width: 110px;">Действие</th>
                         </tr>
@@ -55,15 +58,19 @@
                     <tbody class="" style="">
                         <tr ng-repeat="shop in shops" class="<% shop.delivery_price > 0 || shop.delivery_free ? '' : 'bg-danger' %>" style="height: 55px;" ng-cloak>
                             <td><% $index + 1 %></td>
-                            <td><a target="_blank" href="/admin/shop/<% shop.id %>"><% shop.name %></a><br><% shop.city.name %></td>
+                            <td><a target="_blank" href="/admin/shop/<% shop.id %>"><% shop.name %></a><br><% shop.city.name %><br>id: <% shop.id %></td>
                             <td><% shop.users[0].phone %></td>
                             <td><% shop.delivery_price %></td>
                             <td><% shop.product_last_update %></td>
+                            <td><% shop.product_status_0 + shop.product_status_1 + shop.product_status_2 + shop.product_status_3  %>/<% shop.product_status_1 %>/<% shop.product_status_2 %>/<% shop.product_status_0 %>/<% shop.product_status_3 %></td>
+                            <td><% shop.feedbacks_count %></td>
                             <td>
                                 <span class="m-badge m-badge--success m-badge--wide" ng-show="shop.active">вкл.</span>
                                 <span class="m-badge m-badge--danger m-badge--wide" ng-show="!shop.active">выкл.</span>
                             </td>
-                            <td></td>
+                            <td>
+                                <a href ng-click="sendProductEmail(shop)"><i class="fa fa-bell"></i></a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

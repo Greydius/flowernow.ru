@@ -22,6 +22,14 @@ body.preloader-site {
     /*overflow: hidden;*/
 }
 
+html.blocked, body.blocked {
+    overflow: hidden;
+    touch-action: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 .preloader-wrapper {
     height: 100%;
     width: 100%;
@@ -137,6 +145,9 @@ body.preloader-site {
     -webkit-transition: all .2s ease-in-out;
     -o-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .btn-more {
@@ -339,6 +350,8 @@ header .location-icon {
 
 .choose-city-link {
     border-bottom: 1px solid;
+    word-wrap: normal;
+    display: inline-block;
 }
 
 .choose-city-link:hover {
@@ -444,4 +457,200 @@ header .location-icon {
 
 #dop-products-container .owl-carousel {
     padding-bottom: 40px;
+}
+
+.navbar-default .link-support > a {
+    padding-left: 0px;
+    background: none;
+}
+
+.navbar-default .link-support > a i.fa{
+    color: #df291e;
+    font-size: 26px;
+    position: absolute;
+    left: -30px;
+    top: 12px;
+}
+
+.navbar-toggle {
+    margin-top: 1px;
+    margin-bottom: 0;
+    border: none;
+}
+
+
+
+/* FILTER */
+
+.filters-container {
+    animation-name: "slide-right-hide";
+    animation-duration: .35s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    z-index: 1111;
+    width:100%;
+    background-color: #f6f6f6;
+}
+
+.filters-container > form {
+    height: calc(100% - (60px + 10px + 50px))
+}
+
+.filters-container.initial-state {
+    display: none
+}
+
+.filters-container.active {
+    animation-name: "slide-right-show";
+    animation-duration: .35s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms;
+    right: 0
+}
+
+.filters-container.active .mobile-filter-buttons {
+    display: block
+}
+
+.filters-container .desktop-filter-buttons {
+    display: none
+}
+
+.filters-container .mobile-filter-buttons {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    padding: 12px 20px;
+    background-color: #f7f7f7;
+    width: 100%;
+    height: 60px;
+    border-top: solid 1px #d8d8d8
+}
+
+.filters-container .mobile-crumbs {
+    border-bottom: solid 1px #ddd;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.filters-container .mobile-crumbs a[data-role="hide-filters"] {
+    color: #333;
+}
+
+.filters-container .mobile-crumbs a[data-role="hide-filters"] i {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.filters-container .mobile-crumbs a[data-role="hide-filters"] i:before {
+    content: "\56";
+}
+
+.filter-list .filter-block {
+    background-color: #FFF;
+    border-bottom: 1px solid #d8d8d8;
+    padding: 20px;
+    position: relative;
+}
+
+.filter-controls .filter-block:hover, .filter-list .filter-block:hover {
+    background: #f7f7f7;
+}
+
+
+.filter-controls .filter-block>label.spoiler, .filter-list .filter-block>label.spoiler {
+    cursor: pointer;
+    overflow: hidden;
+    margin: -20px;
+}
+
+.filter-controls .filter-block>label, .filter-list .filter-block>label {
+    display: block;
+    float: none;
+    width: auto;
+}
+
+.filter-controls .filter-block>label>a, .filter-list .filter-block>label>a {
+    color: #333;
+    display: table;
+    overflow: hidden;
+    padding: 20px;
+    text-decoration: none;
+    width: 100%;
+    outline: none;
+}
+
+.catalog-filters .filter-controls .filter-block, .catalog-filters .filter-list .filter-block {
+    position: relative;
+}
+
+.filter-block a.collapsed .glyphicon {
+    -ms-transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.filter-list .filter-block>label>a>span {
+    padding-left: 5px;
+}
+
+.btn-additional  {
+        color: #fff;
+    background-color: #ff7300;
+    border-color: #e66800;
+    font-weight: normal;
+}
+
+.filters-container .mobile-filter-buttons button {
+    width: calc(49% - 12px);
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.filters-container .mobile-filter-buttons button+button {
+    margin-left: 12px;
+}
+
+.filter-list {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.logo-container {
+    display: block;
+    margin: 7px 0 !important;
+    width: 160px;
+    height: 34px;
+    background: url(../img/logo_floristum.png) no-repeat 0 0;
+    background-size: contain;
+}
+
+.media-item figure figcaption {
+    height: 100%;
+}
+
+.media-item figure figcaption ul {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+
+.media-item figure figcaption p {
+    position: absolute;
+    bottom: 20px;
+    font-size: 11px;
+    padding: 5px 10px 0px 10px;
+    bottom: 35px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
 }

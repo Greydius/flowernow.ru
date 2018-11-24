@@ -87,7 +87,7 @@ class OrdersController extends Controller
                                         }
                                 }
 
-                                $shop = Shop::find($shop_id);
+                                $shop = Shop::with('city')->find($shop_id);
 
                                 $date = \DateTime::createFromFormat('d.m.Y', $request->receiving_date);
 
@@ -98,6 +98,7 @@ class OrdersController extends Controller
                                 $order->recipient_address = $request->recipient_address;
                                 $order->recipient_flat = $request->recipient_flat;
                                 $order->recipient_self = !empty($request->recipient_self) ? 1 : 0;
+                                $order->recipient_info = $request->recipient_info;
                                 $order->receiving_date = $date->format('Y-m-d');
                                 $order->receiving_time = $request->receiving_time;
                                 $order->anonymous = !empty($request->anonymous) ? 1 : 0;
@@ -106,7 +107,7 @@ class OrdersController extends Controller
                                 $order->email = $request->email;
                                 $order->text = $request->text;
                                 $order->status = Order::$STATUS_NEW;
-                                $order->payment = $request->payment == 'cash' ? Order::$PAYMENT_CASH : $request->payment == 'rs' ? Order::$PAYMENT_RS : Order::$PAYMENT_CARD;
+                                $order->payment = $request->payment == 'cash' ? Order::$PAYMENT_CASH : ($request->payment == 'rs' ? Order::$PAYMENT_RS : Order::$PAYMENT_CARD);
                                 $order->payed = $order->payment == Order::$PAYMENT_CASH ? 1 : 0;
                                 $order->delivery_price = $shop->delivery_price;
                                 $order->ur_name = $request->ur_name;
@@ -114,7 +115,8 @@ class OrdersController extends Controller
                                 $order->ur_kpp = $request->ur_kpp;
                                 $order->ur_address = $request->ur_address;
                                 $order->ur_bank = $request->ur_bank;
-                                $order->ur_email = $request->ur_email;
+                                $order->ur_email = !empty($request->ur_email) ? $request->ur_email : '';
+                                $order->confirmed = $order->payment == Order::$PAYMENT_CASH ? 0 : 1;
 
                                 if(!empty($request->delivery_out)) {
                                         $order->delivery_out_distance = (int)$request->delivery_out_distance;
@@ -158,21 +160,48 @@ class OrdersController extends Controller
                                 if($orderListCount) {
                                         \DB::commit();
 
-
                                         try {
                                                 if($order->payment == Order::$PAYMENT_RS) {
-                                                        Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
-                                                                $message->to('service@floristum.ru')
-                                                                        ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
-                                                        });
+
+                                                        $link = route('admin.order.view', ['id' => $order->id]);
+                                                        try {
+                                                                $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+                                                        } catch (\Exception $e) {
+                                                                $shortLink = $link;
+                                                        }
 
                                                         //sms for admins
-                                                        Sms::instance()->send('+79119245792', 'Поступил заказ для ЮР. ЛИЦА №'.$order->id  );
-                                                        Sms::instance()->send('+79052122383', 'Поступил заказ для ЮР. ЛИЦА №'.$order->id  );
-                                                } else {
-                                                        Mail::send('email.adminNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                                        Sms::instance()->send('+79119245792', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
+                                                        Sms::instance()->send('+79052122383', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
+
+                                                        $order->generateInvoice();
+
+                                                        if($order->invoicePath && $order->email) {
+                                                                Mail::send('email.rsNewOrder', ['order' => $order,], function ($message) use ($order) {
+                                                                        $message->to([$order->email, 'finance@floristum.ru'])
+                                                                                ->subject('Счет от Floristum.ru №' . $order->id)
+                                                                                ->attach($order->invoicePath);
+                                                                });
+                                                        }
+
+                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                                                                $message->to(['service@floristum.ru'])
+                                                                        ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
+
+                                                                if($order->invoicePath) {
+                                                                        $message->attach($order->invoicePath);
+                                                                }
+                                                        });
+                                                        
+                                                } elseif($order->payment == Order::$PAYMENT_CARD) {
+                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
                                                                 $message->to('service@floristum.ru')
                                                                         ->subject('Создан новый заказ №'. $order->id);
+                                                        });
+                                                } else {
+                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                                                                $message->to('service@floristum.ru')
+                                                                        ->subject('Создан новый заказ №'. $order->id.' ЗА НАЛ.');
                                                         });
                                                 }
                                         } catch(\Exception $e){
@@ -200,7 +229,18 @@ class OrdersController extends Controller
 
                                                 $response['cloudpayments'] = $cloudpaymentsDetails;
                                         } elseif($order->payment == Order::$PAYMENT_RS) {
-                                                $response['link'] = route('payment.success_ur', ['order_id' => $order->id]);
+                                                $response['link'] = route('order.details', ['key' => $order->key]);
+                                        } elseif($order->payment == Order::$PAYMENT_CASH) {
+                                                try {
+                                                        $code = $order->sendSms();
+                                                        $order->sms_code = $code;
+                                                        $order->sms_send_at = date('Y-m-d H:i:s');
+                                                        if($order->save()) {
+                                                                $response['sms_send'] = true;
+                                                        }
+                                                } catch(\Exception $e){
+
+                                                }
                                         }
 
                                         return response()->json($response, 200);
@@ -281,13 +321,14 @@ class OrdersController extends Controller
                                         $shortLink = $link;
                                 }
                                 Sms::instance()->send($shop->phone, 'Примите заказ '.$order->id.' '.$shortLink  );
-
-                                //sms for admins
-                                Sms::instance()->send('+79119245792', 'Поступил заказ '.$order->id.' '.$shortLink  );
-                                Sms::instance()->send('+79052122383', 'Поступил заказ '.$order->id.' '.$shortLink  );
                         }
 
-                        if($order->phone) {
+                        //sms for admins
+                        $smsText = 'Поступил заказ '.$order->id.($order->payment == Order::$PAYMENT_CASH ? ' НАЛ' : '').' '.$shortLink;
+                        Sms::instance()->send('+79119245792', $smsText);
+                        Sms::instance()->send('+79052122383', $smsText);
+
+                        if($order->phone && $order->payment != Order::$PAYMENT_CASH) {
                                 $txt = 'Ваш заказ '.$order->id.' оплачен! Отслеживание: ';
                                 $standartOrderLink = $order->getDetailsLink();
 
@@ -317,7 +358,7 @@ class OrdersController extends Controller
 
                                 $link = \Autologin::route($shop->users[0], 'admin.orders');
 
-                                Mail::send('email.shopNewOrder', ['link' => $link, ], function ($message) use ($order, $shop) {
+                                Mail::send('email.shopNewOrder', ['link' => $link, 'order' => $order], function ($message) use ($order, $shop) {
                                         $message->to($shop->email)
                                                 ->subject('Примите заказ на Floristum.ru №'. $order->id );
                                 });
@@ -325,8 +366,9 @@ class OrdersController extends Controller
 
                         if(!empty($order->email)) {
                                 Mail::send('email.clientNewOrder', ['order' => $order, ], function ($message) use ($order) {
+                                        $subject = 'Заказ №'. $order->id . ' ' .($order->payment != Order::$PAYMENT_CASH ? 'оплачен' : 'оформлен') . '!';
                                         $message->to($order->email)
-                                                ->subject('Заказ №'. $order->id .' оплачен!');
+                                                ->subject($subject);
                                 });
                         }
 
@@ -337,13 +379,13 @@ class OrdersController extends Controller
                 }
         }
 
-        function success($order_id = null) {
+        function success($key = null) {
 
-                if(empty($order_id)) {
+                if(empty($key)) {
                         return view('front.order.success',[]);
                 } else {
                         return view('front.order.success-ur',[
-                                'order' => Order::with('orderLists.product')->where('id', $order_id)->first()
+                                'order' => Order::with('orderLists.product')->where('key', $key)->first()
                         ]);
                 }
         }
@@ -392,18 +434,22 @@ class OrdersController extends Controller
 
                                 $orders = $orderModel->get()->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
+
                         } else {
                                 $orders = $this->user->getShop()->orders()->with('orderLists.product')
                                         ->where('payed', 1)
-                                        ->orderBy('payed_at', 'desc')
+                                        ->where('confirmed', 1)
+                                        ->orderBy(\DB::raw('FIELD(status, "new", "accepted", "completed")'))
+                                        ->orderBy('created_at', 'desc')
                                         ->orderBy('receiving_date', 'asc')
-                                        ->orderBy('receiving_time', 'asc')->get();
+                                        ->orderBy('receiving_time', 'asc')->get()->toArray();
+
+                                array_walk_recursive($orders, function(&$item){$item=strval($item);});
                         }
 
                         $response['orders'] = $orders;
 
                 } catch (\Exception $e){
-                        print_r($e->getMessage()); exit();
                     $statusCode = 400;
                 }finally{
                     return response()->json($response, $statusCode);
@@ -421,19 +467,33 @@ class OrdersController extends Controller
                 } else {
                         $shop = $this->user->getShop();
                         $order = $shop->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                        if($order->payment == Order::$PAYMENT_CASH && !$order->confirmed) {
+                                return redirect()->route('admin.orders');
+                        }
                 }
 
                 return view('admin.orders.view', [
                         'order' => $order,
+                        
                         'shops' => $shops
                 ]);
         }
 
         public function update($id, Request $request) {
                 if($this->user->admin) {
-                        $order = Order::with('orderLists.product')->where('id', $id)->firstOrFail();
+                        $order = Order::with('orderLists.product')->with('shop')->where('id', $id)->firstOrFail();
                 } else {
                         $order = $this->user->getShop()->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                }
+
+                if(!empty($request->hasFile('order_photo'))) {
+                        $this->validate($request, [
+                                'order_photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
+                        ]);
+
+                        $path = $request->file('order_photo')->store('orders', 'orders');
+                        $order->photo = $path;
+                        $order->save();
                 }
 
                 if(!empty($request->status) && $request->status != $order->status) {
@@ -460,6 +520,7 @@ class OrdersController extends Controller
                                                 $order->status = Order::$STATUS_COMPLETED;
                                                 $order->save();
                                                 $order->createTransaction();
+                                                $order->createSuccessCompletedMsg();
                                         }
                                         break;
                         }
@@ -501,13 +562,108 @@ class OrdersController extends Controller
                                         }
                                 }
                         }
+
+                        if(isset($request->receiving_date)) {
+                                $changed = false;
+                                $changed_txt = '';
+                                if($request->receiving_date != $order->receiving_date) {
+                                        $changed = true;
+                                        $changed_txt .= 'Дата доставки: '.$order->receiving_date.' -> '.$request->receiving_date.'<br>';
+
+                                        $order->receiving_date = $request->receiving_date;
+                                }
+
+                                if(isset($request->receiving_time) && $request->receiving_time != $order->receiving_time) {
+                                        $changed = true;
+                                        $changed_txt .= 'Время доставки: '.$order->receiving_time.' -> '.$request->receiving_time.'<br>';
+
+                                        $order->receiving_time = $request->receiving_time;
+                                }
+
+                                if(isset($request->name) && $request->name != $order->name) {
+                                        $changed = true;
+                                        $changed_txt .= 'Имя отправителя: '.$order->name.' -> '.$request->name.'<br>';
+
+                                        $order->name = $request->name;
+                                }
+
+                                if(isset($request->email) && $request->email != $order->email) {
+                                        /*
+                                        $changed = true;
+                                        $changed_txt .= 'Телефон отправителя: '.$order->email.' -> '.$request->email.'<br>';
+                                        */
+                                        $order->email = $request->email;
+                                }
+
+                                if(isset($request->recipient_self) && $request->recipient_self != $order->recipient_self) {
+                                        $changed = true;
+                                        $changed_txt .= 'Получатель сам отправитель: '.($order->recipient_self ? 'Да' : 'Нет').' -> '.($request->recipient_self ? 'Да' : 'Нет').'<br>';
+
+                                        $order->recipient_self = $request->recipient_self;
+                                }
+
+                                if(isset($request->recipient_name) && $request->recipient_name != $order->recipient_name) {
+                                        $changed = true;
+                                        $changed_txt .= 'Имя получателя: '.$order->recipient_name.' -> '.$request->recipient_name.'<br>';
+
+                                        $order->recipient_name = $request->recipient_name;
+                                }
+
+                                if(isset($request->recipient_phone) && $request->recipient_phone != $order->recipient_phone) {
+                                        $changed = true;
+                                        $changed_txt .= 'Телефон получателя: '.$order->recipient_phone.' -> '.$request->recipient_phone.'<br>';
+
+                                        $order->recipient_phone = $request->recipient_phone;
+                                }
+
+                                if(isset($request->receiving_time) && $request->receiving_time != $order->receiving_time) {
+                                        $changed = true;
+                                        $changed_txt .= 'Время доставки: '.$order->receiving_time.' -> '.$request->receiving_time.'<br>';
+
+                                        $order->receiving_time = $request->receiving_time;
+                                }
+
+                                if(isset($request->text) && $request->text != $order->text) {
+                                        $changed = true;
+                                        $changed_txt .= 'Текст открытки: '.$order->text.' -> '.$request->text.'<br>';
+
+                                        $order->text = $request->text;
+                                }
+
+                                if(isset($request->recipient_address) && $request->recipient_address != $order->recipient_address) {
+                                        $changed = true;
+                                        $changed_txt .= 'Адрес доставки: '.$order->recipient_address.' -> '.$request->recipient_address.'<br>';
+
+                                        $order->recipient_address = $request->recipient_address;
+                                }
+
+                                if(isset($request->recipient_info) && $request->recipient_info != $order->recipient_info) {
+                                        $changed = true;
+                                        $changed_txt .= 'Доп. информация: '.$order->recipient_info.' -> '.$request->recipient_info.'<br>';
+
+                                        $order->recipient_info = $request->recipient_info;
+                                }
+                                
+                                if($changed && $order->save()) {
+                                        if($order->shop->phone) {
+                                                Sms::instance()->send($order->shop->phone, 'Заказ №'.$order->id.'. Проверьте данные'  );
+                                        }
+                                        
+                                        if($order->shop->email) {
+                                                Mail::send('email.shopUpdateOrder', ['order' => $order, 'changed_txt' => $changed_txt], function ($message) use ($order) {
+                                                        $message->to($order->shop->email)
+                                                                ->subject('Заказ №'. $order->id .' изменен!');
+                                                });
+                                        }
+                                }
+                        }
                 }
 
                 return back();
         }
 
         function details($key) {
-                $order = Order::where('key', $key)->firstOrFail();
+                $order = Order::where('key', $key)->where('confirmed', 1)->firstOrFail();
 
                 /*
                 Mail::send('email.clientNewOrder', ['order' => $order, ], function ($message) use ($order) {
@@ -576,5 +732,43 @@ class OrdersController extends Controller
                         'message' => 'Ошибка. Попробуйте позже или обратитесь к администратору',
                         'code' => 400
                 ], 400);
+        }
+
+        function getInvoice($key) {
+                $order = Order::where('key', $key)->firstOrFail();
+
+                $file = '/invoices/invoice_'.$order->id.'.pdf';
+
+                if(\Storage::disk('local')->exists($file)) {
+                        return \Storage::disk('local')->download($file);
+                } else {
+                        return redirect()->route('front.index');
+                }
+        }
+
+        public function confirmSmsCode($id, Request $request) {
+                $order = Order::findOrFail($id);
+
+                $return = [];
+                $code = 200;
+
+                if(!empty($request->sms_code) && $request->sms_code == $order->sms_code && !$order->confirmed) {
+                        $order->confirmed = 1;
+                        if($order->save()) {
+                                $return['link'] = route('order.details', ['key' => $order->key]);
+
+                                $this->sendSuccessSms($order);
+                                $this->sendSuccessEmails($order);
+                        }
+                } else {
+                        $return['error'] = true;
+                        $return['message'] = '';
+
+                        $code = 400;
+                }
+
+                $return['code'] = $code;
+
+                return response()->json($return, $code);
         }
 }

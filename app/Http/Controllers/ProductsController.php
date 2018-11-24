@@ -64,11 +64,11 @@ class ProductsController extends Controller
 
                         unset($request->product_type);
                 } else {
-
+                        $request->product_type_filter = $request->product_type;
                         $title = $this->getTitle($request);
                         $meta =  $this->getMeta($request);
                         $viewFile = 'front.product.list';
-                        $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
+                        $popularProduct = Product::popular($this->current_city->id, $request, (int)$request->page ? (int)$request->page : 1, 36);
                         $currentType = ProductType::where('slug', $request->product_type)->first();
 
                         $item = [];
@@ -81,7 +81,6 @@ class ProductsController extends Controller
                                         $popularProducts[] = $item;
                                 }
                         }
-
                         unset($request->product_type);
                 }
 
@@ -103,6 +102,7 @@ class ProductsController extends Controller
                 }
 
                 $city_id = $this->current_city->id;
+                /*
                 $lowPriceProducts = Product::whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
                         })
@@ -112,6 +112,8 @@ class ProductsController extends Controller
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
                         ->whereNull('single')
                         ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))')->take(9)->get();
+                */
+                $lowPriceProducts = Product::lowPriceProducts($city_id)->take(9)->get();
 
 
                 if(!empty($this->user) && $this->user->admin) {
@@ -137,6 +139,7 @@ class ProductsController extends Controller
         }
 
         public function show($slug) {
+
                 $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
                 $params = [
@@ -167,7 +170,7 @@ class ProductsController extends Controller
                 }
 
                 $feedbacksCount = Feedback::where('shop_id', $product->shop_id)->count();
-                $feedbacks = Feedback::where('shop_id', $product->shop_id)->orderBy('feedback_date', 'desc')->take(5)->get();
+                $feedbacks = Feedback::where('shop_id', $product->shop_id)->orderBy('feedback_date', 'desc')->take(10)->get();
                 $params['feedbacksCount'] = $feedbacksCount;
                 $params['feedbacks'] = $feedbacks;
 
@@ -567,6 +570,7 @@ class ProductsController extends Controller
 
                                         if($request->status == 3) {
                                                 $product->status_comment = !empty($request->status_comment) ? $request->status_comment : null;
+                                                $product->status_comment_at = \Carbon::now()->format('Y-m-d H:i:s');
                                         }
 
                                         $product->save();
