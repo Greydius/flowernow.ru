@@ -132,7 +132,8 @@
                                         <span class="text-danger">Нал.-не подтвержден</span>
                                     </div>
                                     <br>
-                                    <span class="text-success" ng-show="order.payment == 'card'">Карта</span>
+                                    <span class="<% order.payed == 1 ? 'text-success' : '' %>" ng-show="order.payment == 'card'">Карта</span>
+                                    <span class="text-danger" ng-show="order.payment == 'card' && order.payed == 0 ">б.оплаты</span>
                                     <span class="text-danger font-weight-bold" ng-show="order.payment == 'rs' && !order.payed">Юрлицо</span>
                                     <span class="text-danger" ng-show="order.payment == 'rs' && order.payed">Юрлицо</span>
                                     <span class="text-danger font-weight-bold" ng-show="order.payment == 'cash' && order.confirmed == 1">Наличные</span>

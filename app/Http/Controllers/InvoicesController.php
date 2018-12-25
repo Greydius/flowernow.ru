@@ -114,6 +114,10 @@ class InvoicesController extends Controller
 
                 $orders = array();
 
+                $toDate = !empty($request->toDate) ? \Carbon\Carbon::parse($request->toDate) : \Carbon\Carbon::now();
+                $threeDay = 60*60*24*3;
+                $threeDayDate = $toDate->subDays(3);
+
                 switch($type) {
                         case 'frozen':
                                 $orderIds = Transaction::where('id', '>', 103)->where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))->pluck('action_id')->toArray();
@@ -122,22 +126,53 @@ class InvoicesController extends Controller
                         case 'available':
                                 $orderIds = Transaction::where('id', '>', 103)->where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))->pluck('action_id')->toArray();
 
-                                $toDate = !empty($request->toDate) ? \Carbon\Carbon::parse($request->toDate) : \Carbon\Carbon::now();
-
                                 if(empty($orderIds)) {
                                         $orderIds[] = 0;
                                 }
                                 $lastOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('created_at', '<', $toDate->toDateTimeString())->orderBy('created_at', 'DESC')->first();
                                 $dateFrom = !empty($lastOutputTransaction) ? \Carbon\Carbon::parse($lastOutputTransaction->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
-                                $orders = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereNotIn('id', $orderIds)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->get();
+
+                                $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
+
+                                $orders = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereNotIn('id', $orderIds)->whereIn('id', $availableOrderIds)->get();
+                                //print_r($orders); exit();
                                 break;
+                        case 'out':
+                                if(empty($request->id)) {
+                                        $lastOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('created_at', '<', $toDate->toDateTimeString())->orderBy('created_at', 'DESC')->first();
+                                } else {
+                                        $lastOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('action_id', $request->id)->first();
+                                }
+
+                                if(!empty($lastOutputTransaction)) {
+
+                                        //find next next out transaction more 3 days
+                                        $prevOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('created_at', '<', \Carbon\Carbon::parse($lastOutputTransaction->created_at)->toDateTimeString())->orderBy('created_at', 'DESC')->first();
+
+                                        $dateFrom = !empty($prevOutputTransaction) ? \Carbon\Carbon::parse($prevOutputTransaction->created_at)->subDays(3) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
+                                        $dateTo = \Carbon\Carbon::parse($lastOutputTransaction->created_at)->subDays(3);
+                                        $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
+                                        $orders = Order::where('shop_id', $shop->id)->whereIn('id', $availableOrderIds)->get();
+                                        //echo $dateFrom->format('Y-m-d H:i:s'); exit();
+                                        /*
+                                        $dateFrom = count($lastOutputTransactions) > 1 ? \Carbon\Carbon::parse($lastOutputTransactions[1]->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
+                                        $dateTo = \Carbon\Carbon::parse($lastOutputTransactions[0]->created_at);
+                                        $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
+                                        
+                                        //$orders = Order::where('shop_id', $shop->id)->where('status', 'completed')->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))->get();
+                                        $orders = Order::where('shop_id', $shop->id)->whereIn('id', $availableOrderIds)->get();
+                                        */
+                                }
                         default:
                                 break;
                 }
 
-                return view('admin.invoices.orders',[
-                        'orders' => $orders
-                ]);
+                return response()->json([
+                        'view' => \View::make('admin.invoices.orders',[
+                                'orders' => $orders
+                        ])->render(),
+                        'title' => $shop->name
+                ], 200);
 
                 echo $request->shop_id; exit();
                 $shop = Shop::findOrFail($request->shop_id);

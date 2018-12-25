@@ -488,8 +488,24 @@ class ShopsController extends Controller
 
                 $products = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
 
+                $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
+
+                        105, //красных тюльпанов
+                        97, //красных гвоздик
+                        116, //красных пионов
+                        130, //разноцветных ирисов
+                        //138, //белых калл
+                        171, //белых фрезий
+                        183, //белых гортензий
+                        166 //белых анемонов
+
+                ];
+                //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
+                $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true, $request, $request->page ? $request->page : 1, 36)->get();
+
                 return view('front.shop.products',[
                         'products' => $products,
+                        'singleProducts' => $singleProducts,
                         'shop' => $shop,
                         'feedbacks' => Feedback::where('shop_id', $shop->id)->orderBy('feedback_date', 'desc')->take(10)->get(),
                         'meta' => [

@@ -6,6 +6,7 @@ namespace App\Model;
 
 use App\MainModel;
 use App\Model\Transaction;
+use App\Helpers\AppHelper;
 
 class Shop extends MainModel
 {
@@ -124,6 +125,23 @@ class Shop extends MainModel
                 foreach ($this->workers()->where('position_id', 1)->get() as $worker) {
                         if(!empty($worker->phone)) {
                                 $phones[] = $this->phone;
+                        }
+                }
+
+                return $phones;
+        }
+
+        public function getSmsPhones() {
+                $phones = [];
+
+                if(!empty($this->phone)) {
+                        $phones[$this->phone] = $this->phone;
+                }
+
+                foreach ($this->workers()->where('notify', 1)->get() as $worker) {
+                        if(!empty($worker->phone)) {
+                                $phone = AppHelper::normalizePhone($worker->phone);
+                                $phones[$phone] = $phone;
                         }
                 }
 

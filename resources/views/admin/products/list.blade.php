@@ -4,6 +4,14 @@
 
     <div ng-controller="productsList" id="productsListContainer">
 
+        @if($user->admin && isset($deletedProducts))
+        <div class="row">
+            <div class="col-sm-12">
+                Кол-во удаленных-ранее одобренных букетов: {{ $deletedProducts }}
+            </div>
+        </div>
+        @endif
+
         <div class="row">
 
 
@@ -199,6 +207,11 @@
                                 <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
                                     <i class="la la-pencil"></i>
                                 </a>
+                                @if($user->admin)
+                                    <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editImages($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
+                                        <i class="la la-pencil"></i>
+                                    </a>
+                                @endif
                                 <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажи)" ng-show="!product.pause">
                                     <i class="la la-pause"></i>
                                 </a>
@@ -588,6 +601,52 @@
         </div>
     </div>
     <!--end::Modal-->
+
+    <script type="text/ng-template" id="edit-images-modal.html">
+        <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">
+                            Редактирование — <% item.id %>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+
+                            <div class="form-group m-form__group" style="position: relative">
+
+                                <div class="row product-photos">
+                                    <div class="photo-preloader"><div></div></div>
+                                    <div class="col-md-12" ng-repeat="photo in photos | orderBy:'priority'">
+                                        <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="rotatePhoto(photo, item)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Перевернуть">
+                                            <i class="fa fa-undo"></i>
+                                        </a>
+                                        <img ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <input type="hidden" name="product_id" ng-model="item.id"  value="<% item.id %>">
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Закрыть
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
 
 
 @endsection

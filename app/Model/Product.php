@@ -152,31 +152,87 @@ class Product extends MainModel
                         }
 
                         if(!empty($request->product_type) && $request->product_type != 'all') {
+
+                                $productType = ProductType::where('slug', $request->product_type)->first();
+                                $productTypeSearchKey = !empty($productType) ? $productType->search_key : null;
+                                $productTypeSearchKeys = [];
+                                if(!empty($productTypeSearchKey)) {
+                                        $productTypeSearchKeys = explode(',', $productTypeSearchKey);
+                                }
+
+                                $productRequest->where(function ($query) use ($request, $productTypeSearchKeys) {
+                                        $query->whereHas('productType', function($query) use ($request) {
+                                                $query->where('slug', $request->product_type);
+                                        });
+
+                                        foreach($productTypeSearchKeys as $pk) {
+                                                $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                        }
+                                });
+
+/*
+                                $productRequest->whereHas('productType', function($query) use ($request) {
+                                        $query->where('slug', $request->product_type);
+                                });
+                                */
+
+                        }
+/*
+                        if(!empty($request->product_type) && $request->product_type != 'all') {
                                 $productRequest->whereHas('productType', function($query) use ($request) {
                                         $query->where('slug', $request->product_type);
                                 });
                         }
+*/
 
                         if(!empty($request->productPrice)) {
                                 $price = Price::find($request->productPrice);
                                 if(!empty($price)) {
-                                        $productRequest->whereRaw('get_client_price(price, shop_id) BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                        $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
                                 }
                         }
 
                         if(!empty($request->price_from)) {
-                                $productRequest->whereRaw('get_client_price(price, shop_id) >= '.(int)$request->price_from.' ');
+                                $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
                         }
 
                         if(!empty($request->price_to)) {
-                                $productRequest->whereRaw('get_client_price(price, shop_id) <= '.(int)$request->price_to.' ');
+                                $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
                         }
 
                         if(!empty($request->flowers)) {
 
+                                $flowers = Flower::whereIn('id', $request->flowers)->get();
+
+                                $flowersSearchKeys = [];
+                                if(!empty($flowers)) {
+                                        foreach($flowers as $flower) {
+                                                if(!empty($flower->search_key)) {
+                                                        $flowersSearchKeys = array_merge($flowersSearchKeys, explode(',', $flower->search_key));
+                                                }
+                                        }
+                                }
+
+                                //dd($flowersSearchKeys);
+
+                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
+                                        $query->whereHas('compositions', function($query) use ($request) {
+                                                $query->whereIn('flower_id', $request->flowers);
+                                        });
+
+                                        foreach($flowersSearchKeys as $pk) {
+                                                $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                        }
+                                });
+
+                                /*
                                 $productRequest->whereHas('compositions', function($query) use ($request) {
                                         $query->whereIn('flower_id', $request->flowers);
                                 });
+                                */
+
                         }
 
                         /*
@@ -207,6 +263,50 @@ class Product extends MainModel
                         } else {
                                 $productRequest->orderBy('sort', 'DESC');
                         }
+
+                        if(!empty($request->q)) {
+
+                                $queryString = $request->q;
+                                $queryString = str_replace(',', ' ', $queryString);
+                                $queryString = str_replace('.', ' ', $queryString);
+                                $queryString = str_replace('-', ' ', $queryString);
+                                $queryString = str_replace('+', ' ', $queryString);
+                                $queryString = str_replace('/', ' ', $queryString);
+                                $queryString = preg_replace('!\s+!', ' ', $queryString);
+                                $queries = explode(' ', $queryString);
+
+
+                                if(!empty($queries)) {
+                                        $flowersBuilder = Flower::where('name', 'like', '%'.$queries[0].'%')->orWhere('search_key', 'like', '%'.$queries[0].'%');
+                                        for($i=1; $i<count($queries); $i++) {
+                                                if(strlen($queries[$i]) > 1) {
+                                                        $flowersBuilder->orWhere('name', 'like', '%'.$queries[$i].'%')->orWhere('search_key', 'like', '%'.$queries[$i].'%');
+                                                }
+                                        }
+
+                                        $flowers = $flowersBuilder->get();
+
+                                        $flowersSearchKeys = [];
+                                        if(!empty($flowers)) {
+                                                foreach($flowers as $flower) {
+                                                        $flowersSearchKeys[] = $flower->id;
+                                                }
+                                        }
+
+                                        $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
+                                                $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
+                                                        $query->whereIn('flower_id', $flowersSearchKeys);
+                                                });
+                                        });
+
+                                        foreach($queries as $pk) {
+                                                $productRequest->orWhere('name', 'like', '%'.$pk.'%')
+                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                        }
+
+
+                                }
+                        }
                 }
 
                 Paginator::currentPageResolver(function () use ($currentPage) {
@@ -228,7 +328,7 @@ class Product extends MainModel
                 */
         }
 
-        static function popularSingle2($city_id, $ids = [], $orderRand = false) {
+        static function popularSingle2($city_id, $ids = [], $orderRand = false, Request $request = null, $page = 1, $perPage = 15) {
                 $_products = Product::with(['shop' => function ($query) {
                         $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
                 }])->join(\DB::raw('
@@ -239,16 +339,18 @@ class Product extends MainModel
                 FROM products 
                 INNER JOIN shops ON shops.id = products.shop_id
                 WHERE shops.city_id = ' . (int)$city_id . '
+                '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
                 AND products.status = 1 
                 AND products.pause = 0 
                 AND products.price > 0 
-                AND products.single IN (' . implode(',', $ids) . ')                
+                '.(!empty($ids) ? ' AND products.single IN (' . implode(',', $ids) . ')' : '').'               
                 GROUP BY single) AS single ON single.single = p.single AND single.min_price = (p.price + shops.delivery_price)
                 WHERE shops.city_id = ' . (int)$city_id . '
+                '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
                 AND p.status = 1 
                 AND p.pause = 0 
                 AND p.price > 0 
-                AND p.single IN (' . implode(',', $ids) . ') GROUP BY p.single) AS single2
+                '.(!empty($ids) ? 'AND p.single IN (' . implode(',', $ids) . ')' : '') .' GROUP BY p.single) AS single2
             '), function ($join) {
                         $join->on('products.id', '=', 'single2.id');
                 })->whereHas('shop', function ($query) use ($city_id) {

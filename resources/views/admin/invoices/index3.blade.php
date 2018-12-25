@@ -42,10 +42,10 @@
                                 @foreach($invoicesNew as $invoice)
                                     <tr>
                                         <td>{{ $invoice->shop->name }} ({{ $invoice->shop->id }})</td>
-                                        <td>{{ $invoice->shop->frozenBalance }}</td>
-                                        <td>{{ $invoice->shop->availableOutBalance }}</td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="frozen">{{ $invoice->shop->frozenBalance }}</a></td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="available">{{ $invoice->shop->availableOutBalance }}</a></td>
                                         <td>
-                                            {{ $invoice->amount }} руб.<br>
+                                            <a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="out" data-id="{{ $invoice->id }}">{{ $invoice->amount }}</a> руб.<br>
                                             {{ $invoice->created_at }}
                                         </td>
                                         <td>
@@ -145,6 +145,7 @@
 
         <hr />
 
+        <!--
         <br><br>
 
         <form class="m-form m-form--fit m-form--label-align-right" method="get" action="{{ route('admin.invoices2') }}">
@@ -169,6 +170,7 @@
                 </div>
             </div>
         </form>
+        -->
 
         <br>
 
@@ -200,17 +202,39 @@
                         </thead>
 
                         <tbody>
+                        <?php
+                            $frozenBalanceTotal = 0;
+                            $availableOutBalanceTotal = 0;
+                            $invoiceAmountTotal = 0;
+                            $totalBalanceTotal = 0;
+                            $total = 0;
+                        ?>
 
                         @foreach($shops as $shop)
                             <tr>
                                 <td>{{ $shop->name }}</td>
                                 <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="frozen">{{ $shop->frozenBalance }}</a></td>
                                 <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="available">{{ $shop->availableOutBalance }}</a></td>
-                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}">{{ $shop->invoiceAmount }}</a></td>
+                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="out">{{ $shop->invoiceAmount }}</a></td>
                                 <td>{{ $shop->totalBalance }}</td>
                                 <td>{{ $shop->total }}</td>
                             </tr>
+                            <?php
+                            $frozenBalanceTotal += $shop->frozenBalance;
+                            $availableOutBalanceTotal += $shop->availableOutBalance;
+                            $invoiceAmountTotal += $shop->invoiceAmount;
+                            $totalBalanceTotal += $shop->totalBalance;
+                            $total += $shop->total;
+                            ?>
                         @endforeach
+                        <tr>
+                            <th><b>Итого</b></th>
+                            <th>{{ $frozenBalanceTotal }}</th>
+                            <th>{{ $availableOutBalanceTotal }}</th>
+                            <th>{{ $invoiceAmountTotal }}</th>
+                            <th>{{ $totalBalanceTotal }}</th>
+                            <th>{{ $total }}</th>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -271,7 +295,7 @@
 
     <!--begin::Modal-->
     <div class="modal fade" id="info_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelInfo" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form class="m-form m-form--fit m-form--label-align-right" method="get" action="{{ route('admin.shop.balance') }}">
                 {{ csrf_field() }}
                 <div class="modal-content">

@@ -3,8 +3,11 @@
 @section('content')
 
     <div class="container">
-        <div class="logo-container-wraper visible-sm visible-xs">
+        <div class="logo-container-wraper visible-sm visible-xs" style="position: relative">
             <a class="logo-container" href="/"></a>
+            @if(!empty($holiday_icon))
+                <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" class="holiday-img">
+            @endif
         </div>
         <h1 class="h2 sm-h2">Доставка цветов в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">{{ $current_city->name_prepositional }}</a></h1>
         <span id="filtr" name="filtr"></span>
@@ -71,8 +74,8 @@
                 </div>
 
                 <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter4" aria-expanded="false" aria-controls="filter4"><span class="pull-left">Цветы в букете</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse" id="filter4">
+                    <button class="btn btn-lg btn-block btn-default {{ \Request::route()->getName() == 'front.index' ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter4" aria-expanded="{{ \Request::route()->getName() == 'front.index' ? 'true' : 'false'}}" aria-controls="filter4"><span class="pull-left">Цветы в букете</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse {{ \Request::route()->getName() == 'front.index' ? 'in' : ''}}" id="filter4">
                         <ul class="list-unstyled">
                             @foreach ($flowers as $flower)
                                 <li>
@@ -88,8 +91,8 @@
                 </div>
 
                 <div class="filter-block filter-product-checker">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="false" aria-controls="filter1"><span class="pull-left">Цена</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse" id="filter-product-price">
+                    <button class="btn btn-lg btn-block btn-default {{ \Request::route()->getName() == 'front.index' ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="{{ \Request::route()->getName() == 'front.index' ? 'true' : 'false'}}" aria-controls="filter1"><span class="pull-left">Цена</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse {{ \Request::route()->getName() == 'front.index' ? 'in' : ''}}" id="filter-product-price">
                         <ul class="list-unstyled">
                             @foreach ($prices as $price)
                                 <li data-id="{{ $price->id }}" data-from="{{ $price->price_from }}" data-to="{{ $price->price_to }}" class="{{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == $price->price_from && request()->price_to == $price->price_to ? 'active' : null }}">{{ $price->name }}</li>
@@ -100,8 +103,8 @@
 
 
                 <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default collapsed" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="false" aria-controls="filter5"><span class="pull-left">Цветовая гамма</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse" id="filter-product-color">
+                    <button class="btn btn-lg btn-block btn-default {{ \Request::route()->getName() == 'front.index' ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="{{ \Request::route()->getName() == 'front.index' ? 'true' : 'false'}}" aria-controls="filter5"><span class="pull-left">Цветовая гамма</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
+                    <div class="collapse {{ \Request::route()->getName() == 'front.index' ? 'in' : ''}}" id="filter-product-color">
                         <div class="row">
                             @foreach ($colors as $color)
                                 <div class="col-2-5 color-item {{ !empty(request()->color) && request()->color == $color->id ? 'active' : null }}" data-id="{{ $color->id }}">
@@ -364,7 +367,7 @@
 <img src="http://floristum.ru/images/dostavka_tsvetov_po_beznalu1.png" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h3>Доставка цветов для юр лиц по безналичному расчету</h3>
 
  
- <b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сторудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц.<br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в {{ $current_city->name_prepositional }}.</p>
+ <p><b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сторудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц.<br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в {{ $current_city->name_prepositional }}.</p>
 
 
 

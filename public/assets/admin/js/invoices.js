@@ -37,10 +37,12 @@ $(document).ready(function() {
                         type: 'get',
                         data: {
                                 shop_id: $button.data('shop_id'),
-                                type: $button.data('type')
+                                type: $button.data('type'),
+                                id: $button.data('id')
                         },
                         success: function (data) {
-                                $('.modal-body', $form).html(data);
+                                $('.modal-body', $form).html(data.view);
+                                $('.modal-title', $form).html(data.title);
                         },
                         error: function (data) {
                                 toastr.error('Ошибка');

@@ -47,7 +47,12 @@
 							<div class="m-stack m-stack--ver m-stack--general">
 								<div class="m-stack__item m-stack__item--middle m-brand__logo">
 									<a href="/" class="m-brand__logo-wrapper">
-										<img alt="floristum.ru" src="{{ asset('images/logo_rectangle_white.png') }}">
+                                        @if(empty($holiday_icon))
+                                            <img alt="floristum.ru" src="{{ asset('images/logo_rectangle_white.png') }}">
+                                        @else
+                                            <img alt="floristum.ru" src="{{ asset('assets/front/img/logo_floristum_mini.png') }}">
+                                            <img alt="floristum.ru" width="65px" src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}">
+                                        @endif
 									</a>
 								</div>
 								<div class="m-stack__item m-stack__item--middle m-brand__tools">

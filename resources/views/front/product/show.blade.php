@@ -1,3 +1,9 @@
+@section('head')
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-likes/dist/social-likes_flat.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/lightslider/css/lightslider.min.css') }}">
+@stop
+
 @section('content')
 
 @section('pageImage', $pageImage)
@@ -57,6 +63,11 @@
 
             @endif
 
+            <div class="social-likes social-likes_single" data-counters="no" data-single-title="Поделиться">
+                <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
+                <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
+                <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
+            </div>
         </div>
         <div class="col-md-7">
             <div class="row">
@@ -70,11 +81,12 @@
 
                     @if(!empty($product->single))
 
-                        <div class="sizes" ng-cloak="">
-
-                            <div class="" style="width: 20%; float: left" ng-repeat="shopSingleProduct in shopSingleProducts">
-                                <a href ng-click="changeQty(shopSingleProduct.single_product.qty_from)" class="btn btn-default btn-block <% shopSingleProduct.single_product.qty_from == qty ? 'active' : '' %>" style="border-radius: 0"><% shopSingleProduct.single_product.qty_from %></a>
-                            </div>
+                        <div class="sizes">
+                            @foreach($shopSingleProducts as $shopSingleProduct)
+                                <div class="" style="width: 20%; float: left">
+                                    <a href="{{ $shopSingleProduct->url }}"class="btn btn-default btn-block {{ $shopSingleProduct->singleProduct->qty_from == $product->singleProduct->qty_from ? 'active' : '' }}" style="border-radius: 0">{{ $shopSingleProduct->singleProduct->qty_from }}</a>
+                                </div>
+                            @endforeach
 
                             <br clear="all">
                         </div>
@@ -120,15 +132,10 @@
                         <li>
                             <img src="{{ asset('assets/front/img/ico/maestro.svg') }}" alt="maestro">
                         </li>
-                        <li>
-                            <img src="{{ asset('assets/front/img/ico/americaexpress.svg') }}" alt="americaexpress">
-                        </li>
-                        <li>
-                            <img src="{{ asset('assets/front/img/ico/otherpay.svg') }}" alt="otherpay">
-                        </li>
-                        <!--
-                        <li>и наличные</li>
-                        -->
+                        
+                        
+                        <li>наличные и безнал для юрлиц</li>
+                    
                     </ul>
                     <br>
 
@@ -378,7 +385,8 @@
         })
     </script>
 
-    <script src="{{ asset('assets/front/ng/product-view.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/social-likes/dist/social-likes.min.js"></script>
+    <script src="{{ asset('assets/front/ng/product-view.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
             jsonData.product = {!! $product->makeHidden('price')->toJson() !!};
             @if(!empty($shopSingleProducts))

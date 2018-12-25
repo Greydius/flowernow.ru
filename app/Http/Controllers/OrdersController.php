@@ -257,9 +257,10 @@ class OrdersController extends Controller
                         } catch(\Exception $e){
                                 \DB::rollback();
                                 // catch code
+                                \Log::debug('Ошибка! Обратитесь в службу поддержки.'.$e->getMessage());
                                 return response()->json([
                                         'error' => true,
-                                        'message' => 'Ошибка! Обратитесь в службу поддержки.'.$e->getMessage(),
+                                        'message' => 'Ошибка! Обратитесь в службу поддержки.',
                                         'code' => 400
                                 ], 400);
                         }
@@ -271,14 +272,33 @@ class OrdersController extends Controller
 
                 $code = 0;
 
-                $order = Order::find($request->InvoiceId);
+                $pos = strpos($request->InvoiceId, '-');
 
-                if(empty($order)) {
-                        $code = 10;
-                } elseif ($order->amount() != $request->Amount) {
-                        $code = 11;
-                } elseif ($order->payed) {
-                        $code = 13;
+                if($pos === false) {
+                        $order = Order::find($request->InvoiceId);
+
+                        if(empty($order)) {
+                                $code = 10;
+                        } elseif ($order->amount() != $request->Amount) {
+                                $code = 11;
+                        } elseif ($order->payed) {
+                                $code = 13;
+                        }
+                } else {
+
+                        $invoiceId = explode('-', $request->InvoiceId);
+                        $orderId = (int)$invoiceId[0];
+                        $chargeId = (int)$invoiceId[1];
+                        $order = Order::find($orderId);
+                        $orderCharge = OrderCharge::find($chargeId);
+
+                        if(empty($order) || empty($orderCharge) || $order->id != $orderCharge->order_id) {
+                                $code = 10;
+                        } elseif ($orderCharge->amount != $request->Amount) {
+                                $code = 11;
+                        } elseif ($orderCharge->payed) {
+                                $code = 13;
+                        }
                 }
 
                 return response()->json([
@@ -289,19 +309,39 @@ class OrdersController extends Controller
         function confirmpayment(Request $request) {
                 $code = 0;
 
-                $order = Order::with('shop')->find($request->InvoiceId);
+                $pos = strpos($request->InvoiceId, '-');
 
-                if(empty($order)) {
-                        $code = 10;
-                } else {
-                        $order->payed = 1;
-                        $order->payed_at = \Carbon::now()->format('Y-m-d H:i:s');
-                        if($order->save()) {
-                                if(!empty($order->promo_code_id)) {
-                                        PromoCode::where('id', $order->promo_code_id)->update(['used_on' => \Carbon::now()->format('Y-m-d H:i:s')]);
+                if($pos === false) {
+                        $order = Order::with('shop')->find($request->InvoiceId);
+
+                        if(empty($order)) {
+                                $code = 10;
+                        } else {
+                                $order->payed = 1;
+                                $order->payed_at = \Carbon::now()->format('Y-m-d H:i:s');
+                                if($order->save()) {
+                                        if(!empty($order->promo_code_id)) {
+                                                PromoCode::where('id', $order->promo_code_id)->update(['used_on' => \Carbon::now()->format('Y-m-d H:i:s')]);
+                                        }
+                                        $this->sendSuccessSms($order);
+                                        //$this->sendSuccessEmails($order);
                                 }
-                                $this->sendSuccessSms($order);
-                                $this->sendSuccessEmails($order);
+                        }
+                } else {
+                        $invoiceId = explode('-', $request->InvoiceId);
+                        $orderId = (int)$invoiceId[0];
+                        $chargeId = (int)$invoiceId[1];
+                        $order = Order::find($orderId);
+                        $orderCharge = OrderCharge::find($chargeId);
+
+                        if(empty($order) || empty($orderCharge) || $order->id != $orderCharge->order_id) {
+                                $code = 10;
+                        } else {
+                                $orderCharge->payed = 1;
+
+                                if($orderCharge->save()) {
+
+                                }
                         }
                 }
 
@@ -313,14 +353,18 @@ class OrdersController extends Controller
         private function sendSuccessSms($order) {
                 try {
                         $shop = $order->shop;
-                        if($shop->phone) {
+                        $shopPhones = $shop->getSmsPhones();
+                        if(!empty($shopPhones)) {
                                 $link = \Autologin::route($shop->users[0], 'admin.orders');
                                 try {
                                         $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
                                 } catch (\Exception $e) {
                                         $shortLink = $link;
                                 }
-                                Sms::instance()->send($shop->phone, 'Примите заказ '.$order->id.' '.$shortLink  );
+
+                                foreach($shopPhones as $phone) {
+                                        Sms::instance()->send($phone, 'Примите заказ '.$order->id.' '.$shortLink  );
+                                }
                         }
 
                         //sms for admins
@@ -353,6 +397,7 @@ class OrdersController extends Controller
                 try {
 
                         $shop = $order->shop;
+                        /*
 
                         if(!empty($shop->email)) {
 
@@ -371,11 +416,12 @@ class OrdersController extends Controller
                                                 ->subject($subject);
                                 });
                         }
+                        */
 
 
 
                 } catch (\Exception $e) {
-
+                        \Log::debug('sendSuccessEmails - '.$e->getMessage());
                 }
         }
 
@@ -465,10 +511,15 @@ class OrdersController extends Controller
                         $shop = $order->shop;
                         $shops = Shop::where('id', '!=', $shop->id)->get();
                 } else {
-                        $shop = $this->user->getShop();
-                        $order = $shop->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
-                        if($order->payment == Order::$PAYMENT_CASH && !$order->confirmed) {
-                                return redirect()->route('admin.orders');
+                        try {
+                                $shop = $this->user->getShop();
+                                $order = $shop->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                                if($order->payment == Order::$PAYMENT_CASH && !$order->confirmed) {
+                                        return redirect()->route('admin.orders');
+                                }
+                        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+                                \Log::debug('View order: id = '.$id.', shop = '.$shop->id);
+                                throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
                         }
                 }
 
@@ -561,6 +612,12 @@ class OrdersController extends Controller
                                                 $this->sendSuccessEmails($order);
                                         }
                                 }
+                        }
+
+                        if($request->has('finance_comment')) {
+                                $order->finance_comment = $request->finance_comment;
+
+                                $order->save();
                         }
 
                         if(isset($request->receiving_date)) {

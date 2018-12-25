@@ -5,6 +5,7 @@
         <th>Цена полная</th>
         <th>Магазину</th>
         <th>Комиссия</th>
+        <th>Комментрарий</th>
     </tr>
     <?
         $amountCommissionTotal = 0;
@@ -24,11 +25,13 @@
             <td>{{ $order->amount() }}</td>
             <td>{{ $order->amountShop() }}</td>
             <td>{{ $commission }}</td>
+            <td>{{ $order->finance_comment }}</td>
         </tr>
     @endforeach
     <tr>
         <td colspan="3" class="font-weight-bold">Итого:</td>
         <td>{{ $amountShopTotal }}</td>
         <td>{{ $amountCommissionTotal }}</td>
+        <td></td>
     </tr>
 </table>

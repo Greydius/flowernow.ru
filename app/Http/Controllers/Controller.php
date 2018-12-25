@@ -17,12 +17,35 @@ class Controller extends BaseController
 
     protected $user;
     protected $city_id;
+    protected $holiday_icon;
 
     public function __construct() {
             $this->user = null;
-            $this->current_city = null;
+            $this->current_city = [];
+            $this->holiday_icon = null;
 
             $this->middleware(function ($request, $next) {
+
+                    if((time() >= strtotime(date('Y-12-15 00:00:00')) && time() <= strtotime(date('Y-12-31 23:59:59'))) ||
+                            (time() >= strtotime(date('Y-01-01 00:00:00')) && time() <= strtotime(date('Y-01-20 23:59:59')))) {
+                            $this->holiday_icon[] = 'mob1';
+                            $this->holiday_icon[] = 'pc4';
+                    }
+
+                    if(time() >= strtotime(date('Y-02-01 00:00:00')) && time() <= strtotime(date('Y-02-14 23:59:59'))) {
+                            $this->holiday_icon[] = 'mob2';
+                            $this->holiday_icon[] = 'pc3';
+                    }
+
+                    if(time() >= strtotime(date('Y-02-28 23:59:59')) && time() <= strtotime(date('Y-02-09 23:59:59'))) {
+                            $this->holiday_icon[] = 'mob3';
+                            $this->holiday_icon[] = 'pc2';
+                    }
+
+                    if(time() >= strtotime(date('Y-08-20 00:00:00')) && time() <= strtotime(date('Y-09-01 23:59:59'))) {
+                            $this->holiday_icon[] = 'mob4';
+                            $this->holiday_icon[] = 'pc1';
+                    }
 
                     $cookieCityId = !empty($_COOKIE['city']) ? $_COOKIE['city'] : null;
 
@@ -91,6 +114,7 @@ class Controller extends BaseController
 
                     $this->user = Auth::user();
                     View::share('user', $this->user);
+                    View::share('holiday_icon', $this->holiday_icon);
 
                     if($this->user) {
                             View::share('shop', $this->user->getShop());

@@ -88,11 +88,61 @@ class HomeController extends Controller
 
     public function test(Request $request) {
 
+            $shopId = 788888;
 
-            $orderId = 37302;
+            try {
+                    $shop = Shop::where('id', $shopId)->firstOrFail();
+            } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+                    \Log::debug('View order: '.$shopId);
+                    throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
+            }
 
-            $order = Order::find($orderId);
-            echo $order->orderLists[0]->product->name;
+            exit();
+
+            /*
+             *
+             * [2018-11-30 09:35:31] local.ERROR: Operation timed out after 30553 milliseconds with 0 out of 0 bytes received {"exception":"[object] (Platron\\Atol\\SdkException(code: 28): Operation timed out after 30553 milliseconds with 0 out of 0 bytes received at /home/m/mihast6k/flowenow.ru/vendor/payprocessing/atol-online/src/clients/PostClient.php:68)
+[stacktrace]
+#0 /home/m/mihast6k/flowenow.ru/app/Console/Commands/GenerateCashVoucher.php(51): Platron\\Atol\\clients\\PostClient->sendRequest(Object(Platron\\Atol\\services\\GetTokenRequest))
+#1 [internal function]: App\\Console\\Commands\\GenerateCashVoucher->handle()
+#2 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(29): call_user_func_array(Array, Array)
+#3 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(87): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#4 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(31): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#5 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Container/Container.php(549): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#6 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Console/Command.php(183): Illuminate\\Container\\Container->call(Array)
+#7 /home/m/mihast6k/flowenow.ru/vendor/symfony/console/Command/Command.php(252): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#8 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Console/Command.php(170): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#9 /home/m/mihast6k/flowenow.ru/vendor/symfony/console/Application.php(938): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#10 /home/m/mihast6k/flowenow.ru/vendor/symfony/console/Application.php(240): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\GenerateCashVoucher), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#11 /home/m/mihast6k/flowenow.ru/vendor/symfony/console/Application.php(148): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#12 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Console/Application.php(88): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#13 /home/m/mihast6k/flowenow.ru/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(121): Illuminate\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 /home/m/mihast6k/flowenow.ru/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 {main}
+"} 
+             */
+
+            \Log::debug('An informational message.');
+
+            exit();
+
+
+            //$shopId = 165;
+            $shopId = 117;
+
+
+
+            $orders = Order::where('shop_id', $shopId)->where('status', 'completed')->get();
+
+            $sum = 0;
+            $i=1;
+            foreach($orders as $order) {
+                    $s = $order->amountShop();
+                    $sum += $s;
+            }
+
+            echo '<br><br><br><br>';
+            echo $sum;
             
 
             exit();

@@ -159,7 +159,7 @@
                                 <label for="amount" class="form-control-label">
                                     Сумма: {{ number_format($outputAvailable, 2) }} руб.
                                 </label>
-                                <input type="hidden" name="amount" value="{{ number_format($outputAvailable, 2) }}">
+                                <input type="hidden" name="amount" value="{{ $outputAvailable }}">
                             </div>
                         </form>
                     </div>

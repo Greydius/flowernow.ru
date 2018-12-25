@@ -28,6 +28,11 @@ $(document).ready(function() {
                                 $('ul.regions').parent('div').show();
                         }
                 }
+        }).on('input', 'input[name="q"]', function(e) {
+                if (e.which == 13) {
+                        $(this).parent('form').submit();
+                        return false;
+                }
         });
 });
 

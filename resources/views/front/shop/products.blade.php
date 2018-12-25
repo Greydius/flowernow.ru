@@ -21,14 +21,14 @@
                 <p>{!! nl2br(e($shop->about)) !!}</p>
             </div>
         @endif
-        @if($shop->address && $shop->address[0]->city)
+        @if(!empty($shop->address) && !empty($shop->address[0]->city))
             <div class="col-md-12">
                 <p><strong>Адрес:</strong> г. {{$shop->address[0]->city->name}}, {{ $shop->address[0]->name }}</p>
             </div>
         @endif
 
 
-@if($shop->workTime && ($shop->workTime[0]->is_work || $shop->workTime[1]->is_work || $shop->workTime[2]->is_work || $shop->workTime[3]->is_work || $shop->workTime[4]->is_work || $shop->workTime[5]->is_work || $shop->workTime[6]->is_work))
+@if(count($shop->workTime) && ($shop->workTime[0]->is_work || $shop->workTime[1]->is_work || $shop->workTime[2]->is_work || $shop->workTime[3]->is_work || $shop->workTime[4]->is_work || $shop->workTime[5]->is_work || $shop->workTime[6]->is_work))
     <div class="col-md-12">
         <p>
             <strong>Часы работы:</strong><br>
@@ -102,11 +102,11 @@
 
     <h2 class="margin-top-null">Витрина букетов цветочного магазина {{ $shop->name }}:</h2>
 
-    @if(count($products))
+    @if(count($singleProducts))
 
-        @if(!empty($products))
+        @if(!empty($singleProducts))
             <div class="row">
-                @foreach($products as $_item)
+                @foreach($singleProducts as $_item)
 
                     @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => true])
 
@@ -114,9 +114,25 @@
             </div>
         @endif
 
+    @endif
+
+    @if(count($products))
+
+        @if(!empty($products))
+            <div class="row">
+                @foreach($products as $_item)
+
+                    @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
+
+                @endforeach
+            </div>
+        @endif
+
         {{ $products->links() }}
 
-    @else
+    @endif
+
+    @if(!count($products) && !count($singleProducts))
         <div class="row">
             <div class="col-md-12">
                 <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>

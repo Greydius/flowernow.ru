@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20180820') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20181223_6') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20180829') }}">
 
     <!--[if lt IE 9]>
@@ -45,7 +45,7 @@
 
     @yield('head')
 
-    <script type="text/javascript">
+    <script>
             var cityId = {{ $current_city ? $current_city->id : null }};
             var detectedCity = {!! !empty($detected_city) ? $detected_city->toJson() : $current_city->toJson() !!};
             var jsonData = {};
@@ -53,7 +53,8 @@
     </script>
 </head>
 
-<body ng-app="flowApp">
+<body>
+<div data-ng-app="flowApp">
 <!--[if lt IE 9]>
 <p class="chromeframe text-center">Вы используете <strong>устаревший</strong> браузер. Пожалуйста <a href="http://browsehappy.com/">обновите ваш браузер</a>.</p>
 <![endif]-->
@@ -117,7 +118,12 @@
                 </div>
 
                 <a class="navbar-brand logo" href="/"></a>
-                <div class="slogan text-primary hidden-xs hidden-sm">Федеральная служба доставки цветов</div>
+                <div class="slogan text-primary hidden-xs hidden-sm" style="{{ !empty($holiday_icon) ? 'padding-left: 100px;' : '' }}">
+                    @if(!empty($holiday_icon))
+                        <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" class="holiday-img" style="width: 135px; top: -10px; left: -19px;">
+                    @endif
+                    Федеральная служба доставки цветов
+                </div>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -148,10 +154,23 @@
                             </div>
                             <a href="#" class="btn btn-block btn-support">Центр помощи</a>
                         </div>
-                        -->
+
                     </li>
+                    -->
                         <li class="dropdown link-support">
-                            <a href="/#filtr" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Фильтр букетов</a>
+                            <form method="get" action="{{ route('product.search') }}">
+                                <div class="flexbox">
+                                    <div class="search">
+                                        <div>
+                                            <input type="text" name="q" placeholder="Поиск..." value="{{ !empty(request()->q) ? request()->q : '' }}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+
+                        <li class="dropdown link-support">
+                            <a href="/#filtr" class="dropdown-toggle header-filtr" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Фильтр букетов</a>
                         </li>
                         <li class="dropdown link-city">
                             <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
@@ -178,7 +197,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-default">Получить код</button>
                             </form>
-                            <!--
+
                             <p>На телефон будет отправлено СМС с кодом для входа в ваш кабинет</p>
                             <br>
                             <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
@@ -196,153 +215,164 @@
 
 <div class="filters-container" ng-controller="mainPage">
     <div class="mobile-crumbs">
-            <a href="javascript:" ng-click="closeMobileFilter()" rel="nofollow noopener" rel="nofollow noopener">
+            <a href="javascript:" ng-click="closeMobileFilter()" rel="nofollow noopener">
                 <span class="fa fa-times" aria-hidden="true"></span>
                 <span>Скрыть фильтры</span>
             </a>
     </div>
-    <form method="get" name="filter-list-shop-catalog" data-role="filter-list-form">
+
         <div class="filter-list" data-role="filter-list" id="shop-catalog">
-            <div class="filter-block">
-                <label class="filter-block-title spoiler ">
-                    <a href="#_filter-product-type" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
-                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
-                        <span>Тип букета</span>
-                    </a>
-                </label>
-                <div class="filter-block-items collapse" id="_filter-product-type" aria-expanded="false">
-                    <ul class="list-unstyled filter">
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="1" data-slug="klassika" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'klassika' ? 'checked' : null }}> Классика
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="2" data-slug="avtorskie" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'avtorskie' ? 'checked' : null }}> Авторские
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="3" data-slug="korobki" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korobki' ? 'checked' : null }}> Коробки
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="4" data-slug="korziny" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korziny' ? 'checked' : null }}> Корзины
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="9" data-slug="frukty" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'frukty' ? 'checked' : null }}> Фрукты
-                            </label>
-                        </li>
-                    </ul>
+            <form method="get" name="filter-list-shop-catalog" data-role="filter-list-form">
+                <div class="filter-block">
+                    <label class="filter-block-title spoiler ">
+                        <a href="#_filter-product-type" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                            <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                            <span>Тип букета</span>
+                        </a>
+                    </label>
+                    <div class="filter-block-items collapse" id="_filter-product-type" aria-expanded="false">
+                        <ul class="list-unstyled filter">
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="1" data-slug="klassika" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'klassika' ? 'checked' : null }}> Классика
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="2" data-slug="avtorskie" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'avtorskie' ? 'checked' : null }}> Авторские
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="3" data-slug="korobki" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korobki' ? 'checked' : null }}> Коробки
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="4" data-slug="korziny" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'korziny' ? 'checked' : null }}> Корзины
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="9" data-slug="frukty" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'frukty' ? 'checked' : null }}> Фрукты
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="10" data-slug="lakomstva" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'lakomstva' ? 'checked' : null }}> Лакомства
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="8" data-slug="igrushki" name="m-filter-product-type" {{ !empty(request()->product_type_filter) && request()->product_type_filter == 'igrushki' ? 'checked' : null }}> Игрушки
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <div class="filter-block">
-                <label class="filter-block-title spoiler ">
-                    <a href="#_filter-flowers" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
-                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
-                        <span>Цветы в букете</span>
-                    </a>
-                </label>
-                <div class="filter-block-items collapse" id="_filter-flowers" aria-expanded="false">
-                    <ul class="list-unstyled filter">
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="228" data-slug="roza" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(228, request()->flowers) ? 'checked' : null }}> Роза
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="267" data-slug="tyulpan" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(267, request()->flowers) ? 'checked' : null }}> Тюльпан
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="612" data-slug="pion" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(612, request()->flowers) ? 'checked' : null }}> Пион
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="781" data-slug="gerbera" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(781, request()->flowers) ? 'checked' : null }}> Гербера
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="407" data-slug="gvozdika" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(407, request()->flowers) ? 'checked' : null }}> Гвоздика
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="464" data-slug="iris" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(464, request()->flowers) ? 'checked' : null }}> Ирис
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="336" data-slug="anemona-vetrenitsa" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(336, request()->flowers) ? 'checked' : null }}> Анемона
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="753" data-slug="alstromeriya" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(753, request()->flowers) ? 'checked' : null }}> Альстромерия
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="checkbox" value="19" data-slug="amarillis" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(19, request()->flowers) ? 'checked' : null }}> Амариллис
-                            </label>
-                        </li>
-                    </ul>
+                <div class="filter-block">
+                    <label class="filter-block-title spoiler ">
+                        <a href="#_filter-flowers" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                            <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                            <span>Цветы в букете</span>
+                        </a>
+                    </label>
+                    <div class="filter-block-items collapse" id="_filter-flowers" aria-expanded="false">
+                        <ul class="list-unstyled filter">
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="228" data-slug="roza" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(228, request()->flowers) ? 'checked' : null }}> Роза
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="267" data-slug="tyulpan" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(267, request()->flowers) ? 'checked' : null }}> Тюльпан
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="612" data-slug="pion" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(612, request()->flowers) ? 'checked' : null }}> Пион
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="781" data-slug="gerbera" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(781, request()->flowers) ? 'checked' : null }}> Гербера
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="407" data-slug="gvozdika" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(407, request()->flowers) ? 'checked' : null }}> Гвоздика
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="464" data-slug="iris" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(464, request()->flowers) ? 'checked' : null }}> Ирис
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="336" data-slug="anemona-vetrenitsa" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(336, request()->flowers) ? 'checked' : null }}> Анемона
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="753" data-slug="alstromeriya" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(753, request()->flowers) ? 'checked' : null }}> Альстромерия
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="19" data-slug="amarillis" name="m-flowers[]" {{ !empty(request()->flowers) && in_array(19, request()->flowers) ? 'checked' : null }}> Амариллис
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <div class="filter-block">
-                <label class="filter-block-title spoiler ">
-                    <a href="#_filter-price" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
-                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
-                        <span>Цена</span>
-                    </a>
-                </label>
-                <div class="filter-block-items collapse" id="_filter-price" aria-expanded="false">
-                    <ul class="list-unstyled filter">
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="1" data-from="100" data-to="1999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 100 && request()->price_to == 1999 ? 'checked' : null }}> До 2000 руб
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="2" data-from="2000" data-to="2999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 2000 && request()->price_to == 2999 ? 'checked' : null }}> 2 000 - 3 000 руб
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="3" data-from="3000" data-to="4999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 3000 && request()->price_to == 4999 ? 'checked' : null }}> 3 000 - 5 000 руб
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="4" data-from="5000" data-to="8999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 5000 && request()->price_to == 8999 ? 'checked' : null }}> 5 000 - 9 000 руб
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="5" data-from="9000" data-to="12999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 9000 && request()->price_to == 12999 ? 'checked' : null }}> 9 000 - 13 000 руб
-                            </label>
-                        </li>
-                        <li class="checkbox">
-                            <label>
-                                <input type="radio" value="6" data-from="13000" data-to="9999999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 13000 && request()->price_to == 9999999 ? 'checked' : null }}> От 13000 руб
-                            </label>
-                        </li>
-                    </ul>
+                <div class="filter-block">
+                    <label class="filter-block-title spoiler ">
+                        <a href="#_filter-price" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                            <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                            <span>Цена</span>
+                        </a>
+                    </label>
+                    <div class="filter-block-items collapse" id="_filter-price" aria-expanded="false">
+                        <ul class="list-unstyled filter">
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="1" data-from="100" data-to="1999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 100 && request()->price_to == 1999 ? 'checked' : null }}> До 2000 руб
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="2" data-from="2000" data-to="2999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 2000 && request()->price_to == 2999 ? 'checked' : null }}> 2 000 - 3 000 руб
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="3" data-from="3000" data-to="4999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 3000 && request()->price_to == 4999 ? 'checked' : null }}> 3 000 - 5 000 руб
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="4" data-from="5000" data-to="8999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 5000 && request()->price_to == 8999 ? 'checked' : null }}> 5 000 - 9 000 руб
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="5" data-from="9000" data-to="12999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 9000 && request()->price_to == 12999 ? 'checked' : null }}> 9 000 - 13 000 руб
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <label>
+                                    <input type="radio" value="6" data-from="13000" data-to="9999999" name="m-price" {{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == 13000 && request()->price_to == 9999999 ? 'checked' : null }}> От 13000 руб
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
 
-            <div class="filter-block">
+                <div class="filter-block">
                 <label class="filter-block-title spoiler ">
                     <a href="#_filter-color" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
                         <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
@@ -424,9 +454,24 @@
                     </div>
                 </div>
             </div>
+            </form>
+
+            <div class="filter-block">
+                <label class="filter-block-title ">
+                    <form method="get" action="{{ route('product.search') }}" class="">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="q" placeholder="Поиск..." value="{{ !empty(request()->q) ? request()->q : '' }}">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">Найти</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </label>
+            </div>
 
         </div>
-    </form>
     <div class="mobile-filter-buttons">
         <button class="btn btn-default"  ng-click="mobileFilterReset()"><span>Сбросить</span></button>
         <button class="btn btn-additional" ng-click="mobileFilter()"><span>Показать</span></button>
@@ -446,7 +491,7 @@
 
         <div class="row">
             <div class="col-md-8">
-                <strong>Популярные города доставки цветов:</strong>
+                <strong>Популярные города с бесплатной доставкой цветов:</strong>
                 <hr>
                 <div class="row">
                     @if(count($popular_city))
@@ -573,7 +618,7 @@
                     <div class="col-md-3">
                         <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
 <ul class="list-unstyled list-foot">
-    <li><a href="https://www.instagram.com/moscow.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/moscow.floristum.ru/">Instagram</a></li>
+    <li><a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
 <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
                    </li>
                         </ul> </div>
@@ -590,7 +635,7 @@
                         <ul class="list-unstyled list-foot">
                             <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
                             <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
-                            <li><a href="https://floristum.ru/login">Вход в личный кабинет</a></li>
+                            <li><strong><a href="https://floristum.ru/login">Вход в личный кабинет</a></strong></li>
                         </ul>
                     </div>
                     <div class="col-md-3">
@@ -611,8 +656,13 @@
                 <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a></span></p>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом">
-</a></br><a href="https://floristum.ru"  style="color: grey">Доставка цветов</a>          </div>
+                <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом"></a>
+                <br><a href="https://floristum.ru"  style="color: grey">Доставка цветов</a>
+                @if(!empty($holiday_icon))
+                    <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" class="holiday-img-footer visible-xs visible-sm">
+                    <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" class="holiday-img-footer visible-md visible-lg" style="width: 275px">
+                @endif
+            </div>
         </div>
         <br>
     </div>
@@ -622,19 +672,25 @@
 <script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
 <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
 <script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/plugins/angular/angular.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('assets/admin/ng/ngApp.js') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/angular/angular.min.js') }}"></script>
+<script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}"></script>
+<script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}"></script>
+<script src="{{ asset('assets/admin/ng/ngApp.js') }}"></script>
 <script src="{{ asset('assets/front/js/main.js') }}"></script>
 <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
 <script src="{{ asset('assets/front/js/custom.js?v=20180618-2') }}"></script>
-<script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}" type="text/javascript"></script>
+<script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}"></script>
 @yield('footer')
 
+<!-- BEGIN JIVOSITE CODE {literal} -->
+<script>
+        (function(){ var widget_id = 'QL9dJzdl8D';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+</script>
+<!-- {/literal} END JIVOSITE CODE -->
+
 <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
+<script>
         (function (d, w, c) {
                 (w[c] = w[c] || []).push(function () {
                         try {
@@ -678,5 +734,6 @@
 
   gtag('config', 'UA-115529108-1');
 </script>
+</div>
 </body>
 </html>

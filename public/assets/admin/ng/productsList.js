@@ -383,6 +383,40 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 return input;
         }
 
+        $scope.editImages = function (e, item) {
+
+                $scope.modalInstance = ModalService.showModal({
+                        templateUrl: 'edit-images-modal.html',
+                        controller: 'editImages',
+                        inputs: {
+                                item: item,
+                                photos: item.photos
+                        },
+                        scope: $scope
+                });
+                $scope.modalInstance.then(function(modal) {
+
+                        modal.element.modal();
+
+                        modal.element.on('shown.bs.modal', function() {
+
+                        }).on('hidden.bs.modal', function() {
+
+                                $('#product-photos').sortable('destroy');
+                        });
+
+                        modal.close.then(function(result) {
+                                if(result) {
+                                        angular.forEach($scope.products, function(value, key) {
+                                                if(value.id == result.id) {
+                                                        $scope.products[key] = result;
+                                                }
+                                        });
+                                }
+                        });
+                });
+        }
+
         $scope.getProducts();
 });
 
@@ -529,4 +563,38 @@ angular.module('flowApp').controller('productBan', function($scope, close, item,
                 close(result, 500);
                 */
         };
+})
+
+angular.module('flowApp').controller('editImages', function($scope, close, item, photos, $element, $http, CSRF_TOKEN) {
+        $scope.item = angular.copy(item);
+        $scope.photos = photos;
+
+        $scope.rotatePhoto = function(photo, item) {
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/rotatePhoto/'+photo.id
+
+                }).then(function (response) {
+
+                        if(response.data.photos) {
+
+                                angular.forEach($scope.products, function(value, key) {
+                                        if(value.id == photo.product_id) {
+                                                value.photo = response.data.photos[0].photo;
+                                        }
+                                });
+
+                                $scope.photos = response.data.photos;
+
+                        }
+
+                }, function (response) {
+
+
+                }).then(function (response) {
+
+                });
+        }
 })

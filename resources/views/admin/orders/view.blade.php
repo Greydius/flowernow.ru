@@ -698,6 +698,53 @@
                             </div>
                         </div>
                     @endif
+
+
+
+
+                    <div class="col-lg-12">
+                        <div class="m-portlet  m-portlet--border-bottom-brand ">
+                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                <div class="m-widget26">
+
+                                    <h2>Комментарий для бухгалтера</h2>
+
+                                    <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                        {{ csrf_field() }}
+                                        <input type="hidden" name="order_id" value="{{ $order->id }}">
+
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <textarea class="form-control" rows="7" name="finance_comment">{{ $order->finance_comment }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12 errors text-danger" >
+
+                                            </div>
+                                            <div class="col-lg-12 success text-success" style="font-size: 10px;" >
+
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Сохранить
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
                 @endif
 
             </div>

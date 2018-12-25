@@ -44,6 +44,11 @@ Route::get('searchCity', [
         'as' => 'city.search'
 ]);
 
+Route::get('search', [
+        'uses' => 'ProductsController@filter',
+        'as' => 'product.search'
+]);
+
 /*CART*/
 Route::get('cart/{product_id}', [
         'uses' => 'OrdersController@add',
@@ -570,6 +575,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::post('product/changePauseProduct/{id}', [
                         'uses' => 'ProductsController@apiChangePauseProduct',
                         'as' => 'admin.api.product.apiChangePauseProduct'
+                ]);
+
+                Route::post('product/rotatePhoto/{id}', [
+                        'uses' => 'ProductsController@rotatePhoto',
+                        'as' => 'admin.api.product.rotatePhoto'
                 ]);
 
                 /* ORDERS*/
