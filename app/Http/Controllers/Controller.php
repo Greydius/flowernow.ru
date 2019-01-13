@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\City;
+use App\Model\Agent;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -72,6 +73,13 @@ class Controller extends BaseController
 
                             setcookie('city', $this->detected_city->id, time() + (86400 * 30), "/", \Config::get('app.domain'));
 
+                    }
+
+                    try{
+                            $agent = Agent::where('city_id', $this->current_city->id)->with('shop.address')->first();
+                            View::share('globalAgent', $agent);
+                    }
+                    catch(\Exception $e){
                     }
 
                     View::share('detected_city', $this->detected_city);

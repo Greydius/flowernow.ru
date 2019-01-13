@@ -8,6 +8,8 @@ use App\Model\Product;
 use App\Model\CashVoucher;
 use App\Model\Feedback;
 use App\Model\Transaction;
+use App\Model\ProductType;
+use App\Model\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Dompdf\Dompdf;
@@ -87,6 +89,72 @@ class HomeController extends Controller
     }
 
     public function test(Request $request) {
+
+
+            $productTypes = ProductType::where('show_on_main', '1')->get();
+            $banners = Banner::whereNotNull('checked_on')->with('shop')->get();
+            $products = [];
+
+            foreach($banners as $banner) {
+                    foreach($productTypes as $productType) {
+                            $request = new Request();
+                            $request->shop_id = $banner->shop->id;
+                            $request->productType = $productType->id;
+                            $request->order = 'rand';
+                            $_products = Product::popular($banner->shop->city_id, $request, 1, 1);
+                            if($_products->total() > 0) {
+                                    foreach($_products as $p) {
+                                            $products[] = $p;
+                                    }
+                            }
+                    }
+            }
+
+            foreach($products as $product) {
+                    $product->sort = 199996320;
+                    $product->save();
+            }
+
+            dd($products);
+
+            exit();
+
+            $path = public_path('uploads/single/');
+
+            $files = scandir($path);
+
+            foreach($files as $file) {
+                    if(is_file($path.$file)) {
+
+                            $newFileName = $path.'632x632/'.$file;
+                            \Image::make($path.$file)->fit(632, 632)->save( $newFileName );
+
+                    }
+            }
+
+echo "finish";
+            exit();
+
+            $shopId = 117;
+
+            $shop = Shop::find($shopId);
+
+            $products = Product::where('shop_id', $shop->id)->whereIn('status', [0, 3])->whereNull('single')->get();
+            $totalProductsCount = Product::where('shop_id', $shop->id)->whereNull('single')->count();
+
+            if($shop->email) {
+                    try {
+                            Mail::send('email.shopProductBan2', ['products' => $products, 'shop' => $shop, 'totalProductsCount' => $totalProductsCount], function ($message) use ($shop) {
+                                    $message->to(['nkornushin@gmail.com'])
+                                            ->subject('Уведомление для '.$shop->name.' на Floristum.ru');
+                            });
+                    } catch (\Exception $e) {
+                            \Log::debug('sendSuccessEmails - '.$e->getMessage());
+                    }
+            }
+
+            exit();
+
 
             $shopId = 788888;
 

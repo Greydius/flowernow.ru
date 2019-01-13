@@ -13,7 +13,7 @@
 @section('pageDescription', $pageDescription)
 @section('pageKeywords', $pageKeywords)
 
-<div class="container" ng-controller="product-view">
+<div class="container" data-ng-controller="product-view">
 
     <br>
     <ol class="breadcrumb">
@@ -32,8 +32,8 @@
                         <img class="img-responsive" src="{{ asset($product->photoUrl) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
                          <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
                     @else
-                        <img class="img-responsive" ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
-                         <figcaption ng-cloak=""><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> <% product.height %> см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> <% product.width %> см</figcaption>
+                        <img class="img-responsive" data-ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                         <figcaption data-ng-cloak=""><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> <% product.height %> см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> <% product.width %> см</figcaption>
                     @endif
 
                 </figure>
@@ -73,11 +73,11 @@
             <div class="row">
                 <div class="col-sm-6 col-md-7">
 
-                    <h1 class="h3 title-media-item-opened"><strong ng-bind="product.name">{{ $product->name }}</strong></h1>
+                    <h1 class="h3 title-media-item-opened"><strong data-ng-bind="product.name">{{ $product->name }}</strong></h1>
 
                     <p><strong>Доставка {{ ($product->deliveryTime ? '~'.$product->deliveryTime : '') }}</strong>, бесплатно в {{ $product->shop->city->name_prepositional }}</p>
 
-                    <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong ng-cloak=""><% product.clientPrice %></strong></p>
+                    <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong data-ng-cloak=""><% product.clientPrice %></strong></p>
 
                     @if(!empty($product->single))
 
@@ -92,13 +92,13 @@
                         </div>
 
                         <div class="zakaz-container" style="clear: both; display: block; float: left; position: relative;">
-                            <div ng-click="downQty()" id="downQty" class="btn btn-xs btn-warning btn-block" style="width: auto; position: relative; float: left; line-height: 28px; border: 1px solid red; padding-top: 0px; padding-bottom: 0px; border-radius: 0;">
+                            <div data-ng-click="downQty()" id="downQty" class="btn btn-xs btn-warning btn-block" style="width: auto; position: relative; float: left; line-height: 28px; border: 1px solid red; padding-top: 0px; padding-bottom: 0px; border-radius: 0;">
                                 <i class="fa fa-minus"></i>
                             </div>
                             <div class="qty-container" style="width: auto; margin-top: 0; background: none !important;float:left;">
-                                <input class="qty product-qty-input" style="text-align: center; margin-left: 0px;margin-right:0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); width:50px;height:30px;line-height:30px;outline:none;border:1px solid #e5e5e5;color:#000;border-radius:0px;font-size:15px;font-weight:400;" name="qty" size="3" maxlength="3" min="7" value="" ng-model="qty" />
+                                <input class="qty product-qty-input" style="text-align: center; margin-left: 0px;margin-right:0px; background: none repeat scroll 0% 0% rgb(255, 255, 255); width:50px;height:30px;line-height:30px;outline:none;border:1px solid #e5e5e5;color:#000;border-radius:0px;font-size:15px;font-weight:400;" name="qty" size="3" maxlength="3" min="7" value="" data-ng-model="qty" />
                             </div>
-                            <div ng-click="upQty()" class="btn btn-xs btn-warning btn-block " style="width: auto; position: relative; float: left; line-height: 28px; border: 1px solid red; padding-top: 0px; padding-bottom: 0px; border-radius: 0;">
+                            <div data-ng-click="upQty()" class="btn btn-xs btn-warning btn-block " style="width: auto; position: relative; float: left; line-height: 28px; border: 1px solid red; padding-top: 0px; padding-bottom: 0px; border-radius: 0;">
                                 <i class="fa fa-plus"></i>
                             </div>
                             <div style="line-height: 28px; padding-left: 10px; float: left;">
@@ -287,6 +287,21 @@
                 </div>
             </div>
         </div>
+        @if($products->total())
+            <div class="container-fluid">
+                <h3 class="margin-top-null"><strong>Вам может понравиться:</strong></h3>
+                <div class="row" style="position:relative;margin-left:0px;margin-right:0px;">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:0px;padding-right:0px;overflow:hidden;">
+
+                        <div class="row" id="other_products_slider">
+                            @foreach($products as $_item)
+                                    @include('front.product.list-item')
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
 </div>
@@ -374,7 +389,7 @@
     <script src="{{ asset('assets/plugins/lightslider/js/lightslider.min.js') }}" type="text/javascript"></script>
 
     <script>
-        $(document).ready(function() {
+        $(window).on('load', function(){
                 $('#lightSlider').lightSlider({
                         gallery: true,
                         item: 1,
@@ -382,7 +397,20 @@
                         slideMargin: 0,
                         thumbItem: 9
                 });
-        })
+
+                $('#other_products_slider').lightSlider({
+                        pager: false,
+                        item: 4,
+                        responsive : [
+                                {
+                                        breakpoint:480,
+                                        settings: {
+                                                item:1
+                                        }
+                                }
+                        ]
+                });
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/social-likes/dist/social-likes.min.js"></script>

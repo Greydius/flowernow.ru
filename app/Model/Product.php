@@ -147,6 +147,11 @@ class Product extends MainModel
                         ->whereNull('single');
 
                 if(!empty($request)) {
+
+                        if(!empty($request->notIn)) {
+                                $productRequest->whereNotIn('id', $request->notIn);
+                        }
+
                         if(!empty($request->productType)) {
                                 $productRequest->where('product_type_id', (int)$request->productType);
                         }
@@ -257,9 +262,12 @@ class Product extends MainModel
                                 if($request->order == 'price') {
                                         $productRequest->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
                                         $productRequest->whereNotIn('product_type_id', [7, 8, 9, 10]);
+                                } elseif($request->order == 'rand') {
+                                        $productRequest->orderBy(\DB::raw('RAND()'));
                                 }
 
                                 //$productRequest->appends($request->order);
+
                         } else {
                                 $productRequest->orderBy('sort', 'DESC');
                         }
@@ -293,15 +301,19 @@ class Product extends MainModel
                                                 }
                                         }
 
-                                        $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
-                                                $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
-                                                        $query->whereIn('flower_id', $flowersSearchKeys);
+                                        if(!empty($flowersSearchKeys)) {
+                                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
+                                                        $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
+                                                                $query->whereIn('flower_id', $flowersSearchKeys);
+                                                        });
                                                 });
-                                        });
+                                        }
 
                                         foreach($queries as $pk) {
-                                                $productRequest->orWhere('name', 'like', '%'.$pk.'%')
-                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                                $productRequest->where(function ($query) use ($request, $pk) {
+                                                        $query->Where('name', 'like', '%'.$pk.'%')
+                                                                ->orWhere('description', 'like', '%'.$pk.'%');
+                                                });
                                         }
 
 
@@ -314,6 +326,11 @@ class Product extends MainModel
                 });
 
                 //echo $productRequest->toSql(); exit();
+
+                if(!empty($request->shop_id) && $request->shop_id == 499) {
+                        //echo $productRequest->toSql(); exit();
+                        //echo $city_id; exit();
+                }
 
                 $products = $productRequest->paginate($perPage);
 
@@ -458,7 +475,8 @@ class Product extends MainModel
                         return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
                 }
 
-                return asset('/uploads/single/'.$this->photo.'');
+                return asset('/uploads/single/632x632/'.$this->photo.'');
+                //return asset('/uploads/single/'.$this->photo.'');
                 //return asset('http://via.placeholder.com/600x600');
         }
 

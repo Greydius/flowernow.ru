@@ -1,6 +1,6 @@
-<div class="row" id="product_container" ng-cloak>
+<div class="row" id="product_container" data-ng-cloak>
 
-    <div class="col-md-12" ng-show="popularProduct">
+    <div class="col-md-12" data-ng-show="popularProduct">
         <div class="hidden-lg hidden-md hidden-xs">
             <br><br>
         </div>
@@ -8,16 +8,16 @@
         <br class="hidden-lg hidden-md">
     </div>
 
-    <div class="col-sm-4" ng-repeat="product in popularProduct">
+    <div class="col-sm-4" data-ng-repeat="product in popularProduct">
         @include('front.product.search-item')
     </div>
 
     <br clear="all">
-    <div class="col-md-6 col-md-offset-3 bottom30" ng-show="links && !otherPopularProducts.length">
+    <div class="col-md-6 col-md-offset-3 bottom30" data-ng-show="links && !otherPopularProducts.length">
         <a href="<% links %>" class="btn btn-block btn-more">Показать все</a>
     </div>
 
-    <div class="col-md-12 text-center top20" ng-show="!popularProduct.length && isFiltered">
+    <div class="col-md-12 text-center top20" data-ng-show="!popularProduct.length && isFiltered">
 
         <strong>
             Извините, в городе {{ $current_city->name }} по указанным Вами параметрам предложений нет,<br>
@@ -32,9 +32,9 @@
 
     </div>
 
-    <div ng-repeat="items in otherPopularProducts">
+    <div data-ng-repeat="items in otherPopularProducts">
 
-        <div ng-show="items.popularProductCount >= 3">
+        <div data-ng-show="items.popularProductCount >= 3">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="hidden-lg hidden-md hidden-xs">
@@ -47,7 +47,7 @@
 
             <div class="row">
 
-                <div class="col-sm-4" ng-repeat="product in items.popularProduct.data" ng-show="$index < 3 || items.popularProduct.total >= 6">
+                <div class="col-sm-4" data-ng-repeat="product in items.popularProduct.data" data-ng-show="$index < 3 || items.popularProduct.total >= 6">
                     @include('front.product.search-item')
                 </div>
 
@@ -61,7 +61,7 @@
 
 
 
-            <div class="col-md-12" ng-show="popularProduct.length">
+            <div class="col-md-12" data-ng-show="popularProduct.length">
                 <hr>
                 <br><br>
             </div>

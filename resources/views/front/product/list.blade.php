@@ -106,7 +106,7 @@
 
             @if(count($popularProduct))
 
-                @if(!empty($popularProduct))
+                @if(count($popularProduct))
                     <div class="row">
                         @foreach($popularProduct as $_item)
 
@@ -114,12 +114,11 @@
 
                         @endforeach
                     </div>
+                    {{ $popularProduct->appends(request()->query())->links() }}
                 @endif
 
-                {{ $popularProduct->appends(request()->query())->links() }}
 
-
-                @if($popularProduct->total() <= 30 && !empty($lowPriceProducts))
+                @if($popularProduct->total() <= 30 && count($lowPriceProducts))
                         <h3 class="margin-top-null top30"><strong>Самые низкие цены</strong></h3>
                         <div class="row">
                             @foreach($lowPriceProducts as $_item)
@@ -138,7 +137,7 @@
                     <div class="col-md-12">
                         <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>
 
-                        @if(!empty($lowPriceProducts))
+                        @if(count($lowPriceProducts))
                             <h3 class="margin-top-null top30"><strong>Самые низкие цены</strong></h3>
                             <div class="row">
                                 @foreach($lowPriceProducts as $_item)

@@ -63,7 +63,7 @@
                             <td><% shop.delivery_price %></td>
                             <td><% shop.product_last_update %></td>
                             <td><% shop.product_status_0 + shop.product_status_1 + shop.product_status_2 + shop.product_status_3  %>/<% shop.product_status_1 %>/<% shop.product_status_2 %>/<% shop.product_status_0 %>/<% shop.product_status_3 %></td>
-                            <td><% shop.feedbacks_count %></td>
+                            <td><% shop.feedbacks_count %><% shop.feedbacks_count ? ' / ' + shop.feedback_date : '' %></td>
                             <td>
                                 <span class="m-badge m-badge--success m-badge--wide" ng-show="shop.active">вкл.</span>
                                 <span class="m-badge m-badge--danger m-badge--wide" ng-show="!shop.active">выкл.</span>

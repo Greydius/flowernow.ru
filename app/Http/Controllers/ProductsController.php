@@ -36,6 +36,8 @@ class ProductsController extends Controller
                 $popularProduct = [];
 
                 $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
+                        105, //красных тюльпанов
+                        97, //красных гвоздик
                         /*
                         105, //красных тюльпанов
                         97, //красных гвоздик
@@ -48,14 +50,30 @@ class ProductsController extends Controller
                         */
                         ];
                 //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
-                $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(6)->get();
+                $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
 
                 if(empty($request->product_type)) {
+                        $item = [];
+                        $request->q = "новог";
+                        $request->order = "rand";
+                        $item['productType'] = null;
+                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
+                        $item['popularProductCount'] = count($item['popularProduct']);
+                        if(!empty($this->user) && $this->user->admin) {
+                                //dd($this->current_city->id);
+                        }
+                        if($item['popularProductCount']) {
+                                $popularProducts[] = $item;
+                        }
+
+                        unset($request->q);
+                        unset($request->order);
+
                         $item = [];
                         foreach ($productTypes as $productType) {
                                 $request->product_type = $productType->slug;
                                 $item['productType'] = $productType;
-                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
+                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, $productType->id == 2 ? 6 : 8);
                                 $item['popularProductCount'] = count($item['popularProduct']);
                                 if($item['popularProductCount']) {
                                         $popularProducts[] = $item;
@@ -63,6 +81,7 @@ class ProductsController extends Controller
                         }
 
                         unset($request->product_type);
+
                 } else {
                         $request->product_type_filter = $request->product_type;
                         $title = $this->getTitle($request);
@@ -185,6 +204,12 @@ class ProductsController extends Controller
                 $feedbacks = Feedback::where('shop_id', $product->shop_id)->orderBy('feedback_date', 'desc')->take(10)->get();
                 $params['feedbacksCount'] = $feedbacksCount;
                 $params['feedbacks'] = $feedbacks;
+
+                $request = new Request();
+                $request->shop_id = $product->shop_id;
+                $request->notIn = [$product->id];
+                $request->order = 'rand';
+                $params['products'] = Product::popular($this->current_city->id, $request, 1, 9);
 
                 return view('front.product.show', $params);
         }

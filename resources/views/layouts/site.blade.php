@@ -55,23 +55,23 @@
 
 <body>
 <div data-ng-app="flowApp">
-<!--[if lt IE 9]>
-<p class="chromeframe text-center">Вы используете <strong>устаревший</strong> браузер. Пожалуйста <a href="http://browsehappy.com/">обновите ваш браузер</a>.</p>
-<![endif]-->
-<div class="preloader-wrapper">
-    <div class="preloader">
-        <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
+    <!--[if lt IE 9]>
+    <p class="chromeframe text-center">Вы используете <strong>устаревший</strong> браузер. Пожалуйста <a href="http://browsehappy.com/">обновите ваш браузер</a>.</p>
+    <![endif]-->
+    <div class="preloader-wrapper">
+        <div class="preloader">
+            <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
+        </div>
     </div>
-</div>
-<header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed-' : null }}">
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+    <header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed-' : null }}">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
 
-                @if(!empty($detected_city))
-                    <div class="visible-xs visible-sm mobile-top-header static on-top" style="display: none !important;">
-                        <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
+                    @if(!empty($detected_city))
+                        <div class="visible-xs visible-sm mobile-top-header static on-top" style="display: none !important;">
+                            <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
                             <span class="city-name">
                                 <!--googleoff: all--><!--noindex-->
                                 <a href="javascript:" onclick="chooseCity(); return false;" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
@@ -80,9 +80,9 @@
                                 </a>
                                 <!--/noindex--><!--googleon: all-->
                             </span>
-                            <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                            </div>
                         </div>
-                    </div>
                 @endif
 
                 <!--
@@ -94,12 +94,12 @@
                 </button>
                 -->
 
-                <div class="link-city hidden-md hidden-lg">
-                    <a href="#" onclick="chooseCity(); return false;">
-                        <i class="fa fa-map-marker"></i>
-                        {{ $current_city->name }}
-                    </a>
-                </div>
+                    <div class="link-city hidden-md hidden-lg">
+                        <a href="#" onclick="chooseCity(); return false;">
+                            <i class="fa fa-map-marker"></i>
+                            {{ $current_city->name }}
+                        </a>
+                    </div>
 
                     <!--
                 <button type="button" class="navbar-toggle">
@@ -110,26 +110,26 @@
                 </button>
                 -->
 
-                <div class="link-filter hidden-md hidden-lg">
-                    <a href="#" onclick="$('.filters-container').addClass('active'); $('body').addClass('blocked'); return false;">
-                        Фильтр букетов
-                        <i class="fa fa-reorder"></i>
-                    </a>
+                    <div class="link-filter hidden-md hidden-lg">
+                        <a href="#" onclick="$('.filters-container').addClass('active'); $('body').addClass('blocked'); return false;">
+                            Фильтр букетов
+                            <i class="fa fa-reorder"></i>
+                        </a>
+                    </div>
+
+                    <a class="navbar-brand logo" href="/"></a>
+                    <div class="slogan text-primary hidden-xs hidden-sm" style="{{ !empty($holiday_icon) ? 'padding-left: 100px;' : '' }}">
+                        @if(!empty($holiday_icon))
+                            <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" alt="" class="holiday-img" style="width: 135px; top: -10px; left: -19px;">
+                        @endif
+                        Федеральная служба доставки цветов
+                    </div>
                 </div>
 
-                <a class="navbar-brand logo" href="/"></a>
-                <div class="slogan text-primary hidden-xs hidden-sm" style="{{ !empty($holiday_icon) ? 'padding-left: 100px;' : '' }}">
-                    @if(!empty($holiday_icon))
-                        <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" class="holiday-img" style="width: 135px; top: -10px; left: -19px;">
-                    @endif
-                    Федеральная служба доставки цветов
-                </div>
-            </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="mainMenu">
+                    <ul class="nav navbar-nav navbar-right">
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="mainMenu">
-                <ul class="nav navbar-nav navbar-right">
-                   
                     <!--<li class="dropdown link-support">
                         <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
                         
@@ -187,40 +187,41 @@
                                 </div>
                             @endif
                         </li>
-                    <!--
-                    <li class="dropdown link-login">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
-                        <div class="dropdown-menu dropdown-login">
-                            <form class="form-login-phone">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="+79196665555">
-                                </div>
-                                <button type="submit" class="btn btn-default">Получить код</button>
-                            </form>
+                        <!--
+                        <li class="dropdown link-login">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
+                            <div class="dropdown-menu dropdown-login">
+                                <form class="form-login-phone">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="+79196665555">
+                                    </div>
+                                    <button type="submit" class="btn btn-default">Получить код</button>
+                                </form>
 
-                            <p>На телефон будет отправлено СМС с кодом для входа в ваш кабинет</p>
-                            <br>
-                            <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
-                            <br>
-                            <p class="h6 text-muted">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
+                                <p>На телефон будет отправлено СМС с кодом для входа в ваш кабинет</p>
+                                <br>
+                                <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
+                                <br>
+                                <p class="h6 text-muted">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
 
-                        </div>
-                    </li>-->
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div> <!-- /.container -->
-    </nav>
-</header>
+                            </div>
+                        </li>-->
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div> <!-- /.container -->
+        </nav>
+    </header>
 
 
-<div class="filters-container" ng-controller="mainPage">
-    <div class="mobile-crumbs">
-            <a href="javascript:" ng-click="closeMobileFilter()" rel="nofollow noopener">
+    <div class="filters-container" data-ng-controller="mainPage">
+        <div class="mobile-crumbs">
+            <a href="javascript:" data-ng-click="closeMobileFilter()" rel="nofollow noopener">
                 <span class="fa fa-times" aria-hidden="true"></span>
                 <span>Скрыть фильтры</span>
             </a>
-    </div>
 
+
+        </div>
         <div class="filter-list" data-role="filter-list" id="shop-catalog">
             <form method="get" name="filter-list-shop-catalog" data-role="filter-list-form">
                 <div class="filter-block">
@@ -230,7 +231,7 @@
                             <span>Тип букета</span>
                         </a>
                     </label>
-                    <div class="filter-block-items collapse" id="_filter-product-type" aria-expanded="false">
+                    <div class="filter-block-items collapse" id="_filter-product-type" aria-expanded="false" role="note">
                         <ul class="list-unstyled filter">
                             <li class="checkbox">
                                 <label>
@@ -278,7 +279,7 @@
                             <span>Цветы в букете</span>
                         </a>
                     </label>
-                    <div class="filter-block-items collapse" id="_filter-flowers" aria-expanded="false">
+                    <div class="filter-block-items collapse" id="_filter-flowers" aria-expanded="false" role="note">
                         <ul class="list-unstyled filter">
                             <li class="checkbox">
                                 <label>
@@ -336,7 +337,7 @@
                             <span>Цена</span>
                         </a>
                     </label>
-                    <div class="filter-block-items collapse" id="_filter-price" aria-expanded="false">
+                    <div class="filter-block-items collapse" id="_filter-price" aria-expanded="false" role="note">
                         <ul class="list-unstyled filter">
                             <li class="checkbox">
                                 <label>
@@ -373,87 +374,87 @@
                 </div>
 
                 <div class="filter-block">
-                <label class="filter-block-title spoiler ">
-                    <a href="#_filter-color" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
-                        <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
-                        <span>Цветовая гамма</span>
-                    </a>
-                </label>
-                <div class="filter-block-items collapse" id="_filter-color" aria-expanded="false">
-                    <div class="row">
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color red"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="1" {{ !empty(request()->color) && request()->color == 1 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color pink"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="2" {{ !empty(request()->color) && request()->color == 2 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color orange"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="3" {{ !empty(request()->color) && request()->color == 3 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color yellow"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="4" {{ !empty(request()->color) && request()->color == 4 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color green"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="5" {{ !empty(request()->color) && request()->color == 5 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color blue"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="6" {{ !empty(request()->color) && request()->color == 6 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color purple"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="7" {{ !empty(request()->color) && request()->color == 7 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color black"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="8" {{ !empty(request()->color) && request()->color == 8 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color white"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="9" {{ !empty(request()->color) && request()->color == 9 ? 'checked' : null }}>
-                            </label>
-                        </div>
-                        <div class="col-2-5 color-item">
-                            <label>
-                                <div class="selected-color mix"></div>
-                                <br>
-                                <input type="radio" name="m-filter-color" value="10" {{ !empty(request()->color) && request()->color == 10 ? 'checked' : null }}>
-                            </label>
+                    <label class="filter-block-title spoiler ">
+                        <a href="#_filter-color" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
+                            <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
+                            <span>Цветовая гамма</span>
+                        </a>
+                    </label>
+                    <div class="filter-block-items collapse" id="_filter-color" aria-expanded="false" role="note">
+                        <div class="row">
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color red"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="1" {{ !empty(request()->color) && request()->color == 1 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color pink"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="2" {{ !empty(request()->color) && request()->color == 2 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color orange"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="3" {{ !empty(request()->color) && request()->color == 3 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color yellow"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="4" {{ !empty(request()->color) && request()->color == 4 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color green"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="5" {{ !empty(request()->color) && request()->color == 5 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color blue"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="6" {{ !empty(request()->color) && request()->color == 6 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color purple"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="7" {{ !empty(request()->color) && request()->color == 7 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color black"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="8" {{ !empty(request()->color) && request()->color == 8 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color white"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="9" {{ !empty(request()->color) && request()->color == 9 ? 'checked' : null }}>
+                                </label>
+                            </div>
+                            <div class="col-2-5 color-item">
+                                <label>
+                                    <div class="selected-color mix"></div>
+                                    <br>
+                                    <input type="radio" name="m-filter-color" value="10" {{ !empty(request()->color) && request()->color == 10 ? 'checked' : null }}>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </form>
 
             <div class="filter-block">
@@ -472,51 +473,51 @@
             </div>
 
         </div>
-    <div class="mobile-filter-buttons">
-        <button class="btn btn-default"  ng-click="mobileFilterReset()"><span>Сбросить</span></button>
-        <button class="btn btn-additional" ng-click="mobileFilter()"><span>Показать</span></button>
+        <div class="mobile-filter-buttons">
+            <button class="btn btn-default"  data-ng-click="mobileFilterReset()"><span>Сбросить</span></button>
+            <button class="btn btn-additional" data-ng-click="mobileFilter()"><span>Показать</span></button>
+        </div>
     </div>
-</div>
 
 
 
-<section>
+    <section>
 
 
-    @yield('content')
+        @yield('content')
 
-    <div class="container">
+        <div class="container">
 
 
 
-        <div class="row">
-            <div class="col-md-8">
-                <strong>Популярные города с бесплатной доставкой цветов:</strong>
-                <hr>
-                <div class="row">
-                    @if(count($popular_city))
-                        <div class="col-xs-6 col-md-3">
-                    @endif
+            <div class="row">
+                <div class="col-md-8">
+                    <strong>Популярные города с бесплатной доставкой цветов:</strong>
+                    <hr>
+                    <div class="row">
+                        @if(count($popular_city))
+                            <div class="col-xs-6 col-md-3">
+                                @endif
 
-                    @foreach($popular_city as $key => $city_item)
-                        <div class="city-popular">
-                            <p><a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a></p>
-                            <p class="text-muted"></p>
-                        </div>
+                                @foreach($popular_city as $key => $city_item)
+                                    <div class="city-popular">
+                                        <p><a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a></p>
+                                        <p class="text-muted"></p>
+                                    </div>
 
-                        @if(($key + 1) == count($popular_city) || ($key + 1) % 3 == 0)
-                                    @if(($key + 1) == count($popular_city))
-                                        <div class="city-popular">
-                                            <p><a href="{{ route('city.popular') }}">Все города…</a></p>
-                                        </div>
-                                    @endif
-                        </div>
+                                    @if(($key + 1) == count($popular_city) || ($key + 1) % 3 == 0)
+                                        @if(($key + 1) == count($popular_city))
+                                            <div class="city-popular">
+                                                <p><a href="{{ route('city.popular') }}">Все города…</a></p>
+                                            </div>
+                                        @endif
+                            </div>
                         @endif
                         @if(($key + 1) < count($popular_city) && ($key + 1) % 3 == 0)
                             <div class="col-xs-6 col-md-3">
-                        @endif
-                    @endforeach
-                                <!--
+                            @endif
+                            @endforeach
+                            <!--
                     <div class="col-xs-6 col-md-3">
                         <div class="city-popular">
                             <p><a href="http://<?=$popular_city[0]->slug?>.floristum.ru"><?=$popular_city[0]->name?></a></p>
@@ -581,159 +582,176 @@
                         </div>
                     </div>
                     -->
-                </div>
-                <br class="hidden-lg hidden-md hidden-sm">
-            </div>
-            <div class="col-md-4">
-                <strong>Популярные цветы:</strong>
-                <hr>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <p class="world-popular"><a href="/catalog/all/roza">Розы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/liliya">Лилии</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/gerbera">Герберы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/tyulpan">Тюльпаны</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/kalla-zantedeskhiya">Каллы</a>, <span class="text-muted"></span></p>
+                            </div>
+                            <br class="hidden-lg hidden-md hidden-sm">
                     </div>
-                    <div class="col-xs-6">
-                        <p class="world-popular"><a href="/catalog/all/romashka-nivyanik">Ромашки</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/fialka-viola">Фиалки</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/khrizantema">Хризантемы</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/gibiskus-kitayskaya-roza">Гибискус</a>, <span class="text-muted"></span></p>
-                        <p class="world-popular"><a href="/catalog/all/vse-cvety">Все цветы...</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<footer>
-    <div class="container">
-        <br>
-        <hr>
-        <div class="row">
-            <div class="col-md-9">
-                <div class="row">
-                    <div class="col-md-3">
-                        <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
-<ul class="list-unstyled list-foot">
-    <li><a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
-<li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
-                   </li>
-                        </ul> </div>
-                    <div class="col-md-3">
-                        <p class="foot-h"><strong>Клиентам</strong></p>
-                        <ul class="list-unstyled list-foot">
-                            <li><a href="https://floristum.ru/delivery">Доставка</a></li>
-                            <li><a href="https://floristum.ru/payment">Оплата</a></li>
-                            <li><a href="https://floristum.ru/faq">FAQ</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="foot-h"><strong>Организациям</strong></p>
-                        <ul class="list-unstyled list-foot">
-                            <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
-                            <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
-                            <li><strong><a href="https://floristum.ru/login">Вход в личный кабинет</a></strong></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-3">
-                        <p class="foot-h"><strong>Правовая&nbsp;информация</strong></p>
-                        <ul class="list-unstyled list-foot">
-                            <li><a href="https://floristum.ru/info/privacy">Конфиденциальность</a></li>
-                            <li><a href="https://floristum.ru/info/personldata">Персональные данные</a></li>
-                            <li><a href="https://floristum.ru/info/oferta">Публичная оферта</a></li>
-                            <li><a href="https://floristum.ru/info/agreement">Публичная оферта о заключении договора купли-продажи</a></li>
-                        </ul>
+                    <div class="col-md-4">
+                        <strong>Популярные цветы:</strong>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p class="world-popular"><a href="/catalog/all/roza">Розы</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/liliya">Лилии</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/gerbera">Герберы</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/tyulpan">Тюльпаны</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/kalla-zantedeskhiya">Каллы</a>, <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6">
+                                <p class="world-popular"><a href="/catalog/all/romashka-nivyanik">Ромашки</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/fialka-viola">Фиалки</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/khrizantema">Хризантемы</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/gibiskus-kitayskaya-roza">Гибискус</a>, <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/catalog/all/vse-cvety">Все цветы...</a></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-sm-6">
-                <p>Служба поддержки: <br> <span class="h4"><a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a> <br> <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a></span></p>
+    </section>
+
+    <footer>
+        <div class="container">
+            <br>
+            <hr>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
+                            <ul class="list-unstyled list-foot">
+                                <li><a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
+                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                </li>
+                            </ul> </div>
+                        <div class="col-md-3">
+                            <p class="foot-h"><strong>Клиентам</strong></p>
+                            <ul class="list-unstyled list-foot">
+                                <li><a href="https://floristum.ru/delivery">Доставка</a></li>
+                                <li><a href="https://floristum.ru/payment">Оплата</a></li>
+                                <li><a href="https://floristum.ru/faq">FAQ</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="foot-h"><strong>Организациям</strong></p>
+                            <ul class="list-unstyled list-foot">
+                                <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
+                                <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
+                                <li><strong><a href="https://floristum.ru/login">Вход в личный кабинет</a></strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="foot-h"><strong>Правовая&nbsp;информация</strong></p>
+                            <ul class="list-unstyled list-foot">
+                                <li><a href="https://floristum.ru/info/privacy">Конфиденциальность</a></li>
+                                <li><a href="https://floristum.ru/info/personldata">Персональные данные</a></li>
+                                <li><a href="https://floristum.ru/info/oferta">Публичная оферта</a></li>
+                                <li><a href="https://floristum.ru/info/agreement">Публичная оферта о заключении договора купли-продажи</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-6 text-right">
-                <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом"></a>
-                <br><a href="https://floristum.ru"  style="color: grey">Доставка цветов</a>
-                @if(!empty($holiday_icon))
-                    <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" class="holiday-img-footer visible-xs visible-sm">
-                    <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" class="holiday-img-footer visible-md visible-lg" style="width: 275px">
-                @endif
+            <hr>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p><strong>Служба поддержки:</strong></p>
+                            <p>
+                                <span class="h4 m-t-10">
+                                    <a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a>
+                                    <br>
+                                    <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-8">
+                            @if(!empty($globalAgent) && !empty($globalAgent->shop) && count($globalAgent->shop->address))
+                                <p><strong>Цветочный магазин в {{$current_city->name_prepositional}}:</strong></p>
+                                <p>{{$current_city->name}}, {{ $globalAgent->shop->address[0]->name }}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 text-right">
+                    <a href="https://floristum.ru"><img src="{{ asset('assets/front/img/logo_floristum.png') }}" alt="Заказ доставки цветов и букетов на дом"></a>
+                    <br><a href="https://floristum.ru"  style="color: grey">Доставка цветов</a>
+                    @if(!empty($holiday_icon))
+                        <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" alt="" class="holiday-img-footer visible-xs visible-sm">
+                        <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" alt="" class="holiday-img-footer visible-md visible-lg" style="width: 275px">
+                    @endif
+                </div>
             </div>
+            <br>
         </div>
-        <br>
-    </div>
-</footer>
+    </footer>
 
 
-<script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
-<script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
-<script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
-<script src="{{ asset('assets/plugins/angular/angular.min.js') }}"></script>
-<script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}"></script>
-<script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}"></script>
-<script src="{{ asset('assets/admin/ng/ngApp.js') }}"></script>
-<script src="{{ asset('assets/front/js/main.js') }}"></script>
-<script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-<script src="{{ asset('assets/front/js/custom.js?v=20180618-2') }}"></script>
-<script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}"></script>
+    <script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
+    <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
+    <script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/angular/angular.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/ng/ngApp.js') }}"></script>
+    <script src="{{ asset('assets/front/js/main.js') }}"></script>
+    <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js?v=20180618-2') }}"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}"></script>
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
-<script>
-        (function(){ var widget_id = 'QL9dJzdl8D';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
-</script>
-<!-- {/literal} END JIVOSITE CODE -->
+    <script>
+            (function(){ var widget_id = 'QL9dJzdl8D';var d=document;var w=window;function l(){var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true;s.src = '//code.jivosite.com/script/widget/'+widget_id; var ss = document.getElementsByTagName('script')[0]; ss.parentNode.insertBefore(s, ss);}if(d.readyState=='complete'){l();}else{if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+    </script>
+    <!-- {/literal} END JIVOSITE CODE -->
 
-<!-- Yandex.Metrika counter -->
-<script>
-        (function (d, w, c) {
-                (w[c] = w[c] || []).push(function () {
-                        try {
-                                w.yaCounter47326329 = new Ya.Metrika({
-                                        id: 47326329,
-                                        clickmap: true,
-                                        trackLinks: true,
-                                        accurateTrackBounce: true,
-                                        webvisor: true
-                                });
-                        } catch (e) {
-                        }
-                });
+    <!-- Yandex.Metrika counter -->
+    <script>
+            (function (d, w, c) {
+                    (w[c] = w[c] || []).push(function () {
+                            try {
+                                    w.yaCounter47326329 = new Ya.Metrika({
+                                            id: 47326329,
+                                            clickmap: true,
+                                            trackLinks: true,
+                                            accurateTrackBounce: true,
+                                            webvisor: true
+                                    });
+                            } catch (e) {
+                            }
+                    });
 
-                var n = d.getElementsByTagName("script")[0],
-                        s = d.createElement("script"),
-                        f = function () {
-                                n.parentNode.insertBefore(s, n);
-                        };
-                s.type = "text/javascript";
-                s.async = true;
-                s.src = "https://mc.yandex.ru/metrika/watch.js";
+                    var n = d.getElementsByTagName("script")[0],
+                            s = d.createElement("script"),
+                            f = function () {
+                                    n.parentNode.insertBefore(s, n);
+                            };
+                    s.type = "text/javascript";
+                    s.async = true;
+                    s.src = "https://mc.yandex.ru/metrika/watch.js";
 
-                if (w.opera == "[object Opera]") {
-                        d.addEventListener("DOMContentLoaded", f, false);
-                } else {
-                        f();
-                }
-        })(document, window, "yandex_metrika_callbacks");
-</script>
-<noscript>
-    <div><img src="https://mc.yandex.ru/watch/47326329" style="position:absolute; left:-9999px;" alt=""/></div>
-</noscript>
-<!-- /Yandex.Metrika counter -->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115529108-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+                    if (w.opera == "[object Opera]") {
+                            d.addEventListener("DOMContentLoaded", f, false);
+                    } else {
+                            f();
+                    }
+            })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript>
+        <div><img src="https://mc.yandex.ru/watch/47326329" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115529108-1"></script>
+    <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
 
-  gtag('config', 'UA-115529108-1');
-</script>
+            gtag('config', 'UA-115529108-1');
+    </script>
 </div>
 </body>
 </html>

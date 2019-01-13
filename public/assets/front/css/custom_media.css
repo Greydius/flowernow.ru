@@ -8,6 +8,12 @@
     }
 }
 
+@media (min-width: 766px) and (max-width: 991px) {
+        .holiday-img-footer {
+                top: 47px;
+        }
+}
+
 @media (min-width: 992px) {
     #city-choose-popup ul li {
         padding-right: 1em;

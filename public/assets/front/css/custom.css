@@ -686,7 +686,7 @@ header .location-icon {
 
 .holiday-img-footer {
         position: absolute;
-        left: 5px;
+        left: -65px;
         top: 0px;
         width: 150px;
 }
@@ -795,4 +795,23 @@ header .location-icon {
 .filter-block .btn.btn-default {
         padding: 13px 18px;
         border: 1px solid #ccc;
+}
+
+.footer_tel {
+        font-size: 23px;
+}
+
+.footer-last-container {
+        margin-bottom: 40px;
+}
+
+#other_products_slider .col-sm-4,
+#other_products_slider .col-xs-6 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+}
+
+#other_products_slider.row {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
 }

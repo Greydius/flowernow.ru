@@ -145,6 +145,10 @@ class City extends MainModel
                 return $this->belongsTo('App\Model\Region');
         }
 
+        public function agent() {
+                return $this->hasOne('App\Model\Agent');
+        }
+
         public static function popular($limit = 10, $random = true) {
                 $model = self::where('popular', 1);
                 if($random) {

@@ -102,31 +102,33 @@
 
     <h2 class="margin-top-null">Витрина букетов цветочного магазина {{ $shop->name }}:</h2>
 
-    @if(count($singleProducts))
+    <div class="row">
+        @if(count($singleProducts))
 
-        @if(!empty($singleProducts))
-            <div class="row">
+            @if(!empty($singleProducts))
                 @foreach($singleProducts as $_item)
-
-                    @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => true])
-
-                @endforeach
-            </div>
-        @endif
-
-    @endif
-
-    @if(count($products))
-
-        @if(!empty($products))
-            <div class="row">
-                @foreach($products as $_item)
 
                     @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
 
                 @endforeach
-            </div>
+            @endif
+
         @endif
+
+        @if(count($products))
+
+            @if(!empty($products))
+                    @foreach($products as $_item)
+
+                        @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
+
+                    @endforeach
+            @endif
+
+        @endif
+    </div>
+
+    @if(count($products))
 
         {{ $products->links() }}
 

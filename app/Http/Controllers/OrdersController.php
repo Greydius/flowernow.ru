@@ -397,8 +397,6 @@ class OrdersController extends Controller
                 try {
 
                         $shop = $order->shop;
-                        /*
-
                         if(!empty($shop->email)) {
 
                                 $link = \Autologin::route($shop->users[0], 'admin.orders');
@@ -416,8 +414,6 @@ class OrdersController extends Controller
                                                 ->subject($subject);
                                 });
                         }
-                        */
-
 
 
                 } catch (\Exception $e) {

@@ -272,6 +272,21 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
         Route::group(['middleware' => 'is-admin'], function () {
 
+                Route::get('agents', [
+                        'uses' => 'AgentsController@index',
+                        'as' => 'admin.agents.list'
+                ]);
+
+                Route::get('agent/edit/{city_id}', [
+                        'uses' => 'AgentsController@edit',
+                        'as' => 'admin.agent.edit'
+                ]);
+
+                Route::post('agent/update/{city_id}', [
+                        'uses' => 'AgentsController@update',
+                        'as' => 'admin.agent.update'
+                ]);
+
                 Route::get('invoices/balance', [
                         'uses' => 'InvoicesController@balance',
                         'as' => 'admin.shop.balance'

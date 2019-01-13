@@ -1,7 +1,7 @@
 <div class="media-item">
     <a href="/flowers/<% product.slug %>/">
         <figure>
-            <img class="img-responsive" ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" alt="...">
+            <img class="img-responsive" data-ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" alt="...">
             <figcaption>
                 <p>
                     <% product.description %>
