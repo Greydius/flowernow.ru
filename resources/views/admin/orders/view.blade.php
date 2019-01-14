@@ -67,6 +67,28 @@
                                                     @endif
                                                 @endforeach
 
+                                                @if($user->admin)
+                                                    <div class="m-widget4__item">
+                                                        <div class="m-widget4__info">
+                                                            <span class="m-widget4__title">
+                                                                Магазин:
+                                                            </span>
+                                                            <br>
+                                                            <span class="m-widget4__sub">
+                                                                г. {{ $order->shop->city->name }}<br>
+                                                                <a href="{{ route('admin.shop.profile_edit', ['id' => $order->shop->id]) }}" target="_blank">{{ $order->shop->name }}</a>
+                                                                <br>
+                                                                @if($order->shop->workers->count())
+                                                                    @foreach($order->shop->workers as $worker)
+                                                                        <p>{{ $worker->name }} ({{ $worker->position_id == 1 ? 'Руководитель' : 'Флорист-менеджер' }}) - {{ $worker->phone }}</p>
+                                                                    @endforeach
+                                                                @endif
+
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
                                                         <i class="flaticon-calendar-2 m--font-brand"  style="font-size: 3.5rem;"></i>
@@ -78,8 +100,14 @@
                                                         <br>
                                                         <span class="m-widget4__sub">
                                                             <p class="lead" ng-show="mode == 'view'">
-                                                            {!! $order->receiving_date ?  $order->receiving_date.'<br>' : '' !!}
-                                                            {!! $order->receiving_time ?  $order->receiving_time : '' !!}
+                                                                {!! $order->receiving_date ?  \Carbon::parse($order->receiving_date)->format('d.m.Y').'<br>' : '' !!}
+                                                                {!! $order->receiving_time ?  $order->receiving_time : '' !!}
+
+                                                                @if($order->shop->city->region->tz != 'UTC+3:00' && !empty($order->receiving_time_msk))
+                                                                    <br>
+                                                                    <span class="text-bold text-danger">с {{ $order->receiving_time_msk->from }} до {{ $order->receiving_time_msk->to }} по МСК</span>
+                                                                @endif
+
                                                             </p>
 
                                                             <div ng-show="mode == 'edit'" ng-cloak>
@@ -499,23 +527,35 @@
                                             Статус:
                                         </label>
 
-                                        @if($order->status == \App\Model\Order::$STATUS_COMPLETED)
+                                        @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
                                             <br><br>
                                             <span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>
                                         @else
 
                                             <select class="form-control m-bootstrap-select m_selectpicker" name="status">
-                                                @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                @if(!$user->admin)
+                                                    @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                        <option {{ $order->status == \App\Model\Order::$STATUS_NEW ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_NEW }}" data-content="<span class='m-badge m-badge--success m-badge--wide m-badge--rounded'>Новый</span>">
+                                                            Новый
+                                                        </option>
+                                                    @endif
+                                                    @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                        <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
+                                                            Принят
+                                                        </option>
+                                                    @endif
+                                                    @if($order->status == \App\Model\Order::$STATUS_ACCEPTED)
+                                                        <option {{ $order->status == \App\Model\Order::$STATUS_COMPLETED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_COMPLETED }}" data-content="<span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>">
+                                                            Выполнен
+                                                        </option>
+                                                    @endif
+                                                @else
                                                     <option {{ $order->status == \App\Model\Order::$STATUS_NEW ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_NEW }}" data-content="<span class='m-badge m-badge--success m-badge--wide m-badge--rounded'>Новый</span>">
                                                         Новый
                                                     </option>
-                                                @endif
-                                                @if($order->status == \App\Model\Order::$STATUS_NEW)
-                                                <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
-                                                    Принят
-                                                </option>
-                                                @endif
-                                                @if($order->status == \App\Model\Order::$STATUS_ACCEPTED)
+                                                    <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
+                                                        Принят
+                                                    </option>
                                                     <option {{ $order->status == \App\Model\Order::$STATUS_COMPLETED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_COMPLETED }}" data-content="<span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>">
                                                         Выполнен
                                                     </option>
@@ -526,7 +566,7 @@
 
                                     </div>
 
-                                    @if($order->status == \App\Model\Order::$STATUS_COMPLETED)
+                                    @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
 
                                     @else
 

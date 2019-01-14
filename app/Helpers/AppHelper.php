@@ -176,4 +176,11 @@ class AppHelper {
                 return $f5;
         }
 
+        public static function orderTimeToArray($str) {
+                $str = str_replace('с', '', $str);
+                $str = str_replace('до ', '', $str);
+                $str = trim($str);
+                return explode(' ', $str);
+        }
+
 }

@@ -60,12 +60,46 @@
             </div>
         </div>
 
+        <div class="hidden-lg hidden-md hidden-xs">
+            <br><br>
+        </div>
+        <strong>У Нас нет наценок при оплате с расчетного счета.</strong><h3 class="margin-top-null"><strong>Цены на цветы такие же, как для физ. лиц:</strong></h3></br></br>
+
+        @if(!empty($popularProducts))
+            @foreach($popularProducts as $item)
+                @if(!empty($item['productType']) && $item['productType']->id != 2 && $item['popularProductCount'] >= 3)
+                    <div data-ng-hide="isFiltered">
+                        <div class="hidden-lg hidden-md hidden-xs">
+                            <br><br>
+                        </div>
+                        <h2 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h2>
+                        <br class="hidden-lg hidden-md">
+
+                        <div class="row">
+                            @foreach($item['popularProduct'] as $key => $_item)
+                                @if($key < 3 || $item['popularProductCount'] == 8)
+
+                                    @include('front.product.list-item', ['col' => 3])
+
+                                @endif
+                            @endforeach
+
+                            <br clear="all">
+                            @if($item['popularProduct']->total() > 6)
+                                <div class="col-md-6 col-md-offset-3 bottom30">
+                                    <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        @endif
+
         @if(count($lowPriceProducts))
+            <!--
             <div ng-hide="isFiltered">
-                <div class="hidden-lg hidden-md hidden-xs">
-                    <br><br>
-                </div>
-                <strong>У Нас нет наценок при оплате с расчетного счета.</strong><h3 class="margin-top-null"><strong>Цены на цветы такие же, как для физ. лиц:</strong></h3></br></br>
+
                 <br class="hidden-lg hidden-md">
 
                 @foreach($lowPriceProducts as $_item)
@@ -79,6 +113,7 @@
 
                 <br clear="all">
             </div>
+            -->
         @endif
 
 

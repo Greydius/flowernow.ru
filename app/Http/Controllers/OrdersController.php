@@ -474,8 +474,24 @@ class OrdersController extends Controller
                                         });
                                 }
 
-                                $orders = $orderModel->get()->toArray();
+                                $orders = $orderModel->get()->makeVisible('created_at')->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
+
+                                try {
+                                        foreach($orders as $key => &$_order) {
+                                                if($_order['receiving_time'] != 'Время согласовать') {
+                                                        $tz = str_replace('UTC', '', $_order['shop']['city']['region']['tz']);
+                                                        $receiving_time_array = AppHelper::orderTimeToArray($_order['receiving_time']);
+                                                        $fromTime = $_order['receiving_date'].' '.$receiving_time_array[0];
+                                                        $toTime = $_order['receiving_date'].' '.$receiving_time_array[1];
+                                                        $_order['receiving_time_msk'] = [];
+                                                        $_order['receiving_time_msk']['from'] = \Carbon::parse($fromTime, $tz)->setTimezone('+3:00')->format('H:i');
+                                                        $_order['receiving_time_msk']['to'] = \Carbon::parse($toTime, $tz)->setTimezone('+3:00')->format('H:i');
+                                                }
+                                        }
+                                } catch(\Exception $e) {
+
+                                }
 
                         } else {
                                 $orders = $this->user->getShop()->orders()->with('orderLists.product')
@@ -484,7 +500,7 @@ class OrdersController extends Controller
                                         ->orderBy(\DB::raw('FIELD(status, "new", "accepted", "completed")'))
                                         ->orderBy('created_at', 'desc')
                                         ->orderBy('receiving_date', 'asc')
-                                        ->orderBy('receiving_time', 'asc')->get()->toArray();
+                                        ->orderBy('receiving_time', 'asc')->get()->makeVisible('created_at')->toArray();
 
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
                         }
@@ -506,13 +522,25 @@ class OrdersController extends Controller
                         $order = Order::with('orderLists.product')->where('id', $id)->firstOrFail();
                         $shop = $order->shop;
                         $shops = Shop::where('id', '!=', $shop->id)->get();
+
+                        if($order->receiving_time != 'Время согласовать') {
+                                $tz = str_replace('UTC', '', $order->shop->city->region->tz);
+                                $receiving_time_array = AppHelper::orderTimeToArray($order->receiving_time);
+                                $fromTime = $order->receiving_date.' '.$receiving_time_array[0];
+                                $toTime = $order->receiving_date.' '.$receiving_time_array[1];
+                                $order->receiving_time_msk = new \stdClass();
+                                $order->receiving_time_msk->from = \Carbon::parse($fromTime, $tz)->setTimezone('+3:00')->format('H:i');
+                                $order->receiving_time_msk->to = \Carbon::parse($toTime, $tz)->setTimezone('+3:00')->format('H:i');
+                        }
+
                 } else {
                         try {
                                 $shop = $this->user->getShop();
-                                $order = $shop->orders()->with('orderLists.product')->where('id', $id)->firstOrFail();
+                                $order = $shop->orders()->with('orderLists.product')->with('shop.city.region')->where('id', $id)->firstOrFail();
                                 if($order->payment == Order::$PAYMENT_CASH && !$order->confirmed) {
                                         return redirect()->route('admin.orders');
                                 }
+
                         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
                                 \Log::debug('View order: id = '.$id.', shop = '.$shop->id);
                                 throw new \Illuminate\Database\Eloquent\ModelNotFoundException();
@@ -554,7 +582,7 @@ class OrdersController extends Controller
                                         }
                                         break;
                                 case Order::$STATUS_ACCEPTED:
-                                        if($order->status == Order::$STATUS_NEW) {
+                                        if($this->user->admin || $order->status == Order::$STATUS_NEW) {
                                                 $order->status = Order::$STATUS_ACCEPTED;
                                                 if($order->save()) {
                                                         $order->changeStatusNotification();
@@ -563,7 +591,7 @@ class OrdersController extends Controller
                                         break;
 
                                 case Order::$STATUS_COMPLETED:
-                                        if($order->status == Order::$STATUS_ACCEPTED) {
+                                        if($this->user->admin || $order->status == Order::$STATUS_ACCEPTED) {
                                                 $order->status = Order::$STATUS_COMPLETED;
                                                 $order->save();
                                                 $order->createTransaction();

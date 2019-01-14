@@ -18,7 +18,7 @@ Route::get('/', [
 ]);
 
 Route::get('/register ', '\App\Http\Controllers\Auth\RegisterController@showRegistrationForm');
-Route::get('/logi', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
+Route::get('/login', '\App\Http\Controllers\Auth\LoginController@showLoginForm');
 
 
 /*SHOP*/

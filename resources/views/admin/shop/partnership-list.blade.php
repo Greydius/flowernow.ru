@@ -14,6 +14,23 @@
         </div>
 
         <div class="m-portlet__body">
+            <form class="m-form m-form--fit m-form--label-align-right" method="post" action="{{ route('shops.partnership.add') }}">
+                {{ csrf_field() }}
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" value="" name="shop_id" placeholder="ID магазина">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" value="" name="url" placeholder="URL">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="submit" value="Сохранить" class="btn btn-success">
+                    </div>
+                </div>
+                <br>
+                <br>
+            </form>
+
             <table class="table table-bordered">
                     <tr>
                         <th>Магазин</th>

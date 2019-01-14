@@ -123,9 +123,13 @@
                                 <td>
                                     <span style="font-weight: bold"><% order.id %></span>
                                     <br>
-                                    <div ng-show="order.payed_at != ''">
+                                    <div ng-show="order.payed_at != '' && order.payment != 'cash'">
                                         <br>
-                                        <% order.payed_at_dt | date:'MM.dd HH:mm' %>
+                                        <% order.payed_at_dt | date:'dd.MM HH:mm' %>
+                                    </div>
+                                    <div ng-show="order.payment == 'cash'">
+                                        <br>
+                                        <% order.created_at_dt | date:'dd.MM HH:mm' %>
                                     </div>
                                     <div ng-show="order.payment == 'cash' && order.confirmed == 0">
                                         <br>
@@ -144,9 +148,13 @@
                                     <span ng-show="order.shop.city.region.tz != 'UTC+3:00'" style="font-weight: bold"><% order.shop.city.region.tz %></span>
                                 </td>
                                 <td>
-                                    <% order.receiving_date_dt | date:'MM.dd' %>
+                                    <% order.receiving_date_dt | date:'dd.MM' %>
                                     <br>
                                     <% order.receiving_time %>
+                                    <div ng-show="order.shop.city.region.tz != 'UTC+3:00'" style="font-weight: bold">
+                                        <br>
+                                        с <% order.receiving_time_msk.from %> до <% order.receiving_time_msk.to %> по МСК
+                                    </div>
                                     <br>
                                     <a href="/admin/order/<% order.id %>" target="_blank">
                                         Детали заказа
@@ -195,6 +203,6 @@
 
 @section('footer')
     <script src="{{ asset('assets/admin/demo/default/custom/components/forms/widgets/bootstrap-datepicker.js') }}" type="text/javascript"></script>
-    <script src="{{ asset('assets/admin/ng/ordersList.js?v=3') }}" type="text/javascript"></script>
+    <script src="{{ asset('assets/admin/ng/ordersList.js?v=20190114') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/js/orders-list.js') }}" type="text/javascript"></script>
 @stop

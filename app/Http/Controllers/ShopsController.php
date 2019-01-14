@@ -592,13 +592,22 @@ class ShopsController extends Controller
                         \Session::flash('layoutWarning', ['type' => 'warning', 'text' => 'Введите правильный адрес страницы']);
                 } else {
 
-                        $shop = $this->user->getShop();
-
-                        $banner = Banner::where('shop_id', $shop->id)->first();
-
-                        if(empty($banner)) {
+                        if($this->user->admin && !empty($request->shop_id)) {
                                 $banner = new Banner();
-                                $banner->shop_id = $shop->id;
+                                $banner->shop_id = $request->shop_id;
+
+                                $route = 'shops.partnership.list';
+                        } else {
+                                $shop = $this->user->getShop();
+
+                                $banner = Banner::where('shop_id', $shop->id)->first();
+
+                                if(empty($banner)) {
+                                        $banner = new Banner();
+                                        $banner->shop_id = $shop->id;
+                                }
+
+                                $route = 'shops.partnership';
                         }
 
                         $banner->url = $request->url;
@@ -608,7 +617,7 @@ class ShopsController extends Controller
                         \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Адрес страницы, на которой размещен код кнопки, успешно сохранен! После успешной проверки ссылки, Ваши товары будут иметь преимущество в выводе на Floristum.ru']);
                 }
 
-                return redirect()->route('shops.partnership');
+                return redirect()->route($route);
         }
 
         public function partnershipList() {

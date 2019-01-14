@@ -58,10 +58,33 @@ class HomeController extends Controller
     }
     
     public function corporate() {
+            $productTypes = ProductType::where('show_on_main', '1')->get();
             $city_id = $this->current_city->id;
             $lowPriceProducts = Product::lowPriceProducts($city_id)->take(9)->get();
+
+            $popularProducts = [];
+            $item = [];
+            $request = new Request();
+
+            foreach ($productTypes as $productType) {
+                    $request->product_type = $productType->slug;
+                    $item['productType'] = $productType;
+                    $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, $productType->id == 2 ? 6 : 8);
+                    $item['popularProductCount'] = count($item['popularProduct']);
+                    if($item['popularProductCount']) {
+                            $popularProducts[] = $item;
+                    }
+            }
+
+            if(!empty($this->user) && $this->user->admin) {
+                    //dd($popularProducts);
+            }
+
+            unset($request->product_type);
+
             return view('front.corporate', [
                     'lowPriceProducts' => $lowPriceProducts,
+                    'popularProducts' => $popularProducts,
                     'pageTitle' => ('Доставка цветов для юр лиц по безналичному расчету в '.$this->current_city->name_prepositional.' | Оплата с расчетного счета организации'),
                     'pageDescription' => ('Доставка цветов и букетов для юр лиц в '.$this->current_city->name_prepositional.' по безналичному расчету. Федеральная курьерская служба доставки букетов цветов. Оплата с расчетного счета организации. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 руб.'),
                     'pageKeywords' => ('доставка, цветы, юридическое лицо, безнал, расчетный счет, '.$this->current_city->name.', область, заказать, онлайн, круглосуточно, бесплатная, на дом, в офис, интернет, магазин, растения, россии, букеты'),
