@@ -450,6 +450,7 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
+                                $perPage = 20;
                                 $orderModel = Order::with('orderLists.product')
                                         ->with('shop.city.region')
                                         ->with('promo')
@@ -474,8 +475,14 @@ class OrdersController extends Controller
                                         });
                                 }
 
-                                $orders = $orderModel->get()->makeVisible('created_at')->toArray();
+                                $orders_data = json_decode($orderModel->paginate($perPage)->toJson(), true);
+                                $orders = $orders_data['data'];
+                                unset($orders_data['data']);
+
+                                //$orders = $orderModel->paginate($perPage)->makeVisible('created_at')->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
+
+                                $response = array_merge($response, $orders_data);
 
                                 try {
                                         foreach($orders as $key => &$_order) {
@@ -494,15 +501,24 @@ class OrdersController extends Controller
                                 }
 
                         } else {
-                                $orders = $this->user->getShop()->orders()->with('orderLists.product')
+                                $perPage = 20;
+                                $orderModel = $this->user->getShop()->orders()->with('orderLists.product')
                                         ->where('payed', 1)
                                         ->where('confirmed', 1)
                                         ->orderBy(\DB::raw('FIELD(status, "new", "accepted", "completed")'))
                                         ->orderBy('created_at', 'desc')
                                         ->orderBy('receiving_date', 'asc')
-                                        ->orderBy('receiving_time', 'asc')->get()->makeVisible('created_at')->toArray();
+                                        ->orderBy('receiving_time', 'asc');
+                                        //->get()->makeVisible('created_at')->toArray();
 
+                                $orders_data = json_decode($orderModel->paginate($perPage)->toJson(), true);
+                                $orders = $orders_data['data'];
+                                unset($orders_data['data']);
+
+                                //$orders = $orderModel->paginate($perPage)->makeVisible('created_at')->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
+
+                                $response = array_merge($response, $orders_data);
                         }
 
                         $response['orders'] = $orders;

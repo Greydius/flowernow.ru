@@ -7,6 +7,10 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
         $scope.dateTo = "";
         $scope.search_str = "";
 
+        $scope.totalPages = 0;
+        $scope.currentPage = 1;
+        $scope.range = [];
+
         $scope.getOrders = function() {
                 $http({
 
@@ -17,6 +21,7 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                                 'dateFrom': $scope.dateFrom,
                                 'dateTo': $scope.dateTo,
                                 'search': $scope.search_str,
+                                'page': $scope.currentPage,
                         }
 
                 }).then(function (response) {
@@ -26,7 +31,21 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                           value.created_at_dt = new Date(value.created_at);
                           value.receiving_date_dt = new Date(value.receiving_date);
                         });
-                        
+
+                        $scope.prev_page = response.data.prev_page_url;
+                        $scope.next_page = response.data.next_page_url;
+
+                        $scope.totalPages   = response.data.last_page;
+                        $scope.currentPage  = response.data.current_page;
+                        // Pagination Range
+                        var pages = [];
+
+                        for(var i=1;i<=response.data.last_page;i++) {
+                                pages.push(i);
+                        }
+
+                        $scope.range = pages;
+
                 }, function (response) {
 
 
@@ -69,5 +88,19 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                         $scope.search_str = $('#m_form_search').val();
                         $scope.getOrders();
                 }
+        }
+
+        $scope.ranges = function (min, max, step) {
+                step = step || 1;
+                var input = [];
+                for (var i = min; i <= max; i += step) {
+                        input.push(i);
+                }
+                return input;
+        }
+
+        $scope.getOrdersPage = function(page) {
+                $scope.currentPage = page;
+                $scope.getOrders();
         }
 });
