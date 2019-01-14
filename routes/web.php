@@ -333,6 +333,36 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'as' => 'admin.article.destroy'
                 ]);
 
+                Route::get('promoTexts', [
+                        'uses' => 'PromoTextController@index',
+                        'as' => 'admin.promo_texts'
+                ]);
+
+                Route::get('promoText/create', [
+                        'uses' => 'PromoTextController@create',
+                        'as' => 'admin.promo_text.create'
+                ]);
+
+                Route::get('promoText/edit/{id}', [
+                        'uses' => 'PromoTextController@edit',
+                        'as' => 'admin.promo_text.edit'
+                ]);
+
+                Route::post('promoText/store', [
+                        'uses' => 'PromoTextController@store',
+                        'as' => 'admin.promo_text.store'
+                ]);
+
+                Route::post('promoText/update/{id}', [
+                        'uses' => 'PromoTextController@update',
+                        'as' => 'admin.promo_text.update'
+                ]);
+
+                Route::get('promoText/destroy/{id}', [
+                        'uses' => 'PromoTextController@destroy',
+                        'as' => 'admin.promo_text.destroy'
+                ]);
+
                 Route::get('invoices', [
                         'uses' => 'InvoicesController@index',
                         'as' => 'admin.invoices'
