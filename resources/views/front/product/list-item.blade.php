@@ -1,6 +1,6 @@
 
 
-<div class="col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6">
+<div class="col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6 {{ !empty($class) ? $class : '' }}">
     <div class="media-item">
         <a href="/flowers/{{ $_item['slug'] }}">
             <figure>

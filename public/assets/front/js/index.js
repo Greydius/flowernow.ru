@@ -49,6 +49,10 @@ $(document).ready(function() {
                 var isActive = $(this).hasClass('active')
                 var $parent = $(this).parents('.filter-block');
                 $('li', $parent).removeClass('active');
+                $('.filter-block-on-main li').removeClass('active');
+                if($(this).parents('.filter-block-on-main')) {
+                        $('.filter-block li').removeClass('active');
+                }
                 if(!isActive) {
                         $(this).addClass('active');
                 }

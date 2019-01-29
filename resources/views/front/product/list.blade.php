@@ -11,17 +11,12 @@
 
     <br class="hidden-xs hidden-sm">
 
-    <div class="row" ng-hide="isFiltered">
-        <div class="col-md-9">
+    <div class="row list-products" ng-hide="isFiltered">
+        <div class="col-md-5">
             <h3 class="margin-top-null"><strong>{{ !empty($title) ? $title : 'Популярные букеты' }}</strong></h3>
         </div>
-        <div class="col-md-3">
-            <ul class="list-inline list-sort text-right">
-                <!-- <li>Сортировать:</li>
-                <li><a href="#">по цене</a></li>
-                <li><a href="#">по новизне</a></li>
-                -->
-            </ul>
+        <div class="col-md-7 hidden-xs hidden-sm">
+            @include('front.product-types')
         </div>
     </div>
 
@@ -29,77 +24,10 @@
 
     <div class="row" id="products-container">
 
-        <div class="col-md-3 col-md-push-9 hidden-xs hidden-sm">
-                <p class="h3 margin-top-null">Уточнить категорию</p>
-
-                <button class="btn btn-info btn-block" ng-click="resetFilter()">Сбросить фильтр</button>
-                <br>
-
-                <div class="filter-block filter-product-checker">
-                    <button class="btn btn-lg btn-block btn-default" type="button" data-toggle="collapse" data-target="#filter-product-type" aria-expanded="false" aria-controls="filter3"><span class="pull-left">Тип букета</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse in" id="filter-product-type">
-                        <ul class="list-unstyled filter">
-                            @foreach ($productTypes as $type)
-                                @if(!count($popularProduct))
-                                    <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class=""><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
-                                @else
-                                    @foreach($popularProducts as $item)
-                                        @if($item['productType']->id == $type->id && $item['popularProductCount'])
-                                            <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type_filter) && request()->product_type_filter == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default {{ count($popularProduct) && $popularProduct->total() >= 30 ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter4" aria-expanded="{{ count($popularProduct) && $popularProduct->total() >= 30 ? 'true' : 'false'}}" aria-controls="filter4"><span class="pull-left">Цветы в букете</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse {{ count($popularProduct) && $popularProduct->total() >= 30 ? 'in' : ''}}" id="filter4">
-                        <ul class="list-unstyled">
-                            @foreach ($flowers as $flower)
-                                <li>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" value="{{ $flower->id }}" data-slug="{{ $flower->slug }}" name="flowers[]" {{ count($popularProduct) && !empty(request()->flowers) && in_array($flower->id, request()->flowers) ? 'checked' : null }}> {{ $flower->name }}
-                                        </label>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="filter-block filter-product-checker">
-                    <button class="btn btn-lg btn-block btn-default {{ count($popularProduct) && $popularProduct->total() >= 30 ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter-product-price" aria-expanded="{{ count($popularProduct) && $popularProduct->total() >= 30 ? 'true' : 'false'}}" aria-controls="filter1"><span class="pull-left">Цены</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse {{ count($popularProduct) && $popularProduct->total() >= 30 ? 'in' : ''}}" id="filter-product-price">
-                        <ul class="list-unstyled">
-                            @foreach ($prices as $price)
-                                <li data-id="{{ $price->id }}" data-from="{{ $price->price_from }}" data-to="{{ $price->price_to }}" class="{{ count($popularProduct) && !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == $price->price_from && request()->price_to == $price->price_to ? 'active' : null }}">{{ $price->name }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
 
 
-                <div class="filter-block">
-                    <button class="btn btn-lg btn-block btn-default {{ count($popularProduct) && $popularProduct->total() >= 30 ? '' : 'collapsed'}}" type="button" data-toggle="collapse" data-target="#filter-product-color" aria-expanded="{{ count($popularProduct) && $popularProduct->total() >= 30 ? 'true' : 'false'}}" aria-controls="filter5"><span class="pull-left">Цвет</span> <span class="pull-right glyphicon glyphicon-menu-up" aria-hidden="true"></span></button>
-                    <div class="collapse {{ count($popularProduct) && $popularProduct->total() >= 30 ? 'in' : ''}}" id="filter-product-color">
-                        <div class="row">
-                            @foreach ($colors as $color)
-                                <div class="col-2-5 color-item {{ count($popularProduct) && !empty(request()->color) && request()->color == $color->id ? 'active' : null }}" data-id="{{ $color->id }}">
-                                    <div class="selected-color {{ $color->css_class }}"></div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-        </div>
+        <div class="col-md-12"  style="background-color: #fff; padding-top: 20px;">
 
-
-
-        <div class="col-md-9 col-md-pull-3"  style="background-color: #fff; padding-top: 20px;">
 
 
             @include('front.product.search')
@@ -108,9 +36,10 @@
 
                 @if(count($popularProduct))
                     <div class="row">
-                        @foreach($popularProduct as $_item)
+                        
+                        @foreach($popularProduct as $key => $_item)
 
-                            @include('front.product.list-item')
+                            @include('front.product.list-item', ['col' => 3, 'class' => ($key < count($popularProduct)-3 ? 'pull-right' : '')])
 
                         @endforeach
                     </div>
@@ -123,7 +52,7 @@
                         <div class="row">
                             @foreach($lowPriceProducts as $_item)
 
-                                @include('front.product.list-item')
+                                @include('front.product.list-item', ['col' => 3])
 
                             @endforeach
                         </div>
@@ -142,7 +71,7 @@
                             <div class="row">
                                 @foreach($lowPriceProducts as $_item)
 
-                                    @include('front.product.list-item')
+                                    @include('front.product.list-item', ['col' => 3])
 
                                 @endforeach
                             </div>
@@ -152,6 +81,14 @@
                     </div>
                 </div>
 
+            @endif
+
+            @if(!empty($promoText))
+                <div class="row">
+                    <div class="col-md-12">
+                        {!! $promoText->text !!}
+                    </div>
+                </div>
             @endif
 
         </div>

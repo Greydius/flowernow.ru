@@ -53,27 +53,27 @@ class ProductsController extends Controller
                 $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
 
                 if(empty($request->product_type)) {
+                        /*
                         $item = [];
                         $request->q = "новог";
                         $request->order = "rand";
                         $item['productType'] = null;
                         $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
                         $item['popularProductCount'] = count($item['popularProduct']);
-                        if(!empty($this->user) && $this->user->admin) {
-                                //dd($this->current_city->id);
-                        }
+
                         if($item['popularProductCount']) {
                                 $popularProducts[] = $item;
                         }
 
                         unset($request->q);
                         unset($request->order);
+                        */
 
                         $item = [];
                         foreach ($productTypes as $productType) {
                                 $request->product_type = $productType->slug;
                                 $item['productType'] = $productType;
-                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, $productType->id == 2 ? 6 : 8);
+                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
                                 $item['popularProductCount'] = count($item['popularProduct']);
                                 if($item['popularProductCount']) {
                                         $popularProducts[] = $item;
@@ -142,24 +142,28 @@ class ProductsController extends Controller
                         $lowPriceProducts = Product::lowPriceProducts($city_id)->take(12)->get();
                 }
 
+                $promoText = null;
 
                 if(!empty($this->user) && $this->user->admin) {
-                        //dd($lowPriceProducts);
+                        //dd($popularProduct);
+                }
+
+                if(!empty($request->flowers)) {
+                        $promoText = \App\Model\PromoText::where('flower_id', $request->flowers[0])->where('type', 'info')->first();
+                        if(!empty($promoText)) {
+
+                        }
                 }
 
                 return view($viewFile,[
                         'title' => $title,
                         'meta' => $meta,
+                        'promoText' => $promoText,
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
                         'lowPriceProducts' => $lowPriceProducts,
                         'singleProducts' => $singleProducts,
-                        'prices' => Price::all(),
-                        'sizes' => Size::all(),
-                        'productTypes' => $productTypes,
                         'currentType' => $currentType,
-                        'colors' => Color::all(),
-                        'flowers' => Flower::orderBy('popularity', 'desc')->limit(9)->get(),
                         'specialOffers' => $specialOffers,
                         'specialOfferProducts' => $specialOfferProducts,
                 ]);

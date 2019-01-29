@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\City;
 use App\Model\Agent;
+use App\Model\ProductType;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -73,6 +74,8 @@ class Controller extends BaseController
 
                             setcookie('city', $this->detected_city->id, time() + (86400 * 30), "/", \Config::get('app.domain'));
 
+                            $productTypes = ProductType::where('show_on_main', '1')->get();
+
                     }
 
                     try{
@@ -83,6 +86,10 @@ class Controller extends BaseController
                     }
 
                     View::share('detected_city', $this->detected_city);
+                    View::share('_productTypes', ProductType::where('show_on_main', '1')->get());
+                    View::share('_flowers', \App\Model\Flower::orderBy('popularity', 'desc')->limit(9)->get());
+                    View::share('_prices', \App\Model\Price::all());
+                    View::share('_colors', \App\Model\Color::all());
 
 
                     /*

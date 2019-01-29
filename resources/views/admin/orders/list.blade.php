@@ -121,7 +121,10 @@
                                 </td>
                             @else
                                 <td>
-                                    <span style="font-weight: bold"><% order.id %></span>
+                                    <span style="font-weight: bold">
+                                        <% order.id %>
+                                        <i ng-show="order.finance_comment" class="la la-info text-warning" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% order.finance_comment %>"></i>
+                                    </span>
                                     <br>
                                     <div ng-show="order.payed_at != '' && order.payment != 'cash'">
                                         <br>

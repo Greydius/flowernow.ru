@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20181223_6') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20180829') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20190124_3') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190123_3') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -64,14 +64,16 @@
         </div>
     </div>
     <header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed-' : null }}">
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
 
-                    @if(!empty($detected_city))
-                        <div class="visible-xs visible-sm mobile-top-header static on-top" style="display: none !important;">
-                            <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
+
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container2">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+
+                        @if(!empty($detected_city))
+                            <div class="visible-xs visible-sm mobile-top-header static on-top" style="display: none !important;">
+                                <div class="confirm-city-mobile-widget" data-role="confirm-city-mobile-widget">
                             <span class="city-name">
                                 <!--googleoff: all--><!--noindex-->
                                 <a href="javascript:" onclick="chooseCity(); return false;" class="city-select w-choose-city-widget" data-city-id="ec54f012-3053-11e1-ae41-001517c526f0" rel="nofollow noopener">
@@ -80,136 +82,145 @@
                                 </a>
                                 <!--/noindex--><!--googleon: all-->
                             </span>
-                                <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    <span class="close-btn" data-id="ec54f012-3053-11e1-ae41-001517c526f0"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                </div>
                             </div>
-                        </div>
-                @endif
-
-                <!--
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mainMenu" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                -->
-
-                    <div class="link-city hidden-md hidden-lg">
-                        <a href="#" onclick="chooseCity(); return false;">
-                            <i class="fa fa-map-marker"></i>
-                            {{ $current_city->name }}
-                        </a>
-                    </div>
-
-                    <!--
-                <button type="button" class="navbar-toggle">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                -->
-
-                    <div class="link-filter hidden-md hidden-lg">
-                        <a href="#" onclick="$('.filters-container').addClass('active'); $('body').addClass('blocked'); return false;">
-                            Фильтр букетов
-                            <i class="fa fa-reorder"></i>
-                        </a>
-                    </div>
-
-                    <a class="navbar-brand logo" href="/"></a>
-                    <div class="slogan text-primary hidden-xs hidden-sm" style="{{ !empty($holiday_icon) ? 'padding-left: 100px;' : '' }}">
-                        @if(!empty($holiday_icon))
-                            <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" alt="" class="holiday-img" style="width: 135px; top: -10px; left: -19px;">
                         @endif
-                        Федеральная служба доставки цветов
-                    </div>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="mainMenu">
-                    <ul class="nav navbar-nav navbar-right">
-
-                    <!--<li class="dropdown link-support">
-                        <a href="{{ route('front.faq') }}" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
-                        
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Помощь</a>
-                        <div class="dropdown-menu dropdown-support">
-                            <form class="form-support-search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Чем мы можем вам помочь?">
-                                </div>
-                            </form>
-                            <div class="asqed-block">
-                                <p><strong>Рекомендуем почитать</strong></p>
-                                <ul class="list-unstyled">
-                                    <li><a href="#">Как оплатить заказ?</a></li>
-                                    <li><a href="#">Как оформить заказ?</a></li>
-                                    <li><a href="#">Когда смогут доставить?</a></li>
-                                    <li><a href="#">Свежесть цветов</a></li>
-                                    <li><a href="#">Что такое Flowwow?</a></li>
-                                    <li><a href="#">Сохранность денежныйх средств</a></li>
-                                    <li><a href="#">Соответсвует ли букет изображению на сайте?</a></li>
-                                </ul>
+                            <div class="link-filter hidden-md hidden-lg">
+                                <a href="#" onclick="$('.filters-container').addClass('active'); $('body').addClass('blocked'); return false;">
+                                    Фильтр букетов
+                                    <i class="fa fa-reorder"></i>
+                                </a>
                             </div>
-                            <a href="#" class="btn btn-block btn-support">Центр помощи</a>
+
+                        <div class="link-city hidden-md hidden-lg">
+                            <a href="#" onclick="chooseCity(); return false;">
+                                <i class="fa fa-map-marker"></i>
+                                {{ $current_city->name }}
+                            </a>
                         </div>
 
-                    </li>
-                    -->
-                        <li class="dropdown link-support">
-                            <form method="get" action="{{ route('product.search') }}">
-                                <div class="flexbox">
-                                    <div class="search">
-                                        <div>
-                                            <input type="text" name="q" placeholder="Поиск..." value="{{ !empty(request()->q) ? request()->q : '' }}" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </li>
 
-                        <li class="dropdown link-support">
-                            <a href="/#filtr" class="dropdown-toggle header-filtr" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter"></i> Фильтр букетов</a>
-                        </li>
-                        <li class="dropdown link-city">
-                            <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
-                            @if(!empty($detected_city))
-                                <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
-                                    <div class="arrow"></div>
-                                    <div class="popover-content">
-                                        <div class="dropdown-city" id="dropdownCity">
-                                            <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
-                                            <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
-                                            <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
+                        <ul class="nav navbar-nav hidden-xs hidden-sm" id="header-right-bar">
+                            <li class="dropdown link-city">
+                                <a href="#" onclick="chooseCity(); return false;">{{ $current_city->name }}</a>
+                                @if(!empty($detected_city))
+                                    <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
+                                        <div class="arrow"></div>
+                                        <div class="popover-content">
+                                            <div class="dropdown-city" id="dropdownCity">
+                                                <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
+                                                <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
+                                                <a class="choose-link pull-right" href="#" onclick="chooseCity(); return false;">Выбрать другой</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
-                        </li>
-                        <!--
-                        <li class="dropdown link-login">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход</a>
-                            <div class="dropdown-menu dropdown-login">
-                                <form class="form-login-phone">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="+79196665555">
+                                @endif
+                            </li>
+                            <li class="slogan-li  hidden-xs hidden-sm">
+                                Федеральная служба<br>доставки цветов
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-city-wraper">
+                        <a class="navbar-brand logo" href="/"></a>
+
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="mainMenu">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown {{ (!empty(request()->product_type_filter) && request()->product_type_filter != 'vse-cvety' && request()->product_type_filter != 'all') || !empty(request()->single) ? 'active' : ''}}" id="productTypesMenuItem">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Тип букета
+                                </a>
+                                @if(!empty($_productTypes ))
+                                    <div class="dropdown-menu dropdown-support">
+                                        <div class="collapse in filter-block filter-product-checker filter-product-type" id="filter-product-type">
+                                            <ul class="list-unstyled filter">
+                                                @foreach ($_productTypes as $type)
+                                                    <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type_filter) && request()->product_type_filter == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
+                                                @endforeach
+                                                <li data-id="" data-slug="single" class="{{ !empty(request()->single) ? 'active' : null }}">
+                                                    <img src="{{ asset('assets/front/img/ico/poshtuchno.png') }}" alt=""> Поштучно
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-default">Получить код</button>
+                                @endif
+                            </li>
+                            <li class="dropdown {{ !empty(request()->flowers) ? 'active' : ''}}" id="flowersMenuItem">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Цветы в букете
+                                </a>
+                                @if(!empty($_flowers ))
+                                    <div class="dropdown-menu dropdown-support">
+                                        <div class="filter-block">
+                                            <ul class="list-unstyled">
+                                                @foreach ($_flowers as $flower)
+                                                    <li>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" value="{{ $flower->id }}" data-slug="{{ $flower->slug }}" name="flowers[]" {{ !empty(request()->flowers) && in_array($flower->id, request()->flowers) ? 'checked' : null }}> {{ $flower->name }}
+                                                            </label>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                            </li>
+                            <li class="dropdown {{ !empty(request()->price_from) && !empty(request()->price_to) ? 'active' : ''}}" id="priceMenuItem">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Цены
+                                </a>
+                                @if(!empty($_prices))
+                                    <div class="dropdown-menu dropdown-support">
+                                        <div class="filter-block filter-product-checker" id="filter-product-price">
+                                            <ul class="list-unstyled">
+                                                @foreach ($_prices as $price)
+                                                    <li data-id="{{ $price->id }}" data-from="{{ $price->price_from }}" data-to="{{ $price->price_to }}" class="{{ !empty(request()->price_from) && !empty(request()->price_to) && request()->price_from == $price->price_from && request()->price_to == $price->price_to ? 'active' : null }}">{{ $price->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                @endif
+                            </li>
+                            <li class="dropdown {{ !empty(request()->color) ? 'active' : ''}}" id="colorMenuItem">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    Цвет
+                                </a>
+                                @if(!empty($_colors))
+                                    <div class="dropdown-menu dropdown-support">
+                                        <div class="filter-block" id="filter-product-color">
+                                            <div class="row">
+                                                @foreach ($_colors as $color)
+                                                    <div class="col-md-6 color-item {{ !empty(request()->color) && request()->color == $color->id ? 'active' : null }}" data-id="{{ $color->id }}">
+                                                        <div class="selected-color {{ $color->css_class }}"></div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </li>
+                            <li class="dropdown link-support">
+                                <form method="get" action="{{ route('product.search') }}">
+                                    <div class="flexbox">
+                                        <div class="search">
+                                            <div>
+                                                <input type="text" name="q" placeholder="Поиск..." value="{{ !empty(request()->q) ? request()->q : '' }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </form>
-
-                                <p>На телефон будет отправлено СМС с кодом для входа в ваш кабинет</p>
-                                <br>
-                                <p class="text-muted">Или <a class="text-muted" href="#">войти с помощью эл. почты</a></p>
-                                <br>
-                                <p class="h6 text-muted">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="#">политикой конфиденциальности</a> и <a class="text-muted" href="#">соглашением об обработке персональных данных</a></p>
-
-                            </div>
-                        </li>-->
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div> <!-- /.container -->
-        </nav>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div> <!-- /.container -->
+            </nav>
     </header>
 
 
@@ -652,7 +663,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <div class="row last-row">
                 <div class="col-sm-8">
                     <div class="row">
                         <div class="col-md-4">
@@ -661,7 +672,7 @@
                                 <span class="h4 m-t-10">
                                     <a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a>
                                     <br>
-                                    <a href="tel:{{ config('site.phones.hot_normalized') }}"><strong>{{ config('site.phones.hot') }}</strong></a>
+                                    <a class="footer-phone" href="tel:{{ config('site.phones.hot_normalized') }}">{{ config('site.phones.hot') }}</a>
                                 </span>
                             </p>
                         </div>
@@ -697,8 +708,8 @@
     <script src="{{ asset('assets/admin/ng/ngApp.js') }}"></script>
     <script src="{{ asset('assets/front/js/main.js') }}"></script>
     <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-    <script src="{{ asset('assets/front/js/custom.js?v=20180618-2') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js?v=20180914') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js?v=20190123-2') }}"></script>
+    <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->

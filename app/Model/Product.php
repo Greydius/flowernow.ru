@@ -132,7 +132,8 @@ class Product extends MainModel
                         183, //белых гортензий
                         166 //белых анемонов
                         ];
-                        $request->product_type = 'klassika';
+                        //$request->product_type = 'klassika';
+                        unset($request->product_type);
                         return self::popularSingle2($city_id, $singleProductsIds)->paginate($perPage);
                 }
 

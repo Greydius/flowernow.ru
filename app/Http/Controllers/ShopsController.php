@@ -588,7 +588,9 @@ class ShopsController extends Controller
         }
 
         public function partnershipAdd(Request $request) {
-                if(empty($request->url) || filter_var($request->url, FILTER_VALIDATE_URL) === FALSE) {
+                $route = 'shops.partnership';
+
+                if(empty($request->url)) {
                         \Session::flash('layoutWarning', ['type' => 'warning', 'text' => 'Введите правильный адрес страницы']);
                 } else {
 
@@ -606,8 +608,6 @@ class ShopsController extends Controller
                                         $banner = new Banner();
                                         $banner->shop_id = $shop->id;
                                 }
-
-                                $route = 'shops.partnership';
                         }
 
                         $banner->url = $request->url;

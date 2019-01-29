@@ -60,7 +60,7 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 
         $scope.filter = function() {
 
-                var $productType = $('#filter-product-type li.active');
+                var $productType = $('.filter-product-type li.active');
                 var $productFlower = $('input[name="flowers[]"]:checked');
                 var $productPrice = $('#filter-product-price li.active');
                 var $productColor = $('#filter-product-color .color-item.active');
@@ -172,7 +172,7 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
                         if(path.flowers.length > 1) {
                                 getParams.flowers = path.flowers.slice(1)
                         }
-                } else {
+                } else if(path.productType != 'single') {
                         url += '/vse-cvety';
                 }
 

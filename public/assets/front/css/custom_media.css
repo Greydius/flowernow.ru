@@ -43,6 +43,11 @@
 }
 
 @media (min-width: 0) and (max-width: 991px) {
+
+        .container2 {
+                padding: 0 15px;
+        }
+
     .navbar {
         min-height: 35px;
         height: 35px;
@@ -61,7 +66,7 @@
 
     .navbar-default .link-city > a {
         background: none;
-        padding-left: 23px;
+        padding-left: 13px;
     }
 
     .navbar-default .link-city > a i.fa, .link-filter a i.fa {
@@ -99,7 +104,7 @@
     }
 
     .link-filter a {
-        margin-right: 31px;
+        margin-right: 22px;
     }
 
     .media-item .description-media-item .buy .buy-btn {
@@ -148,4 +153,10 @@
     .media-item-opened .feedback-date {
         display: block;
     }
+}
+
+@media only screen and (min-width: 768px) {
+        .dropdown:hover .dropdown-menu {
+                display: block;
+        }
 }

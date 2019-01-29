@@ -15,14 +15,20 @@
 
         <div class="row"> 
             <div class="col-md-12 m-b-4">
-              
- <br> 
+
+                <br><br><br>
         <h1 class="h2 margin-top-null m-b-1">Доставка цветов для юр лиц по безналичному расчету в {{ $current_city->name_prepositional }}.</h1>
 <div style="background-color: #fff; padding: 15px;"><h2 style="font-size: 20px; font-weight: bold;">Хотите заказывать цветы как юр. лицо с оплатой с расчетного счета в {{ $current_city->name_prepositional }}? </h2> 
 
 <img src="http://floristum.ru/images/dostavka_tsvetov_po_beznalu_white.png" alt="Доставка цветов по безналу юр лицам" align="left"  vspace="15" hspace="35"><strong><br>Заказывать по безналу просто!</strong> <br><br><b>Желаете заказать цветы прямо сейчас?</b> — просто выберите букет на <a href="/">Floristum.ru в  {{ $current_city->name_prepositional }}</a>, а на странице заказа выберите способ оплаты "Безнал для юр. лиц", заполните реквизиты и на Вашу почту будет мгновенно отправлен договор и выставлен счет. <br>
 <br><b>Предпочитаете заключить договор заблаговременно и заказывать цветы по предоплате?</b> —  пожалуйста, напишите нам о своих намерениях: <b>corporate@floristum.ru</b> или позвоните: <b>8 (812) 982-23-83</b>. <br> <br> Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц. 
        <br> <br> <br> <br></div><br> <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        @include('front.product-types')
+                    </div>
+                </div>
         <ul> <h3>Преимущества работы с <a href="/">Floristum.ru в  {{ $current_city->name_prepositional }}</a> для юр лиц<br>(коммерческое предложение на цветы с доставкой):</h3><br>
                       <li><img src="http://floristum.ru/images/dostavka_tsvetov_v_ofis1.png" alt="Доставка цветов и букетов" align="right" 
   vspace="10" hspace="25">
