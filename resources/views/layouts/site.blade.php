@@ -35,7 +35,7 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20190124_3') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=201901295555') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190123_3') }}">
 
     <!--[if lt IE 9]>
@@ -708,8 +708,8 @@
     <script src="{{ asset('assets/admin/ng/ngApp.js') }}"></script>
     <script src="{{ asset('assets/front/js/main.js') }}"></script>
     <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
-    <script src="{{ asset('assets/front/js/custom.js?v=20190123-2') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js?v=201901295555') }}"></script>
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->

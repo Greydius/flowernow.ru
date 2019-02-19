@@ -55,7 +55,7 @@ class User extends Authenticatable
             $ordersModel= Order::select('id')->where('payed', 1);
 
             if(!$this->admin) {
-                    $ordersModel->whereIn('shop_id', $this->shops->pluck('id')->toArray());
+                    $ordersModel->whereIn('shop_id', $this->shops->pluck('id')->toArray())->where('confirmed', 1);
             }
 
             $status = ['new', 'accepted'];

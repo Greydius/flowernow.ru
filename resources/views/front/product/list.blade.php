@@ -7,7 +7,7 @@
 
 @section('content')
 
-<div class="container" ng-controller="mainPage">
+<div class="container 34" ng-controller="mainPage">
 
     <br class="hidden-xs hidden-sm">
 
@@ -57,7 +57,7 @@
                             @endforeach
                         </div>
 
-                        {{ $lowPriceProducts->appends(request()->query())->withPath('/catalog?order=price')->links() }}
+                        {{ $lowPriceProducts->withPath('/catalog?order=price')->links() }}
                 @endif
 
             @else
@@ -76,7 +76,7 @@
                                 @endforeach
                             </div>
 
-                            {{ $lowPriceProducts->appends(request()->query())->withPath('/catalog?order=price')->links() }}
+                            {{ $lowPriceProducts->withPath('/catalog?order=price')->links() }}
                         @endif
                     </div>
                 </div>

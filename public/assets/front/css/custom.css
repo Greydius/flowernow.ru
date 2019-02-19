@@ -39,7 +39,7 @@ html.blocked, body.blocked {
     left: 0;
     z-index: 9999999;
     opacity: 0.8;
-    display: none;
+    display: block;
 }
 
 .preloader-wrapper .preloader {
@@ -49,6 +49,7 @@ html.blocked, body.blocked {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     width: 120px;
+    text-align: center;
 }
 
 .fl-preloader {
@@ -957,4 +958,14 @@ header .location-icon {
 
 .navbar-default #header-right-bar > li + li {
         border-left: none;
+}
+
+.filter-block-on-main ul li {
+        display: inline-block;
+        border-bottom: 0;
+        text-align: center
+}
+
+.filter-block-on-main span {
+        padding-top: 5px; display: block; text-decoration: underline;
 }

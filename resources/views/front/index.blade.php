@@ -9,7 +9,7 @@
                 <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" class="holiday-img">
             @endif
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 20px;">
             <div class="col-md-4">
                 <h1 class="h2 sm-h2">Доставка цветов<br>в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">{{ $current_city->name_prepositional }}</a></h1>
                 <span id="filtr" name="filtr"></span>
@@ -29,7 +29,7 @@
             @if(empty($popularProducts))
                 <div class="row hidden-xs hidden-sm">
                     <div class="col-md-5">
-                        <h2 class="margin-top-null"><strong>{{ !empty($currentType) ? $currentType->alt_name : null }}</strong></h2>
+                        <h2 class="margin-top-null">{{ !empty($currentType) ? $currentType->alt_name : null }}</h2>
                     </div>
                     <div class="col-md-7">
                         <ul class="list-inline list-sort text-right">
@@ -56,7 +56,7 @@
                                     <div class="hidden-lg hidden-md hidden-xs">
                                         <br><br>
                                     </div>
-                                    <h2 class="margin-top-null"><strong>{{ $item['productType']->alt_name }} с доставкой в {{ $current_city->name_prepositional }}</strong></h2>
+                                    <h2 class="margin-top-null">{{ $item['productType']->alt_name }} с доставкой в {{ $current_city->name_prepositional }}</h2>
                                     <br class="hidden-lg hidden-md">
 
                                     <div class="row">
@@ -87,7 +87,7 @@
                                     <br><br>
                                 </div>
 
-                                <h2 class="margin-top-null"><strong>Букеты цветов поштучно</strong></h2>
+                                <h2 class="margin-top-null">Букеты цветов поштучно</h2>
                                 <br class="hidden-lg hidden-md">
 
                                 <div class="row">
@@ -110,7 +110,7 @@
                                 <div class="hidden-lg hidden-md hidden-xs">
                                     <br><br>
                                 </div>
-                                <h2 class="margin-top-null"><strong>Самые низкие цены</strong></h2>
+                                <h2 class="margin-top-null">Самые низкие цены</h2>
                                 <br class="hidden-lg hidden-md">
 
                                 <div class="row">
@@ -174,7 +174,7 @@
                                     <div class="hidden-lg hidden-md hidden-xs">
                                         <br><br>
                                     </div>
-                                    <h2 class="margin-top-null specialOffer"><strong>{{ $specialOffer->name }}</strong></h2>
+                                    <h2 class="margin-top-null specialOffer">{{ $specialOffer->name }}</h2>
                                     <br class="hidden-lg hidden-md">
 
                                     <div class="row">
@@ -202,7 +202,7 @@
                                         <div class="hidden-lg hidden-md hidden-xs">
                                             <br><br>
                                         </div>
-                                        <h2 class="margin-top-null"><strong>{{ $item['productType']->alt_name }}</strong></h2>
+                                        <h2 class="margin-top-null">{{ $item['productType']->alt_name }}</h2>
                                         <br class="hidden-lg hidden-md">
 
                                         <div class="row">

@@ -9,7 +9,7 @@
                         <h4 class="modal-title" id="myLargeModalLabel">Выбор города</h4>
                     </div>
                     <div class="col-md-5">
-                        <input type="text" class="form-control input-sm" placeholder="Название города" id="search-city-input">
+                        <input type="text" class="form-control input-sm" placeholder="Название города" id="search-city-input" autocomplete="off">
                     </div>
                 </div>
             </div>

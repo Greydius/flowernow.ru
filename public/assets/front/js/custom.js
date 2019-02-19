@@ -1,6 +1,27 @@
 var region_visible = null;
 
+$.ajax({
+        beforeSend: function() {
+                preloader('show');
+        },
+        complete: function() {
+                preloader('hide');
+        }
+});
+
+window.onbeforeunload = function(e) {
+        // check condition
+        preloader('show');
+};
+
 $(document).ready(function() {
+
+        $(window).on('load', function () {
+                setTimeout(function() {
+                        preloader('hide');
+                }, 500);
+        })
+
         $('.phone').mask("+7(999)999-99-99");
 
 
@@ -33,6 +54,29 @@ $(document).ready(function() {
                         $(this).parent('form').submit();
                         return false;
                 }
+        }).on('click', '.filter-product-checker ul li', function() {
+                var isActive = $(this).hasClass('active')
+                var $parent = $(this).parents('.filter-block');
+                $('li', $parent).removeClass('active');
+                $('.filter-block-on-main li').removeClass('active');
+                if($(this).parents('.filter-block-on-main')) {
+                        $('.filter-block li').removeClass('active');
+                }
+                if(!isActive) {
+                        $(this).addClass('active');
+                }
+
+                applyFilter();
+        }).on('click', '#filter-product-color .color-item', function() {
+                var isActive = $(this).hasClass('active')
+                $('#filter-product-color .color-item').removeClass('active');
+                if(!isActive) {
+                        $(this).addClass('active');
+                }
+
+                applyFilter();
+        }).on('change', 'input[name="flowers[]"]', function() {
+                applyFilter();
         });
 });
 
@@ -103,3 +147,7 @@ jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function(arg) {
         return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
     };
 });
+
+function applyFilter() {
+        angular.element('.filters-container').scope().getProducts();
+}

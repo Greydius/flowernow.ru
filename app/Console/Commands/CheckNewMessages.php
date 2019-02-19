@@ -41,7 +41,7 @@ class CheckNewMessages extends Command
     public function handle()
     {
         //
-            $messages = Message::whereNull('sent_at')->get();
+            $messages = Message::whereNull('sent_at')->limit(5)->get();
 
             if(!empty($messages)) {
                     foreach ($messages as $message) {

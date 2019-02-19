@@ -45,31 +45,6 @@ $(document).ready(function() {
                 changeCity(data);
         });
 
-        $(document).on('click', '.filter-product-checker ul li', function() {
-                var isActive = $(this).hasClass('active')
-                var $parent = $(this).parents('.filter-block');
-                $('li', $parent).removeClass('active');
-                $('.filter-block-on-main li').removeClass('active');
-                if($(this).parents('.filter-block-on-main')) {
-                        $('.filter-block li').removeClass('active');
-                }
-                if(!isActive) {
-                        $(this).addClass('active');
-                }
-                
-                applyFilter();
-        }).on('click', '#filter-product-color .color-item', function() {
-                var isActive = $(this).hasClass('active')
-                $('#filter-product-color .color-item').removeClass('active');
-                if(!isActive) {
-                        $(this).addClass('active');
-                }
-
-                applyFilter();
-        }).on('change', 'input[name="flowers[]"]', function() {
-                applyFilter();
-        });
-
         $('.link-city [rel="popover"]').popover({
                 container: 'body',
                 html: true,
@@ -96,10 +71,6 @@ function setCity() {
         cityPopover('hide');
 
         return false;
-}
-
-function applyFilter() {
-        angular.element('#products-container').scope().getProducts();
 }
 
 function changeCity(data){

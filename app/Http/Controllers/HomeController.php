@@ -113,6 +113,62 @@ class HomeController extends Controller
 
     public function test(Request $request) {
 
+            $orders = Order::where('payed', 1)->select('phone')->distinct()->get();
+
+            foreach($orders as $order) {
+                    //echo $order->phone;
+                    /*
+                    $message = new \App\Model\Message();
+                    $message->message_type = 'sms';
+                    $message->send_to = $order->phone;
+                    $message->msg = json_encode(['text' => 'Ко дню влюбленных -5% на заказ цветов floristum.ru. Код Fb14']);
+                    $message->save();
+                    */
+            }
+            
+
+            /*
+            $order = Order::where('id', 37884)->with('shop')->first();
+
+
+            $shop = $order->shop;
+
+            Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                    $message->to(['nkornushin@gmail.com'])
+                            ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
+
+                    if($order->invoicePath) {
+                            $message->attach($order->invoicePath);
+                    }
+            });
+            */
+
+
+/*
+            $shopId = 117;
+
+            $shop = Shop::find($shopId);
+
+            $products = Product::where('shop_id', $shop->id)->whereIn('status', [0, 3])->whereNull('single')->get();
+            $totalProductsCount = Product::where('shop_id', $shop->id)->whereNull('single')->count();
+
+            if($shop->email) {
+                    try {
+                            Mail::send('email.shopProductBan2', ['products' => $products, 'shop' => $shop, 'totalProductsCount' => $totalProductsCount], function ($message) use ($shop) {
+                                    $message->to(['nkornushin@gmail.com'])
+                                            ->subject('Уведомление для '.$shop->name.' на Floristum.ru');
+                            });
+                    } catch (\Exception $e) {
+                            echo $e->getMessage();
+                            \Log::debug('sendSuccessEmails - '.$e->getMessage());
+                    }
+            }
+
+            echo $shop->email;
+
+            exit();
+*/
+
 
             $productTypes = ProductType::where('show_on_main', '1')->get();
             $banners = Banner::whereNotNull('checked_on')->with('shop')->get();

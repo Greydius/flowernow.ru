@@ -156,7 +156,7 @@ class OrdersController extends Controller
                                                 }
                                         }
                                 }
-
+                                
                                 if($orderListCount) {
                                         \DB::commit();
 
@@ -178,7 +178,7 @@ class OrdersController extends Controller
 
                                                         if($order->invoicePath && $order->email) {
                                                                 Mail::send('email.rsNewOrder', ['order' => $order,], function ($message) use ($order) {
-                                                                        $message->to([$order->email, 'finance@floristum.ru'])
+                                                                        $message->to([$order->email])
                                                                                 ->subject('Счет от Floristum.ru №' . $order->id)
                                                                                 ->attach($order->invoicePath);
                                                                 });
@@ -205,7 +205,7 @@ class OrdersController extends Controller
                                                         });
                                                 }
                                         } catch(\Exception $e){
-
+                                                \Log::debug('Ошибка юрика.'.$e->getMessage());
                                         }
 
                                         $response = [
@@ -324,7 +324,7 @@ class OrdersController extends Controller
                                                 PromoCode::where('id', $order->promo_code_id)->update(['used_on' => \Carbon::now()->format('Y-m-d H:i:s')]);
                                         }
                                         $this->sendSuccessSms($order);
-                                        //$this->sendSuccessEmails($order);
+                                        $this->sendSuccessEmails($order);
                                 }
                         }
                 } else {
