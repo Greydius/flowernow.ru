@@ -54,7 +54,13 @@ class GenerateCashVoucher extends Command
                     $createDocumentService = (new \Platron\Atol\services\CreateDocumentRequest($tokenResponse->token));
                     $i = 0;
                     foreach($order->orderLists as $orderList) {
-                            $receiptPosition = new \Platron\Atol\data_objects\ReceiptPosition($orderList->product->name.($orderList->single ? ' ('.$orderList->qty.' шт.)' : ''), $orderList->client_price + ($i == 0 ? ($orderList->single ? $order->delivery_price : 0) + ($order->delivery_out_distance ? $order->delivery_out_distance*$order->delivery_out_price : 0) : 0), 1, \Platron\Atol\data_objects\ReceiptPosition::TAX_NONE);
+                            $receiptPosition = new \Platron\Atol\data_objects\ReceiptPosition(
+                                    $orderList->product->name.($orderList->single ? ' ('.$orderList->qty.' шт.)' : ''),
+                                    //$orderList->client_price + ($i == 0 ? ($orderList->single ? $order->delivery_price : 0) + ($order->delivery_out_distance ? $order->delivery_out_distance*$order->delivery_out_price : 0) : 0),
+                                    ($orderList->qty > 1 && !$orderList->single ? round($orderList->client_price/$orderList->qty) :  $orderList->client_price + ($i == 0 ? 0 : 0)),
+                                    ($orderList->qty > 1 && !$orderList->single ? $orderList->qty : 1),
+                                    \Platron\Atol\data_objects\ReceiptPosition::TAX_NONE
+                            );
                             $createDocumentService->addReceiptPosition($receiptPosition);
                             $i++;
                     }

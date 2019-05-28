@@ -12,8 +12,9 @@
     <br class="hidden-xs hidden-sm">
 
     <div class="row list-products" ng-hide="isFiltered">
+
         <div class="col-md-5">
-            <h3 class="margin-top-null"><strong>{{ !empty($title) ? $title : 'Популярные букеты' }}</strong></h3>
+            <h1 class="margin-top-null h2 sm-h2">{!!  !empty($title) ? $title : 'Популярные букеты' !!}</h1>
         </div>
         <div class="col-md-7 hidden-xs hidden-sm">
             @include('front.product-types')
@@ -26,9 +27,12 @@
 
 
 
-        <div class="col-md-12"  style="background-color: #fff; padding-top: 20px;">
+        <div class="col-md-12"  style="background-color: #fff; padding-top: 35px;">
 
-
+            <div class="free_phone hidden-xs">
+                <b>8 800 600-54-97</b>
+                <span>Звонок бесплатный</span>
+            </div>
 
             @include('front.product.search')
 

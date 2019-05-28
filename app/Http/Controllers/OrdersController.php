@@ -324,7 +324,7 @@ class OrdersController extends Controller
                                                 PromoCode::where('id', $order->promo_code_id)->update(['used_on' => \Carbon::now()->format('Y-m-d H:i:s')]);
                                         }
                                         $this->sendSuccessSms($order);
-                                        $this->sendSuccessEmails($order);
+                                        //$this->sendSuccessEmails($order);
                                 }
                         }
                 } else {
@@ -372,7 +372,7 @@ class OrdersController extends Controller
                         Sms::instance()->send('+79119245792', $smsText);
                         Sms::instance()->send('+79052122383', $smsText);
 
-                        if($order->phone && $order->payment != Order::$PAYMENT_CASH) {
+                        if($order->phone && $order->payment == Order::$PAYMENT_CARD) {
                                 $txt = 'Ваш заказ '.$order->id.' оплачен! Отслеживание: ';
                                 $standartOrderLink = $order->getDetailsLink();
 
@@ -381,8 +381,8 @@ class OrdersController extends Controller
                                 } catch (\Exception $e) {
                                         $shortOrderLink = $standartOrderLink;
                                 }
-                                //$txt .= $shortOrderLink;
-                                $txt .= $standartOrderLink;
+                                $txt .= $shortOrderLink;
+                                //$txt .= $standartOrderLink;
 
                                 Sms::instance()->send($order->phone, $txt);
                         }
@@ -434,10 +434,35 @@ class OrdersController extends Controller
 
         function orders() {
 
+                $stat = [];
                 $orders = $this->user->getShop()->orders()->with('orderLists.product')->where('payed', 1)->orderBy('receiving_date', 'asc')->orderBy('receiving_time', 'asc')->get();
 
+                if($this->user->admin) {
+                        $dateFrom = new \Carbon('first day of last month');
+                        $dateFrom->startOfMonth();
+                        $dateTo = new \Carbon('last day of last month');
+                        $dateTo->endOfMonth();
+
+                        $stat['lastMonth'] = [
+                                'avgOrderPrice' => Order::avgOrderPrice($dateFrom, $dateTo),
+                                'avgPayedOrders' => Order::avgPayedOrders($dateFrom, $dateTo),
+                                'ordersSumForPeriod' => Order::ordersSumForPeriod($dateFrom, $dateTo)
+                        ];
+
+                        $dateFrom = new \Carbon('first day of this month');
+                        $dateFrom->startOfMonth();
+                        $dateTo = new \Carbon();
+
+                        $stat['currentMonth'] = [
+                                'avgOrderPrice' => Order::avgOrderPrice($dateFrom, $dateTo),
+                                'avgPayedOrders' => Order::avgPayedOrders($dateFrom, $dateTo),
+                                'ordersSumForPeriod' => Order::ordersSumForPeriod($dateFrom, $dateTo)
+                        ];
+                }
+
                 return view('admin.orders.list', [
-                        'orders' => $orders
+                        'orders' => $orders,
+                        'stat' => $stat
                 ]);
         }
 
@@ -450,7 +475,7 @@ class OrdersController extends Controller
 
                 try{
                         if($this->user->admin) {
-                                $perPage = 20;
+                                $perPage = 50;
                                 $orderModel = Order::with('orderLists.product')
                                         ->with('shop.city.region')
                                         ->with('promo')
@@ -471,8 +496,14 @@ class OrdersController extends Controller
                                 if(!empty($request->search)) {
 
                                         $orderModel->whereHas('shop', function($query) use ($request) {
-                                                $query->where('shops.name', 'like', "%$request->search%");
-                                        });
+                                                $query->where('shops.name', 'like', '%'.$request->search.'%');
+                                        })->orWhere('id', 'like', '%'.$request->search.'%');
+                                        
+                                        
+                                }
+
+                                if(!empty($request->ur) && $request->ur == 'true') {
+                                        $orderModel->where('payment', 'rs');
                                 }
 
                                 $orders_data = json_decode($orderModel->paginate($perPage)->toJson(), true);
@@ -501,7 +532,7 @@ class OrdersController extends Controller
                                 }
 
                         } else {
-                                $perPage = 20;
+                                $perPage = 50;
                                 $orderModel = $this->user->getShop()->orders()->with('orderLists.product')
                                         ->where('payed', 1)
                                         ->where('confirmed', 1)
@@ -565,7 +596,9 @@ class OrdersController extends Controller
 
                 return view('admin.orders.view', [
                         'order' => $order,
-                        
+                        'products' => Product::whereHas('OrderList', function($query) use ($order) {
+                                $query->where('order_lists.order_id', $order->id);
+                        })->withTrashed()->get(),
                         'shops' => $shops
                 ]);
         }
@@ -629,14 +662,47 @@ class OrdersController extends Controller
                         if(!empty($request->shop_id) && $request->shop_id != $order->shop_id) {
                                 $order->shop_id = $request->shop_id;
                                 if($order->save()) {
+
+                                        $order->refresh();
+
+                                        $shop = $order->shop;
+                                        $shopPhones = $shop->getSmsPhones();
+
+                                        if(!empty($shopPhones)) {
+                                                $link = \Autologin::route($shop->users[0], 'admin.orders');
+                                                try {
+                                                        $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+                                                } catch (\Exception $e) {
+                                                        $shortLink = $link;
+                                                }
+
+                                                foreach($shopPhones as $phone) {
+                                                        Sms::instance()->send($phone, 'Примите заказ '.$order->id.' '.$shortLink  );
+                                                }
+                                        }
+
+                                        if(!empty($shop->email)) {
+
+                                                /*
+                                                $link = \Autologin::route($shop->users[0], 'admin.orders');
+
+                                                Mail::send('email.shopNewOrder', ['link' => $link, 'order' => $order], function ($message) use ($order, $shop) {
+                                                        $message->to($shop->email)
+                                                                ->subject('Примите заказ на Floristum.ru №'. $order->id );
+                                                });
+                                                */
+                                        }
+                                        /*
                                         $shop = $order->shop;
                                         if($shop->phone) {
                                                 try {
                                                         Sms::instance()->send($shop->phone, 'У Вас новый заказ!');
+
                                                 } catch(\Exception $e){
 
                                                 }
                                         }
+                                        */
 
                                         \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Заказ успешно передан другому магазину']);
                                 }
@@ -649,7 +715,7 @@ class OrdersController extends Controller
                                 if($order->save()) {
                                         if($order->payed) {
                                                 $this->sendSuccessSms($order);
-                                                $this->sendSuccessEmails($order);
+                                                //$this->sendSuccessEmails($order);
                                         }
                                 }
                         }
@@ -855,7 +921,7 @@ class OrdersController extends Controller
                                 $return['link'] = route('order.details', ['key' => $order->key]);
 
                                 $this->sendSuccessSms($order);
-                                $this->sendSuccessEmails($order);
+                                //$this->sendSuccessEmails($order);
                         }
                 } else {
                         $return['error'] = true;

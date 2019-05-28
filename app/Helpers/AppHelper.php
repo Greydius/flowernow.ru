@@ -52,7 +52,7 @@ class AppHelper {
                 return date('H:i', $_time);
         }
 
-        public static function urlShortener($longUrl) {
+        public static function urlShortener_old($longUrl) {
                 $postData = ['longUrl' => $longUrl];
                 $jsonData = json_encode($postData);
 
@@ -75,6 +75,39 @@ class AppHelper {
 
                 //7
                 return $json;
+                if (isset($json->error)) {
+                        echo $json->error->message;
+                } else {
+                        echo $json->id;
+                }
+        }
+
+        public static function urlShortener($longUrl) {
+                $postData = ['url' => $longUrl];
+                $jsonData = json_encode($postData);
+
+                //4
+                $curlObj = curl_init();
+                curl_setopt($curlObj, CURLOPT_URL, 'https://clck.ru/--');
+                curl_setopt($curlObj, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curlObj, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($curlObj, CURLOPT_HEADER, 0);
+                //curl_setopt($curlObj, CURLOPT_HTTPHEADER, ['Content-type:application/json']);
+                curl_setopt($curlObj, CURLOPT_POST, 1);
+                curl_setopt($curlObj, CURLOPT_POSTFIELDS, http_build_query($postData));
+
+                //5
+                $response = curl_exec($curlObj);
+
+                $json = json_decode($response);
+                //6
+                curl_close($curlObj);
+
+                //7
+                $return = new \stdClass();
+                $return->id = $response;
+                return $return;
+
                 if (isset($json->error)) {
                         echo $json->error->message;
                 } else {
@@ -129,7 +162,7 @@ class AppHelper {
                 return $arr[$case][(int)$m];
         }
 
-        public static function num2str($num) {
+        public static function num2str($num, $skobki = false) {
                 $nul = 'ноль';
                 $ten = array(
                         array('', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'),
@@ -162,6 +195,17 @@ class AppHelper {
                                 if($uk > 1) $out[] = self::morph($v, $unit[$uk][0], $unit[$uk][1], $unit[$uk][2]);
                         } //foreach
                 } else $out[] = $nul;
+
+                if($skobki && count($out)) {
+                        foreach($out as &$_out) {
+                                if(!empty($_out)) {
+                                        $_out = '('.$_out;
+                                        break;
+                                }
+                        }
+                        $out[count($out)-1] = $out[count($out)-1].')';
+                }
+
                 $out[] = self::morph(intval($rub), $unit[1][0], $unit[1][1], $unit[1][2]); // rub
                 $out[] = $kop . ' ' . self::morph($kop, $unit[0][0], $unit[0][1], $unit[0][2]); // kop
                 return trim(preg_replace('/ {2,}/', ' ', join(' ', $out)));

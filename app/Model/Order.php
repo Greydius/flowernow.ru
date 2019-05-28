@@ -20,7 +20,7 @@ class Order extends MainModel
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at', 'sms_code', 'sms_send_at'];
 
-        protected $appends = ['amount', 'amountShop'];
+        protected $appends = ['amount', 'amountShop', 'receivingDateFormat', 'payedDateFormat', 'createdAtFormat'];
 
         public static function boot() {
                 parent::boot();
@@ -151,7 +151,17 @@ class Order extends MainModel
         }
 
         public function getDetailsLink() {
-                return route('order.details', ['key' => $this->key]);
+
+                $href = route('order.details', [
+                        'key' => $this->key
+                ], false);
+
+                $shop = $this->shop;
+
+                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'http://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
+                
+                //return route('order.details', ['key' => $this->key]);
+                return $href;
         }
         
         public function changeStatusNotification() {
@@ -248,6 +258,39 @@ class Order extends MainModel
 
                 return $path;
         }
+
+        public function getReceivingDateFormatAttribute() {
+                $receivingDate = $this->receiving_date;
+
+                if(!empty($receivingDate)) {
+                        $receivingTime = strtotime($receivingDate);
+                        $receivingDate = date('d', $receivingTime).' '.AppHelper::ruMonth(date('m', $receivingTime)).' '.date('Y', $receivingTime);
+                }
+
+                return $receivingDate;
+        }
+
+        public function getPayedDateFormatAttribute() {
+                $payedAt = $this->payed_at;
+
+                if(!empty($payedAt)) {
+                        $payedAtTime = strtotime($payedAt);
+                        $payedAt = date('d', $payedAtTime).' '.AppHelper::ruMonth(date('m', $payedAtTime)).' '.date('Y H:i', $payedAtTime);
+                }
+
+                return $payedAt;
+        }
+
+        public function getCreatedAtFormatAttribute() {
+                $createdAt = $this->created_at;
+
+                if(!empty($createdAt)) {
+                        $createdAtTime = strtotime($createdAt);
+                        $createdAt = date('d', $createdAtTime).' '.AppHelper::ruMonth(date('m', $createdAtTime)).' '.date('Y H:i', $createdAtTime);
+                }
+
+                return $createdAt;
+        }
         
         public function sendSms() {
                 $code = AppHelper::getCode();
@@ -257,8 +300,25 @@ class Order extends MainModel
         }
 
         public function createSuccessCompletedMsg() {
-                $message = new Message();
 
+                if(!empty($this->phone)) {
+
+                        $link = route('feedback.add', ['key' => $this->key]);
+
+                        try {
+                                $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+                        } catch (\Exception $e) {
+                                $shortLink = $link;
+                        }
+
+                        $message = new Message();
+                        $message->message_type = 'sms';
+                        $message->send_to = $this->phone;
+                        $message->msg = json_encode(['text' => 'Заказ №'.$this->id.' выполнен. Получите скидку до 30% за отзыв '.$shortLink]);
+                        $message->save();
+                }
+
+                /*
                 if(!empty($this->email)) {
                         $message->message_type = 'email';
                         $message->send_to = $this->email;
@@ -273,5 +333,44 @@ class Order extends MainModel
                         $message->msg = json_encode(['text' => 'Заказ №'.$this->id.' выполнен']);
                         $message->save();
                 }
+                */
+        }
+
+        public static function ordersSumForPeriod($dateFrom, $dateTo) {
+                return Order::where('orders.created_at', '>=', $dateFrom)
+                        ->where('orders.created_at', '<=', $dateTo)
+                        ->where('payed', 1)
+                        ->join('order_lists', 'orders.id', '=', 'order_lists.order_id')
+                        ->sum(\DB::raw('order_lists.shop_price+orders.delivery_price'));
+        }
+
+        public static function ordersCountForPeriod($dateFrom, $dateTo) {
+                return Order::where('orders.created_at', '>=', $dateFrom)
+                        ->where('orders.created_at', '<=', $dateTo)
+                        ->where('orders.payed', 1)
+                        ->count();
+        }
+
+        public static function avgOrderPrice($dateFrom, $dateTo) {
+                $ordersSum = Order::ordersSumForPeriod($dateFrom, $dateTo);
+
+                $ordersCount = Order::ordersCountForPeriod($dateFrom, $dateTo);
+
+                return round($ordersSum/$ordersCount);
+                return 0;
+        }
+
+        public static function avgPayedOrders($dateFrom, $dateTo) {
+                $ordersCount = Order::ordersCountForPeriod($dateFrom, $dateTo);
+
+                $days = $dateFrom->diff($dateTo)->days;
+
+                $days = $days ? $days : 1;
+
+                if($days) {
+                        return round($ordersCount/$days);
+                }
+
+                return 0;
         }
 }

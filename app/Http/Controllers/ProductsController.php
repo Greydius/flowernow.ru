@@ -12,6 +12,7 @@ use App\Model\SingleProduct;
 use App\Model\ProductType;
 use App\Model\ProductPhoto;
 use App\Model\Size;
+use App\Model\FeedbackCity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -87,7 +88,7 @@ class ProductsController extends Controller
                         $title = $this->getTitle($request);
                         $meta =  $this->getMeta($request);
                         $viewFile = 'front.product.list';
-                        $popularProduct = Product::popular($this->current_city->id, $request, (int)$request->page ? (int)$request->page : 1, 36);
+                        $popularProduct = Product::popular($this->current_city->id, $request, (int)$request->page ? (int)$request->page : 1, 76);
                         $currentType = ProductType::where('slug', $request->product_type)->first();
 
                         $item = [];
@@ -136,7 +137,7 @@ class ProductsController extends Controller
                 if(!empty($popularProduct) && $popularProduct->total() <= 30) {
                         $request2 = new Request();
                         $request2->order = 'price';
-                        $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 36);
+                        $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
                         //dd($lowPriceProducts);
                 } else {
                         $lowPriceProducts = Product::lowPriceProducts($city_id)->take(12)->get();
@@ -155,6 +156,22 @@ class ProductsController extends Controller
                         }
                 }
 
+                //$topFeedbackId = FeedbackCity::getCityTopFeedbackId($city_id);
+
+                $feedback1 = Feedback::getTodayFeedback($city_id);
+                $feedback2 =  Feedback::whereHas('shop', function($query) use ($city_id) {
+                        $query->where('city_id', $city_id)->available();
+                })->where('id', '!=', !empty($feedback1) ? $feedback1[0]->id : 0)->where('approved', 1)->orderBy('feedback_date_tmp', 'desc')->take(9)->get();
+
+
+
+                if(!empty($feedback1)) {
+                        $feedbacks = $feedback1->merge($feedback2);
+                } else {
+                        $feedbacks = $feedback2;
+                }
+
+
                 return view($viewFile,[
                         'title' => $title,
                         'meta' => $meta,
@@ -166,12 +183,13 @@ class ProductsController extends Controller
                         'currentType' => $currentType,
                         'specialOffers' => $specialOffers,
                         'specialOfferProducts' => $specialOfferProducts,
+                        'feedbacks' => $feedbacks
                 ]);
         }
 
         public function show($slug) {
 
-                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->with('singleProduct')->firstOrFail();
+                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->with('singleProduct')->withTrashed()->firstOrFail();
 
                 $params = [
                         'product' => $product,
@@ -204,8 +222,8 @@ class ProductsController extends Controller
                         $params['shopSingleProducts'] = $shopSingleProducts;
                 }
 
-                $feedbacksCount = Feedback::where('shop_id', $product->shop_id)->count();
-                $feedbacks = Feedback::where('shop_id', $product->shop_id)->orderBy('feedback_date', 'desc')->take(10)->get();
+                $feedbacksCount = Feedback::where('shop_id', $product->shop_id)->where('approved', 1)->count();
+                $feedbacks = Feedback::where('shop_id', $product->shop_id)->where('approved', 1)->orderBy('feedback_date', 'desc')->take(10)->get();
                 $params['feedbacksCount'] = $feedbacksCount;
                 $params['feedbacks'] = $feedbacks;
 
@@ -717,7 +735,7 @@ class ProductsController extends Controller
 
                 $product = Product::findOrFail($request->input('id'));
 
-                $validator = Validator::make($request->all(), $product->dop ? Product::$productDopRules : Product::$productRules, $product->dop ? Product::$productDopRulesMessages : Product::$productDopRulesMessages);
+                $validator = Validator::make($request->all(), (!empty($product->dop) ? Product::$productDopRules : Product::$productRules), (!empty($product->dop) ? Product::$productDopRulesMessages : Product::$productRulesMessages));
 
                 if ($validator->fails()) {
 
@@ -908,7 +926,7 @@ class ProductsController extends Controller
                         $title['price'] .= ' руб';
                 }
 
-                return implode(', ', $title).' с доставкой в г.'.$this->current_city->name;
+                return implode(', ', $title).' с доставкой в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">г.'.$this->current_city->name.'</a>';
         }
 
         public function getMeta(Request $request) {
@@ -977,6 +995,9 @@ class ProductsController extends Controller
                         if($queries[0] == 'single') {
                                 $request->single = true;
                                 return $this->catalog($request);
+                        } elseif($queries[0] == 'archive') {
+                                $request->deleted = true;
+                                return $this->catalog($request);
                         }
                 }
 
@@ -985,7 +1006,7 @@ class ProductsController extends Controller
 
         private function catalog(Request $request) {
 
-                $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 36);
+                $popularProduct = Product::popular($this->current_city->id, $request, $request->page ? $request->page : 1, 76);
                 $title = 'Каталог букетов';
                 $meta = [];
 
@@ -1003,6 +1024,10 @@ class ProductsController extends Controller
                         $title = 'Букеты цветов поштучно';
                 }
 
+                if($request->deleted) {
+                        $title = 'Архив букетов';
+                }
+
                 $lowPriceProducts = null;
 
                 if($request->q) {
@@ -1011,7 +1036,7 @@ class ProductsController extends Controller
                         if(!empty($popularProduct) && $popularProduct->total() <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'price';
-                                $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 36);
+                                $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
                         }
                 }
 
@@ -1217,5 +1242,13 @@ class ProductsController extends Controller
                         return response()->json($return, $return['statusCode']);
                 }
 
+        }
+
+        public function copy() {
+                $shops = Shop::get();
+
+                return view('admin.products.copy',[
+                        'shops' => $shops,
+                ]);
         }
 }

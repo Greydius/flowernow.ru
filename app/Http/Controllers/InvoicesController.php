@@ -151,8 +151,48 @@ class InvoicesController extends Controller
 
                                         $dateFrom = !empty($prevOutputTransaction) ? \Carbon\Carbon::parse($prevOutputTransaction->created_at)->subDays(3) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
                                         $dateTo = \Carbon\Carbon::parse($lastOutputTransaction->created_at)->subDays(3);
-                                        $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
-                                        $orders = Order::where('shop_id', $shop->id)->whereIn('id', $availableOrderIds)->get();
+
+                                        $dateFromCash = !empty($prevOutputTransaction) ? \Carbon\Carbon::parse($prevOutputTransaction->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
+                                        $dateToCash = \Carbon\Carbon::parse($lastOutputTransaction->created_at);
+
+
+                                        /*
+                                        $availableOrderIds = Transaction::where('shop_id', $shop->id)
+                                                ->where('action', 'order')
+                                                ->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))
+                                                ->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))
+                                                ->pluck('action_id')->toArray();
+                                        */
+
+                                        $availableOrderIds = Transaction::where('shop_id', $shop->id)
+                                                ->where('action', 'order')
+                                                ->where(function ($query) use ($dateFrom, $dateTo, $dateFromCash, $dateToCash) {
+                                                        $query->where(function ($query2) use ($dateFrom, $dateTo) {
+                                                                $query2->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))
+                                                                        ->where('created_at', '<', $dateTo->format('Y-m-d H:i:s'))
+                                                                        ->where('amount', '>', '0');
+                                                        })
+                                                        ->orWhere(function ($query3) use ($dateFromCash, $dateToCash) {
+                                                                $query3->where('created_at', '>', $dateFromCash->format('Y-m-d H:i:s'))
+                                                                        ->where('created_at', '<', $dateToCash->format('Y-m-d H:i:s'))
+                                                                        ->where('amount', '<', '0');;
+                                                        });
+                                                })
+                                                ->pluck('action_id')->toArray();
+
+                                        \Log::error($availableOrderIds);
+
+                                        /*
+                                        \Log::error($dateFrom->format('Y-m-d H:i:s'));
+                                        \Log::error($dateTo->format('Y-m-d H:i:s'));
+                                        */
+
+                                        //!!!!!!!!!!!!!!!!!!
+                                        //$orders = Order::where('shop_id', $shop->id)->whereIn('id', $availableOrderIds)->get();
+                                        $orders = Order::whereIn('id', $availableOrderIds)->get();
+
+
+
                                         //echo $dateFrom->format('Y-m-d H:i:s'); exit();
                                         /*
                                         $dateFrom = count($lastOutputTransactions) > 1 ? \Carbon\Carbon::parse($lastOutputTransactions[1]->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');

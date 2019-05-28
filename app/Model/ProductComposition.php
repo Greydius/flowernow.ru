@@ -12,4 +12,8 @@ class ProductComposition extends MainModel
         function flower() {
                 return $this->belongsTo('App\Model\Flower');
         }
+
+        public function product() {
+                return $this->belongsTo('App\Model\Product');
+        }
 }

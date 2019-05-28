@@ -12,6 +12,10 @@
         .holiday-img-footer {
                 top: 47px;
         }
+
+        .holiday-img {
+                width: 70px;
+        }
 }
 
 @media (min-width: 992px) {
@@ -150,9 +154,29 @@
 }
 
 @media (min-width: 0) and (max-width: 767px) {
-    .media-item-opened .feedback-date {
-        display: block;
-    }
+
+        body {
+                padding-top: 20px;
+        }
+
+        .media-item-opened .feedback-date {
+                display: block;
+        }
+
+        .product-right {
+                float: none;
+        }
+
+        .holiday-img-footer {
+                left: 20px;
+        }
+
+        .holiday-img {
+                position: absolute;
+                left: -37px;
+                top: 6px;
+                width: 65px;
+        }
 }
 
 @media only screen and (min-width: 768px) {

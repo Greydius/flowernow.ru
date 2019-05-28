@@ -35,8 +35,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=201901295555') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190123_3') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20190305') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190305') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -58,11 +58,13 @@
     <!--[if lt IE 9]>
     <p class="chromeframe text-center">Вы используете <strong>устаревший</strong> браузер. Пожалуйста <a href="http://browsehappy.com/">обновите ваш браузер</a>.</p>
     <![endif]-->
+    <!--
     <div class="preloader-wrapper">
         <div class="preloader">
             <img src="{{ asset('assets/front/img/loading.gif') }}" alt="Загрузка цветов">
         </div>
     </div>
+    -->
     <header class="{{ !empty($detected_city) ? 'mobile-city-confirm-showed-' : null }}">
 
 
@@ -124,7 +126,14 @@
                     </div>
 
                     <div class="nav-city-wraper">
-                        <a class="navbar-brand logo" href="/"></a>
+
+                        @if(!empty($holiday_icon))
+                            <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" alt="" class="holiday-img visible-xs visible-sm">
+                            <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" alt="" class="holiday-img visible-md visible-lg">
+                            <a class="navbar-brand logo visible-md visible-lg" href="/"></a>
+                        @else
+                            <a class="navbar-brand logo" href="/"></a>
+                        @endif
 
                     </div>
 
@@ -503,7 +512,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    <strong>Популярные города с бесплатной доставкой цветов:</strong>
+                    <strong>Популярные города:</strong>
                     <hr>
                     <div class="row">
                         @if(count($popular_city))
@@ -630,14 +639,17 @@
                         <div class="col-md-3">
                             <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
                             <ul class="list-unstyled list-foot">
-                                <li><a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
-                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                  <li><a href="https://play.google.com/store/apps/details?id=ru.floristum.app"><img src="http://floristum.ru/images/playmarket_floristum.ru.png" alt="Скачать приложение Флористум в Google Play"   width="120"></a><!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                <!-- <li><a href="#"><img src="http://floristum.ru/images/appstore_floristum.ru.png" alt="Скачать приложение Флористум в Apple Store"   width="120"></a> -->
+                                <li>&nbsp;<a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
+                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="playmarket_floristum.ru">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                            
                                 </li>
                             </ul> </div>
                         <div class="col-md-3">
                             <p class="foot-h"><strong>Клиентам</strong></p>
                             <ul class="list-unstyled list-foot">
-                                <li><a href="https://floristum.ru/delivery">Доставка</a></li>
+                                <li><a href="{{ route('front.delivery') }}">Доставка</a></li>
                                 <li><a href="https://floristum.ru/payment">Оплата</a></li>
                                 <li><a href="https://floristum.ru/faq">FAQ</a></li>
                             </ul>
@@ -645,7 +657,7 @@
                         <div class="col-md-3">
                             <p class="foot-h"><strong>Организациям</strong></p>
                             <ul class="list-unstyled list-foot">
-                                <li><a href="https://floristum.ru/registershop">Магазинам цветов</a></li>
+                                <li><a href="https://floristum.ru/registershop">Магазинам</a></li>
                                 <li><a href="{{ route('front.corporate') }}">Корпоративным клиентам</a></li>
                                 <li><strong><a href="https://floristum.ru/login">Вход в личный кабинет</a></strong></li>
                             </ul>
@@ -702,6 +714,7 @@
     <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
     <script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
     <script src="{{ asset('assets/plugins/angular/angular.min.js') }}"></script>
     <script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}"></script>
     <script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}"></script>
@@ -709,7 +722,7 @@
     <script src="{{ asset('assets/front/js/main.js') }}"></script>
     <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
-    <script src="{{ asset('assets/front/js/custom.js?v=201901295555') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js?v=20190423') }}"></script>
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->

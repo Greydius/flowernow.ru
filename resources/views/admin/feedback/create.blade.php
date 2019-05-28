@@ -23,6 +23,16 @@
                     {{ csrf_field() }}
                     <div class="m-portlet__body">
 
+
+
+                        <div class="form-group m-form__group">
+                            <label class="m-checkbox">
+                                <input type="checkbox" value="1" name="approved" {{ !empty($feedback) && $feedback->approved ? "checked" : "" }}>
+                                Одобрен
+                                <span></span>
+                            </label>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group m-form__group">

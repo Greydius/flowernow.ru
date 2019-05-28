@@ -275,10 +275,20 @@
 														<span></span>
 													</i>
 													<span class="m-menu__link-text">
-													Отзывы
+													Отзывы (фейковые)
 												</span>
 												</a>
 											</li>
+                                            <li class="m-menu__item  {{ \Request::route()->getName() == 'admin.feedback.real.list' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+                                                <a href="{{ route('admin.feedback.real.list') }}" class="m-menu__link ">
+                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="m-menu__link-text">
+													Отзывы (реальный)
+												</span>
+                                                </a>
+                                            </li>
 											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.promoCodes.create' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
 												<a href="{{ route('admin.promoCodes.create') }}" class="m-menu__link ">
 													<i class="m-menu__link-bullet m-menu__link-bullet--dot">

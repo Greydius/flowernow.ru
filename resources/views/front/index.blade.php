@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="container">
-        <div class="logo-container-wraper visible-sm visible-xs" style="position: relative; display: none">
+        <div class="logo-container-wraper hidden-lg hidden-md hidden-xs" style="position: relative; display: none">
             <a class="logo-container" href="/"></a>
             @if(!empty($holiday_icon))
                 <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" class="holiday-img">
@@ -48,6 +48,10 @@
 
 
                 <div class="col-md-12" style="background-color: #fff; padding-top: 10px;"  >
+                    <div class="free_phone hidden-xs">
+                      <b>8 800 600-54-97</b>
+                        <span>Звонок бесплатный</b> </br></br></br></span>
+                    </div>
 
                     @if(!empty($popularProducts))
                         @foreach($popularProducts as $item)
@@ -105,7 +109,7 @@
                             </div>
                         @endif
 
-                        @if(count($lowPriceProducts))
+                        @if(!empty($lowPriceProducts) && count($lowPriceProducts))
                             <div data-ng-hide="isFiltered">
                                 <div class="hidden-lg hidden-md hidden-xs">
                                     <br><br>
@@ -287,6 +291,43 @@
 
     @endif
 
+
+    @if(count($feedbacks))
+
+        <div class="container">
+            <br class="hidden-xs hidden-sm">
+            <center>
+                <h3>Отзывы о доставке букетов в городе {{ $current_city->name }}</h3>
+            </center>
+            <br class="hidden-xs hidden-sm">
+            <div class="row owl-carousel owl-theme">
+
+        @foreach($feedbacks as $key => $feedback)
+
+            <div class=" col-md-12">
+                <div class="media-left">
+                    <img class="media-object" width="54" height="54" src="{{ asset('assets/front/img/reviews-5.png') }}" alt="...">
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                            <strong>Заказчик {{ $feedback->name }}</strong>
+                            <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><br><span class="text-muted feedback-date">{{ Carbon\Carbon::parse($feedback->feedback_date_tmp)->format('d.m.Y') }}</span><? } ?>
+                    </h4>
+                    <p>{{ $feedback->feedback }}</p>
+                    <ul class="list-inline">
+                        <li>
+                            <div class="rating-green"><span style="width:{{ $feedback->rating * 20 }}%;"></span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        @endforeach
+            </div>
+        </div>
+
+    @endif
+
     <br class="hidden-xs hidden-sm">
 
 
@@ -307,7 +348,7 @@
             <img src="http://floristum.ru/images/dostavka_tsvetov_po_beznalu1.png" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h3>Доставка цветов для юр лиц по безналичному расчету</h3>
 
 
-        <p><b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сторудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц.<br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в {{ $current_city->name_prepositional }}.</p>
+        <p><b>Доставка букетов цветов с оплатой по безналу в {{ $current_city->name_prepositional }}</b> юридическим лицам, для сотрудников организаций и их клиентов в офисы и на дом — одно из основных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное <b>коммерческое предложение на цветы</b> для юридических лиц.<br><br>С Floristum.ru процесс выбора букета или цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым, интересным и не займет много времени. Забудьте о тратах наличных на букеты для корпоративных нужд и об очередях в магазинах — заказывайте доставку цветов и оплачивайте с расчетного счета юр лица! <br><br>Мы предоставляем полный пакет закрывающих документов на заказанные у нас букеты цветов. Подробнее в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в {{ $current_city->name_prepositional }}.</p>
 
 
 
@@ -318,17 +359,26 @@
 @endsection
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('assets/front/js/typeahead.js/typeaheadjs.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.carousel.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.theme.default.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/front/js/typeahead.js/typeaheadjs.css') }}" />
 @stop
 
 @section('footer')
-    <script type="text/javascript">
 
-            routes.products = '{!! route('api.products.popular') !!}';
-    </script>
-
+    <script src="{{ asset('assets/plugins/OwlCarousel2-2.3.4/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
     <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js?v=2_3') }}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+            routes.products = '{!! route('api.products.popular') !!}';
+            $('.owl-carousel').owlCarousel({
+
+                    nav:true,
+
+            })
+    </script>
 @stop

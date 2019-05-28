@@ -256,7 +256,7 @@ $(document).ready(function() {
 
         function pay(options) {
             var widget = new cp.CloudPayments();
-            widget.charge(options,
+            widget.auth(options,
                 function (options) { // success
                     //действие при успешной оплате
                         window.location = '/payment/success';

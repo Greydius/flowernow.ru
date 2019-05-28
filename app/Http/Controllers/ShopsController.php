@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AppHelper;
 use App\Model\Product;
+use App\Model\Order;
 use App\Model\Shop;
 use App\Model\ShopAddress;
 use App\Model\ShopWorkTime;
 use App\Model\ShopWorker;
 use App\Model\Feedback;
 use App\Model\Banner;
+use App\Model\ShopReport;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Image;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ShopsController extends Controller
 {
@@ -36,8 +40,25 @@ class ShopsController extends Controller
                         $shop = $this->user->getShop();
                 }
 
+                $reportsDate = [];
+
+                $firstOrder = $shop->orders()->where('payed', 1)->where('payment', '!=', 'cash')->first();
+
+                if(!empty($firstOrder)) {
+
+                        $reportDate = \Carbon\Carbon::parse($firstOrder->payed_at);
+                        $nowDate = \Carbon\Carbon::now();
+                        do {
+                                $reportsDate[] = clone $reportDate;
+                                $reportDate->addMonthsNoOverflow(1);
+
+                        } while($reportDate < $nowDate);
+                }
+
                 return view('admin.shop.profile', [
-                        'shop' => $shop
+                        'shop' => $shop,
+                        'reportsDate' => $reportsDate,
+                        'reports' => $shop->reports()->orderBy('report_date')->get()
                 ]);
         }
 
@@ -449,15 +470,15 @@ class ShopsController extends Controller
                 ];
 
                 try{
-                        $perPage = 500;
+                        $perPage = 100;
                         $shop = Shop::with(['users', 'city'])->select('shops.*',
                                 \DB::raw('(SELECT MAX(products.updated_at) FROM products WHERE products.shop_id = shops.id) AS product_last_update'),
                                 \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 0 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_0'),
                                 \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 1 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_1'),
                                 \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 2 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_2'),
                                 \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 3 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_3'),
-                                \DB::raw('(SELECT COUNT(*) FROM feedback WHERE feedback.shop_id = shops.id) AS feedbacks_count'),
-                                \DB::raw('(SELECT DATE_FORMAT(feedback_date, \'%Y-%m-%d\') FROM feedback WHERE feedback.shop_id = shops.id ORDER BY feedback_date DESC LIMIT 1) AS feedback_date')
+                                \DB::raw('(SELECT COUNT(*) FROM feedback WHERE feedback.shop_id = shops.id and feedback.approved = 1) AS feedbacks_count'),
+                                \DB::raw('(SELECT DATE_FORMAT(feedback_date, \'%Y-%m-%d\') FROM feedback WHERE feedback.shop_id = shops.id and feedback.approved = 1 ORDER BY feedback_date DESC LIMIT 1) AS feedback_date')
                         )->orderBy('id', 'desc');
                         if(!empty($request->search)) {
                              $shop->where('name', 'like', "%$request->search%");
@@ -508,7 +529,7 @@ class ShopsController extends Controller
                         'products' => $products,
                         'singleProducts' => $singleProducts,
                         'shop' => $shop,
-                        'feedbacks' => Feedback::where('shop_id', $shop->id)->orderBy('feedback_date', 'desc')->take(10)->get(),
+                        'feedbacks' => Feedback::where('shop_id', $shop->id)->where('approved', 1)->orderBy('feedback_date', 'desc')->take(10)->get(),
                         'meta' => [
                                 'title' => 'Доставка цветов в '.$this->current_city->name_prepositional.' | '.$shop->name,
                                 'description' => null,
@@ -555,7 +576,7 @@ class ShopsController extends Controller
                         'id' => $shop->id
                 ], false);
 
-                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? '//'.$shop->city->slug.'.floristum.ru'.$href : '//floristum.ru'.$href;
+                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'http://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
 
                 $src = "https://floristum.ru/assets/front/img/logo_floristum_mini.png";
 
@@ -628,5 +649,178 @@ class ShopsController extends Controller
                 return view('admin.shop.partnership-list', [
                         'banners' => $banners
                 ]);
+        }
+
+        public function getReport($id, Request $request) {
+
+                $shop = Shop::with(['users'])->findOrFail($id);
+                $user_id = $this->user->id;
+
+                if(!$this->user->admin) {
+                        $user_shop = $this->user->getShop();
+                        if($user_shop->id != $shop->id) {
+                                return response()->json([
+                                        'error' => true,
+                                        'code'  => 403
+                                ], 403);
+                        }
+                } else {
+                        $user_id = $shop->users[0]->id;
+                }
+
+                $dompdf = new Dompdf();
+                $dompdf->set_option('isRemoteEnabled', true);
+                $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+                //$date = \Carbon::now()->subMonth();
+                $date = \Carbon\Carbon::parse($request->reportDate);
+                $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->where('payment', '!=', 'cash')->first();
+
+                $view = view('reports.report', [
+                        'date' => clone $date,
+                        'firstOrder' => $firstOrder,
+                        'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                        'shop' => Shop::find($shop->id)
+                        //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                        //'order' => $order
+                ])->render();
+
+                //echo $view; exit();
+
+                $dompdf->loadHtml($view, 'UTF-8');
+
+                // (Optional) Setup the paper size and orientation
+                //$dompdf->setPaper('A4', 'landscape');
+
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Output the generated PDF to Browser
+                $dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
+
+
+                exit();
+        }
+
+        public function getReportCmd(Request $request) {
+
+                set_time_limit ( 3800 );
+
+                $request->reportDate = '2019-02-13';
+
+                $date = \Carbon\Carbon::parse($request->reportDate);
+
+                $shops = Shop::with(['users'])->whereExists(function ($query) use ($date) {
+                        $query->select(\DB::raw(1))
+                                ->from('orders')
+                                ->whereRaw('orders.shop_id = shops.id')
+                                ->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
+                })->get();
+
+                //dd(count($shops));
+
+                foreach($shops as $shop) {
+
+                        //$user_id = $this->user->id;
+
+                        if(!$this->user->admin) {
+                                $user_shop = $this->user->getShop();
+                                if($user_shop->id != $shop->id) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'code'  => 403
+                                        ], 403);
+                                }
+                        } else {
+                                $user_id = $shop->users[0]->id;
+                        }
+
+                        $dompdf = new Dompdf();
+                        $dompdf->set_option('isRemoteEnabled', true);
+                        $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                        //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+                        //$date = \Carbon::now()->subMonth();
+
+                        $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->where('payment', '!=', 'cash')->first();
+
+                        $view = view('reports.report', [
+                                'date' => clone $date,
+                                'firstOrder' => $firstOrder,
+                                'orders' => Order::where('shop_id', $shop->id)
+                                        ->where(function ($query) {
+                                                $query->where('payment', '=', 'cash')
+                                                        ->where('payed', '=', '1');
+                                        })->orWhere(function ($query) use ($date) {
+                                                $query->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
+                                        })->get(),
+                                'shop' => Shop::find($shop->id)
+                                //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                                //'order' => $order
+                        ])->render();
+
+                        //echo $view; exit();
+
+                        $dompdf->loadHtml($view, 'UTF-8');
+
+                        // (Optional) Setup the paper size and orientation
+                        //$dompdf->setPaper('A4', 'landscape');
+
+                        // Render the HTML as PDF
+                        $dompdf->render();
+
+                        // Output the generated PDF to Browser
+                        //$dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
+
+                        $report = new ShopReport();
+
+                        $output = $dompdf->output();
+
+                        $report->shop_id = $shop->id;
+                        $report->report_date = $date->startOfMonth()->format('Y-m-d');
+                        $report->ext = 'pdf';
+                        $report->file = base64_encode($output);
+                        $report->save();
+
+                        $report = new ShopReport();
+
+                        unset($date);
+                        $date = \Carbon\Carbon::parse($request->reportDate);
+
+                        $report->shop_id = $shop->id;
+                        $report->report_date = $date->startOfMonth()->format('Y-m-d');
+                        $report->ext = 'docx';
+                        $report->file = base64_encode($view);
+                        $report->save();
+                }
+
+
+                exit();
+        }
+
+        public function getReportFile($id, Request $request) {
+                $report = ShopReport::findOrFail($id);
+
+                $shop = $this->user->getShop();
+
+                if($shop->id == $report->shop_id || $this->user->admin) {
+                        $fileName = 'report_'.$report->shop_id.'_'.$report->report_date;
+                        if($report->ext == 'pdf') {
+                                header("Content-type:application/pdf");
+                                header("Content-Disposition:attachment;filename=".$fileName.".pdf");
+                                header("Pragma: no-cache");
+                                header("Expires: 0");
+                        } else {
+                                header("Content-type: application/vnd.ms-word");
+                                header("Content-Disposition: attachment;Filename=".$fileName.".doc");
+                                header("Pragma: no-cache");
+                                header("Expires: 0");
+                        }
+
+                        echo base64_decode($report->file);
+                }
+
+                exit();
         }
 }

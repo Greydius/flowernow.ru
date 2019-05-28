@@ -29,6 +29,22 @@
 
                                 <div class="m-widget4">
 
+
+                                                @if($user->admin && $order->payment == App\Model\Order::$PAYMENT_RS && $order->invoicePath)
+
+                                                    <div class="m-widget4__item">
+
+                                                        <div class="m-widget4__img m-widget4__img--logo">&nbsp;</div>
+
+                                                        <div class="m-widget4__info">
+                                                            <span class="m-widget4__title">
+                                                                <a class="text-danger" style="font-size: 18px;" href="{{ route('order.getInvoice', ['key' => $order->key]) }}">Скачать счет на оплату</a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                @endif
+
                                                 <div class="m-widget4__item">
 
                                                     <div class="m-widget4__img m-widget4__img--logo">&nbsp;</div>
@@ -59,7 +75,7 @@
 
                                                             <div class="m-widget4__info">
                                                                 <span class="m-widget4__title">
-                                                                    {{ $item->product->name }} (id: {{ $item->product->id }})
+                                                                    {{ $item->product->name }} (id: {{ $item->product->id }}) {!! $item->qty > 1 ? '<span class="text-danger"><strong>x'.$item->qty.' шт.</strong></span>' : ''  !!}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -413,24 +429,28 @@
 
             <div class="row">
 
-                <div class="col-lg-6">
-                    <div class="m-portlet  m-portlet--border-bottom-brand ">
-                        <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
-                            <div class="m-widget26">
-                                <div class="m-widget26__number m--font-info" style="font-size: 1.8rem;">
-                                    <div class="m-demo-icon__preview">
-                                        <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
-                                    </div>
-                                    {{ $order->amount() }} р.
-                                    <small>
-                                        Цена
-                                    </small>
-                                </div>
+                @if($user->admin || $order->payment == 'cash')
 
+                    <div class="col-lg-6">
+                        <div class="m-portlet  m-portlet--border-bottom-brand ">
+                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                <div class="m-widget26">
+                                    <div class="m-widget26__number m--font-info" style="font-size: 1.8rem;">
+                                        <div class="m-demo-icon__preview">
+                                            <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
+                                        </div>
+                                        {{ $order->amount() }} р.
+                                        <small>
+                                            Цена
+                                        </small>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                @endif
 
                 <div class="col-lg-6">
                     <div class="m-portlet  m-portlet--border-bottom-brand ">

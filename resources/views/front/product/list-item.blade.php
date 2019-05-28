@@ -4,7 +4,7 @@
     <div class="media-item">
         <a href="/flowers/{{ $_item['slug'] }}">
             <figure>
-                <img class="img-responsive" src="{{ $_item['photoUrl'] }}" alt="...">
+                <img class="img-responsive lozad" data-src="{{ $_item['photoUrl'] }}">
                 <figcaption>
                     <p>
                         @foreach($_item->compositions as $composition)
@@ -24,11 +24,11 @@
             <div class="row">
                 <div class="col-xs-12 buy">
                     <a href="{{ route('order.add', ['product_id' => $_item['id']]) }}" class="btn btn-danger btn-outline buy-btn">Заказать</a>
-                    <p><strong class="price-media-item">{{ $_item['clientPrice'] }} руб.</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
+                    <p><strong class="price-media-item">{{ empty($_item['deleted_at']) ? $_item['clientPrice'].' руб.' : '&nbsp;' }}</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
                     @if(!empty($isNeedShopName))
                         <p>{{ $_item['shop']->name }}</p>
                     @endif
-                    <p class="delivery-line"><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> доставка цветов
+                    <p class="delivery-line"><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки">&nbsp; за   
                         @if($_item['deliveryTime'] || $_item->shop->deliveryTimeFormat2)
                             {{ $_item['deliveryTime'] ? $_item['deliveryTime'] : $_item->shop->deliveryTimeFormat2 }}
                         @else

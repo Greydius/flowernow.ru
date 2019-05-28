@@ -18,7 +18,34 @@
         <div class="m-portlet__body">
 
             @if($user->admin)
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>Прошедший месяц</h3>
+                        <p>Средний заказ: {{ $stat['lastMonth']['avgOrderPrice'] }} руб.</p>
+                        <p>Среднее кол-во заказов: {{ $stat['lastMonth']['avgPayedOrders'] }} шт.</p>
+                        <p>Оборот: {{ $stat['lastMonth']['ordersSumForPeriod'] }} руб.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Текущий месяц</h3>
+                        <p>Средний заказ: {{ $stat['currentMonth']['avgOrderPrice'] }} руб.</p>
+                        <p>Среднее кол-во заказов: {{ $stat['currentMonth']['avgPayedOrders'] }} шт.</p>
+                        <p>Оборот: {{ $stat['currentMonth']['ordersSumForPeriod'] }} руб.</p>
+                    </div>
+                </div>
+            @endif
+
+            @if($user->admin)
                 <form class="m-form m-form--fit m-form--label-align-right" method="get" action="">
+                    <div class="col-md-12">
+                        <div class="form-group m-form__group">
+                            <label class="m-checkbox">
+
+                                <input type="checkbox" value="1" ng-model="ur_only" name="ur_only" id="ur_only" {{ app('request')->input('ur_only') ? 'checked' : '' }} ng-change="changeUr()">
+                                Только заказы Юр.Лиц
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <div class="m-input-icon m-input-icon--left">
                             <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
@@ -37,8 +64,8 @@
                             <div class="input-daterange input-group" id="m_datepicker_5">
                                 <input type="text" class="form-control m-input" name="dateFrom" ng-model="dateFrom" value="{{ app('request')->input('dateFrom') }}"/>
                                 <span class="input-group-addon">
-                                 <i class="la la-ellipsis-h"></i>
-                             </span>
+                                     <i class="la la-ellipsis-h"></i>
+                                 </span>
                                 <input type="text" class="form-control" name="dateTo" ng-model="dateTo" value="{{ app('request')->input('dateTo') }}"/>
                             </div>
                         </div>
@@ -82,14 +109,14 @@
                                     <span style="font-weight: bold"><% order.id %></span>
                                     <div ng-show="order.payed_at != ''">
                                         <br>
-                                        <% order.payed_at_dt | date:'MM.dd HH:mm' %>
+                                        <% order.payedDateFormat %>
                                     </div>
                                     <br>
                                     <span class="text-success" ng-show="order.payment == 'card'">Карта</span>
                                     <span class="text-danger font-weight-bold" ng-show="order.payment == 'cash'">Наличные</span>
                                 </td>
                                 <td>
-                                    <% order.receiving_date_dt | date:'MM.dd' %>
+                                    <% order.receivingDateFormat %>
                                     <br>
                                     <% order.receiving_time %>
                                     <br>
@@ -128,11 +155,11 @@
                                     <br>
                                     <div ng-show="order.payed_at != '' && order.payment != 'cash'">
                                         <br>
-                                        <% order.payed_at_dt | date:'dd.MM HH:mm' %>
+                                        <% order.payedDateFormat %>
                                     </div>
                                     <div ng-show="order.payment == 'cash'">
                                         <br>
-                                        <% order.created_at_dt | date:'dd.MM HH:mm' %>
+                                        <% order.createdAtFormat %>
                                     </div>
                                     <div ng-show="order.payment == 'cash' && order.confirmed == 0">
                                         <br>
@@ -141,8 +168,8 @@
                                     <br>
                                     <span class="<% order.payed == 1 ? 'text-success' : '' %>" ng-show="order.payment == 'card'">Карта</span>
                                     <span class="text-danger" ng-show="order.payment == 'card' && order.payed == 0 ">б.оплаты</span>
-                                    <span class="text-danger font-weight-bold" ng-show="order.payment == 'rs' && !order.payed">Юрлицо</span>
-                                    <span class="text-danger" ng-show="order.payment == 'rs' && order.payed">Юрлицо</span>
+                                    <span class="text-danger font-weight-bold" ng-show="order.payment == 'rs' && order.payed == 0">Юрлицо</span>
+                                    <span class="text-success font-weight-bold" ng-show="order.payment == 'rs' && order.payed == 1">Юрлицо</span>
                                     <span class="text-danger font-weight-bold" ng-show="order.payment == 'cash' && order.confirmed == 1">Наличные</span>
                                 </td>
                                 <td style="font-size: 12px">
@@ -151,7 +178,7 @@
                                     <span ng-show="order.shop.city.region.tz != 'UTC+3:00'" style="font-weight: bold"><% order.shop.city.region.tz %></span>
                                 </td>
                                 <td>
-                                    <% order.receiving_date_dt | date:'dd.MM' %>
+                                    <% order.receivingDateFormat %>
                                     <br>
                                     <% order.receiving_time %>
                                     <div ng-show="order.shop.city.region.tz != 'UTC+3:00'" style="font-weight: bold">
@@ -172,6 +199,7 @@
                                     <div ng-show="order.promo_code_id" class="text-danger" style="font-size: 10px">
                                         Скидка по промо: <% order.promo.text %>
                                     </div>
+                                    <br><span style="font-size: 10px" class="text-danger"><% order.ur_name %></span>
                                 </td>
 
                                 <td>

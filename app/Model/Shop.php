@@ -78,6 +78,11 @@ class Shop extends MainModel
         function feedbacks() {
                 return $this->hasMany('App\Model\Feedback');
         }
+
+        // relation for reports
+        function reports() {
+                return $this->hasMany('App\Model\ShopReport');
+        }
         
         public function getDeliveryTimeFormatAttribute() {
 
@@ -149,7 +154,12 @@ class Shop extends MainModel
         }
 
         public function frozenBalance() {
-                $amount = Transaction::where('id', '>', 103)->where('shop_id', $this->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))->sum('amount');
+                $amount = Transaction::where('id', '>', 103)
+                        ->where('shop_id', $this->id)
+                        ->where('action', 'order')
+                        ->where('amount', '>', 0)
+                        ->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))
+                        ->sum('amount');
 
                 return $amount;
         }

@@ -49,6 +49,26 @@ Route::get('search', [
         'as' => 'product.search'
 ]);
 
+Route::get('reviews', [
+        'uses' => 'FeedbackController@reviews',
+        'as' => 'feedback.reviews'
+]);
+
+Route::get('review/add/{key}', [
+        'uses' => 'FeedbackController@add',
+        'as' => 'feedback.add'
+]);
+
+Route::post('review/add/{key}', [
+        'uses' => 'FeedbackController@feedbackCreate',
+        'as' => 'feedback.create'
+]);
+
+Route::get('happy-recipients', [
+        'uses' => 'HomeController@happyRecipients',
+        'as' => 'front.happyRecipients'
+]);
+
 /*CART*/
 Route::get('cart/{product_id}', [
         'uses' => 'OrdersController@add',
@@ -178,6 +198,11 @@ Route::group(['prefix' => 'api/v1'], function() {
 
 Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
 
+        Route::get('products/copy', [
+                'uses' => 'ProductsController@copy',
+                'as' => 'products.copy'
+        ]);
+
         /*Партнерка*/
         Route::get('partnership', [
                 'uses' => 'ShopsController@partnership',
@@ -203,6 +228,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         Route::get('test/test', [
                 'uses' => 'HomeController@test',
                 'as' => 'admin.test'
+        ]);
+
+        Route::get('nick/test', [
+                'uses' => 'TestController@test',
+                'as' => 'nick.test'
         ]);
 
         /* FINANCE */
@@ -271,6 +301,16 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {
+
+                Route::get('direct', [
+                        'uses' => 'DirectController@index',
+                        'as' => 'admin.directs.list'
+                ]);
+
+                Route::post('direct/update/{direct}', [
+                        'uses' => 'DirectController@update',
+                        'as' => 'admin.directs.update'
+                ]);
 
                 Route::get('agents', [
                         'uses' => 'AgentsController@index',
@@ -398,6 +438,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'as' => 'admin.feedback.list'
                 ]);
 
+                Route::get('feedback/real', [
+                        'uses' => 'FeedbackController@real',
+                        'as' => 'admin.feedback.real.list'
+                ]);
+
                 Route::get('feedback/create', [
                         'uses' => 'FeedbackController@create',
                         'as' => 'admin.feedback.create'
@@ -426,6 +471,16 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::get('feedback/destroy/{id}', [
                         'uses' => 'FeedbackController@destroy',
                         'as' => 'admin.feedback.destroy'
+                ]);
+
+                Route::get('feedback/unapprove/{id}', [
+                        'uses' => 'FeedbackController@unapprove',
+                        'as' => 'admin.feedback.unapprove'
+                ]);
+
+                Route::get('feedback/approve/{id}', [
+                        'uses' => 'FeedbackController@approve',
+                        'as' => 'admin.feedback.approve'
                 ]);
 
                 Route::get('promoCodes/create', [
@@ -499,6 +554,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                                 'as' => 'admin.api.invoices.list'
                         ]);
                 });
+
+                Route::get('reports/list', [
+                        'uses' => 'ReportsController@all',
+                        'as' => 'admin.reports.list'
+                ]);
         });
 
         Route::get('shop', [
@@ -519,6 +579,21 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         Route::post('shop/uploadLogo/{id}', [
                 'uses' => 'ShopsController@uploadLogo',
                 'as' => 'admin.shop.uploadLogo'
+        ]);
+
+        Route::post('shop/getReport/{id}', [
+                'uses' => 'ShopsController@getReport',
+                'as' => 'admin.shop.getReport'
+        ]);
+
+        Route::get('report/getReportCmd', [
+                'uses' => 'ShopsController@getReportCmd',
+                'as' => 'admin.shop.getReportCmd'
+        ]);
+
+        Route::get('report/getReportFile/{id}', [
+                'uses' => 'ShopsController@getReportFile',
+                'as' => 'admin.shop.getReportFile'
         ]);
 
         Route::post('shop/uploadPhoto/{id}', [
@@ -692,3 +767,5 @@ Route::get('/articles/{slug}', [
 
 /*Sitemap*/
 Route::get('/sitemap.xml', 'SitemapController@index');
+
+Route::get('404', ['as' => '404', 'uses' => 'HomeController@notfound']);

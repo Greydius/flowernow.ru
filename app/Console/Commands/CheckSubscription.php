@@ -44,12 +44,15 @@ class CheckSubscription extends Command
         //
             $subscriptions = Subscription::where('active', 1)->where('start_time', date('H:i'))->get();
 
+            //$subscriptions = Subscription::where('id',10)->get();
+
             foreach ($subscriptions as $subscription) {
                     $parameters = json_decode($subscription->parameters);
 
                     $day = date('d', strtotime("+1 day"));
                     $month = date('m', strtotime("+1 day"));
 
+                    /*
                     $sql = 'SELECT DISTINCT phone_clean FROM f_order WHERE phone_clean IS NOT NULL AND phone_clean != "" 
                             AND city IN (' . implode(',', $parameters->cities) . ')
                             AND (
@@ -58,8 +61,12 @@ class CheckSubscription extends Command
                                 (DAY(day) = '.(int)date('d').' AND MONTH(day) = '.(int)date('m').' AND DAY(FROM_UNIXTIME(dt)) != '.(int)date('d').' )
                             )
                             ';
+                    */
+
+                    $sql = "SELECT '79803888394' AS phone_clean";
 
                     $message = $subscription->message;
+
                     if (strpos($message, '[promo]') !== false) {
                             $promo_code = PromoCode::getNewCode();
 
@@ -82,6 +89,7 @@ class CheckSubscription extends Command
 
                     $phones = \DB::select($sql);
 
+
                     foreach ($phones as $phone) {
                             $message = $subscription->message;
                             if(strpos($message, '[promo]') !== false) {
@@ -103,6 +111,8 @@ class CheckSubscription extends Command
                             //$subscriptionList->send = 1;
                             $subscriptionList->save();
                     }
+
+                    exit();
             }
     }
 }

@@ -41,7 +41,7 @@
                             @endif
                             <tr>
                                 <td>{{ $feedback->shop->name }}</td>
-                                <td>{{ $feedback->product ? $feedback->product->name : ''}}</td>
+                                <td>{!!  !empty($feedback->order) && !empty($feedback->order->orderLists[0]->product) ? '<img src="'. $feedback->order->orderLists[0]->product->photoUrl .'" width="50px" alt=""><br><a href="/flowers/'.$feedback->order->orderLists[0]->product->slug.'" target="_blank">'.$feedback->order->orderLists[0]->product->name.'</a>' : '' !!}</td>
                                 <td>{{ Carbon::parse($feedback->feedback_date)->format('Y-m-d') }}</td>
                                 <td>{{ $feedback->name }}</td>
                                 <td>{!! nl2br($feedback->feedback) !!}</td>
@@ -53,6 +53,16 @@
                                     <a href="{{ route('admin.feedback.destroy', ['id' => $feedback->id]) }}" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only">
                                         <i class="fa fa-remove"></i>
                                     </a>
+
+                                    @if($feedback->approved == 1)
+                                        <a href="{{ route('admin.feedback.unapprove', ['id' => $feedback->id]) }}" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" title="Блокировать">
+                                            <i class="fa fa-power-off"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('admin.feedback.approve', ['id' => $feedback->id]) }}" class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" title="Подтвердить">
+                                            <i class="fa fa-check"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -78,6 +88,12 @@
 
 
 @endsection
+
+@section('head')
+    <style>
+        table {     table-layout: fixed;     width:100% } td {     word-wrap:break-word; }
+    </style>
+@stop
 
 @section('footer')
 @stop

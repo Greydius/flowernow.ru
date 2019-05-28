@@ -156,9 +156,9 @@
                         <tr>
                             <td>1</td>
                             <td>Букет "{{ $order->orderLists[0]->product->name }}"</td>
-                            <td align="right">1</td>
+                            <td align="right">{{ $order->orderLists[0]->qty }}</td>
                             <td align="center">шт</td>
-                            <td align="right">{{ number_format($order->amount, 2, '.', ' ') }}</td>
+                            <td align="right">{{ number_format($order->orderLists[0]->client_price / $order->orderLists[0]->qty, 2, '.', ' ') }}</td>
                             <td align="right">{{ number_format($order->amount, 2, '.', ' ') }}</td>
                         </tr>
                         <tr>

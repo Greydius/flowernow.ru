@@ -39,7 +39,7 @@ class Controller extends BaseController
                             $this->holiday_icon[] = 'pc3';
                     }
 
-                    if(time() >= strtotime(date('Y-02-28 23:59:59')) && time() <= strtotime(date('Y-02-09 23:59:59'))) {
+                    if(time() >= strtotime(date('Y-02-28 23:59:59')) && time() <= strtotime(date('Y-03-09 23:59:59'))) {
                             $this->holiday_icon[] = 'mob3';
                             $this->holiday_icon[] = 'pc2';
                     }

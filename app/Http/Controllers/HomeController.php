@@ -43,6 +43,11 @@ class HomeController extends Controller
         return view('front.delivery');
     }
 
+        public function notfound()
+        {
+                return view('errors.404');
+        }
+
     public function payment()
     {
         return view('front.payment');
@@ -113,18 +118,180 @@ class HomeController extends Controller
 
     public function test(Request $request) {
 
+            $order = Order::find(39393);
+
+            $link = route('feedback.add', ['key' => $order->key]);
+
+            try {
+                    $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+            } catch (\Exception $e) {
+                    print_r($e);
+                    $shortLink = $link;
+            }
+
+            echo $shortLink;
+
+            exit();
+
+
+            $product = Product::withTrashed()->find(8);
+
+            $product->load('compositions');
+            $product->load('photos');
+
+            $_product = $product->replicate();
+            $_product->push();
+
+            /*
+            foreach($product->compositions as $composition) {
+                    unset($composition->id);
+                    $_product->compositions()->create($composition->toArray());
+            }
+            */
+
+            dd($_product->id);
+
+
+            exit();
+
+
+            //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+            $date = \Carbon::now()->subMonth();
+            $firstOrder = Order::where('shop_id', '254')->where('payed', 1)->where('payment', 'rs')->first();
+
+            $view = view('reports.report', [
+                    'date' => $date,
+                    'firstOrder' => $firstOrder,
+                    'orders' => Order::where('shop_id', '254')->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                    'shop' => Shop::find(254)
+                    //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                    //'order' => $order
+            ])->render();
+
+
+            header("Content-type: application/vnd.ms-word");
+            header("Content-Disposition: attachment;Filename=qwe.doc");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+
+            echo $view;
+
+            exit();
+
+
+            $tags = "<br>";
+            $test = strip_tags($tags,$view);
+            dd($test);
+            $breaks = array("<br />","<br>","<br/>");
+            $text = str_ireplace($breaks, "\r\n", $test);
+
+
+            $pw = new \PhpOffice\PhpWord\PhpWord();
+
+            /* [THE HTML] */
+            $section = $pw->addSection();
+            $html = "<h1>HELLO WORLD!</h1>";
+            $html .= "<p>This is a paragraph of random text</p>";
+            $html .= "<table><tr><td>A table</td><td>Cell</td></tr></table>";
+            \PhpOffice\PhpWord\Shared\Html::addHtml($section, $text, false, false);
+
+            /* [SAVE FILE ON THE SERVER] */
+// $pw->save("html-to-doc.docx", "Word2007");
+
+            /* [OR FORCE DOWNLOAD] */
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment;filename="convert.docx"');
+            $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($pw, 'Word2007');
+            $objWriter->save('php://output');
+
+            exit();
+
+
+            $dompdf = new Dompdf();
+            $dompdf->set_option('isRemoteEnabled', true);
+            $dompdf->set_option('isHtml5ParserEnabled', true);
+
+            //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+            $date = \Carbon::now()->subMonth();
+            $firstOrder = Order::where('shop_id', '254')->where('payed', 1)->where('payment', 'rs')->first();
+
+            $view = view('reports.report', [
+                    'date' => $date,
+                    'firstOrder' => $firstOrder,
+                    'orders' => Order::where('shop_id', '254')->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                    'shop' => Shop::find(254)
+                    //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                    //'order' => $order
+            ])->render();
+
+            //echo $view; exit();
+
+            $dompdf->loadHtml($view, 'UTF-8');
+
+            // (Optional) Setup the paper size and orientation
+            //$dompdf->setPaper('A4', 'landscape');
+
+            // Render the HTML as PDF
+            $dompdf->render();
+
+            // Output the generated PDF to Browser
+            $dompdf->stream();
+
+
+            exit();
+            $orders = Order::where('created_at', '>', '2019-03-07')->where('payed', 1)->where('status', 'new')->where('payment', 'card')->select('shop_id')->distinct()->get();
+
+
+            foreach($orders as $key => $order) {
+                    $shop = Shop::find($order->shop_id);
+                    if(!empty($shop->email)) {
+                            $message = new \App\Model\Message();
+                            $message->message_type = 'email';
+                            $message->send_to = $shop->email;
+                            $message->msg = json_encode(['text' => view('email.march8Reminder')->render(),
+                                    'subject' => 'У Вас не принятые заказы от Floristum.ru']);
+                            $message->save();
+                    }
+            }
+
+            echo $key;
+
+            exit();
+
+            $order = Order::find(37031);
+
+            $standartOrderLink = $order->getDetailsLink();
+
+            dd($order->orderLists()->withTrashed()->get());
+
+            echo $standartOrderLink; exit();
+
+            $order->shop_id = 10;
+            if($order->save()) {
+
+                    $shop = $order->shop;
+
+                    dd($shop);
+            }
+            echo $order->shop->id;
+
+            exit();
+
+            /*
             $orders = Order::where('payed', 1)->select('phone')->distinct()->get();
 
-            foreach($orders as $order) {
-                    //echo $order->phone;
-                    /*
+            foreach($orders as $key => $order) {
                     $message = new \App\Model\Message();
                     $message->message_type = 'sms';
                     $message->send_to = $order->phone;
-                    $message->msg = json_encode(['text' => 'Ко дню влюбленных -5% на заказ цветов floristum.ru. Код Fb14']);
+                    $message->msg = json_encode(['text' => 'До 9 марта -5% на цветы с доставкой floristum.ru. Код:MR8']);
                     $message->save();
-                    */
             }
+
+            echo $key;
+
+            exit();
+            */
             
 
             /*
@@ -683,5 +850,16 @@ exit();
                             'product_type_id' => $singleProduct->product_type_id
                     ]);
             }
+    }
+
+    public function happyRecipients() {
+            $perPage = 9;
+            $orders = Order::with('orderLists.product')->whereNotNull('photo')->whereHas('shop', function ($query) {
+                    $query->where('city_id', $this->current_city->id);
+            })->paginate($perPage);
+
+            return view('front.happy-recipients', [
+                    'orders' => $orders
+            ]);
     }
 }

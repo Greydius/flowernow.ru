@@ -680,8 +680,8 @@ header .location-icon {
 
 .holiday-img {
         position: absolute;
-        left: 170px;
-        top: -18px;
+        left: -280px;
+        top: 5px;
         width: 140px;
 }
 
@@ -968,4 +968,26 @@ header .location-icon {
 
 .filter-block-on-main span {
         padding-top: 5px; display: block; text-decoration: underline;
+}
+
+.free_phone {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: #00abdd;
+        font-size: 25px;
+        margin: 10px 20px 0 0;
+        letter-spacing: 1px;
+        line-height: 20px;
+        text-align: center;
+}
+
+.free_phone span {
+        display: block;
+        font-size: 11px;
+        color: grey;
+}
+
+.product-right {
+        float: right;
 }

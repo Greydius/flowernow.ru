@@ -68,8 +68,11 @@
                 <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
                 <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
             </div>
+
+
         </div>
-        <div class="col-md-7">
+
+        <div class="col-md-7 product-right">
             <div class="row">
                 <div class="col-sm-6 col-md-7">
 
@@ -77,9 +80,16 @@
 
                     <p><strong>Доставка {{ ($product->deliveryTime ? '~'.$product->deliveryTime : '') }}</strong>, бесплатно в {{ $product->shop->city->name_prepositional }}</p>
 
-                    <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong data-ng-cloak=""><% product.clientPrice %></strong></p>
+                    @if(empty($product->deleted_at))
+                        <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong data-ng-cloak=""><% product.clientPrice %></strong></p>
+                    @else
+                        <p class="h3 title-media-item-opened text-danger">Товар закончился</p>
+                        <a href="/" class="btn btn-lg btn-warning btn-block">
+                            <strong>Подобрать аналогичный букет</strong>
+                        </a>
+                    @endif
 
-                    @if(!empty($product->single))
+                    @if(!empty($product->single) && empty($product->deleted_at))
 
                         <div class="sizes">
                             @foreach($shopSingleProducts as $shopSingleProduct)
@@ -117,8 +127,8 @@
 
 
                     <br><br>
-                    @if($shopIsAvailable)
-                        <a href="{{ route('order.add', ['product_id' => $product->id]) }}" id="go_to_order" target="_blank" class="btn btn-lg btn-warning btn-block">
+                    @if($shopIsAvailable && empty($product->deleted_at))
+                        <a href="{{ route('order.add', ['product_id' => $product->id]) }}" id="go_to_order" class="btn btn-lg btn-warning btn-block">
                             <strong>Оформить заказ</strong>
                         </a>
                     @endif
@@ -242,6 +252,12 @@
                 @endforeach
             @endif
 
+        </div>
+
+        
+
+        <div class="col-md-5 col-xs-12">
+
             <br><br>
 
 
@@ -286,7 +302,11 @@
                     </figure>
                 </div>
             </div>
+
         </div>
+
+        <br clear="all">
+
         @if($products->total())
             <div class="container-fluid">
                 <h3 class="margin-top-null"><strong>Вам может понравиться:</strong></h3>

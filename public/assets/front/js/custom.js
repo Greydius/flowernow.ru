@@ -1,5 +1,8 @@
 var region_visible = null;
 
+const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+observer.observe();
+
 $.ajax({
         beforeSend: function() {
                 preloader('show');

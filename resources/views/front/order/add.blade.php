@@ -251,6 +251,15 @@
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
                                         <option value="Время согласовать">Согласовать</option>
+                                        <option value="с 08:00 до 10:00">с 08:00 до 10:00</option>
+                                        <option value="с 10:00 до 12:00">с 10:00 до 12:00</option>
+                                        <option value="с 12:00 до 14:00">с 12:00 до 14:00</option>
+                                        <option value="с 14:00 до 16:00">с 14:00 до 16:00</option>
+                                        <option value="с 16:00 до 18:00">с 16:00 до 18:00</option>
+                                        <option value="с 18:00 до 20:00">с 18:00 до 20:00</option>
+                                        <option value="с 20:00 до 22:00">с 20:00 до 22:00</option>
+                                        <option value="с 22:00 до 24:00">с 22:00 до 24:00</option>
+                                        <!--
                                         <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
                                         <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
                                         <option value="с 10:00 до 11:00">с 10:00 до 11:00</option>
@@ -267,6 +276,7 @@
                                         <option value="с 21:00 до 22:00">с 21:00 до 22:00</option>
                                         <option value="с 22:00 до 23:00">с 22:00 до 23:00</option>
                                         <option value="с 23:00 до 24:00">с 23:00 до 24:00</option>
+                                        -->
                                     </select>
                                 </div>
                             </div>
@@ -290,6 +300,12 @@
                                 <input type="email" class="form-control order-email" placeholder="Эл. почта">
                             </div>
 
+                        </div>
+                        <br>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="recipient_photo" id="recipient_photo"> Сделать фотографию получателя
+                            </label>
                         </div>
 
                         <br>

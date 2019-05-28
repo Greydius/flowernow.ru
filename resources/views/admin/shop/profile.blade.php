@@ -72,6 +72,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if($user->admin)
+                                <li class="nav-item m-tabs__item">
+                                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#report" role="tab">
+                                        <i class="la la-clipboard"></i>
+                                        Отчеты Агента
+                                    </a>
+                                </li>
+                                @endif
                             </ul>
                             <div class="tab-content" id="profile-content">
                                 <div class="tab-pane active" id="m_name" role="tabpanel">
@@ -178,6 +186,8 @@
 
                                         </div>
 
+                                            <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
+
                                     </div>
 
 
@@ -218,6 +228,8 @@
                                                 </span>
                                             </span>
                                         </button>
+
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
 
 
                                     </div>
@@ -337,6 +349,7 @@
                                         </div>
 
 
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
 
                                     </div>
 
@@ -615,6 +628,8 @@
 
                                         </div>
 
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
+
                                     </div>
 
 
@@ -744,6 +759,8 @@
                                         </span>
                                         </button>
 
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
+
                                     </div>
 
                                 </div>
@@ -810,6 +827,8 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
 
                                     </div>
 
@@ -890,6 +909,8 @@
                                             </select>
                                         </div>
 
+                                        <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
+
                                     </div>
 
                                 </div>
@@ -908,11 +929,51 @@
 
                                 </div>
 
+                                @if($user->admin)
+                                <div class="tab-pane" id="report" role="tabpanel">
+
+                                    <div class="m-portlet__body">
+
+                                        @if($user->admin)
+                                            <div class="form-group m-form__group">
+                                                <form action="{{ route('admin.shop.getReport', ['id' => $shop->id]) }}" enctype="multipart/form-data" method="post">
+                                                    {{ csrf_field() }}
+                                                    <div class="row">
+                                                        <div class="col-md-10">
+                                                            <select class="form-control" name="reportDate">
+                                                                <option value="">Отчет за период</option>
+                                                                @foreach($reportsDate as $date)
+                                                                    <option value="{{ $date->format('Y-m-d') }}">{{ $date->format('Y-m') }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <input type="submit" value="Скачать" class="form-control btn-info">
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        @endif
+
+                                        <div class="form-group m-form__group">
+                                            <table style=" width: 100%">
+                                                @foreach($reports as $report)
+                                                    <tr>
+                                                        <td>{{ \App\Helpers\AppHelper::ruMonth($report->report_date->format('m'), 2) }} {{ $report->report_date->format('Y') }}</td>
+                                                        <td><a href="{{ route('admin.shop.getReportFile', ['id' => $report->id]) }}" target="_blank"><i class="fa fa-file-<?=($report->ext == 'pdf' ? 'pdf' : 'word')?>-o"></i></a></td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @endif
+
                             </div>
 
                         </div>
-
-                    <span class="text-danger req-star">*</span><span class="text-danger"> - поля обязательные к заполнению</span>
 
 
 

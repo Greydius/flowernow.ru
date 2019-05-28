@@ -22,6 +22,7 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                                 'dateTo': $scope.dateTo,
                                 'search': $scope.search_str,
                                 'page': $scope.currentPage,
+                                'ur': $('#ur_only').is(':checked')
                         }
 
                 }).then(function (response) {
@@ -88,6 +89,10 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                         $scope.search_str = $('#m_form_search').val();
                         $scope.getOrders();
                 }
+        }
+
+        $scope.changeUr = function() {
+                $scope.getOrders();
         }
 
         $scope.ranges = function (min, max, step) {

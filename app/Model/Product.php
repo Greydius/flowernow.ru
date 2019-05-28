@@ -107,6 +107,10 @@ class Product extends MainModel
                 return $this->belongsTo('App\Model\ProductType');
         }
 
+        function orderList() {
+                return $this->hasMany('App\Model\OrderList');
+        }
+
         // relation for products
         function compositions() {
                 return $this->hasMany('App\Model\ProductComposition');
@@ -139,7 +143,7 @@ class Product extends MainModel
 
                 $productRequest = self::with(['shop'  => function($query) {
                             $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                        }])->whereHas('shop', function($query) use ($city_id) {
+                        }, 'photos'])->whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
                         })->where('price', '>', 0)
                         ->where('dop', 0)
@@ -148,6 +152,10 @@ class Product extends MainModel
                         ->whereNull('single');
 
                 if(!empty($request)) {
+
+                        if($request->deleted) {
+                                $productRequest->onlyTrashed();
+                        }
 
                         if(!empty($request->notIn)) {
                                 $productRequest->whereNotIn('id', $request->notIn);
@@ -286,6 +294,7 @@ class Product extends MainModel
 
 
                                 if(!empty($queries)) {
+
                                         $flowersBuilder = Flower::where('name', 'like', '%'.$queries[0].'%')->orWhere('search_key', 'like', '%'.$queries[0].'%');
                                         for($i=1; $i<count($queries); $i++) {
                                                 if(strlen($queries[$i]) > 1) {
@@ -303,18 +312,25 @@ class Product extends MainModel
                                         }
 
                                         if(!empty($flowersSearchKeys)) {
-                                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
+                                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys, $queries) {
                                                         $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
                                                                 $query->whereIn('flower_id', $flowersSearchKeys);
                                                         });
-                                                });
-                                        }
 
-                                        foreach($queries as $pk) {
-                                                $productRequest->where(function ($query) use ($request, $pk) {
-                                                        $query->Where('name', 'like', '%'.$pk.'%')
-                                                                ->orWhere('description', 'like', '%'.$pk.'%');
+                                                        foreach($queries as $pk) {
+                                                                $query->orWhere(function ($query) use ($request, $pk) {
+                                                                        $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                                                ->orWhere('description', 'like', '%'.$pk.'%');
+                                                                });
+                                                        }
                                                 });
+                                        } else {
+                                                foreach($queries as $pk) {
+                                                        $productRequest->where(function ($query) use ($request, $pk) {
+                                                                $query->Where('name', 'like', '%'.$pk.'%')
+                                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                                        });
+                                                }
                                         }
 
 
@@ -329,6 +345,12 @@ class Product extends MainModel
                 //echo $productRequest->toSql(); exit();
 
                 if(!empty($request->shop_id) && $request->shop_id == 499) {
+                        //echo $productRequest->toSql(); exit();
+                        //echo $city_id; exit();
+                }
+
+                if(!empty($request->test)) {
+                        //dd($request);
                         //echo $productRequest->toSql(); exit();
                         //echo $city_id; exit();
                 }
@@ -380,6 +402,8 @@ class Product extends MainModel
                 } else {
                         $_products->orderByRaw(\DB::raw("FIELD(products.single, " . implode(',', $ids) . ")"));
                 }
+
+                //\Log::debug($_products->toSql());
 
              return $_products;
         }
@@ -473,6 +497,11 @@ class Product extends MainModel
         public function getPhotoUrlAttribute() {
 
                 if(empty($this->single)) {
+                        /*
+                        if(!empty($this->photos[0]->cdn_response)) {
+                                return('https://res.cloudinary.com/floristum/image/upload/350x350/'.$this->shop_id.'/'.$this->photos[0]->photo);
+                        }
+                        */
                         return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
                 }
 
