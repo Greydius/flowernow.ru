@@ -823,4 +823,8 @@ class ShopsController extends Controller
 
                 exit();
         }
+        
+        public function rules() {
+                return view('admin.shop.rules', []);
+        }
 }

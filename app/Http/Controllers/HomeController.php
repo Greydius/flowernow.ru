@@ -118,6 +118,10 @@ class HomeController extends Controller
 
     public function test(Request $request) {
 
+           
+
+            exit();
+
             $order = Order::find(39393);
 
             $link = route('feedback.add', ['key' => $order->key]);

@@ -991,3 +991,8 @@ header .location-icon {
 .product-right {
         float: right;
 }
+
+.main-products-container {
+        background-color: #fff;
+        padding-top: 35px;
+}

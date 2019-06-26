@@ -213,6 +213,12 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'uses' => 'ShopsController@partnershipAdd',
                 'as' => 'shops.partnership.add'
         ]);
+        
+        /*Правила*/
+        Route::get('rules', [
+                'uses' => 'ShopsController@rules',
+                'as' => 'shops.rules'
+        ]);
 
         /*SINGLE PRODUCTS*/
         Route::get('single', [

@@ -39,7 +39,7 @@ class Feedback extends Model
                                 $query->where('city_id', $city_id)->available();
                         })->where('approved', 1)->orderBy('feedback_date_tmp', 'asc')->take(1)->get();
 
-                        if(!empty($feedback)) {
+                        if(count($feedback)) {
                                 $feedback[0]->feedback_date_tmp = $date->format('Y-m-d H:i:s');
                                 $feedback[0]->save();
                                 return $feedback;

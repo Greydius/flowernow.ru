@@ -238,7 +238,7 @@
                             <img class="media-object" width="54" height="54" src="{{ asset('assets/front/img/reviews-5.png') }}" alt="...">
                         </div>
                         <div class="media-body">
-                            <h4 class="media-heading"><strong>Заказчик букета {{ $feedback->name }}</strong> <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><span class="text-muted feedback-date">{{ Carbon\Carbon::parse($feedback->feedback_date)->format('d-m-Y') }}</span><? } ?></h4>
+                            <h4 class="media-heading"><strong> {{ $feedback->name }}</strong> <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><span class="text-muted feedback-date">{{ Carbon\Carbon::parse($feedback->feedback_date)->format('d-m-Y') }}</span><? } ?></h4>
                             <p>{{ $feedback->feedback }}</p>
                             <ul class="list-inline">
                                 <li>

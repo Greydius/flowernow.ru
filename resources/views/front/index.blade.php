@@ -310,7 +310,7 @@
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">
-                            <strong>Заказчик {{ $feedback->name }}</strong>
+                            <strong> {{ $feedback->name }}</strong>
                             <? if($feedback->feedback_date != '0000-00-00 00:00:00') { ?><br><span class="text-muted feedback-date">{{ Carbon\Carbon::parse($feedback->feedback_date_tmp)->format('d.m.Y') }}</span><? } ?>
                     </h4>
                     <p>{{ $feedback->feedback }}</p>

@@ -182,7 +182,7 @@
 
                         <div class="form2">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Ваше имя" name="name">
+                                <input type="text" class="form-control" placeholder="Ваше имя" name="name[]">
                             </div>
                             <div class="form-group">
                                 <input type="tel" class="form-control phone_input customer_phone" data-placeholder="Ваш телефон" ng-model="phone" name="phone">
@@ -291,7 +291,7 @@
                                         <input type="checkbox" name="anonymous"> Отправить цветы анонимно
                                     </label>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Имя" name="name">
+                                <input type="text" class="form-control" placeholder="Имя" name="name[]">
                             </div>
                             <div class="form-group">
                                 <input type="tel" class="form-control phone_input customer_phone" required data-placeholder="Телефон">

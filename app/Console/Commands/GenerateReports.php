@@ -43,7 +43,7 @@ class GenerateReports extends Command
          */
         public function handle()
         {
-                $reportDate = '2019-04-13';
+                $reportDate = '2019-05-13';
 
                 $date = \Carbon\Carbon::parse($reportDate);
 

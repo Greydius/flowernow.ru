@@ -4,14 +4,16 @@
 
 
     <div class="row" ng-controller="orderView">
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-print-8">
             <!--begin::Portlet-->
             <div class="m-portlet">
                 <div class="m-portlet__head">
                     <div class="m-portlet__head-caption">
                         <div class="m-portlet__head-title">
-                            <span class="m-portlet__head-icon m--hide">
-                                <i class="la la-gear"></i>
+                            <span class="m-portlet__head-icon hidden-print">
+                                <a href="javascript:window.print();">
+                                    <i class="la la-print"></i>
+                                </a>
                             </span>
                             <h3 class="m-portlet__head-text">
                                 Заказ № {{ $order->id }}
@@ -55,7 +57,7 @@
                                                                 <span class="text-danger"><strong>Получите {{ $order->amount() }} руб. наличными с заказчика!</strong></span>
                                                             @endif
 
-                                                            @if($order->payment != 'cash')
+                                                            @if($order->payed && $order->payment != 'cash')
                                                                 <span class="text-success"><strong>Заказ оплачен онлайн.</strong></span>
                                                             @endif
                                                         </span>
@@ -75,7 +77,14 @@
 
                                                             <div class="m-widget4__info">
                                                                 <span class="m-widget4__title">
-                                                                    {{ $item->product->name }} (id: {{ $item->product->id }}) {!! $item->qty > 1 ? '<span class="text-danger"><strong>x'.$item->qty.' шт.</strong></span>' : ''  !!}
+                                                                    {{ $item->product->name }} (id: {{ $item->product->id }}) {!! $item->qty > 1 ? (
+                                                                        $item->product->single ? (
+                                                                            $item->product->singleProduct->qty_from != $item->qty ?
+                                                                                '<br><span class="text-danger"><strong>В букете изменено кол-во цветов на '.$item->qty.' шт.</strong></span>'
+                                                                                : ''
+                                                                        ) : '<span class="text-danger"><strong>x'.$item->qty.' шт.</strong></span>'
+
+                                                                        ) : ''  !!}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -84,7 +93,7 @@
                                                 @endforeach
 
                                                 @if($user->admin)
-                                                    <div class="m-widget4__item">
+                                                    <div class="m-widget4__item hidden-print">
                                                         <div class="m-widget4__info">
                                                             <span class="m-widget4__title">
                                                                 Магазин:
@@ -107,7 +116,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-calendar-2 m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-calendar-2 m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -157,7 +166,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-user-ok m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-user-ok m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -188,7 +197,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-user-add m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-user-add m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -233,7 +242,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-attachment m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-attachment m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -264,7 +273,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-map-location m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-map-location m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -297,7 +306,7 @@
 
                                                 <div class="m-widget4__item">
                                                     <span class="m-widget17__icon">
-                                                        <i class="flaticon-notes m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                        <i class="flaticon-notes m--font-brand"  ></i>
                                                     </span>
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
@@ -323,7 +332,7 @@
                                                 @if($user->admin && $order->payment == \App\Model\Order::$PAYMENT_RS)
                                                     <div class="m-widget4__item">
                                                         <span class="m-widget17__icon">
-                                                            <i class="flaticon-notes m--font-brand"  style="font-size: 3.5rem;"></i>
+                                                            <i class="flaticon-notes m--font-brand"  ></i>
                                                         </span>
                                                         <div class="m-widget4__info">
                                                             <span class="m-widget4__title">
@@ -356,7 +365,7 @@
 
                     </div>
 
-                    <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit">
+                    <div class="m-portlet__foot m-portlet__no-border m-portlet__foot--fit hidden-print">
                         <div class="m-form__actions m-form__actions--solid">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -425,7 +434,7 @@
 
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4 col-print-4">
 
             <div class="row">
 
@@ -461,10 +470,17 @@
                                     <div class="m-demo-icon__preview">
                                         <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
                                     </div>
-                                    {{ $order->amountShop() }} р.
-                                    <small>
-                                        Вам
-                                    </small>
+                                    @if($order->payment != 'cash')
+                                        {{ $order->amountShop() }} р.
+                                        <small>
+                                            Вам
+                                        </small>
+                                    @else
+                                        <small>
+                                            Со счета удерживается комиссия
+                                        </small>
+                                        {{ $order->amountShop()*(-1) }} р.
+                                    @endif
                                 </div>
 
                             </div>
@@ -474,7 +490,7 @@
 
                 @if($user->admin)
 
-                <div class="col-lg-12">
+                <div class="col-lg-12 hidden-print">
                     <div class="m-portlet  m-portlet--border-bottom-brand ">
                         <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                             <div class="m-widget26">
@@ -504,7 +520,7 @@
 
                 @if(!$order->recipient_self)
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 hidden-print">
                         <div class="m-portlet  m-portlet--border-bottom-brand ">
                             <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                                 <div class="m-widget26">
@@ -534,7 +550,7 @@
 
                 @endif
 
-                <div class="col-lg-12">
+                <div class="col-lg-12 hidden-print">
                     <div class="m-portlet  m-portlet--border-bottom-brand ">
                         <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                             <div class="m-widget26">
@@ -611,7 +627,7 @@
 
                 @if($user->admin)
                     @if($order->payed)
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 hidden-print">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
                                 <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                                     <div class="m-widget26">
@@ -682,7 +698,7 @@
                     @endif
 
                     @if($order->status != \App\Model\Order::$STATUS_COMPLETED)
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 hidden-print">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
                                 <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                                     <div class="m-widget26">
@@ -722,7 +738,7 @@
                     @endif
 
                     @if($order->payment == \App\Model\Order::$PAYMENT_RS && !$order->payed)
-                        <div class="col-lg-12">
+                        <div class="col-lg-12 hidden-print">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
                                 <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                                     <div class="m-widget26">
@@ -762,7 +778,7 @@
 
 
 
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 hidden-print">
                         <div class="m-portlet  m-portlet--border-bottom-brand ">
                             <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
                                 <div class="m-widget26">
@@ -816,6 +832,10 @@
 
 
 @endsection
+
+@section('head')
+    <link href="{{ asset('assets/admin/css/print.css') }}" rel="stylesheet" type="text/css"/>
+@stop
 
 @section('footer')
     <script src="{{ asset('assets/admin/ng/ordersList.js') }}" type="text/javascript"></script>

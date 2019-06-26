@@ -9,7 +9,7 @@
 
 <div class="container 34" ng-controller="mainPage">
 
-    <br class="hidden-xs hidden-sm">
+    <br class="hidden-xs- hidden-sm-">
 
     <div class="row list-products" ng-hide="isFiltered">
 
@@ -27,7 +27,7 @@
 
 
 
-        <div class="col-md-12"  style="background-color: #fff; padding-top: 35px;">
+        <div class="col-md-12 main-products-container">
 
             <div class="free_phone hidden-xs">
                 <b>8 800 600-54-97</b>

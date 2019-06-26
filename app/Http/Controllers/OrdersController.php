@@ -102,7 +102,7 @@ class OrdersController extends Controller
                                 $order->receiving_date = $date->format('Y-m-d');
                                 $order->receiving_time = $request->receiving_time;
                                 $order->anonymous = !empty($request->anonymous) ? 1 : 0;
-                                $order->name = $request->name;
+                                $order->name = $request->name[0] ? $request->name[0] : $request->name[1];
                                 $order->phone = $request->phone;
                                 $order->email = $request->email;
                                 $order->text = $request->text;

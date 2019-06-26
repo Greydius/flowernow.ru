@@ -363,6 +363,20 @@
 									</span>
                                 </a>
                             </li>
+
+                            <li class="m-menu__item {{ \Request::route()->getName() == 'shops.rules' ? 'm-menu__item--active' : null }}">
+                                <a href="{{ route('shops.rules') }}" class="m-menu__link ">
+                                    <i class="m-menu__link-icon fa fa-road"></i>
+                                    <span class="m-menu__link-title">
+										<span class="m-menu__link-wrap">
+											<span class="m-menu__link-text">
+												Правила работы
+											</span>
+
+										</span>
+									</span>
+                                </a>
+                            </li>
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->
