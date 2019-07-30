@@ -227,4 +227,133 @@ class AppHelper {
                 return explode(' ', $str);
         }
 
+        static function  RESIZER($src_img, $width, $height, $mode=0, $format=NULL, $quality=90) {
+
+                if (empty($src_img) OR !file_exists(public_path() . $src_img)){
+                        if (empty($width)) $width = $height;
+                        if (empty($height)) $height = $width;
+                        return "http://placehold.it/".(int)$width."x".(int)$height;
+                }
+
+                $path_parts = pathinfo($src_img);
+
+                $img_size = @getimagesize(public_path() . $src_img);
+                if ($img_size === false) return false;
+
+                if (!$height){
+                        $yy_ratio = $width / $img_size[0];
+                        $height = floor($yy_ratio * $img_size[1]);
+                }
+
+                if (!$width){
+                        $xx_ratio = $height / $img_size[1];
+                        $width = floor($xx_ratio * $img_size[0]);
+                }
+
+                $SAVE_PATH = $path_parts['dirname'] . "/".$width."x".$height."_".($mode ? 'c' : 'r')."/";
+
+                $FileName = $path_parts['basename']; // file name
+
+
+                if (!is_dir(public_path() . $SAVE_PATH)){
+                        mkdir(public_path() . $SAVE_PATH, 0755, 1);
+                }
+
+                $dest_img = public_path() . $SAVE_PATH.$FileName;
+
+
+                if (file_exists($dest_img) && filemtime(public_path() . $src_img) < filemtime($dest_img))
+                        return $SAVE_PATH.$FileName;
+
+                $img_format = strtolower(substr($img_size['mime'], strpos($img_size['mime'], '/') + 1));
+                if (($img_format == 'x-ms-bmp') || ($img_format == 'bitmap')) {
+                        $img_format = 'bmp';
+                }
+                if (!function_exists($fn_imgcreatefrom = 'imagecreatefrom'.$img_format))
+                        return false;
+
+                if (!$format) {
+                        $format = $img_format;
+                }
+
+                $x_ratio = $width / $img_size[0];
+                $y_ratio = $height / $img_size[1];
+                $new_x = 0;
+                $new_y = 0;
+                $old_width = $img_size[0];
+                $old_height = $img_size[1];
+
+                // just resize to this resolution
+                if ($mode == 0) {
+                        if ($x_ratio < $y_ratio) {
+                                $new_width = $width;
+                                $new_height = floor($x_ratio * $img_size[1]);
+                        } else {
+                                $new_height = $height;
+                                $new_width = floor($y_ratio * $img_size[0]);
+                        }
+                }
+                // proportionality
+                elseif ($mode == 1) {
+                        $new_height = $height;
+                        $new_width = $width;
+                        $new_x_ratio = $old_width / $new_width;
+                        $new_y_ratio = $old_height / $new_height;
+                        if ($new_x_ratio < $new_y_ratio) {
+                                $old_height = floor($new_x_ratio * $new_height);
+                                $new_y = floor(($img_size[1] - $old_height) / 2);
+                        } elseif ($new_x_ratio > $new_y_ratio) {
+                                $old_width = floor($new_y_ratio * $new_width);
+                                $new_x = floor(($img_size[0] - $old_width) / 2);
+                        }
+                }
+                // priorities
+                else {
+                        $new_height = $height;
+                        $new_width = $width;
+                        $new_x_ratio = $old_width / $new_width;
+                        $new_y_ratio = $old_height / $new_height;
+                        // width priority
+                        if ($mode == 2) {
+                                $old_height = floor($new_x_ratio * $new_height);
+                                $new_y = floor(($img_size[1] - $old_height) / 2);
+                        }
+                        // height priority
+                        elseif ($mode == 3) {
+                                $old_width = floor($new_y_ratio * $new_width);
+                                $new_x = floor(($img_size[0] - $old_width) / 2);
+                        }
+                }
+
+                $gd_dest_img = imagecreatetruecolor($new_width, $new_height);
+                $gd_src_img = $fn_imgcreatefrom(public_path() . $src_img);
+
+                if (($format == 'png') || ($format == 'gif')) {
+                        //self::setTransparency($gd_dest_img, $gd_src_img);
+                        /*PNG FIX 17.06.2012*/
+                        imagealphablending($gd_dest_img, false);
+                        imagesavealpha($gd_dest_img, true);
+                        $transparent = imagecolorallocatealpha($gd_dest_img, 255, 255, 255, 127);
+                        imagefilledrectangle($gd_dest_img, 0, 0, $new_width, $new_height, $transparent);
+                        /*PNG FIX END*/
+                }
+
+                imagecopyresampled($gd_dest_img, $gd_src_img, 0, 0, $new_x, $new_y, $new_width, $new_height, $old_width, $old_height);
+                switch ($format) {
+                        case 'gif': imagegif($gd_dest_img, $dest_img);
+                                break;
+                        case 'png': imagepng($gd_dest_img, $dest_img);
+                                break;
+                        case 'bmp': imagebmp($gd_dest_img, $dest_img);
+                                break;
+                        default: imagejpeg($gd_dest_img, $dest_img, $quality);
+                                break;
+                }
+                imagedestroy($gd_dest_img);
+                imagedestroy($gd_src_img);
+
+
+                return $SAVE_PATH.$FileName;
+        }
+
 }

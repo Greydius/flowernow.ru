@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Order;
+use App\Model\OrderTransfer;
 use App\Model\Shop;
 use App\Model\Product;
 use App\Model\CashVoucher;
@@ -118,43 +119,40 @@ class HomeController extends Controller
 
     public function test(Request $request) {
 
-           
+            $product = Product::where('id', 23498)->first();
 
+            //file_exists(GET_DR() . $src_img)
+
+            echo \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$product->shop_id.'/'.$product->photo, 351, 351, 1, NULL, 75);
             exit();
 
-            $order = Order::find(39393);
+            \App\Helpers\AppHelper::RESIZER();
 
-            $link = route('feedback.add', ['key' => $order->key]);
+            $productTypes = ProductType::where('show_on_main', '1')->get();
+            $banners = Banner::whereNotNull('checked_on')->with('shop')->get();
+            $products = [];
 
-            try {
-                    $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
-            } catch (\Exception $e) {
-                    print_r($e);
-                    $shortLink = $link;
+            foreach($banners as $banner) {
+                    foreach($productTypes as $productType) {
+                            $request = new Request();
+                            $request->shop_id = $banner->shop->id;
+                            $request->productType = $productType->id;
+                            $request->order = 'rand';
+                            $_products = Product::popular($banner->shop->city_id, $request, 1, 1);
+                            if($_products->total() > 0) {
+                                    foreach($_products as $p) {
+                                            $products[] = $p;
+                                    }
+                            }
+                    }
             }
 
-            echo $shortLink;
-
-            exit();
-
-
-            $product = Product::withTrashed()->find(8);
-
-            $product->load('compositions');
-            $product->load('photos');
-
-            $_product = $product->replicate();
-            $_product->push();
-
-            /*
-            foreach($product->compositions as $composition) {
-                    unset($composition->id);
-                    $_product->compositions()->create($composition->toArray());
+            foreach($products as $product) {
+                    $product->sort = 199996320;
+                    $product->save();
             }
-            */
 
-            dd($_product->id);
-
+            dd($products);
 
             exit();
 

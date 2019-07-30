@@ -141,11 +141,22 @@ class Product extends MainModel
                         return self::popularSingle2($city_id, $singleProductsIds)->paginate($perPage);
                 }
 
+                /*
                 $productRequest = self::with(['shop'  => function($query) {
                             $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
                         }, 'photos'])->whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
                         })->where('price', '>', 0)
+                        ->where('dop', 0)
+                        ->where('status', 1)
+                        ->where('pause', 0)
+                        ->whereNull('single');
+                */
+
+                $productRequest = self::with(['shop'  => function($query) {
+                        $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
+                        ->where('price', '>', 0)
                         ->where('dop', 0)
                         ->where('status', 1)
                         ->where('pause', 0)
@@ -179,10 +190,12 @@ class Product extends MainModel
                                                 $query->where('slug', $request->product_type);
                                         });
 
+                                        /*
                                         foreach($productTypeSearchKeys as $pk) {
                                                 $query->orWhere('name', 'like', '%'.$pk.'%')
                                                         ->orWhere('description', 'like', '%'.$pk.'%');
                                         }
+                                        */
                                 });
 
 /*
@@ -349,7 +362,7 @@ class Product extends MainModel
                         //echo $city_id; exit();
                 }
 
-                if(!empty($request->test)) {
+                if(!empty($request->t)) {
                         //dd($request);
                         //echo $productRequest->toSql(); exit();
                         //echo $city_id; exit();
@@ -502,10 +515,15 @@ class Product extends MainModel
                                 return('https://res.cloudinary.com/floristum/image/upload/350x350/'.$this->shop_id.'/'.$this->photos[0]->photo);
                         }
                         */
-                        return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+
+                        //return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+
+                        return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                 }
 
-                return asset('/uploads/single/632x632/'.$this->photo.'');
+                //return asset('/uploads/single/632x632/'.$this->photo.'');
+                return \App\Helpers\AppHelper::RESIZER('/uploads/single/632x632/'.$this->photo, 351, 351, 1, NULL, 75);
+
                 //return asset('/uploads/single/'.$this->photo.'');
                 //return asset('http://via.placeholder.com/600x600');
         }
@@ -536,9 +554,10 @@ class Product extends MainModel
         }
 
         public static function lowPriceProducts($city_id) {
-                return Product::whereHas('shop', function($query) use ($city_id) {
+                return Product::whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
+                /*whereHas('shop', function($query) use ($city_id) {
                         $query->where('city_id', $city_id)->available();
-                })
+                })*/
                         ->where('price', '>', 0)
                         ->where('status', 1)
                         ->where('pause', 0)

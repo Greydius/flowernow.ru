@@ -729,6 +729,16 @@ Route::get('/seed/city', [
         'uses' => 'SeedController@insertCityData'
 ]);
 
+Route::get('/recover/reset', [
+        'uses' => 'Auth\SendsPasswordResetEmailsController@showLinkRequestForm',
+        'as' => 'recover.reset'
+]);
+
+Route::post('/recover/email', [
+        'uses' => 'Auth\SendsPasswordResetEmailsController@sendResetLinkEmail',
+        'as' => 'recover.email'
+]);
+
 
 Route::post('/recover/sendCode', [
         'uses' => 'Auth\ForgotPasswordController@sendCode',

@@ -29,7 +29,7 @@
 
                 <figure class="main-picture">
                     @if(empty($product->single))
-                        <img class="img-responsive" src="{{ asset($product->photoUrl) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                        <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
                          <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
                     @else
                         <img class="img-responsive" data-ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">

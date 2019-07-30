@@ -17,6 +17,11 @@ window.onbeforeunload = function(e) {
         preloader('show');
 };
 
+var lazyLoadInstance = new LazyLoad({
+        elements_selector: ".lazy"
+        // ... more custom settings?
+});
+
 $(document).ready(function() {
 
         $(window).on('load', function () {

@@ -356,7 +356,10 @@ class Order extends MainModel
 
                 $ordersCount = Order::ordersCountForPeriod($dateFrom, $dateTo);
 
-                return round($ordersSum/$ordersCount);
+                if($ordersCount) {
+                        return round($ordersSum/$ordersCount);
+                }
+                
                 return 0;
         }
 

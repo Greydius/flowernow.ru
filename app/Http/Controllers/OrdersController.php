@@ -498,8 +498,12 @@ class OrdersController extends Controller
                                         $orderModel->whereHas('shop', function($query) use ($request) {
                                                 $query->where('shops.name', 'like', '%'.$request->search.'%');
                                         })->orWhere('id', 'like', '%'.$request->search.'%');
-                                        
-                                        
+                                }
+
+                                if(!empty($request->shopId)) {
+                                        $orderModel->whereHas('shop', function($query) use ($request) {
+                                                $query->where('shops.id', $request->shopId);
+                                        });
                                 }
 
                                 if(!empty($request->ur) && $request->ur == 'true') {
@@ -633,6 +637,7 @@ class OrdersController extends Controller
                                 case Order::$STATUS_ACCEPTED:
                                         if($this->user->admin || $order->status == Order::$STATUS_NEW) {
                                                 $order->status = Order::$STATUS_ACCEPTED;
+                                                $order->accepted_at = date('Y-m-d H:i:s');
                                                 if($order->save()) {
                                                         $order->changeStatusNotification();
                                                 }

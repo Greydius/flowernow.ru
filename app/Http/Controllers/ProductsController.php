@@ -25,6 +25,72 @@ class ProductsController extends Controller
     //
         public function index(Request $request) {
 
+                if(!empty($request->t)){
+
+                        $viewFile = 'front.index';
+
+                        $title = '';
+                        $meta = [];
+
+                        $productTypes = ProductType::where('show_on_main', '1')->get();
+
+                        $currentType = null;
+
+                        $popularProducts = [];
+                        $popularProduct = [];
+
+                        $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
+                                105, //красных тюльпанов
+                                97, //красных гвоздик
+                                /*
+                                105, //красных тюльпанов
+                                97, //красных гвоздик
+                                116, //красных пионов
+                                130, //разноцветных ирисов
+                                //138, //белых калл
+                                171, //белых фрезий
+                                183, //белых гортензий
+                                166 //белых анемонов
+                                */
+                        ];
+                        //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
+                        //$singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
+                        $singleProducts = [];
+
+                        if(empty($request->product_type)) {
+
+                                $item = [];
+                                foreach ($productTypes->take(1) as $productType) {
+                                        $request->product_type = $productType->slug;
+                                        $request->t = true;
+                                        $item['productType'] = $productType;
+                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
+                                        $item['popularProductCount'] = count($item['popularProduct']);
+                                        if($item['popularProductCount']) {
+                                                $popularProducts[] = $item;
+                                        }
+                                }
+
+                                unset($request->product_type);
+
+                        }
+
+
+                        return view('front.index',[
+                                'title' => '',
+                                'meta' => '',
+                                'promoText' => '',
+                                'popularProduct' => null,
+                                'popularProducts' => $popularProducts,
+                                'lowPriceProducts' => null,
+                                'singleProducts' => $singleProducts,
+                                'currentType' => null,
+                                'specialOffers' => null,
+                                'specialOfferProducts' => null,
+                                'feedbacks' => null
+                        ]);
+                }
+
                 $viewFile = 'front.index';
 
                 $title = '';
@@ -50,6 +116,8 @@ class ProductsController extends Controller
                         166 //белых анемонов
                         */
                         ];
+
+                $singleProductsIds = [];
                 //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
                 $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
 
@@ -72,10 +140,11 @@ class ProductsController extends Controller
 
                         $item = [];
                         foreach ($productTypes as $productType) {
-                                $request->product_type = $productType->slug;
+                                //$request->product_type = $productType->slug;
+                                $request->productType = $productType->id;
                                 $item['productType'] = $productType;
                                 $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
-                                $item['popularProductCount'] = count($item['popularProduct']);
+                                $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
                                 if($item['popularProductCount']) {
                                         $popularProducts[] = $item;
                                 }
@@ -200,7 +269,7 @@ class ProductsController extends Controller
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
                 ];
 
-                $size = getimagesize($product->photoUrl);
+                $size = getimagesize(public_path().$product->photoUrl);
                 if($size) {
                         $params['pageImageWidth'] = $size[0];
                         $params['pageImageHeight'] = $size[1];

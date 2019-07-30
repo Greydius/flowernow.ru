@@ -73,12 +73,20 @@
                                     </li>
                                 @endif
                                 @if($user->admin)
-                                <li class="nav-item m-tabs__item">
-                                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#report" role="tab">
-                                        <i class="la la-clipboard"></i>
-                                        Отчеты Агента
-                                    </a>
-                                </li>
+                                    <li class="nav-item m-tabs__item">
+                                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#report" role="tab">
+                                            <i class="la la-clipboard"></i>
+                                            Отчеты Агента
+                                        </a>
+                                    </li>
+                                @endif
+                                @if($user->admin)
+                                    <li class="nav-item m-tabs__item">
+                                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#orders" role="tab">
+                                            <i class="m-menu__link-icon flaticon-cart"></i>
+                                            Заказы
+                                        </a>
+                                    </li>
                                 @endif
                             </ul>
                             <div class="tab-content" id="profile-content">
@@ -971,6 +979,14 @@
                                 </div>
                                 @endif
 
+                                @if($user->admin)
+                                    <div class="tab-pane" id="orders" role="tabpanel" ng-controller="ordersList" >
+
+                                        @include('admin.orders.table')
+
+                                    </div>
+                                @endif
+
                             </div>
 
                         </div>
@@ -1008,10 +1024,16 @@
     <script src="{{ asset('assets/plugins/datepair/datepair.js') }}"></script>
     <script src="{{ asset('assets/plugins/datepair/jquery.datepair.js') }}"></script>
     <script src="{{ asset('assets/admin/demo/default/custom/components/forms/widgets/bootstrap-switch.js') }}"></script>
+    @if($user->admin)
+        <script src="{{ asset('assets/admin/ng/ordersList.js?v=20190114') }}" type="text/javascript"></script>
+    @endif
 
     <script type="text/javascript">
         jsonData.address = {!! $shop->address->makeHidden(['created_at', 'updated_at', 'deleted_at'])->toJson() !!};
         jsonData.workerDirector = {!! $shop->workers()->where('position_id', 1)->get()->makeHidden(['created_at', 'updated_at', 'deleted_at'])->toJson() !!};
         jsonData.workerFlorist = {!! $shop->workers()->where('position_id', 2)->get()->makeHidden(['created_at', 'updated_at', 'deleted_at'])->toJson() !!};
+        @if($user->admin)
+                jsonData.shopId = '{{ $shop->id }}';
+        @endif
     </script>
 @stop

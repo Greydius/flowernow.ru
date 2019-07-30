@@ -4,7 +4,8 @@
     <div class="media-item">
         <a href="/flowers/{{ $_item['slug'] }}">
             <figure>
-                <img class="img-responsive lozad" data-src="{{ $_item['photoUrl'] }}">
+                <img class="img-responsive" src="{{ $_item['photoUrl'] }}">
+
                 <figcaption>
                     <p>
                         @foreach($_item->compositions as $composition)

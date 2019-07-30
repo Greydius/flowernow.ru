@@ -5,7 +5,9 @@ namespace App;
 use App\Model\Product;
 use App\Model\Order;
 use Illuminate\Notifications\Notifiable;
+use App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
 
 class User extends Authenticatable
 {
@@ -64,4 +66,9 @@ class User extends Authenticatable
 
             return $ordersModel->count();
     }
+
+        public function sendPasswordResetNotification($token)
+        {
+                $this->notify(new Notifications\ResetPassword($token));
+        }
 }

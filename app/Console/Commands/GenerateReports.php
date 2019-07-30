@@ -43,9 +43,10 @@ class GenerateReports extends Command
          */
         public function handle()
         {
-                $reportDate = '2019-05-13';
+                //$reportDate = '2019-05-13';
 
-                $date = \Carbon\Carbon::parse($reportDate);
+                //$date = \Carbon\Carbon::parse($reportDate);
+                $date = new \Carbon\Carbon('first day of last month');
 
                 $shops = Shop::with(['users'])->whereExists(function ($query) use ($date) {
                         $query->select(\DB::raw(1))
@@ -73,6 +74,7 @@ class GenerateReports extends Command
                                         $query->where(function ($query) use ($date) {
                                                 $query->where('payment', '=', 'cash')
                                                         ->where('payed', '=', '1')
+                                                        ->where('confirmed', '=', '1')
                                                         ->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
                                         })->orWhere(function ($query) use ($date) {
                                                 $query->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
@@ -117,7 +119,8 @@ class GenerateReports extends Command
                         $report->warning = $orderWarnings;
                         $report->save();
 
-                        $date2 = \Carbon\Carbon::parse($reportDate);
+                        //$date2 = \Carbon\Carbon::parse($reportDate);
+                        $date2 = new \Carbon\Carbon('first day of last month');
 
                         $viewOptions['type'] = 'docx';
                         $viewOptions['date'] = clone $date2;

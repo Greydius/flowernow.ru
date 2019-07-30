@@ -28,13 +28,23 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ \Request::url() }}" />
 
-    <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/less-space.min.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&amp;subset=cyrillic" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <script type='text/javascript'>
+            //<![CDATA[
+            function loadCSS(e, t, n) { "use strict"; var i = window.document.createElement("link"); var o = t || window.document.getElementsByTagName("script")[0]; i.rel = "stylesheet"; i.href = e; i.media = "only x"; o.parentNode.insertBefore(i, o); setTimeout(function () { i.media = n || "all" }) }
+            loadCSS("https://floristum.ru/assets/front/css/bootstrap-3.3.4.min.css");
+            loadCSS("https://fonts.googleapis.com/css?family=Noto+Sans:400,700&amp;subset=cyrillic");
+            loadCSS("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css");
+            //]]>
+    </Script>
+
+    <!--
+        <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700&amp;subset=cyrillic" rel="stylesheet">
+    
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        -->
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/media.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/main.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/media.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20190305') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190305') }}">
 
@@ -110,6 +120,7 @@
                                     <div class="popover fade bottom in" role="tooltip" id="link-city-popover">
                                         <div class="arrow"></div>
                                         <div class="popover-content">
+                                            <button type="button" class="close" onclick="$('#link-city-popover').hide();">×</button>
                                             <div class="dropdown-city" id="dropdownCity">
                                                 <p>Ваш город:<br><b><i class="fa fa-map-marker"></i>{{ $detected_city->name }}</b>?</p>
                                                 <a class="btn btn-info" href="http://{{ ($detected_city->slug != 'moskva' ? $detected_city->slug.'.' : '') . \Config::get('app.domain') }}" rel="nofollow noopener">Да</a>
@@ -715,6 +726,7 @@
     <script src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/jquery.maskedinput/jquery.maskedinput.min.js') }}"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@12.0.0/dist/lazyload.min.js"></script>
     <script src="{{ asset('assets/plugins/angular/angular.min.js') }}"></script>
     <script src="{{ asset('assets/admin/ng/angular-modal-service.min.js') }}"></script>
     <script src="{{ asset('assets/admin/ng/angular-sanitize.min.js') }}"></script>
@@ -722,7 +734,7 @@
     <script src="{{ asset('assets/front/js/main.js') }}"></script>
     <script src="{{ asset('assets/front/js/holder.min.js') }}"></script>
     <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
-    <script src="{{ asset('assets/front/js/custom.js?v=20190423') }}"></script>
+    <script src="{{ asset('assets/front/js/custom.js?v=20190717') }}"></script>
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->

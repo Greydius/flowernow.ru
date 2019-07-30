@@ -6,6 +6,7 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
         $scope.dateFrom = "";
         $scope.dateTo = "";
         $scope.search_str = "";
+        $scope.shopId = jsonData.shopId ? jsonData.shopId : null;
 
         $scope.totalPages = 0;
         $scope.currentPage = 1;
@@ -22,6 +23,7 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                                 'dateTo': $scope.dateTo,
                                 'search': $scope.search_str,
                                 'page': $scope.currentPage,
+                                'shopId': $scope.shopId ? $scope.shopId : null,
                                 'ur': $('#ur_only').is(':checked')
                         }
 
