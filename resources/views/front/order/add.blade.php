@@ -343,7 +343,7 @@
                                     <div class="text-center" ng-cloak>
                                         <button type="button" class="btn btn-warning create-order">Оплатить <% total() %> <i class="fa fa-rub"></i></button>
                                     </div>
-                                    <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
+                                    <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}" target="_blank">Политикой конфиденциальности</a>, <a class="text-muted" href="{{ route('front.personldata') }}" target="_blank">Соглашением о персональных данных</a> и <a class="text-muted" href="{{ route('front.agreement') }}" target="_blank">Публичной офертой</a></p>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="oplata2">
                                     <br>
@@ -354,7 +354,7 @@
                                         <div class="text-center">
                                             <button type="button" class="btn btn-warning create-order">Заказать за <% total() %> <i class="fa fa-rub"></i></button>
                                         </div>
-                                        <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
+                                        <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}" target="_blank">Политикой конфиденциальности</a>, <a class="text-muted" href="{{ route('front.personldata') }}" target="_blank">Соглашением о персональных данных</a> и <a class="text-muted" href="{{ route('front.agreement') }}" target="_blank">Публичной данных</a></p>
                                     </div>
                                     <div ng-show="sms_send">
                                         <p class="text-center">Чтобы завершить заказ, введите код-подтверждение, который вам придёт по SMS</p>
@@ -412,7 +412,7 @@
                                     <div class="text-center" ng-cloak>
                                         <button type="button" class="btn btn-warning create-order-ur">Выставить счёт <% total() %> <i class="fa fa-rub"></i></button>
                                     </div>
-                                    <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}">политикой конфиденциальности</a> и <a class="text-muted" href="{{ route('front.personldata') }}">соглашением об обработке персональных данных</a></p>
+                                    <p class="h6 text-center">Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}" target="_blank">Политикой конфиденциальности</a>, <a class="text-muted" href="{{ route('front.personldata') }}" target="_blank">Соглашением о персональных данных</a> и <a class="text-muted" href="{{ route('front.agreement') }}" target="_blank">Публичной данных</a></p>
                                 </div>
                             </div>
                         </div>

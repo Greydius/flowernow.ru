@@ -518,7 +518,7 @@
 
                 @endif
 
-                @if(!$order->recipient_self)
+                @if(!empty($order->recipient_photo))
 
                     <div class="col-lg-12 hidden-print">
                         <div class="m-portlet  m-portlet--border-bottom-brand ">
@@ -624,6 +624,35 @@
 
                     </div>
                 </div>
+
+                @if($user->admin && $order->status != \App\Model\Order::$STATUS_COMPLETED)
+                        <div class="col-lg-12 hidden-print">
+                            <div class="m-portlet  m-portlet--border-bottom-brand ">
+                                <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                    <div class="m-widget26">
+
+                                        <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                            {{ csrf_field() }}
+
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#rejection_modal">
+                                                        Отказаться
+                                                    </button>
+                                                </div>
+                                            </div>
+
+
+                                        </form>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        @include('admin.orders.modals.rejection')
+                @endif
 
                 @if($user->admin)
                     @if($order->payed)

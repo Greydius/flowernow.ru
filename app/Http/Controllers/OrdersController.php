@@ -826,6 +826,15 @@ class OrdersController extends Controller
                                 }
                         }
                 }
+                
+                if(!empty($request->rejection)) {
+                        if($order->rejection()) {
+                                \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Заказ успешно отменен']);
+                                return redirect()->route('admin.orders');
+                        }
+
+                        \Session::flash('layoutWarning', ['type' => 'danger', 'text' => 'Ошибка! Попробуйте попытку позже или обратитесь к администрации сайта!']);
+                }
 
                 return back();
         }
@@ -938,5 +947,16 @@ class OrdersController extends Controller
                 $return['code'] = $code;
 
                 return response()->json($return, $code);
+        }
+
+        public function rejectionList(Request $request) {
+                $shop = $this->user->getShop();
+
+                $rejectionOrders = Order::where('shop_id', '-1')->where('city_id', $shop->city_id)->where('prev_shop_id', '!=', $shop->id)->get();
+
+                return view('admin.orders.rejection-list', [
+                        'orders' => $rejectionOrders
+                ]);
+
         }
 }

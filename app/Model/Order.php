@@ -376,4 +376,13 @@ class Order extends MainModel
 
                 return 0;
         }
+
+        public function rejection() {
+
+                $this->city_id = $this->shop->city_id;
+                $this->prev_shop_id = $this->shop_id;
+                $this->shop_id = -1;
+
+                return $this->save();
+        }
 }

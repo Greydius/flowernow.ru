@@ -118,15 +118,29 @@ class HomeController extends Controller
     }
 
     public function test(Request $request) {
+/*
+            $shops = Shop::where('id', '>', 12)->get();
 
+            foreach($shops as $shop) {
+                    $message = new \App\Model\Message();
+                    $message->message_type = 'email';
+                    $message->send_to = $shop->email;
+                    $message->msg = json_encode(['text' => view('email.flowwow')->render(),
+                            'subject' => 'Floristum.ru и flowwow']);
+                    $message->save();
+            }
+
+            exit();
+*/
+
+            /*
             $product = Product::where('id', 23498)->first();
-
-            //file_exists(GET_DR() . $src_img)
 
             echo \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$product->shop_id.'/'.$product->photo, 351, 351, 1, NULL, 75);
             exit();
 
             \App\Helpers\AppHelper::RESIZER();
+            */
 
             $productTypes = ProductType::where('show_on_main', '1')->get();
             $banners = Banner::whereNotNull('checked_on')->with('shop')->get();

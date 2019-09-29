@@ -364,7 +364,7 @@ class Product extends MainModel
 
                 if(!empty($request->t)) {
                         //dd($request);
-                        //echo $productRequest->toSql(); exit();
+                        echo $productRequest->toSql(); exit();
                         //echo $city_id; exit();
                 }
 

@@ -999,9 +999,11 @@
 
                 <div class="m-portlet__foot m-portlet__foot--fit">
                     <div class="m-form__actions">
+                        @if($user->admin || $user->created_at > '2019-08-03')
                         <button type="reset" class="btn btn-primary" id="save_profile" data-route="{{ route('admin.shop.update', ['id' => $shop->id]) }}">
                             Сохранить
                         </button>
+                        @endif
                     </div>
                 </div>
             </div>

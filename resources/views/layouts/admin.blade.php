@@ -230,7 +230,7 @@
 									</a>
 								</li>
 
-								<li class="m-menu__item  m-menu__item--submenu m-menu__item--open {{ in_array(\Request::route()->getName(), ['admin.articles', 'admin.setting.index', 'admin.subscription.index', 'admin.feedback.list', 'admin.promoCodes.create', 'shops.partnership.list', 'admin.agents.list', 'admin.agent.edit']) ? 'm-menu__item--expanded' : '' }}" aria-haspopup="true" data-menu-submenu-toggle="hover">
+								<li class="m-menu__item  m-menu__item--submenu m-menu__item--open {{ in_array(\Request::route()->getName(), ['admin.article-categories', 'admin.articles', 'admin.setting.index', 'admin.subscription.index', 'admin.feedback.list', 'admin.promoCodes.create', 'shops.partnership.list', 'admin.agents.list', 'admin.agent.edit']) ? 'm-menu__item--expanded' : '' }}" aria-haspopup="true" data-menu-submenu-toggle="hover">
 									<a href="#" class="m-menu__link m-menu__toggle">
 										<i class="m-menu__link-icon flaticon-settings"></i>
 										<span class="m-menu__link-text">
@@ -299,6 +299,16 @@
 												</span>
 												</a>
 											</li>
+                                            <li class="m-menu__item  {{ \Request::route()->getName() == 'admin.article-categories' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
+                                                <a href="{{ route('admin.article-categories') }}" class="m-menu__link ">
+                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="m-menu__link-text">
+													Категории статей
+												</span>
+                                                </a>
+                                            </li>
 											<li class="m-menu__item  {{ \Request::route()->getName() == 'admin.articles' ? 'm-menu__item--active' : null }}" aria-haspopup="true">
 												<a href="{{ route('admin.articles') }}" class="m-menu__link ">
 													<i class="m-menu__link-bullet m-menu__link-bullet--dot">

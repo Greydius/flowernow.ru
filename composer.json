@@ -18,7 +18,8 @@
         "payprocessing/atol-online": "^1.0",
         "phpoffice/phpword": "^0.16.0",
         "scriptixru/sypexgeo": "0.2.*@dev",
-        "watson/autologin": "^0.5.3"
+        "watson/autologin": "^0.5.3",
+        "laravel/passport": "^4.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

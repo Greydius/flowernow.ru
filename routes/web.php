@@ -203,6 +203,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'products.copy'
         ]);
 
+        Route::post('products/copyProcess', [
+                'uses' => 'ProductsController@copyProcess',
+                'as' => 'products.copyProcess'
+        ]);
+
         /*Партнерка*/
         Route::get('partnership', [
                 'uses' => 'ShopsController@partnership',
@@ -304,6 +309,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.order.changeShop'
         ]);
 
+        Route::get('orders/rejection', [
+                'uses' => 'OrdersController@rejectionList',
+                'as' => 'admin.orders.rejection'
+        ]);
+
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {
@@ -378,6 +388,42 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'uses' => 'ArticleController@destroy',
                         'as' => 'admin.article.destroy'
                 ]);
+
+
+                //Articles Category
+
+                Route::get('article-categories', [
+                        'uses' => 'ArticleCategoryController@index',
+                        'as' => 'admin.article-categories'
+                ]);
+
+                Route::get('article-category/create', [
+                        'uses' => 'ArticleCategoryController@create',
+                        'as' => 'admin.article-category.create'
+                ]);
+
+                Route::get('article-category/edit/{id}', [
+                        'uses' => 'ArticleCategoryController@edit',
+                        'as' => 'admin.article-category.edit'
+                ]);
+
+                Route::post('article-category/store', [
+                        'uses' => 'ArticleCategoryController@store',
+                        'as' => 'admin.article-category.store'
+                ]);
+
+                Route::post('article-category/update/{id}', [
+                        'uses' => 'ArticleCategoryController@update',
+                        'as' => 'admin.article-category.update'
+                ]);
+
+                Route::get('article-category/destroy/{id}', [
+                        'uses' => 'ArticleCategoryController@destroy',
+                        'as' => 'admin.article-category.destroy'
+                ]);
+
+                //Articles Category END
+
 
                 Route::get('promoTexts', [
                         'uses' => 'PromoTextController@index',

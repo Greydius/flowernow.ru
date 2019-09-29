@@ -5,13 +5,14 @@ namespace App;
 use App\Model\Product;
 use App\Model\Order;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 use App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.

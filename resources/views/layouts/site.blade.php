@@ -5,10 +5,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('pageTitle', 'Доставка цветов в '.$current_city->name_prepositional.' | Заказать цветы с круглосуточной бесплатной доставкой в '.$current_city->name_prepositional.' | Интернет магазин цветов')</title>
+    <title>@yield('pageTitle', 'Доставка цветов круглосуточно в '.$current_city->name_prepositional.'. Заказать букет с доставкой в '.$current_city->name_prepositional.'')</title>
 
-    <meta name="description" content="@yield('pageDescription', 'Доставка цветов и букетов в '.$current_city->name_prepositional.', области, России. Федеральная курьерская служба доставки букетов цветов. Выбор букетов и подарков. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 руб.')">
-    <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветы, '.$current_city->name.', область, заказать, онлайн, круглосуточно, бесплатная, на дом, в офис, интернет, магазин, растения, россии, букеты')">
+    <meta name="description" content="@yield('pageDescription', 'У нас вы можете выбрать шикарный букет с доставкой по '.$current_city->name_prepositional.', области и всей России. Свежесть цветов и их сохранность, а главное круглосуточную доставку обеспечивает Федеральная курьерская служба доставки')">
+    <meta name="keywords" content="@yield('pageKeywords', 'заказать букет с доставкой на дом в '.$current_city->name_prepositional.', заказ и доставка букетов цветов в '.$current_city->name_prepositional.'')">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
     <link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
@@ -28,10 +28,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ \Request::url() }}" />
 
+    <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap-3.3.4.min.css') }}">
+
     <script type='text/javascript'>
             //<![CDATA[
             function loadCSS(e, t, n) { "use strict"; var i = window.document.createElement("link"); var o = t || window.document.getElementsByTagName("script")[0]; i.rel = "stylesheet"; i.href = e; i.media = "only x"; o.parentNode.insertBefore(i, o); setTimeout(function () { i.media = n || "all" }) }
-            loadCSS("https://floristum.ru/assets/front/css/bootstrap-3.3.4.min.css");
+            
             loadCSS("https://fonts.googleapis.com/css?family=Noto+Sans:400,700&amp;subset=cyrillic");
             loadCSS("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css");
             //]]>
@@ -45,8 +47,8 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/fonts.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/main.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=20190305') }}">
-    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190305') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=201900900') }}">
+    <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190825') }}">
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -653,7 +655,8 @@
                                   <li><a href="https://play.google.com/store/apps/details?id=ru.floristum.app"><img src="http://floristum.ru/images/playmarket_floristum.ru.png" alt="Скачать приложение Флористум в Google Play"   width="120"></a><!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
                                 <!-- <li><a href="#"><img src="http://floristum.ru/images/appstore_floristum.ru.png" alt="Скачать приложение Флористум в Apple Store"   width="120"></a> -->
                                 <li>&nbsp;<a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
-                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="playmarket_floristum.ru">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                <li><a href="https://floristum.ru/articles/Otkrit_magazin_cvetov_1">Как открыть магазин</a>
                             
                                 </li>
                             </ul> </div>

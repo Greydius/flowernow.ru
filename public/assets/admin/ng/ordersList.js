@@ -87,10 +87,14 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
 
         $scope.search = function(keyEvent) {
                 if (keyEvent.which === 13) {
-                        $scope.currentPage = 1;
-                        $scope.search_str = $('#m_form_search').val();
-                        $scope.getOrders();
+                        $scope.filterOrders();
                 }
+        }
+
+        $scope.filterOrders = function(keyEvent) {
+                $scope.currentPage = 1;
+                $scope.search_str = $('#m_form_search').val();
+                $scope.getOrders();
         }
 
         $scope.changeUr = function() {

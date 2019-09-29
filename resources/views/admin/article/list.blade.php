@@ -23,15 +23,17 @@
                         <tr>
                             <th>Название</th>
                             <th>Транскрипция</th>
+                            <th>Категория</th>
                             <th></th>
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($articles as $article)
-                            <tr>
+                            <tr class="{{ !$article->public ? 'bg-warning' : ''}}">
                                 <td>{{ $article->name }}</td>
                                 <td>{{ $article->slug }}</td>
+                                <td>{{ !empty($article->category) ? $article->category->name : '' }}</td>
                                 <td>
                                     <a href="{{ route('admin.article.edit', ['id' => $article->id]) }}" class="btn btn-outline-accent m-btn m-btn--icon m-btn--icon-only">
                                         <i class="fa fa-pencil"></i>

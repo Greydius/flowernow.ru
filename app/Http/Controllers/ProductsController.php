@@ -61,7 +61,8 @@ class ProductsController extends Controller
 
                                 $item = [];
                                 foreach ($productTypes->take(1) as $productType) {
-                                        $request->product_type = $productType->slug;
+                                        //$request->product_type = $productType->slug;
+                                        $request->productType = $productType->id;
                                         $request->t = true;
                                         $item['productType'] = $productType;
                                         $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
@@ -545,7 +546,7 @@ class ProductsController extends Controller
                                                 });
                                         }
 
-                                        $query->orWhere('products.id', $request->search)->orWhere('products.name', 'like', "%$request->search%");
+                                        $query->orWhere('products.id', $request->search)->orWhere('products.name', 'like', "%$request->search%")->orWhere('products.description', 'like', "%$request->search%");
                                 }
                         });
 
@@ -1319,5 +1320,97 @@ class ProductsController extends Controller
                 return view('admin.products.copy',[
                         'shops' => $shops,
                 ]);
+        }
+
+        public function copyProcess(Request $request) {
+
+
+                if(!empty($request->from_shop_id) && !empty($request->to_shop_id)) {
+                        $products = Product::where('shop_id', $request->from_shop_id)
+                                ->whereNull('single')
+                                //->where('status', 1)
+                                ->with(['compositions', 'photos'])
+                                ->get();
+
+                        \DB::beginTransaction();
+
+                        try{
+
+                                foreach($products as $product) {
+
+                                        $newProduct = $product->replicate();
+                                        $newProduct->shop_id = $request->to_shop_id;
+                                        $newProduct->status = 3;
+                                        $newProduct->slug = Product::getNewProductSlug($newProduct->name);
+                                        $newProduct->save();
+
+
+                                        foreach($product->photos as $photo) {
+                                                $filePathNew = Product::$fileUrl.$request->to_shop_id.'/';
+                                                $filePathOld = Product::$fileUrl.$request->from_shop_id.'/';
+
+                                                $filePathNew632 = Product::$fileUrl.'632x632/'.$request->to_shop_id.'/';
+                                                $filePathOld632 = Product::$fileUrl.'632x632/'.$request->from_shop_id.'/';
+
+                                                if(!file_exists(public_path($filePathNew))) {
+                                                        \File::makeDirectory(public_path($filePathNew));
+                                                }
+
+                                                if(!file_exists(public_path($filePathNew632))) {
+                                                        \File::makeDirectory(public_path($filePathNew632));
+                                                }
+
+                                                if (!copy(public_path($filePathOld.$photo->photo), public_path($filePathNew.$photo->photo)) ||
+                                                        !copy(public_path($filePathOld632.$photo->photo), public_path($filePathNew632.$photo->photo)) ) {
+                                                        throw new \Exception('Copy error');
+                                                }
+
+                                                /*
+                                                $newProductPhoto = $photo->replicate();
+                                                $newProductPhoto->product_id = $newProduct->id;
+                                                if($newProductPhoto->save()) {
+                                                        $filePathNew = Product::$fileUrl.$request->to_shop_id.'/';
+                                                        $filePathOld = Product::$fileUrl.$request->from_shop_id.'/';
+
+                                                        $filePathNew632 = Product::$fileUrl.'632x632/'.$request->to_shop_id.'/';
+                                                        $filePathOld632 = Product::$fileUrl.'632x632/'.$request->from_shop_id.'/';
+
+                                                        if(!file_exists(public_path($filePathNew))) {
+                                                                \File::makeDirectory(public_path($filePathNew));
+                                                        }
+
+                                                        if(!file_exists(public_path($filePathNew632))) {
+                                                                \File::makeDirectory(public_path($filePathNew632));
+                                                        }
+
+                                                        if (!copy(public_path($filePathOld.$newProductPhoto->photo), public_path($filePathNew.$newProductPhoto->photo)) &&
+                                                                !copy(public_path($filePathOld632.$newProductPhoto->photo), public_path($filePathNew632.$newProductPhoto->photo)) ) {
+                                                                throw new \Exception('Copy error');
+                                                        }
+                                                }
+                                                */
+                                        }
+
+
+                                        foreach($product->compositions as $composition) {
+                                                $newProductComposition = $composition->replicate();
+                                                $newProductComposition->product_id = $newProduct->id;
+                                                $newProductComposition->save();
+                                        }
+                                }
+
+                                \DB::commit();
+
+                        } catch (\Exception $e) {
+
+                                \DB::rollBack();
+
+                                dd($e);
+                        }
+
+                        \Session::flash('layoutWarning', ['type' => 'success', 'text' => 'Товары успешно скопированы!']);
+                }
+
+                return redirect()->route('products.copy');
         }
 }

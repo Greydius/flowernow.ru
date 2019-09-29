@@ -1,7 +1,7 @@
 @extends('layouts.site')
 
 @section('pageImage', (!empty($meta) && !empty($meta['image']) ? $meta['image'] : null))
-@section('pageTitle', (!empty($meta) && !empty($meta['title']) ? $meta['title'] : null))
+@section('pageTitle')
 @section('pageDescription', (!empty($meta) && !empty($meta['description']) ? $meta['description'] : null))
 @section('pageKeywords', (!empty($meta) && !empty($meta['keywords']) ? $meta['keywords'] : null))
 
@@ -13,15 +13,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h1 class="margin-top-null h2 sm-h2">Доставка цветов {{ $shop->name }} в <a href="{{ route('front.index') }}">{{ $shop->city->name_prepositional }}</a></h1>
+            <h1 class="margin-top-null h2 sm-h2"><a href="{{ route('front.index') }}">Доставка цветов в {{ $shop->city->name_prepositional }}</a></h1>
         </div>
-        @if($shop->about)
+        @if(false && $shop->about)
             <div class="col-md-12">
-                <strong>Описание магазина цветов {{ $shop->name }}:</strong>
+                <strong>Описание магазина цветов:</strong>
                 <p>{!! nl2br(e($shop->about)) !!}</p>
             </div>
         @endif
-        @if(!empty($shop->address) && !empty($shop->address[0]->city))
+        @if(false && !empty($shop->address) && !empty($shop->address[0]->city))
             <div class="col-md-12">
                 <p><strong>Адрес:</strong> г. {{$shop->address[0]->city->name}}, {{ $shop->address[0]->name }}</p>
             </div>
@@ -61,7 +61,7 @@
 
 @if(count($shop->feedbacks))
     <div class="col-md-12">
-        <h3>Отзывы о работе магазина {{ $shop->name }}</h3>
+        <h3>Отзывы о работе магазина {{ $shop->id }}</h3>
 
         @if(count($feedbacks))
 
@@ -94,60 +94,58 @@
 
 <br class="hidden-xs hidden-sm">
 
-<div class="row" id="products-container">
+    @if(false)
+        <div class="row" id="products-container">
 
-
-
-<div class="col-md-12">
-
-    <h2 class="margin-top-null">Витрина букетов цветочного магазина {{ $shop->name }}:</h2>
-
-    <div class="row">
-        @if(count($singleProducts))
-
-            @if(!empty($singleProducts))
-                @foreach($singleProducts as $_item)
-
-                    @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
-
-                @endforeach
-            @endif
-
-        @endif
-
-        @if(count($products))
-
-            @if(!empty($products))
-                    @foreach($products as $_item)
-
-                        @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
-
-                    @endforeach
-            @endif
-
-        @endif
-    </div>
-
-    @if(count($products))
-
-        {{ $products->links() }}
-
-    @endif
-
-    @if(!count($products) && !count($singleProducts))
-        <div class="row">
             <div class="col-md-12">
-                <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>
+
+                <h2 class="margin-top-null">Витрина букетов цветочного магазина {{ $shop->id }}:</h2>
+
+                <div class="row">
+                    @if(count($singleProducts))
+
+                        @if(!empty($singleProducts))
+                            @foreach($singleProducts as $_item)
+
+                                @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
+
+                            @endforeach
+                        @endif
+
+                    @endif
+
+                    @if(count($products))
+
+                        @if(!empty($products))
+                                @foreach($products as $_item)
+
+                                    @include('front.product.list-item', ['col' => 3, 'isNeedShopName' => false])
+
+                                @endforeach
+                        @endif
+
+                    @endif
+                </div>
+
+                @if(count($products))
+
+                    {{ $products->links() }}
+
+                @endif
+
+                @if(!count($products) && !count($singleProducts))
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>
+                        </div>
+                    </div>
+                @endif
+
             </div>
+
         </div>
+
     @endif
-
-</div>
-
-
-</div>
-
-
 <br class="hidden-xs hidden-sm">
 
 </div>

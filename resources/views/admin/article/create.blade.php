@@ -24,6 +24,19 @@
                     <div class="m-portlet__body">
 
                         <div class="form-group m-form__group">
+                            <span class="m-switch m-switch--outline m-switch--success">
+                                <label class="col-form-label">
+                                    Публикация:
+                                </label>
+                                <br>
+                                <label>
+                                    <input type="checkbox" {{ empty($article) || $article->public ? 'checked="checked"' : null }} name="public" value="1">
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+
+                        <div class="form-group m-form__group">
                             <label for="name">
                                 Название
                             </label>
@@ -38,8 +51,20 @@
                         </div>
 
                         <div class="form-group m-form__group">
+                            <label for="article_category_id">
+                                Категория
+                            </label>
+                            <select name="article_category_id" id="article_category_id" class="form-control">
+                                <option value="0">---</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ !empty($article) && $article->article_category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group m-form__group">
                             <label for="feedback-text">
-                                Отзыв
+                                Текст статьи
                             </label>
                             <textarea class="form-control m-input summernote" id="feedback-text" name="article" rows="3" required>{{ !empty($article) ? $article->article : '' }}</textarea>
                         </div>

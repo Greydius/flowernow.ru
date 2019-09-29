@@ -12,6 +12,14 @@
         </div>
         @endif
 
+        @if($user->admin)
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="{{ route('products.copy') }}">Копирование продуктов</a>
+                </div>
+            </div>
+        @endif
+
         <div class="row">
 
 
@@ -66,6 +74,7 @@
                         </div>
 
                         <div class="col-md-3">
+                            <!--
                             <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
                                 <span>
                                     <i class="la la-arrows-v"></i>
@@ -74,6 +83,7 @@
                                     </span>
                                 </span>
                             </button>
+                            -->
                         </div>
 
                         <div class="col-md-3">
@@ -148,9 +158,12 @@
                                             </span>
                                         @endif
 
+                                    <!--
                                     <a href ng-click="editItem($event, product)" style="display: block">
                                         <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
                                     </a>
+                                    -->
+                                        <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
                                 </div>
                             </div>
 
@@ -173,9 +186,12 @@
                                 <div class="col-xl-12">
                                     <div style="    padding: 5px; font-size: 12px">
                                         <div class="m-widget4__ext text-danger" ng-show="product.status == 0 && product.pause == 0">
+                                            <!--
                                             <a href class="text-danger" ng-click="editItem($event, product)">
                                                 Не заполнены обязательные поля <span style="font-size: 20px">*</span>
                                             </a>
+                                            -->
+                                            Не заполнены обязательные поля <span style="font-size: 20px">*</span>
 
                                         </div>
 
@@ -188,9 +204,12 @@
                                         </div>
 
                                         <div class="m-widget4__ext text-danger" ng-show="product.status == 3 && product.pause == 0">
+                                            <!--
                                             <a href class="text-danger" ng-click="editItem($event, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% product.status_comment %>">
                                                 Отклонено модератором <span class="m-badge m-badge--danger">i</span>
                                             </a>
+                                            -->
+                                            Отклонено модератором <span class="m-badge m-badge--danger">i</span>
                                         </div>
 
                                         <div class="m-widget4__ext text-warning" ng-show="product.pause == 1">
@@ -204,24 +223,26 @@
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions" style="padding: 5px;">
-                                <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
-                                    <i class="la la-pencil"></i>
-                                </a>
-                                @if($user->admin)
-                                    <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editImages($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
+                                @if($user->admin || $user->created_at > '2019-08-03')
+                                    <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
                                         <i class="la la-pencil"></i>
                                     </a>
-                                @endif
-                                <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажи)" ng-show="!product.pause">
-                                    <i class="la la-pause"></i>
-                                </a>
-                                <a href  class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" ng-click="pauseItem(0, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Возобновить продажу" ng-show="product.pause">
-                                    <i class="la la-play"></i>
-                                </a>
+                                    @if($user->admin)
+                                        <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editImages($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
+                                            <i class="la la-pencil"></i>
+                                        </a>
+                                    @endif
 
-                                <a href  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only pull-right" ng-click="deleteItem(product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Удалить">
-                                    <i class="la la-times-circle-o"></i>
-                                </a>
+                                    <a href  class="btn btn-outline-warning m-btn m-btn--icon m-btn--icon-only"  ng-click="pauseItem(1, product)" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Пауза (временно убрать с продажи)" ng-show="!product.pause">
+                                        <i class="la la-pause"></i>
+                                    </a>
+                                    <a href  class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" ng-click="pauseItem(0, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Возобновить продажу" ng-show="product.pause">
+                                        <i class="la la-play"></i>
+                                    </a>
+                                    <a href  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only pull-right" ng-click="deleteItem(product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Удалить">
+                                        <i class="la la-times-circle-o"></i>
+                                    </a>
+                                @endif
                             </div>
                         </div>
 
@@ -678,12 +699,12 @@
     <script src="{{ asset('assets/admin/js/products-list.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script src="{{ asset('assets/admin/ng/productsList.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script type="text/javascript">
-        jsonData.productTypes = {!! $productTypes->toJson() !!};
-        jsonData.colors = {!! $colors->toJson() !!};
-        jsonData.flowers = {!! $flowers->toJson() !!};
-        jsonData.times = {!! json_encode($times) !!};
-        jsonData.specialOffers = {!! json_encode($specialOffers) !!};
-        routes.productUpdate = '{{ route('admin.products.update')  }}';
-        jsonData.searchStr = {!! json_encode(app('request')->input('s')) !!};
+            jsonData.productTypes = {!! $productTypes->toJson() !!};
+            jsonData.colors = {!! $colors->toJson() !!};
+            jsonData.flowers = {!! $flowers->toJson() !!};
+            jsonData.times = {!! json_encode($times) !!};
+            jsonData.specialOffers = {!! json_encode($specialOffers) !!};
+            routes.productUpdate = '{{ route('admin.products.update')  }}';
+            jsonData.searchStr = {!! json_encode(app('request')->input('s')) !!};
     </script>
 @stop

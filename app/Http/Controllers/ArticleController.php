@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Model\Article;
+use App\Model\ArticleCategory;
 
 class ArticleController extends Controller
 {
@@ -15,7 +16,7 @@ class ArticleController extends Controller
     public function index()
     {
         //
-            $articles = Article::get();
+            $articles = Article::with(['category'])->get();
             return view('admin.article.list', [
                     'articles' => $articles
             ]);
@@ -29,7 +30,9 @@ class ArticleController extends Controller
     public function create()
     {
         //
-            return view('admin.article.create', []);
+            return view('admin.article.create', [
+                    'categories' => ArticleCategory::get()
+            ]);
     }
 
     /**
@@ -44,34 +47,42 @@ class ArticleController extends Controller
             $detail = $request->article;
 
             $dom = new \domdocument();
-            $dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            //$dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            //echo mb_convert_encoding($detail, 'HTML-ENTITIES', 'UTF-8'); exit();
+            $dom->loadHTML(mb_convert_encoding($detail, 'HTML-ENTITIES', 'UTF-8'));
 
             $images = $dom->getelementsbytagname('img');
 
-            foreach ($images as $k => $img) {
-                    $data = $img->getattribute('src');
+            if(!empty($images)) {
+                    foreach ($images as $k => $img) {
+                            $data = $img->getattribute('src');
 
-                    if(strpos($data, ';') !== false) {
-                            list($type, $data) = explode(';', $data);
-                            list(, $data) = explode(',', $data);
+                            if(strpos($data, ';') !== false) {
+                                    list($type, $data) = explode(';', $data);
+                                    list(, $data) = explode(',', $data);
 
-                            $data = base64_decode($data);
-                            $image_name = time() . $k . '.png';
-                            $path = public_path() . '/articles/images/' . $image_name;
+                                    $data = base64_decode($data);
+                                    $image_name = time() . $k . '.png';
+                                    $path = public_path() . '/articles/images/' . $image_name;
 
-                            file_put_contents($path, $data);
+                                    file_put_contents($path, $data);
 
-                            $img->removeattribute('src');
-                            $img->setattribute('src', '/articles/images/' . $image_name);
+                                    $img->removeattribute('src');
+                                    $img->setattribute('src', '/articles/images/' . $image_name);
+                            }
                     }
             }
 
+
             $detail = $dom->savehtml();
+
+
 
             $new_details = '';
 
             $d = new \DOMDocument;
             $d->loadHTML($detail);
+
             $body = $d->getElementsByTagName('body')->item(0);
             // perform innerhtml on $body by enumerating child nodes
             // and saving them individually
@@ -79,10 +90,11 @@ class ArticleController extends Controller
                     $new_details .= $d->saveHTML($childNode);
             }
 
-
             $article = new Article();
             $article->name = $request->name;
             $article->slug = $request->slug;
+            $article->public = (int)$request->public;
+            $article->article_category_id = $request->article_category_id;
             $article->article = $new_details;
             $article->save();
 
@@ -98,9 +110,29 @@ class ArticleController extends Controller
     public function show($slug)
     {
         //
-            $article = Article::where('slug', $slug)->firstOrFail();
+
+            $productTypes = \App\Model\ProductType::where('show_on_main', '1')->get();
+            $city_id = $this->current_city->id;
+
+            $request = new Request();
+            $request->order = 'rand';
+            $popularProducts = \App\Model\Product::popular($this->current_city->id, $request, 1, 8);
+
+            $article = Article::where('slug', $slug)->where('public', 1)->firstOrFail();
+            $articles = [];
+            $nextArticle = null;
+
+            if(!empty($article->article_category_id)) {
+                    $articles = Article::where('article_category_id', $article->article_category_id)->where('public', 1)->get();
+                    $nextArticle = Article::where('article_category_id', $article->article_category_id)->where('public', 1)->where('id', '>', $article->id)->first();
+            }
+
             return view('front.article.show', [
-                    'article' => $article
+                    'pageTitle' => $article->name,
+                    'article' => $article,
+                    'articles' => $articles,
+                    'nextArticle' => $nextArticle,
+                    'popularProducts' => $popularProducts
             ]);
     }
 
@@ -115,7 +147,8 @@ class ArticleController extends Controller
         //
             $article = Article::findOrFail($id);
             return view('admin.article.create', [
-                    'article' => $article
+                    'article' => $article,
+                    'categories' => ArticleCategory::get()
             ]);
     }
 
@@ -134,7 +167,9 @@ class ArticleController extends Controller
             $detail = $request->article;
 
             $dom = new \domdocument();
-            $dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            //$dom->loadHtml('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            //$dom->loadHtml($detail, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+            $dom->loadHTML(mb_convert_encoding($detail, 'HTML-ENTITIES', 'UTF-8'));
 
             $images = $dom->getelementsbytagname('img');
 
@@ -158,6 +193,7 @@ class ArticleController extends Controller
 
             $detail = $dom->savehtml();
 
+
             $new_details = '';
 
             $d = new \DOMDocument;
@@ -171,6 +207,8 @@ class ArticleController extends Controller
 
             $article->name = $request->name;
             $article->slug = $request->slug;
+            $article->public = (int)$request->public;
+            $article->article_category_id = $request->article_category_id;
             $article->article = $new_details;
             $article->save();
 

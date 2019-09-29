@@ -18,7 +18,6 @@
     <br>
     <ol class="breadcrumb">
         <li><a href="/">Цветы в {{ $product->shop->city->name_prepositional }}</a></li>
-        <li><a href="{{ route('shop.products', ['id' => $product->shop->id]) }}">Магазин {{ $product->shop->name }}</a></li>
         <li class="active">{{ $product->name }}</li>
     </ol>
 
@@ -134,17 +133,15 @@
                     @endif
                     <ul class="list-inline">
                         <li>
-                            <img src="{{ asset('assets/front/img/ico/visa.svg') }}" alt="visa">
+                            &nbsp;&nbsp;<img src="{{ asset('assets/front/img/ico/card.png') }}" alt="заказать букет по карте">
                         </li>
                         <li>
-                            <img src="{{ asset('assets/front/img/ico/mastercard.svg') }}" alt="mastercard">
+                            <img src="{{ asset('assets/front/img/ico/cash.png') }}" alt="заказать букет за наличные">
                         </li>
-                        <li>
-                            <img src="{{ asset('assets/front/img/ico/maestro.svg') }}" alt="maestro">
-                        </li>
+                     
                         
                         
-                        <li>наличные и безнал для юрлиц</li>
+                        <li>и безнал для юрлиц</li>
                     
                     </ul>
                     <br>

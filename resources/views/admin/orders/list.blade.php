@@ -47,13 +47,13 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="m-input-icon m-input-icon--left">
+                        <div class="input-group">
                             <input type="text" class="form-control m-input m-input--solid" placeholder="Поиск..." id="m_form_search" ng-keypress="search($event)">
-                            <span class="m-input-icon__icon m-input-icon__icon--left">
-                                <span>
-                                    <i class="la la-search"></i>
-                                </span>
-                            </span>
+                            <div class="input-group-append">
+                                <button class="btn btn-secondary" type="button" ng-click="filterOrders()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group m-form__group row">

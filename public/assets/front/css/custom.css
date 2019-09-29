@@ -996,3 +996,15 @@ header .location-icon {
         background-color: #fff;
         padding-top: 35px;
 }
+
+.planshet-logo {
+        display: none;
+}
+
+.btn-warning {
+        background-color: #df291e;
+}
+
+.btn-warning:hover {
+        background-color: #df291e;
+}
