@@ -367,6 +367,15 @@ class OrdersController extends Controller
                                 }
                         }
 
+                        if(!empty($shop->users[0]) && !empty($shop->users[0]->firebase_token)) {
+                                $order->sendPushNotification($shop->users[0]->firebase_token,
+                                        [
+                                                'title' => 'Новый заказ',
+                                                'body' => 'Примите заказ №'.$order->id,
+                                        ]
+                                );
+                        }
+
                         //sms for admins
                         $smsText = 'Поступил заказ '.$order->id.($order->payment == Order::$PAYMENT_CASH ? ' НАЛ' : '').' '.$shortLink;
                         Sms::instance()->send('+79119245792', $smsText);
@@ -571,11 +580,16 @@ class OrdersController extends Controller
 
                 if($this->user->admin) {
                         $order = Order::with('orderLists.product')->where('id', $id)->firstOrFail();
-                        $shop = $order->shop;
-                        $shops = Shop::where('id', '!=', $shop->id)->get();
+                        if($order->shop_id != -1) {
+                                $shop = $order->shop;
+                                $shops = Shop::where('id', '!=', $shop->id)->get();
+                        } else {
+                                $shop = Shop::find($order->prev_shop_id);
+                                $shops = Shop::get();
+                        }
 
                         if($order->receiving_time != 'Время согласовать') {
-                                $tz = str_replace('UTC', '', $order->shop->city->region->tz);
+                                $tz = str_replace('UTC', '', $shop->city->region->tz);
                                 $receiving_time_array = AppHelper::orderTimeToArray($order->receiving_time);
                                 $fromTime = $order->receiving_date.' '.$receiving_time_array[0];
                                 $toTime = $order->receiving_date.' '.$receiving_time_array[1];
@@ -603,7 +617,8 @@ class OrdersController extends Controller
                         'products' => Product::whereHas('OrderList', function($query) use ($order) {
                                 $query->where('order_lists.order_id', $order->id);
                         })->withTrashed()->get(),
-                        'shops' => $shops
+                        'shops' => $shops,
+                        'shop' => $order->shop_id != -1 ? $order->shop : Shop::find($order->prev_shop_id),
                 ]);
         }
 

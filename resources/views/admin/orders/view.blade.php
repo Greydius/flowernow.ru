@@ -92,7 +92,7 @@
                                                     @endif
                                                 @endforeach
 
-                                                @if($user->admin)
+                                                @if($user->admin && !empty($order->shop))
                                                     <div class="m-widget4__item hidden-print">
                                                         <div class="m-widget4__info">
                                                             <span class="m-widget4__title">
@@ -128,7 +128,7 @@
                                                                 {!! $order->receiving_date ?  \Carbon::parse($order->receiving_date)->format('d.m.Y').'<br>' : '' !!}
                                                                 {!! $order->receiving_time ?  $order->receiving_time : '' !!}
 
-                                                                @if($order->shop->city->region->tz != 'UTC+3:00' && !empty($order->receiving_time_msk))
+                                                                @if($shop->city->region->tz != 'UTC+3:00' && !empty($order->receiving_time_msk))
                                                                     <br>
                                                                     <span class="text-bold text-danger">с {{ $order->receiving_time_msk->from }} до {{ $order->receiving_time_msk->to }} по МСК</span>
                                                                 @endif
@@ -284,7 +284,7 @@
 
                                                             <div ng-show="mode == 'view'">
                                                                 <p class="lead">
-                                                                    {{ $order->shop->city->name }}<br>
+                                                                    {{ $shop->city->name }}<br>
                                                                     {{ $order->recipient_address.' '.$order->recipient_flat }}
                                                                 </p>
 
@@ -550,82 +550,84 @@
 
                 @endif
 
-                <div class="col-lg-12 hidden-print">
-                    <div class="m-portlet  m-portlet--border-bottom-brand ">
-                        <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
-                            <div class="m-widget26">
+                @if($order->shop_id != -1)
+                    <div class="col-lg-12 hidden-print">
+                        <div class="m-portlet  m-portlet--border-bottom-brand ">
+                            <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                                <div class="m-widget26">
 
-                                <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
-                                    {{ csrf_field() }}
-                                    <div class="form-group ">
+                                    <form method="post" action="{{ route('admin.order.update', ['id' => $order->id]) }}" class="m-form">
+                                        {{ csrf_field() }}
+                                        <div class="form-group ">
 
-                                        <label class="" style="font-weight: bold">
-                                            Статус:
-                                        </label>
+                                            <label class="" style="font-weight: bold">
+                                                Статус:
+                                            </label>
 
-                                        @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
-                                            <br><br>
-                                            <span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>
-                                        @else
+                                            @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
+                                                <br><br>
+                                                <span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>
+                                            @else
 
-                                            <select class="form-control m-bootstrap-select m_selectpicker" name="status">
-                                                @if(!$user->admin)
-                                                    @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                <select class="form-control m-bootstrap-select m_selectpicker" name="status">
+                                                    @if(!$user->admin)
+                                                        @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                            <option {{ $order->status == \App\Model\Order::$STATUS_NEW ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_NEW }}" data-content="<span class='m-badge m-badge--success m-badge--wide m-badge--rounded'>Новый</span>">
+                                                                Новый
+                                                            </option>
+                                                        @endif
+                                                        @if($order->status == \App\Model\Order::$STATUS_NEW)
+                                                            <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
+                                                                Принят
+                                                            </option>
+                                                        @endif
+                                                        @if($order->status == \App\Model\Order::$STATUS_ACCEPTED)
+                                                            <option {{ $order->status == \App\Model\Order::$STATUS_COMPLETED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_COMPLETED }}" data-content="<span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>">
+                                                                Выполнен
+                                                            </option>
+                                                        @endif
+                                                    @else
                                                         <option {{ $order->status == \App\Model\Order::$STATUS_NEW ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_NEW }}" data-content="<span class='m-badge m-badge--success m-badge--wide m-badge--rounded'>Новый</span>">
                                                             Новый
                                                         </option>
-                                                    @endif
-                                                    @if($order->status == \App\Model\Order::$STATUS_NEW)
                                                         <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
                                                             Принят
                                                         </option>
-                                                    @endif
-                                                    @if($order->status == \App\Model\Order::$STATUS_ACCEPTED)
                                                         <option {{ $order->status == \App\Model\Order::$STATUS_COMPLETED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_COMPLETED }}" data-content="<span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>">
                                                             Выполнен
                                                         </option>
                                                     @endif
-                                                @else
-                                                    <option {{ $order->status == \App\Model\Order::$STATUS_NEW ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_NEW }}" data-content="<span class='m-badge m-badge--success m-badge--wide m-badge--rounded'>Новый</span>">
-                                                        Новый
-                                                    </option>
-                                                    <option {{ $order->status == \App\Model\Order::$STATUS_ACCEPTED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_ACCEPTED }}" data-content="<span class='m-badge m-badge--warning m-badge--wide m-badge--rounded'>Принят</span>">
-                                                        Принят
-                                                    </option>
-                                                    <option {{ $order->status == \App\Model\Order::$STATUS_COMPLETED ? 'selected' : '' }} value="{{ \App\Model\Order::$STATUS_COMPLETED }}" data-content="<span class='m-badge m-badge--info m-badge--wide m-badge--rounded'>Выполнен</span>">
-                                                        Выполнен
-                                                    </option>
-                                                @endif
-                                            </select>
+                                                </select>
+
+                                            @endif
+
+                                        </div>
+
+                                        @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
+
+                                        @else
+
+                                            <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            Сохранить
+                                                        </button>
+                                                    </div>
+                                            </div>
 
                                         @endif
 
-                                    </div>
 
-                                    @if(!$user->admin && $order->status == \App\Model\Order::$STATUS_COMPLETED)
+                                    </form>
 
-                                    @else
-
-                                        <div class="row">
-                                                <div class="col-lg-12">
-                                                    <button type="submit" class="btn btn-primary">
-                                                        Сохранить
-                                                    </button>
-                                                </div>
-                                        </div>
-
-                                    @endif
-
-
-                                </form>
-
+                                </div>
                             </div>
+
                         </div>
-
                     </div>
-                </div>
+                @endif
 
-                @if($user->admin && $order->status != \App\Model\Order::$STATUS_COMPLETED)
+                @if($order->shop_id != -1 && $order->status != \App\Model\Order::$STATUS_COMPLETED)
                         <div class="col-lg-12 hidden-print">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
                                 <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">

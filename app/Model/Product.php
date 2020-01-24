@@ -291,7 +291,7 @@ class Product extends MainModel
                                 //$productRequest->appends($request->order);
 
                         } else {
-                                $productRequest->orderBy('sort', 'DESC');
+                                $productRequest->orderBy('star', 'DESC');
                         }
 
                         if(!empty($request->q)) {

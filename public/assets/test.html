@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Document</title>
+	<style>
+		*,*:after,*:before {
+			box-sizing: border-box;
+		}
+		.dowloadAppIcons {
+		    position: fixed;
+		    top: 50%;
+		    right: 0;
+		    width: 40px;
+		    padding: 8px;
+		    background: rgba(0,0,0,.5);
+		    border-radius: 10px;
+		    border-top-right-radius: 0;
+        	border-bottom-right-radius: 0;
+        	transition: .3s;
+		}
+		.dowloadAppIcons:hover {
+		    background: rgba(0,0,0,.4);
+		}
+		.dowloadAppIcons__item {
+		    display: block;
+		}
+		.dowloadAppIcons__item:nth-child(2) img {
+		    margin-top: 10px;
+		    border-radius: 7px;
+		}
+		.dowloadAppIcons__item  img {
+		    display: block;
+		    width: 100%;
+		    height: auto;
+		}
+		
+		
+		.dowloadAppBanner {
+		    position: sticky;
+		    top: 0;
+		    left: 0;
+			display: -webkit-flex;
+			display: -moz-flex;
+			display: -ms-flex;
+			display: -o-flex;
+			display: flex;
+			-webkit-flex-direction: column;
+			-moz-flex-direction: column;
+			-ms-flex-direction: column;
+			-o-flex-direction: column;
+			flex-direction: column;
+			-ms-align-items: center;
+			align-items: center;
+		    width: 100%;
+		    height: 100vh;
+		    padding: 0 20%;
+		    background: #fff;
+		}
+		.dowloadAppBanner__img {
+		    display: block;
+		    width: 100%;
+		    height: auto;
+		}
+		.dowloadAppBanner__logo {
+		    display: block;
+		    -ms-align-self: flex-start;
+			align-self: flex-start;
+		    width: 100%;
+		    max-width: 205px;
+		    height: auto;
+		    margin: -20px 0 20px 20px;
+		}
+		.dowloadAppBanner__text {
+		    margin-bottom: 20px;
+		    color: #df291e;
+            font-family: Tahoma;
+            font-size: 44px;
+            line-height: 110%;
+            font-weight: 700;
+            text-align: center;
+		}
+		.dowloadAppBanner__link {
+		    display: block;
+		    width: 100%;
+		    max-width: 300px;
+		    margin-bottom: 30px;
+		    padding: 15px 10px;
+		    font-size: 24px;
+		    line-height: 24px;
+		    text-decoration: none;
+		    color: #fff;
+            font-family: Tahoma;
+		    text-align: center;
+		    border-radius: 50px;
+		    background: #97cf26;
+		    box-shadow: 0 0 9px 0px rgb(57, 111, 26);
+		}
+		.dowloadAppBanner__close {
+		    margin: 0;
+		    padding: 0;
+		    border: none;
+		    outline: none;
+		    background: none;
+		    color : #1aa2e5;
+		    font-size: 18px;
+		    cursor: pointer;
+		}
+		
+		.downloadApp {
+			position: sticky;
+			top: 0;
+			left: 0;
+			display: -webkit-flex;
+			display: -moz-flex;
+			display: -ms-flex;
+			display: -o-flex;
+			display: flex;
+			-ms-align-items: center;
+			align-items: center;
+			padding: 10px 15px;
+			background: #fff;
+			box-shadow: 0px 0px 10px 0px rgba(0,0,0,.3);
+		}
+		.downloadApp__close {
+			position: relative;
+			display: block;
+			width: 25px;
+			height: 25px;
+			margin-right: 15px;
+			padding: 0;
+			background: none;
+			border: none;
+			outline: none;
+			cursor: pointer;
+		}
+		.downloadApp__close:before,
+		.downloadApp__close:after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 20px;
+			height: 2px;
+			background: #453e3e;
+		}
+		.downloadApp__close:before {
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
+		.downloadApp__close:after {
+			transform: translate(-50%, -50%) rotate(-45deg);
+		}
+		.downloadApp__logo,
+		.downloadApp__logoOS {
+			display: block;
+			width: 100%;
+			max-width: 40px;
+			height: auto;
+			margin-right: 10px;
+		}
+		.downloadApp__link {
+			display: block;
+			color: #df291e;
+			font-family: Tahoma;
+			font-size: 18px;
+			line-height: 22px;
+			font-weight: 400;
+			text-decoration: none;
+		}
+		.downloadApp__link span {
+			display: block;
+			text-decoration: underline;
+		}
+		@media (max-width: 768px) {
+		    .dowloadAppBanner {
+		        padding: 0;
+		    }
+		}
+		@media (max-width: 390px) {
+		    .dowloadAppBanner__logo {
+            	max-width: 150px;
+            }
+            .dowloadAppBanner__text {
+                font-size: 24px;
+            }
+            .dowloadAppBanner__link {
+                max-width: 250px;
+            	font-size: 18px;
+            	line-height: 18px;
+            }
+		}
+		@media (max-width: 390px) {
+			.downloadApp {
+				padding: 10px;
+			}
+			.downloadApp__close {
+				margin-right: 10px;
+			}
+			.downloadApp__logo,
+			.downloadApp__logoOS {
+				max-width: 30px;
+			}
+			.downloadApp__link {
+				font-size: 14px;
+				line-height: 18px;
+			}
+		}
+	</style>
+	<script src="../assets/jquery.js"></script>
+	<script>
+		var userDeviceArray = [
+		{device: 'Android', platform: /Android/},
+		{device: 'iPhone', platform: /iPhone/},
+		{device: 'iPad', platform: /iPad/},
+		{device: 'Symbian', platform: /Symbian/},
+		{device: 'Windows Phone', platform: /Windows Phone/},
+		{device: 'Tablet OS', platform: /Tablet OS/},
+		{device: 'Linux', platform: /Linux/},
+		{device: 'Windows', platform: /Windows NT/},
+		{device: 'Macintosh', platform: /Macintosh/}
+		];
+
+		var platform = navigator.userAgent;
+
+		function getPlatform() {
+			for (var i in userDeviceArray) {
+				if (userDeviceArray[i].platform.test(platform)) {
+					return userDeviceArray[i].device;
+				}
+			}
+			return 'Неизвестная платформа!' + platform;
+		}
+	</script>
+
+</head>
+<body style="padding: 0; margin: 0;">
+    <div class="downloadApp">
+        <button class="downloadApp__close"></button>
+        <img src="logo_mobile.png" alt="" class="downloadApp__logo">
+        <img src="iOS.png" alt="" class="downloadApp__logoOS">
+        <a href="ios" class="downloadApp__link">
+            5% скидка в приложении!
+            <span>Установить приложение</span>
+        </a>
+    </div>
+	<div class="dowloadAppBanner">
+		<img src="downloadAppBannerImg.jpg" alt="" class="dowloadAppBanner__img">
+		<img src="downloadAppBannerLogo.png" alt="" class="dowloadAppBanner__logo">
+		<div class="dowloadAppBanner__text">-10% на заказ в приложении!</div>
+		<a href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppBanner__link">Скачать приложение</a>
+		<button class="dowloadAppBanner__close">Спасибо, не нужно</button>
+	</div>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	<h1>asfasfasf</h1>
+	
+	
+	<div class="dowloadAppIcons">
+	   <a target="_blank" href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppIcons__item">
+	       <img src="android.png" alt="">
+	   </a>
+	   <a target="_blank" href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppIcons__item">
+	       <img src="iOS.png" alt="">
+	   </a>
+	</div>
+	
+	<script>
+		if ($(window).width() <= 991) {
+			$('.dowloadAppBanner').show()
+			$('.dowloadAppIcons').hide()
+			$('.downloadApp').hide()
+			$('body').css('overflowY', 'hidden')
+		} else {
+			$('.dowloadAppBanner').hide()
+			$('.downloadApp').hide()
+		}
+		
+		if (getPlatform() == 'Android') {
+			$('.downloadApp').addClass('android')
+			$('.downloadApp__link').attr('href', 'https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US')
+			$('.downloadApp__logoOS').attr('src', 'android.png')
+			$('.dowloadAppBanner__link').attr('href', 'https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US')
+		}
+		$('.downloadApp__close').click(function(event) {
+			$(this).parent().hide()
+		});
+		$('.dowloadAppBanner__close').click(function(event) {
+		    $(this).parent().hide()
+			$('.downloadApp').show()
+			$('body').css('overflowY', 'auto')
+		});
+	</script>
+</body>
+</html>

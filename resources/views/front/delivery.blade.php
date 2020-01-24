@@ -4,7 +4,7 @@
 
     <div class="container">
         <br>
-        <h1 class="h2 margin-top-null m-b-1"><strong>Доставка букетов цветов</strong> - всегда бесплатна по {{ $current_city->name_prepositional }}</h1>
+        <h1 class="h2 margin-top-null m-b-1"><strong>Доставка букетов цветов</strong> - всегда бесплатна в {{ $current_city->name_prepositional }}</h1>
 
         <div class="row m-b-3">
             <div class="col-md-10">
@@ -17,7 +17,7 @@
 
         <div class="row m-b-3">
             <div class="col-md-10">
-                <p> <img src="{{ asset('assets/front/img/dostavka_tsvetov.png') }}" height="100px" Align="left" hspace="25">Доставка по {{ $current_city->name_prepositional }} осуществляется бесплатно (в границах города). Доставка также бесплатная, если она не выходит за пределы кольцевой. Если получатель букета находится не в {{ $current_city->name_prepositional }}, стоимость услуги устанавливается цветочным магазином или непосредственно флористом и рассчитывается автоматически в зависимости от указанного вами в форме заказа количества км от кольцевой. Зависеть она будет от, соответственно, расстояния.</p>
+                <p> <img src="{{ asset('assets/front/img/dostavka_tsvetov.png') }}" height="100px" Align="left" hspace="25">Доставка в {{ $current_city->name_prepositional }} осуществляется бесплатно (в границах города). Доставка также бесплатная, если она не выходит за пределы кольцевой. Если получатель букета находится не в {{ $current_city->name_prepositional }}, стоимость услуги устанавливается цветочным магазином или непосредственно флористом и рассчитывается автоматически в зависимости от указанного вами в форме заказа количества км от кольцевой. Зависеть она будет от, соответственно, расстояния.</p>
             
                
             </div>

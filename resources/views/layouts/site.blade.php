@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="other" content="{{ Auth::user() && Auth::user()->id === 427 ? 'можно' : 'нельзя' }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('pageTitle', 'Доставка цветов круглосуточно в '.$current_city->name_prepositional.'. Заказать букет с доставкой в '.$current_city->name_prepositional.'')</title>
+    <title>@yield('pageTitle', 'Доставка букетов цветов в '.$current_city->name_prepositional.'')</title>
 
-    <meta name="description" content="@yield('pageDescription', 'У нас вы можете выбрать шикарный букет с доставкой по '.$current_city->name_prepositional.', области и всей России. Свежесть цветов и их сохранность, а главное круглосуточную доставку обеспечивает Федеральная курьерская служба доставки')">
-    <meta name="keywords" content="@yield('pageKeywords', 'заказать букет с доставкой на дом в '.$current_city->name_prepositional.', заказ и доставка букетов цветов в '.$current_city->name_prepositional.'')">
+    <meta name="description" content="@yield('pageDescription', 'Выбрать красивый букет цветов с доставкой в '.$current_city->name_prepositional.', области и всей России. Свежесть цветов и их сохранность, а главное круглосуточную доставку обеспечивает Федеральная курьерская служба доставки')">
+    <meta name="keywords" content="@yield('pageKeywords', 'доставка цветов '.$current_city->name.', купить букет цветов недорого, купить цветы с доставкой в '.$current_city->name_prepositional.' дешево')">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 
     <link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
@@ -246,7 +247,7 @@
     </header>
 
 
-    <div class="filters-container" data-ng-controller="mainPage">
+    <div class="filters-container mainPage" ng-controller="mainPage">
         <div class="mobile-crumbs">
             <a href="javascript:" data-ng-click="closeMobileFilter()" rel="nofollow noopener">
                 <span class="fa fa-times" aria-hidden="true"></span>
@@ -652,10 +653,10 @@
                         <div class="col-md-3">
                             <p class="foot-h"><strong>&copy; Floristum.ru</strong></p>
                             <ul class="list-unstyled list-foot">
-                                  <li><a href="https://play.google.com/store/apps/details?id=ru.floristum.app"><img src="http://floristum.ru/images/playmarket_floristum.ru.png" alt="Скачать приложение Флористум в Google Play"   width="120"></a><!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                  <li><a href="https://play.google.com/store/apps/details?id=ru.floristum.app"><img src="{{ asset('images/playmarket_floristum.ru.png') }}" alt="Скачать приложение Флористум в Google Play"   width="120"></a><!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
                                 <!-- <li><a href="#"><img src="http://floristum.ru/images/appstore_floristum.ru.png" alt="Скачать приложение Флористум в Apple Store"   width="120"></a> -->
-                                <li>&nbsp;<a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="http://floristum.ru/images/instagram.png" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
-                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="http://floristum.ru/images/vk.png" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
+                                <li>&nbsp;<a href="https://www.instagram.com/rozamir.floristum.ru/"><img src="{{ asset('images/instagram.png') }}" alt="Доставка цветов в Инстаграм"></a> <a href="https://www.instagram.com/rozamir.floristum.ru/">Instagram</a></li>
+                                <li>&nbsp;<a href="https://vk.com/floristum"><img src="{{ asset('images/vk.png') }}" alt="Доставка цветов Вконтакте"></a> <a href="https://vk.com/floristum">Vkontakte</a> <!--</br><img src="http://floristum.ru/images/facebook.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/googleplus.png" alt="Доставка цветов Вконтакте"></br><img src="http://floristum.ru/images/twit.png" alt="Доставка цветов Вконтакте"> -->
                                 <li><a href="https://floristum.ru/articles/Otkrit_magazin_cvetov_1">Как открыть магазин</a>
                             
                                 </li>
@@ -790,7 +791,77 @@
             gtag('js', new Date());
 
             gtag('config', 'UA-115529108-1');
+			var current_lang = '';
     </script>
 </div>
+
+<?php
+/*
+use Illuminate\Support\Facades\Input;
+$get_input = Input::all();
+print_r($get_input);
+*/
+if( substr_count($_SERVER['HTTP_HOST'],'.') == 1){
+?>
+<!--lang switcher-->
+<style>
+.translate_div{-moz-transform: rotate(-90deg);
+-webkit-transform: rotate(-90deg);
+-o-transform: rotate(-90deg);
+-ms-transform: rotate(-90deg);
+transform: rotate(-90deg);
+position:fixed; top:140px; left:-28px; z-index:999999; background:#666; color:white; padding: 8px;
+border-radius: 0 0 5px 5px; cursor:pointer;}
+.translate_div:hover{opacity:0.8}
+.translate_div a{color:white;}
+.translate_div a:hover{color:white; text-decoration:none;}
+.translate_div img{-moz-transform: rotate(-270deg);
+-webkit-transform: rotate(-270deg);
+-o-transform: rotate(-270deg);
+-ms-transform: rotate(-270deg);
+transform: rotate(-270deg);}
+
+@media(max-width:480px){
+	.translate_div{-moz-transform: rotate(-90deg);
+-webkit-transform: rotate(-90deg);
+-o-transform: rotate(-90deg);
+-ms-transform: rotate(-90deg);
+transform: rotate(-90deg);
+position:fixed; top:80px; left:auto; right:-28px; z-index:999999; background:#666; color:white; padding: 8px;
+border-radius:  5px 5px 0 0 ; cursor:pointer;}
+	
+}
+
+</style>
+
+<div class="translate_div">
+ <a href="#"><span>English</span> <img src="/images/eng_translate.png"></a>
+</div>
+<script>
+function strpos (haystack, needle, offset) {
+  var i = (haystack+'').indexOf(needle, (offset || 0));
+  return i === -1 ? false : i;
+}
+ 
+if(strpos(location.href, '/en/')){
+	$('.translate_div a').attr('href', location.href.replace("/en/", '/'));
+	$('.translate_div span').html('Русский');
+	$('.translate_div img').attr('src', '/images/ru_translate.png');
+	current_lang = 'en';
+}else{
+	$('.translate_div a').attr('href', location.href.replace(".ru", '.ru/en'));
+	$('.translate_div span').html('English');
+	$('.translate_div img').attr('src', '/images/eng_translate.png');
+	current_lang = 'ru';
+}
+
+</script>
+<!--lang switcher end-->
+<?php } ?>
+
+@if(Auth::user() && Auth::user()->id === 427)
+<style src="/assets/test.css"></style>
+<script src="/assets/test.js"></script>
+@endif
 </body>
 </html>

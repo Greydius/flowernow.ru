@@ -72,4 +72,18 @@ class User extends Authenticatable
         {
                 $this->notify(new Notifications\ResetPassword($token));
         }
+
+        // relation for Supervisor
+        function supervisor() {
+                return $this->hasMany('App\Model\Supervisor');
+        }
+
+        public function isSupervisor($cityId = null) {
+                return self::whereHas('supervisor', function($q) use ($cityId) {
+                        $q->where('user_id', $this->id);
+                        if(!empty($cityId)) {
+                                $q->where('city_id', $cityId);
+                        }
+                })->count();
+        }
 }

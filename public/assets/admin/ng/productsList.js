@@ -4,6 +4,7 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
 
         $scope.products = [];
         $scope.flowers = jsonData.flowers;
+        $scope.blocks = jsonData.blocks;
         $rootScope.photos = [];
         $scope.prev_page = "";
         $scope.next_page = "";
@@ -338,6 +339,38 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                 });
         }
 
+        $scope.changeBlock = function (item) {
+
+                var status = 1;
+
+                $scope.modalInstance = ModalService.showModal({
+                        templateUrl: 'block-item-modal.html',
+                        controller: 'productChangeBlock',
+                        inputs: {
+                                item: item
+                        },
+                        scope: $scope
+                });
+                $scope.modalInstance.then(function(modal) {
+
+                        modal.element.modal();
+
+                        modal.element.on('shown.bs.modal', function() {
+
+                        });
+
+                        modal.close.then(function(result) {
+                                if(result) {
+                                        angular.forEach($scope.products, function(value, key) {
+                                                if(value.id == result.id) {
+                                                        value.block_id = result.block_id;
+                                                }
+                                        });
+                                }
+                        });
+                });
+        }
+
         $scope.search = function(keyEvent) {
                 if (keyEvent.which === 13) {
                         $scope.currentPage = 1;
@@ -366,6 +399,25 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
 
                 }).then(function (response) {
                         item.pause = pause;
+                }, function (response) {
+
+
+                }).then(function (response) {
+
+                });
+        }
+
+        $scope.starItem = function(star, item) {
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/changeStarProduct/'+item.id,
+                        data: {
+                                'star': star
+                        }
+
+                }).then(function (response) {
+                        item.star = star;
                 }, function (response) {
 
 
@@ -553,6 +605,39 @@ angular.module('flowApp').controller('productBan', function($scope, close, item,
                                     toastr.error(response.data.message);
                         } else {
                                     toastr.error('Ошибка!');
+                        }
+                }).then(function (response) {
+
+                });
+
+                /*
+                $element.modal('hide');
+                close(result, 500);
+                */
+        };
+})
+
+angular.module('flowApp').controller('productChangeBlock', function($scope, close, item, $element, $http, CSRF_TOKEN) {
+        $scope.item = angular.copy(item);
+
+        $scope.save = function(result) {
+
+                $http({
+
+                        method: 'POST',
+                        url:   '/admin/api/v1/product/changeBlockProduct/'+item.id,
+                        data: {'block_id': result.block_id}
+
+                }).then(function (response) {
+
+                        $element.modal('hide');
+                        close(result, 500);
+
+                }, function (response) {
+                        if(response.data.error && response.data.message) {
+                                toastr.error(response.data.message);
+                        } else {
+                                toastr.error('Ошибка!');
                         }
                 }).then(function (response) {
 

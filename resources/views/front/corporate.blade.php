@@ -32,7 +32,7 @@
         <ul> <h3>Преимущества работы с <a href="/">Floristum.ru в  {{ $current_city->name_prepositional }}</a> для юр лиц<br>(коммерческое предложение на цветы с доставкой):</h3><br>
                       <li><img src="http://floristum.ru/images/dostavka_tsvetov_v_ofis1.png" alt="Доставка цветов и букетов" align="right" 
   vspace="10" hspace="25">
-                        <p><strong>Букеты с доставкой день в день по {{ $current_city->name_prepositional }} и любой город России по единому договору.</strong></p>
+                        <p><strong>Букеты с доставкой день в день в {{ $current_city->name_prepositional }} и любой город России по единому договору.</strong></p>
                         <p>Заключив один договор, вы можете заказывать цветы и подарки в любой город России, в котором работает Floristum.ru, а это сотни населенных пунктов, в которых живут Ваши клиенты и коллеги!</p>
                     </li>
                     <li>

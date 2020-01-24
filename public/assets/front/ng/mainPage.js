@@ -1,7 +1,11 @@
 'use strict';
 
-angular.module('flowApp').controller('mainPage', function($scope, $element, $http, $httpParamSerializerJQLike) {
+angular.module('flowApp').controller('mainPage', function($scope, $element, $http, ModalService, $httpParamSerializerJQLike) {
         $scope.popularProduct = jsonData.popularProduct;
+        $scope.flowers = jsonData.flowers;
+        $scope.productTypes = jsonData.productTypes;
+        $scope.colors = jsonData.colors;
+        $scope.times = jsonData.times;
         $scope.filters = {};
         $scope.isFiltered = false;
         $scope.title = '';
@@ -154,11 +158,17 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 
                 newurl += serializeGetParams ? '?'+serializeGetParams : '';
                 */
-
+				
                 var newurl = $scope.prepareUrl(path);
 
-                //window.history.pushState({path:newurl},'',newurl);
-                window.location = newurl;
+                
+				//window.history.pushState({path:newurl},'',newurl);
+                 
+				if(current_lang == 'en'){
+					newurl = newurl.replace(".ru", '.ru/en');
+				} 
+				//console.log(current_lang+'-'+newurl);
+				window.location = newurl;
         }
 
         $scope.prepareUrl = function(path) {
@@ -268,4 +278,145 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
                 $('.filters-container').addClass('active');
                 $('body').addClass('blocked');
         }
+
+        $scope.editItem = function (e, itemId) {
+
+                $http({
+
+                        method: 'GET',
+                        url:  '/admin/api/v1/product/' + itemId,
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+
+                }).then(function (response) {
+                        $scope.item = response.data.product;
+                        $scope.modalInstance = ModalService.showModal({
+                                templateUrl: 'edit-item-modal.html',
+                                controller: 'productEdit',
+                                inputs: {
+                                        item: $scope.item
+                                },
+                                scope: $scope
+                        });
+
+                        $scope.modalInstance.then(function(modal) {
+                                modal.element.modal();
+                        });
+                }, function (response) {
+                        $('.preloader-wrapper').hide();
+
+                }).then(function (response) {
+                        $('.preloader-wrapper').hide();
+                });
+
+
+                /*
+                $scope.modalInstance = ModalService.showModal({
+                        templateUrl: 'edit-item-modal.html',
+                        controller: 'productEdit',
+                        inputs: {
+                                item: item,
+                                photos: item.photos
+                        },
+                        scope: $scope
+                });
+                $scope.modalInstance.then(function(modal) {
+
+                        modal.element.modal();
+
+                        modal.element.on('shown.bs.modal', function() {
+                                modal.element.find('.m-select2').select2();
+                                myDropzoneOptions.url = '/admin/products/uploadPhoto/'+item.id
+                                modal.element.find('#droparea').dropzone(myDropzoneOptions);
+
+                                $('.product-photos').sortable({
+                                        items: '.product-photos-container',
+                                        placeholder: "highlight",
+                                        start: function (event, ui) {
+                                                //ui.item.toggleClass("highlight");
+                                        },
+                                        stop: function (event, ui) {
+                                                //ui.item.toggleClass("highlight");
+                                        },
+                                        update: function(event, ui) {
+                                                var priority = [];
+                                                $('.product-photos .product-photos-container img').each(function () {
+
+                                                        priority.push($(this).data('photo-id'));
+
+                                                });
+
+                                                $scope.changePriority($('input[name="product_id"]').val(), priority);
+                                        }
+                                }).disableSelection();
+                        }).on('hidden.bs.modal', function() {
+
+                                $('#product-photos').sortable('destroy');
+                        });
+
+                        modal.close.then(function(result) {
+                                if(result) {
+                                        angular.forEach($scope.products, function(value, key) {
+                                                if(value.id == result.id) {
+                                                        $scope.products[key] = result;
+                                                }
+                                        });
+                                }
+                        });
+                });
+                */
+        }
+
+        $scope.starItem = function(star, itemId) {
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/api/v1/product/changeStarProduct/'+itemId,
+                        data: {
+                                'star': star
+                        }
+
+                }).then(function (response) {
+                        window.location.reload();
+                }, function (response) {
+
+
+                }).then(function (response) {
+
+                });
+        }
+})
+
+angular.module('flowApp').controller('productEdit', function($scope, close, item, $element, $http, shareService, $rootScope) {
+
+        $scope.save = function(result) {
+                console.log($scope.item);
+
+                $http({
+
+                        method: 'POST',
+                        url:  '/admin/products/update',
+                        data: $.param($scope.item),
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+
+                }).then(function (response) {
+
+                        $element.modal('hide');
+                        window.location.reload();
+
+                }, function (response) {
+                        if(response.data.error && response.data.message) {
+                                alert(response.data.message);
+                        } else {
+                                alert('Ошибка!');
+                        }
+                }).then(function (response) {
+
+                });
+
+                /*
+                $element.modal('hide');
+                close(result, 500);
+                */
+        };
+
 })

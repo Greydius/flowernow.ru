@@ -6,6 +6,7 @@ use App\MainModel;
 use App\Model\OrderList;
 use App\Model\Transaction;
 use App\Model\Shop;
+use App\User;
 use \App\Helpers\Sms;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dompdf\Dompdf;
@@ -382,7 +383,59 @@ class Order extends MainModel
                 $this->city_id = $this->shop->city_id;
                 $this->prev_shop_id = $this->shop_id;
                 $this->shop_id = -1;
+                $this->save();
 
-                return $this->save();
+                $this->sendNotification();
+
+                return true;
+        }
+
+        function sendNotification() {
+
+                $cityId = $this->city_id;
+                $currentShopId = $this->prev_shop_id;
+
+                $users = User::whereHas('shops', function ($query) use ($cityId, $currentShopId) {
+                        $query->where('city_id', $cityId)->where('id', '!=', $currentShopId);
+                })->whereNotNull('firebase_token')->get();
+
+                if(!empty($users)) {
+                        foreach($users as $user) {
+                                $this->sendPushNotification($user->firebase_token,
+                                        [
+                                                'title' => 'Свободный заказ',
+                                                'body' => 'Появился новый свободный заказ №'.$this->id,
+                                        ]
+                                );
+                        }
+                }
+        }
+
+        function sendPushNotification($to = '', $data = []) {
+                $apiKey = 'AAAAS3WGJYU:APA91bEiqtnQ853Yb6VdbZem_Ygr9QlhMw1lZMP6iqCN-1HvT0MNKyEn8tcGtvijg03oCScEkhSyX6LEPidUdUyc6y17QuZkDX6DFIkEPhyD0LENwKkxhfv9qSZRlajL8EpOAS5vWUn6';
+                $fields = [
+                        'to' => $to,
+                        'notification' => $data
+                ];
+
+                $headers = [
+                        'Authorization: key='.$apiKey,
+                        'Content-type: Application/json'
+                ];
+
+                $url = 'https://fcm.googleapis.com/fcm/send';
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                return json_decode($result);
         }
 }

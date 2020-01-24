@@ -28,7 +28,9 @@ class LoginController extends Controller
                         ], 401);
                 }
 
-                $token = Auth::user()->createToken(config('app.name'));
+                $user =  Auth::user();
+
+                $token = $user->createToken(config('app.name'));
                 $token->token->expires_at = $request->remember_me ?
                         Carbon::now()->addMonth() :
                         Carbon::now()->addDay();
@@ -38,6 +40,7 @@ class LoginController extends Controller
                 return response()->json([
                         'token_type' => 'Bearer',
                         'token' => $token->accessToken,
+                        'shop' => $user->getShop(),
                         'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()
                 ], 200);
         }

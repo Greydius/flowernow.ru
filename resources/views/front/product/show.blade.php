@@ -77,7 +77,7 @@
 
                     <h1 class="h3 title-media-item-opened"><strong data-ng-bind="product.name">{{ $product->name }}</strong></h1>
 
-                    <p><strong>Доставка {{ ($product->deliveryTime ? '~'.$product->deliveryTime : '') }}</strong>, бесплатно в {{ $product->shop->city->name_prepositional }}</p>
+                    <p><strong>Доставка {{ ($product->block_id == 3 ? 'до 1 ч.' : ($product->deliveryTime ? '~'.$product->deliveryTime : '')) }}</strong>, бесплатно в {{ $product->shop->city->name_prepositional }}</p>
 
                     @if(empty($product->deleted_at))
                         <p class="h3 title-media-item-opened"><i class="fa fa-rub"></i> <strong data-ng-cloak=""><% product.clientPrice %></strong></p>
@@ -225,7 +225,7 @@
             @if($feedbacksCount)
                 <br><br>
                 <ul class="nav nav-tabs links-media-item-open">
-                    <li role="presentation"><a href="#otzivy">{{ $feedbacksCount.' '.Lang::choice('отзыв|отзыва|отзывов', $feedbacksCount, [], 'ru') }}</a></li>
+                    <li role="presentation"><a href="#otzivy">{{ $feedbacksCount.' '.Lang::choice('отзыв|отзыва|отзывов', $feedbacksCount, [], 'ru') }} о работе флориста:</a></li>
                 </ul>
 
                 @foreach($feedbacks as $feedback)

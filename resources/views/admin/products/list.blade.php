@@ -122,6 +122,10 @@
                         <div class="m-portlet__body" style="padding-top: 0; padding-bottom: 0;">
                             <div class="row">
                                 <div class="col-xl-12 products-img-wraper">
+
+                                    @if($user->isSupervisor())
+
+                                    @endif
                                     @if($user->admin)
                                     <div class="products-btns" ng-show="product.shop">
                                         <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Отклонить">
@@ -142,6 +146,26 @@
                                             </a>
                                         @endif
                                     </div>
+                                    @endif
+
+                                    @if($user->isSupervisor())
+                                        <a href  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" ng-click="starItem(0, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="В топ" style="position: absolute; margin: 5px;" ng-show="product.star">
+                                            <i class="la la-star"></i>
+                                        </a>
+                                        <a href  class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" ng-click="starItem(1, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="В топ" style="position: absolute; margin: 5px;" ng-show="!product.star">
+                                            <i class="la la-star-o"></i>
+                                        </a>
+
+                                        <a href ng-click="banProduct(product)" class="btn btn-outline-danger m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Отклонить" style="position: absolute; margin: 5px; top: 35px;">
+                                            <i class="fa flaticon-signs-2"></i>
+                                        </a>
+
+                                        <a href ng-click="changeBlock(product)" class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Изменить блок вывода" style="position: absolute; margin: 5px; top: 70px;">
+                                            <i class="fa flaticon-signs-2"></i>
+                                        </a>
+                                        <a href ng-click="approveProduct(product)" class="btn btn-outline-success m-btn m-btn--icon m-btn--icon-only" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Одобрить" ng-show="product.status != 1"  style="position: absolute; margin: 5px; top: 105px;">
+                                            <i class="fa flaticon-interface"></i>
+                                        </a>
                                     @endif
 
                                     <span class="m-menu__link-badge product-id-badge">
@@ -223,7 +247,7 @@
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions" style="padding: 5px;">
-                                @if($user->admin || $user->created_at > '2019-08-03')
+                                @if($user->admin || $user->created_at > '2019-08-03' || $user->isSupervisor())
                                     <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
                                         <i class="la la-pencil"></i>
                                     </a>
@@ -580,6 +604,40 @@
         </div>
     </script>
 
+    @if($user->isSupervisor())
+    <script type="text/ng-template" id="block-item-modal.html">
+        <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Блок на главной
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <select class="form-control form-control-sm input-sm " data--maximum-selection-length="1"  ng-model="item.block_id" ng-options="block.id as block.name for block in blocks">
+                            <option value="">Выбрать блок на главной</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Закрыть
+                        </button>
+                        <button type="button" class="btn btn-danger" ng-click="save(item)">
+                            Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    @endif
+
     <!--begin::Modal-->
     <div class="modal fade" id="m_modal_5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm" role="document">
@@ -702,6 +760,7 @@
             jsonData.productTypes = {!! $productTypes->toJson() !!};
             jsonData.colors = {!! $colors->toJson() !!};
             jsonData.flowers = {!! $flowers->toJson() !!};
+            jsonData.blocks = {!! !empty($blocks) ? $blocks->toJson() : '[]' !!};
             jsonData.times = {!! json_encode($times) !!};
             jsonData.specialOffers = {!! json_encode($specialOffers) !!};
             routes.productUpdate = '{{ route('admin.products.update')  }}';

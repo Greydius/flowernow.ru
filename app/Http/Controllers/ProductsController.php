@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Block;
 use App\Model\Color;
 use App\Model\Shop;
 use App\Model\Flower;
@@ -25,83 +26,60 @@ class ProductsController extends Controller
     //
         public function index(Request $request) {
 
-                if(!empty($request->t)){
+                $viewFile = 'front.index';
+                $title = '';
+                $meta = [];
+                $popularProducts = [];
+                $popularProduct = [];
+                $blocks = [];
+                $city_id = $this->current_city->id;
+                $promoText = null;
+                $lowPriceProducts = null;
+                $singleProducts = null;
+                $currentType = null;
+                $specialOffers = null;
+                $specialOfferProducts = [];
 
-                        $viewFile = 'front.index';
+                if(!empty($this->current_city) && $this->current_city->id == 637640 && empty($request->product_type)) {
 
-                        $title = '';
-                        $meta = [];
+                        $productRequest = Product::with(['shop'  => function($query) {
+                                $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                        }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$this->current_city->id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
+                                ->where('price', '>', 0)
+                                ->where('dop', 0)
+                                ->where('status', 1)
+                                ->where('pause', 0)
+                                ->whereNull('single')
+                                ->orderBy('star', 'DESC')
+                                ->orderBy('sort', 'DESC');
 
-                        $productTypes = ProductType::where('show_on_main', '1')->get();
+                        $blocks = Block::all();
+                        $blockRequest = [];
+                        foreach($blocks as $key => $block) {
+                                $blockRequest[$key] = clone $productRequest;
+                                $blockRequest[$key]->where('block_id', $block->id)->limit($block->items);
+                        }
 
-                        $currentType = null;
+                        for($i=1; $i< count($blockRequest); $i++) {
+                                $blockRequest[0]->unionAll($blockRequest[$i]);
+                        }
 
-                        $popularProducts = [];
-                        $popularProduct = [];
+                        $blockProducts = $blockRequest[0]->get();
 
-                        $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
-                                105, //красных тюльпанов
-                                97, //красных гвоздик
-                                /*
-                                105, //красных тюльпанов
-                                97, //красных гвоздик
-                                116, //красных пионов
-                                130, //разноцветных ирисов
-                                //138, //белых калл
-                                171, //белых фрезий
-                                183, //белых гортензий
-                                166 //белых анемонов
-                                */
-                        ];
-                        //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
-                        //$singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
-                        $singleProducts = [];
-
-                        if(empty($request->product_type)) {
-
-                                $item = [];
-                                foreach ($productTypes->take(1) as $productType) {
-                                        //$request->product_type = $productType->slug;
-                                        $request->productType = $productType->id;
-                                        $request->t = true;
-                                        $item['productType'] = $productType;
-                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
-                                        $item['popularProductCount'] = count($item['popularProduct']);
-                                        if($item['popularProductCount']) {
-                                                $popularProducts[] = $item;
+                        foreach($blocks as $key => &$block) {
+                                $products = [];
+                                foreach($blockProducts as $product) {
+                                        if($product->block_id == $block->id) {
+                                                $products[] = $product;
                                         }
                                 }
 
-                                unset($request->product_type);
-
+                                $blocks[$key]->products = $products;
                         }
-
-
-                        return view('front.index',[
-                                'title' => '',
-                                'meta' => '',
-                                'promoText' => '',
-                                'popularProduct' => null,
-                                'popularProducts' => $popularProducts,
-                                'lowPriceProducts' => null,
-                                'singleProducts' => $singleProducts,
-                                'currentType' => null,
-                                'specialOffers' => null,
-                                'specialOfferProducts' => null,
-                                'feedbacks' => null
-                        ]);
                 }
 
-                $viewFile = 'front.index';
-
-                $title = '';
-                $meta = [];
 
                 $productTypes = ProductType::where('show_on_main', '1')->get();
-                $currentType = null;
-
-                $popularProducts = [];
-                $popularProduct = [];
 
                 $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
                         105, //красных тюльпанов
@@ -116,11 +94,13 @@ class ProductsController extends Controller
                         183, //белых гортензий
                         166 //белых анемонов
                         */
-                        ];
+                ];
 
                 $singleProductsIds = [];
                 //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
-                $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
+                if(empty($blocks)) {
+                        $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
+                }
 
                 if(empty($request->product_type)) {
                         /*
@@ -139,22 +119,30 @@ class ProductsController extends Controller
                         unset($request->order);
                         */
 
-                        $item = [];
-                        foreach ($productTypes as $productType) {
-                                //$request->product_type = $productType->slug;
-                                $request->productType = $productType->id;
-                                $item['productType'] = $productType;
-                                $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
-                                $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
-                                if($item['popularProductCount']) {
-                                        $popularProducts[] = $item;
+                        if(empty($blocks)) {
+                                $item = [];
+                                foreach ($productTypes as $productType) {
+                                        //$request->product_type = $productType->slug;
+                                        $request->productType = $productType->id;
+                                        $item['productType'] = $productType;
+                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
+                                        $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
+                                        if($item['popularProductCount']) {
+                                                $popularProducts[] = $item;
+                                        }
                                 }
+
+                                unset($request->product_type);
                         }
 
-                        unset($request->product_type);
 
                 } else {
                         $request->product_type_filter = $request->product_type;
+                        $productType = ProductType::where('slug', $request->product_type)->first();
+                        if(!empty($productType) && !empty($productType->promo_text) && $this->current_city->id == 637640 && (empty($request->page) || $request->page == 1)) {
+                                $promoText = new \stdClass();
+                                $promoText->text = $productType->promo_text;
+                        }
                         $title = $this->getTitle($request);
                         $meta =  $this->getMeta($request);
                         $viewFile = 'front.product.list';
@@ -176,11 +164,8 @@ class ProductsController extends Controller
 
                 $specialOffers = \DB::table('special_offers')->whereRaw('? between date_from and date_to', [date('Y-m-d')])->get();
 
-                $specialOfferProducts = [];
-
                 if(!empty($specialOffers)) {
                         foreach ($specialOffers as $specialOffer) {
-                                $city_id = $this->current_city->id;
                                 $specialOfferProduct = Product::whereHas('shop', function($query) use ($city_id) {
                                         $query->where('city_id', $city_id)->available();
                                 })->where('price', '>', 0)->where('status', 1)->where('pause', 0)->whereRaw('FIND_IN_SET(? ,special_offer_id)', [$specialOffer->id]);
@@ -190,8 +175,6 @@ class ProductsController extends Controller
                                 }
                         }
                 }
-
-                $city_id = $this->current_city->id;
                 /*
                 $lowPriceProducts = Product::whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
@@ -204,16 +187,16 @@ class ProductsController extends Controller
                         ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))')->take(9)->get();
                 */
 
-                if(!empty($popularProduct) && $popularProduct->total() <= 30) {
-                        $request2 = new Request();
-                        $request2->order = 'price';
-                        $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
-                        //dd($lowPriceProducts);
-                } else {
-                        $lowPriceProducts = Product::lowPriceProducts($city_id)->take(12)->get();
+                if(empty($blocks)) {
+                        if(!empty($popularProduct) && $popularProduct->total() <= 30) {
+                                $request2 = new Request();
+                                $request2->order = 'price';
+                                $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
+                                //dd($lowPriceProducts);
+                        } else {
+                                $lowPriceProducts = Product::lowPriceProducts($city_id)->take(12)->get();
+                        }
                 }
-
-                $promoText = null;
 
                 if(!empty($this->user) && $this->user->admin) {
                         //dd($popularProduct);
@@ -225,6 +208,9 @@ class ProductsController extends Controller
 
                         }
                 }
+
+
+
 
                 //$topFeedbackId = FeedbackCity::getCityTopFeedbackId($city_id);
 
@@ -253,7 +239,8 @@ class ProductsController extends Controller
                         'currentType' => $currentType,
                         'specialOffers' => $specialOffers,
                         'specialOfferProducts' => $specialOfferProducts,
-                        'feedbacks' => $feedbacks
+                        'feedbacks' => $feedbacks,
+                        'blocks' => $blocks
                 ]);
         }
 
@@ -323,7 +310,8 @@ class ProductsController extends Controller
                         'specialOffers' => SpecialOffer::all(),
                         'flowers' => Flower::orderBy('name', 'asc')->get(),
                         'times' => $times,
-                        'deletedProducts' => $deletedProducts
+                        'deletedProducts' => $deletedProducts,
+                        'blocks' => Block::all()
                 ]);
         }
 
@@ -488,6 +476,7 @@ class ProductsController extends Controller
 
                 try{
                         $perPage = 16;
+
                         if($this->user->admin) {
                                 $perPage = 40;
                                 $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->whereNull('single')->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
@@ -522,6 +511,16 @@ class ProductsController extends Controller
                                 }
 
                                // echo $productRequestModel->toSql(); exit();
+                        } elseif($this->user->isSupervisor()) {
+                                $supervisorCitiesIds = $this->user->supervisor()->pluck('city_id')->toArray();
+
+                                $productRequestModel  = Product::with(['compositions.flower', 'photos', 'shop'])->
+                                        whereHas('shop', function ($query) use ($supervisorCitiesIds) {
+                                                $query->whereIn('city_id', $supervisorCitiesIds);
+                                        })
+                                        ->whereNull('single')
+                                        ->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
+
                         } else {
                                 $productRequestModel = $this->user->getShop()->products()->whereNull('single')->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
                         }
@@ -746,7 +745,7 @@ class ProductsController extends Controller
                 try{
                         $product = null;
 
-                        if($this->user->admin) {
+                        if($this->user->admin || $this->user->isSupervisor()) {
                                 $product = Product::find($id);
                         }
 
@@ -763,6 +762,36 @@ class ProductsController extends Controller
 
                                         $product->save();
                                 }
+                        }
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
+        public function apiChangeBlockProduct($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        $product = null;
+
+                        if($this->user->admin || $this->user->isSupervisor()) {
+                                $product = Product::find($id);
+                        }
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->block_id = $request->block_id;
+                                $product->save();
                         }
 
                 } catch (\Exception $e){
@@ -801,6 +830,33 @@ class ProductsController extends Controller
 
         }
 
+        public function apiChangeStarProduct($id, Request $request) {
+
+                $return = [
+                        'statusCode' => 200,
+                        'message' => ''
+                ];
+
+                try{
+                        $product = Product::find($id);
+                        $shop = $this->user->getShop();
+
+                        if(empty($product) || !isset($request->star) || !$this->user->isSupervisor($product->shop->city->id)) {
+                                throw new \Exception('Продукт не найден');
+                        } else {
+                                $product->star = (int)$request->star ? 1 : 0;
+                                $product->save();
+                        }
+
+                } catch (\Exception $e){
+                        $return['statusCode'] = 400;
+                        $return['message'] = $e->getMessage();
+                }finally{
+                        return response()->json($return, $return['statusCode']);
+                }
+
+        }
+
         public function update(Request $request) {
 
                 $product = Product::findOrFail($request->input('id'));
@@ -819,7 +875,7 @@ class ProductsController extends Controller
 
                 $shop = $this->user->getShop();
 
-                if(empty($product) || (!$this->user->admin && $shop->id != $product->shop_id)) {
+                if(empty($product) || (!$this->user->admin && $shop->id != $product->shop_id && !$this->user->isSupervisor($shop->city_id))) {
                         return response()->json([
                                 'error' => true,
                                 'message' => 'Ошибка!',
@@ -871,7 +927,7 @@ class ProductsController extends Controller
                 $updated_at = $product->updated_at;
 
                 if($product->save()) {
-                        if(!$this->user->admin && ($updated_at != $product->updated_at || $product->status == 0)) {
+                        if(!$this->user->admin && ($updated_at != $product->updated_at || $product->status == 0) && !$this->user->isSupervisor($shop->city_id)) {
                                 $product->status = 2;
                                 $product->save();
                         }
@@ -996,7 +1052,18 @@ class ProductsController extends Controller
                         $title['price'] .= ' руб';
                 }
 
-                return implode(', ', $title).' с доставкой в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">г.'.$this->current_city->name.'</a>';
+                $result = implode(', ', $title);
+
+                if(mb_strpos($result, '{city}') === false) {
+                        //$result .= ' с доставкой в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">г.'.$this->current_city->name.'</a>';
+                        $result .= ' с доставкой в '.$this->current_city->name;
+                } else {
+                        //$result = str_replace('{city}', '<a href="#" class="choose-city-link" onclick="chooseCity(); return false;">г.'.$this->current_city->name.'</a>', $result);
+                        $result = str_replace('{city}', $this->current_city->name, $result);
+                }
+
+                //return implode(', ', $title).' с доставкой в <a href="#" class="choose-city-link" onclick="chooseCity(); return false;">г.'.$this->current_city->name.'</a>';
+                return $result;
         }
 
         public function getMeta(Request $request) {
@@ -1005,20 +1072,37 @@ class ProductsController extends Controller
 
 
                 $meta['title'] = 'Букеты и композиции из цветов';
-                $meta['description'] = 'Заказать ';
                 $meta['keywords'] = '';
 
                 if(!empty($request->product_type)) {
                         $productType = ProductType::where('slug', $request->product_type)->first();
                         if(!empty($productType)) {
                                 $meta['title'] = $productType->alt_name;
+                                if(!empty($productType->description)) {
+                                        $meta['description'] = $productType->description;
+                                        if(mb_strpos($meta['description'], '{city}') != false) {
+                                                $meta['description'] = str_replace('{city}', $this->current_city->name_prepositional, $meta['description']);
+                                        }
+                                }
+
+                                if(!empty($productType->keywords)) {
+                                        $meta['keywords'] = $productType->keywords;
+                                        if(mb_strpos($meta['keywords'], '{city}') != false) {
+                                                $meta['keywords'] = str_replace('{city}', $this->current_city->name, $meta['keywords']);
+                                        }
+                                }
                         }
                 }
 
-                $meta['description'] .= mb_strtolower($meta['title']);
-                $meta['description'] .= ' в г '.$this->current_city->name.' с доставкой';
+                if(empty($meta['description'])) {
+                        $meta['description'] = 'Заказать ';
+                        $meta['description'] .= mb_strtolower($meta['title']);
+                        $meta['description'] .= ' в г '.$this->current_city->name.' с доставкой';
+                }
 
-                $meta['keywords'] .= mb_strtolower($meta['title']);
+                if(empty($meta['keywords'])) {
+                        $meta['keywords'] .= mb_strtolower($meta['title']);
+                }
                 
                 if(!empty($request->flowers) && is_array($request->flowers)) {
                         $flowers = Flower::whereIn('id', $request->flowers)->get();
@@ -1035,8 +1119,9 @@ class ProductsController extends Controller
                         }
                 }
 
-                $meta['title'] .= ' доставка в г '.$this->current_city->name;
-                $meta['keywords'] .= ', '.$this->current_city->name;
+                //$meta['title'] .= ' доставка в г '.$this->current_city->name;
+                $meta['title'] = mb_strpos($meta['title'], '{city}') === false ? $meta['title'].' в г '.$this->current_city->name : str_replace('{city}', $this->current_city->name, $meta['title']);
+                //$meta['keywords'] .= ', '.$this->current_city->name;
 
                 return $meta;
         }
@@ -1412,5 +1497,29 @@ class ProductsController extends Controller
                 }
 
                 return redirect()->route('products.copy');
+        }
+
+        public function apiProduct($id, Request $request) {
+
+                $statusCode = 200;
+                $message = '';
+
+                try{
+                        $product = Product::find($id);
+
+                        if(empty($product)) {
+                                throw new \Exception('Продукт не найден');
+                        }
+
+                } catch (\Exception $e){
+                        $statusCode = 400;
+                        $message = $e->getMessage();
+                } finally {
+                        return response()->json([
+                                'product' => $product,
+                                'message' => $message,
+                                'code' => $statusCode
+                        ], $statusCode);
+                }
         }
 }

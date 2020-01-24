@@ -23,9 +23,157 @@
         <br>
     </div>
 
-    @if(count($popularProducts) || count($singleProducts))
+    @if(count($popularProducts) || count($singleProducts) || count($blocks))
 
-        <div class="container" data-ng-controller="mainPage">
+        <div class="container" ng-controller="mainPage">
+
+            @if(!empty($user) && $user->isSupervisor($current_city->id))
+                <script type="text/ng-template" id="edit-item-modal.html">
+                    <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">
+                                        Редактирование — <% item.id %>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+
+                                        <input type="hidden" name="product_id" ng-model="item.id"  value="<% item.id %>">
+
+                                        <div class="form-group m-form__group">
+                                            <label for="edit-product-name">
+                                                Название <span class="text-danger must-have">*</span>
+                                            </label>
+                                            <input type="text" class="form-control form-control-sm m-input" id="edit-product-name" ng-model="item.name" placeholder="Название">
+                                        </div>
+
+                                        <div class="form-group m-form__group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-price">
+                                                        Цена <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <div class="m-input-icon m-input-icon--right">
+                                                        <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, руб." id="edit-product-price">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                <span>
+                                                    <i class="fa fa-rub"></i>
+                                                </span>
+                                            </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-make-time">
+                                                        Время изготовления <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <select class="form-control form-control-sm" ng-model="item.make_time" ng-options="time.value as time.name for time in times"></select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="form-group m-form__group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-width">
+                                                        Ширина, см <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <div class="m-input-icon m-input-icon--right">
+                                                        <input type="text" class="form-control form-control-sm m-input" ng-model="item.width" placeholder="см." id="edit-product-width">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                <span>
+                                                    <i class="fa fa-arrows-h"></i>
+                                                </span>
+                                            </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-height">
+                                                        Высота, см <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <div class="m-input-icon m-input-icon--right">
+                                                        <input type="text" class="form-control form-control-sm m-input" ng-model="item.height" placeholder="см." id="edit-product-height">
+                                                        <span class="m-input-icon__icon m-input-icon__icon--right">
+                                                <span>
+                                                    <i class="fa fa-arrows-v"></i>
+                                                </span>
+                                            </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group m-form__group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-height">
+                                                        Тип букета <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <select class="form-control form-control-sm" ng-model="item.product_type_id" ng-options="productType.id as productType.name for productType in productTypes">
+                                                        <option value="">Укажите тип</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <label for="edit-product-height">
+                                                        Цвет
+                                                    </label>
+                                                    <select class="form-control form-control-sm" ng-model="item.color_id" ng-options="color.id as color.name for color in colors"></select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group m-form__group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="edit-product-height">
+                                                        Описание <span class="text-danger must-have">*</span>
+                                                    </label>
+                                                    <textarea class="form-control" ng-model="item.description" rows="6"></textarea>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="form-group m-form__group">
+                                            <div class="row">
+                                                <div class="col-md-12 text-danger">
+                                                    <span class="must-have">*</span> - поля обязательные к заполнению
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Закрыть
+                                    </button>
+                                    <button type="button" class="btn btn-primary" ng-click="save(item)">
+                                        Сохранить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            @endif
 
             @if(empty($popularProducts))
                 <div class="row hidden-xs hidden-sm">
@@ -33,11 +181,7 @@
                         <h2 class="margin-top-null">{{ !empty($currentType) ? $currentType->alt_name : null }}</h2>
                     </div>
                     <div class="col-md-7">
-                        <ul class="list-inline list-sort text-right">
-                            <li>Сортировать:</li>
-                            <li><a href="#">по цене</a></li>
-                            <li><a href="#">по новизне</a></li>
-                        </ul>
+                       
                     </div>
                 </div>
 
@@ -51,17 +195,48 @@
                 <div class="col-md-12" style="background-color: #fff; padding-top: 10px;"  >
                     <div class="free_phone hidden-xs">
                       <b>8 800 600-54-97</b>
-                        <span>Звонок бесплатный</b> </br></br></br></span>
+                        <span>Звонок бесплатный</b> <br><br><br></span>
                     </div>
 
-                    @if(!empty($popularProducts))
+                    @if(!empty($popularProducts) || !empty($blocks))
+
+                        @foreach($blocks as $block)
+                            <div data-ng-hide="isFiltered">
+                                <div class="hidden-lg hidden-md hidden-xs">
+                                    <br><br>
+                                </div>
+                                <h2 class="margin-top-null">{{ $block->name }}</h2>
+                                <p>{{ $block->description }}</p>
+                                <br class="hidden-lg hidden-md">
+
+                                <div class="row">
+                                    @if(!empty($block->products))
+                                        @foreach($block->products as $key => $_item)
+                                            @include('front.product.list-item', ['col' => 3])
+                                        @endforeach
+
+                                        <br clear="all">
+                                        @if(!empty($block->slug))
+                                            <div class="col-md-6 col-md-offset-3 bottom30">
+                                                <a href="/catalog/{{ $block->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все</a>
+                                            </div>
+                                        @endif
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+
                         @foreach($popularProducts as $item)
                             @if(!empty($item['productType']) && $item['productType']->id == 2 && $item['popularProductCount'] >= 3)
                                 <div data-ng-hide="isFiltered">
                                     <div class="hidden-lg hidden-md hidden-xs">
                                         <br><br>
                                     </div>
-                                    <h2 class="margin-top-null">{{ $item['productType']->alt_name }} с доставкой в {{ $current_city->name_prepositional }}</h2>
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h2 class="margin-top-null">{{ mb_strpos($item['productType']->alt_name, '{city}') === false ? $item['productType']->alt_name.' с доставкой в '.$current_city->name_prepositional : str_replace('{city}', $current_city->name, $item['productType']->alt_name) }}</h2>
+                                        </div>
+                                    </div>
                                     <br class="hidden-lg hidden-md">
 
                                     <div class="row">
@@ -76,7 +251,7 @@
                                         <br clear="all">
                                         @if($item['popularProduct']->total() > 8)
                                             <div class="col-md-6 col-md-offset-3 bottom30">
-                                                <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
+                                                <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все</a>
                                             </div>
                                         @endif
                                     </div>
@@ -266,23 +441,62 @@
 
     <div class="container">
         <br><br>
-        <img src="http://floristum.ru/images/dostavka_tsvetov_v_ofis1.png" alt="Доставка цветов и букетов" align="left"
-             vspace="20" hspace="25"><h3 class="text-left">О доставке цветов в {{ $current_city->name_prepositional }} с Floristum.ru</h3>
+        <img src="{{ asset('images/dostavka_tsvetov_v_ofis1.png') }}" alt="Доставка цветов и букетов" align="left"
+             vspace="20" hspace="25"><h2 class="text-left">Доставка букетов цветов в {{ $current_city->name_prepositional }}</h2>
 
-        <p><b>Флористум — сервис заказа доставки цветов в {{ $current_city->name_prepositional }} и по всей России</b>.  </br> </br>  На Флористум.ру вы можете заказать букеты в офис или на дом  в {{ $current_city->name_prepositional }} от федеральной сети цветочных магазинов с оптимальным соотношением цена — качество. Сравните предложения с аналогичными композициями флористов и магазинов, представленных на Флористум в {{ $current_city->name_prepositional }} или другом городе, по Вашему выбору. <br><br>
-            Заказав букет с доставкой в {{ $current_city->name_prepositional }} на дом или в офис — Вы, или человек, которому хотите сделать сюрприз, гарантировано получите свежую и профессионально оформленную цветочную композицию по указанному адресу и в указанный промежуток времени. 
-</br>Курьер вручит заказ с улыбкой, озвучит поздравление, если Вы пожелаете, имя отправителя, а также сделает фото момента вручения, с позволения получателя, конечно.
-Заказанные цветы можно получить лично или доверить нашим специально подготовленным сотрудникам и курьерам организацию приятного сюрприза получателю в любом городе России! Услуга доставки цветов доступна круглосуточно и в любом городе страны! </br>
-</br>Управляющие директора наших цветочных магазинов и опытные сотрудники-флористы заинтересованы, чтобы Вы, как покупатель и Ваш адресат были довольны, оставили положительный отзыв и высоко оценили выполненную работу на страницах сайта системы. Оценки клиентов влияют на рейтинг магазинов и отдельных флористов, что определяет частоту заказов цветов у флористов. Озвученный принцип позволяет постоянно контролировать качество заказанных цветов и стимулировать каждого флориста постоянно совершенствовать свое мастерство и стремиться приятно удивлять клиентов раз от раза.</br>
-</br>Каждый заказ цветов защищен системой качества Флористум с гарантией мгновенного возврата оплаченной суммы покупателю в форс-мажорных случаях. Мы внимательно следим за работой магазинов, поэтому при возникновении спорной ситуации, позвоните в нашу службу по телефону, указанному на сайте, и мы в кратчайший срок разрешим спорную ситуацию заменой заказанных цветов или моментальным возвратом средств, если Вы пожелаете. </br>Мы готовы осуществить доставку цветов на дом для Вас и ваших близких от недорогих (дешевых) до элитных (VIP): подсолнухи, лилии, герберы, альстромерии, ромашки, ирисы, розы, каллы, гиацинты, пионы, амариллисы, тюльпаны, орхидеи, хризантемы и другие, даже самые экзотические цветы.</p>
-        <p> <br><br>
-            <img src="http://floristum.ru/images/dostavka_tsvetov_po_beznalu1.png" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h3>Мы работаем и с юридическими лицами по безналичному расчету</h3>
+        <p>Флористум – это федеральная сеть доставки цветов в {{ $current_city->name_prepositional }}. Юбилей,
+день рождения, корпоративное мероприятие, семейное торжество, День св.
+Валентина, 23 февраля, 8 марта и т.д. - на нашем сайте вы сможете заказать
+букеты с доставкой в офис, на дом или по другому, указанному адресату.  </br> </br>  Живые цветы созданы для того, чтобы подчеркнуть значимость момента,
+создать нужное настроение и… оказать мягкое психологическое воздействие
+на вашего визави. Не верите? К примеру, первое свидание. Вот как вы
+думаете, к какому парню у девушки сразу возникнет интерес – к тому,
+который пришел без цветов, или к тому, который не забыл купить букет для
+любимой.
+</br></br>
+В столице работает много компаний предоставляющих такую услугу,
+как доставка букетов в {{ $current_city->name_prepositional }}. В чем же преимущество нашей сети
+Floristum?</br></br>
+Цена букета, по соотношению деньги/свежесть, одна из самых
+оптимальных в регионе. Есть интернет, и вы всегда можете сравнить
+стоимость наших услуг с предложениями конкурентов.</br></br>
+<h3>Доставка цветов Москва</h3>
+Доставка букетов цветов в {{ $current_city->name_prepositional }} с Floristum.ru – это всегда быстро,
+свежо, креативно и недорого. Работаем круглосуточно – для нас нет
+праздничных и выходных дней. Симпатичный и улыбчивый курьер доставит
+и вручит букет цветов, озвучит поздравление, а также сфотографирует этот
+трогательный момент. Оформить у нас флористическую композицию с
+подвозом домой или в офис – это гарантированный сюрприз для вашего адресата.
+</br></br>Кстати об оформлении. В компании Флористум цветочные композиции
+создают профессионалы высочайшего класса. Каждый созданный ими букет
+можно смело называть оригинальным. Заказчик имеет возможность оставить
+отзыв на сайте и выставить рейтинг флористу. Эти оценки позволяют нам
+корректировать работу в сторону повышения качества оказываемых услуг.
+Чтобы поднять человеку настроение, достаточно преподнести живые цветы,
+оформленные в виде оригинального букета или корзины.
+</br></br>
+Мы предлагаем оценить цветочную тему шире, чем просто
+«сопровождающий элемент» ухаживания или «гарнир» подарка на день
+рождения. Современные флористические композиции активно используются
+для украшения интерьера. Живыми цветами можно оформить банкетный зал,
+сопроводить свадебную церемонию, украсить яхту или автомобиль, создать
+фруктово-конфетно-цветочные корзины на детском празднике и т.д.
+</br></br>
+Оплата доставки цветов. Клиент можете рассчитаться картами VISA,
+MasterCard, VisaElectron, Maestro, МИР, а кроме того, картами
+международных платежных систем - это VisaInternational,
+MasterCardInternational, DinersClubInternational, AmericanExpress.
+</p>
+        
+           <p> <br><br> <img src="{{ asset('images/dostavka_tsvetov_po_beznalu1.png') }}" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h4>Мы работаем и с юридическими лицами по безналичному расчету</h4>
 
 
-        <p>Букеты с оплатой по безналу юридическим лицам, для сотрудников организаций, их клиентов в офисы и на дом — одно из главных направлений нашей работы. Ассортимент букетов по ценам представленным на сайте предлагается как публичное коммерческое предложение для юридических лиц.
-<br><br>
-С Floristum.ru процесс выбора цветочной композиции для поздравления коллег, сотрудников и клиентов станет простым и интересным. Забудьте о тратах наличных средств на оформление корпоративов, а также об очередях в магазинах перед 8 марта — заказать авторский букет с доставкой в Москве можно у нас прямо сейчас, а оплатить с расчетного счета юр лица! 
-<br><br> Мы предоставляем полный пакет закрывающих документов на товар, приобретенный у нас. Подробнее читайте в разделе <a href="{{ route('front.corporate') }}">доставка цветов по безналу</a> в  {{ $current_city->name_prepositional }}
+        <p>Для юридических лиц существует возможность заказать авторский букет
+и оплатить услугу по безналичному расчету. Наша сеть предоставляет
+полный пакет финдокументов на товар, приобретенный у нас. <a href="{{ route('front.corporate') }}">Доставка
+цветов по безналу</a> в {{ $current_city->name_prepositional }} – сейчас это очень популярная услуга.<br><br>
+При возникновении форс-мажорных обстоятельств деньги мгновенно
+возвращаются заказчику.
 </p>
 
 
@@ -305,7 +519,6 @@
     <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
     <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>
-    <script src="{{ asset('assets/front/ng/mainPage.js?v=2_3') }}" type="text/javascript"></script>
 
     <script type="text/javascript">
 

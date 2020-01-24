@@ -13,8 +13,11 @@ class CreateModelSupervisorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('model_supervisors', function (Blueprint $table) {
+        Schema::create('supervisors', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('shop_id');
+            $table->integer('city_id');
+            $table->index(['shop_id', 'city_id']);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateModelSupervisorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('model_supervisors');
+        Schema::dropIfExists('supervisors');
     }
 }

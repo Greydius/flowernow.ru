@@ -744,9 +744,19 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                         'as' => 'admin.api.product.apiChangeStatusProduct'
                 ]);
 
+                Route::post('product/changeBlockProduct/{id}', [
+                        'uses' => 'ProductsController@apiChangeBlockProduct',
+                        'as' => 'admin.api.product.apiChangeBlockProduct'
+                ]);
+
                 Route::post('product/changePauseProduct/{id}', [
                         'uses' => 'ProductsController@apiChangePauseProduct',
                         'as' => 'admin.api.product.apiChangePauseProduct'
+                ]);
+
+                Route::post('product/changeStarProduct/{id}', [
+                        'uses' => 'ProductsController@apiChangeStarProduct',
+                        'as' => 'admin.api.product.apiChangeStarProduct'
                 ]);
 
                 Route::post('product/rotatePhoto/{id}', [
@@ -758,6 +768,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 Route::get('orders', [
                         'uses' => 'OrdersController@apiList',
                         'as' => 'admin.api.orders.list'
+                ]);
+
+                Route::get('product/{id}', [
+                        'uses' => 'ProductsController@apiProduct',
+                        'as' => 'admin.api.product.product'
                 ]);
         });
 });

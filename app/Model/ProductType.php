@@ -9,6 +9,8 @@ class ProductType extends MainModel
     //
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+        protected $appends = ['photo'];
+
         public function product() {
                 return $this->hasMany('App\Model\Product');
         }
@@ -25,5 +27,9 @@ class ProductType extends MainModel
                 });
 
                 return $query;
+        }
+
+        public function getPhotoAttribute() {
+                return asset('assets/front/img/ico/'.$this->icon);
         }
 }
