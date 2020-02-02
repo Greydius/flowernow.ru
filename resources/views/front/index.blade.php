@@ -504,6 +504,9 @@ MasterCardInternational, DinersClubInternational, AmericanExpress.
         <br><br>
 
     </div>
+    @if(Route::currentRouteName() != 'favorites.show')
+      <a href="{{ route('favorites.show') }}" class="favorites-heart"></a>
+    @endif
 
 @endsection
 

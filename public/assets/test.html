@@ -11,13 +11,13 @@
 		.dowloadAppIcons {
 		    position: fixed;
 		    top: 50%;
-		    right: 0;
+		    left: 0;
 		    width: 40px;
 		    padding: 8px;
 		    background: rgba(0,0,0,.5);
 		    border-radius: 10px;
-		    border-top-right-radius: 0;
-        	border-bottom-right-radius: 0;
+		    border-top-left-radius: 0;
+        	border-bottom-left-radius: 0;
         	transition: .3s;
 		}
 		.dowloadAppIcons:hover {
@@ -36,7 +36,6 @@
 		    height: auto;
 		}
 		
-		
 		.dowloadAppBanner {
 		    position: sticky;
 		    top: 0;
@@ -53,6 +52,7 @@
 			flex-direction: column;
 			-ms-align-items: center;
 			align-items: center;
+			justify-content: center;
 		    width: 100%;
 		    height: 100vh;
 		    padding: 0 20%;
@@ -107,7 +107,6 @@
 		    font-size: 18px;
 		    cursor: pointer;
 		}
-		
 		.downloadApp {
 			position: sticky;
 			top: 0;
@@ -189,8 +188,6 @@
             	font-size: 18px;
             	line-height: 18px;
             }
-		}
-		@media (max-width: 390px) {
 			.downloadApp {
 				padding: 10px;
 			}
@@ -238,8 +235,8 @@
     <div class="downloadApp">
         <button class="downloadApp__close"></button>
         <img src="logo_mobile.png" alt="" class="downloadApp__logo">
-        <img src="iOS.png" alt="" class="downloadApp__logoOS">
-        <a href="ios" class="downloadApp__link">
+        <img src="android.png" alt="" class="downloadApp__logoOS">
+        <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="downloadApp__link">
             5% скидка в приложении!
             <span>Установить приложение</span>
         </a>
@@ -248,70 +245,41 @@
 		<img src="downloadAppBannerImg.jpg" alt="" class="dowloadAppBanner__img">
 		<img src="downloadAppBannerLogo.png" alt="" class="dowloadAppBanner__logo">
 		<div class="dowloadAppBanner__text">-10% на заказ в приложении!</div>
-		<a href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppBanner__link">Скачать приложение</a>
+		<a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppBanner__link">Скачать приложение</a>
 		<button class="dowloadAppBanner__close">Спасибо, не нужно</button>
 	</div>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	<h1>asfasfasf</h1>
-	
-	
+
 	<div class="dowloadAppIcons">
 	   <a target="_blank" href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppIcons__item">
 	       <img src="android.png" alt="">
 	   </a>
-	   <a target="_blank" href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppIcons__item">
-	       <img src="iOS.png" alt="">
-	   </a>
+	  <!--  <a target="_blank" href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppIcons__item">
+	      <img src="iOS.png" alt="">
+	  </a> -->
 	</div>
 	
 	<script>
-		if ($(window).width() <= 991) {
+	    $('.downloadApp').hide()
+		if ($(window).width() <= 991 || getPlatform() !== 'Windows' || getPlatform() !== 'iPad') {
 			$('.dowloadAppBanner').show()
 			$('.dowloadAppIcons').hide()
-			$('.downloadApp').hide()
 			$('body').css('overflowY', 'hidden')
 		} else {
 			$('.dowloadAppBanner').hide()
-			$('.downloadApp').hide()
 		}
 		
-		if (getPlatform() == 'Android') {
-			$('.downloadApp').addClass('android')
-			$('.downloadApp__link').attr('href', 'https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US')
-			$('.downloadApp__logoOS').attr('src', 'android.png')
-			$('.dowloadAppBanner__link').attr('href', 'https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US')
+		if (getPlatform() == 'iPhone' || getPlatform() == 'iPad') {
+			$('.downloadApp__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4')
+			$('.downloadApp__logoOS').attr('src', 'iOS.png')
+			$('.dowloadAppBanner__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4')
+			// $('.dowloadAppBanner').hide()
+			// $('.downloadApp').hide()
+		}
+		if (getPlatform() == 'Windows') {
+			$('.dowloadAppBanner').hide()
+			if ($(window).width() > 991) {
+			    $('.dowloadAppIcons').show()
+			}
 		}
 		$('.downloadApp__close').click(function(event) {
 			$(this).parent().hide()

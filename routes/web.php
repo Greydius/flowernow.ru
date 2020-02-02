@@ -34,6 +34,11 @@ Route::get('/flowers/{slug}', [
         'as' => 'product.show'
 ]);
 
+Route::get('/favorites/', [
+        'uses' => 'FavoritesController@index',
+        'as' => 'favorites.show'
+]);
+
 Route::get('/catalog/{query?}', [
         'uses' => 'ProductsController@filter',
         'as' => 'product.catalog'

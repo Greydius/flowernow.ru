@@ -62,10 +62,18 @@
 
             @endif
 
-            <div class="social-likes social-likes_single" data-counters="no" data-single-title="Поделиться">
-                <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
-                <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
-                <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
+            <div class="product-card-bottom">
+              <div class="add-favorites" data-product-id="{{ $product->id }}">
+                <span class="add-favorites__like"></span>
+                <span class="add-favorites__text">Сохранить в избранное</span>
+                <span class="add-favorites__text--remove">Убрать из избранного</span>
+              </div>
+              <div class="social-likes social-likes_single" data-counters="no" data-single-title="Поделиться">
+                  <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
+                  <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
+                  <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
+              </div>
+
             </div>
 
 
