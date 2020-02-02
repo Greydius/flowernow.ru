@@ -11,24 +11,32 @@
                 <i class="fa fa-star{{ !$_item['star'] ? '-o' : '' }}"></i>
             </a>
         @endif
-        <a href="/flowers/{{ $_item['slug'] }}">
-            <figure>
-                <img class="img-responsive lazy" data-src="{{ $_item['photoUrl'] }}">
+        <div class="product-image">
+          <a href="/flowers/{{ $_item['slug'] }}" class="product-image">
+              <figure>
+                  <img class="img-responsive lazy" data-src="{{ $_item['photoUrl'] }}">
 
-                <figcaption>
-                    <p>
-                        @foreach($_item->compositions as $composition)
-                            {{ $composition->flower->name }} {{ $composition->qty ? ' - '.$composition->qty.' шт.' : null }}<br>
-                        @endforeach
-                        {{ $_item['description'] }}
-                    </p>
-                    <ul class="list-inline text-center">
-                        <li><span class="glyphicon glyphicon-resize-horizontal"></span> {{ $_item['width'] }} см</li>
-                        <li><span class="glyphicon glyphicon-resize-vertical"></span> {{ $_item['height'] }} см</li>
-                    </ul>
-                </figcaption>
-            </figure>
-        </a>
+                  <figcaption>
+                      <p>
+                          @foreach($_item->compositions as $composition)
+                              {{ $composition->flower->name }} {{ $composition->qty ? ' - '.$composition->qty.' шт.' : null }}<br>
+                          @endforeach
+                          {{ $_item['description'] }}
+                      </p>
+                      <ul class="list-inline text-center">
+                          <li><span class="glyphicon glyphicon-resize-horizontal"></span> {{ $_item['width'] }} см</li>
+                          <li><span class="glyphicon glyphicon-resize-vertical"></span> {{ $_item['height'] }} см</li>
+                      </ul>
+                  </figcaption>
+              </figure>
+          </a>
+          @if(Route::currentRouteName() == 'favorites.show')
+            <span data-product-id="{{ $_item['id'] }}" class="product-image__close">X</span>
+          @endif
+          @if(Route::currentRouteName() != 'favorites.show')
+            <span data-product-id="{{ $_item['id'] }}" class="product-image__like"></span>
+          @endif
+        </div>
 
         <div class="description-media-item">
             <div class="row">

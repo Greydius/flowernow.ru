@@ -327,15 +327,10 @@
       cursor: pointer;
       z-index: 2;
     }
-    @media all and (max-width: 991px) and (min-width: 0) {
-      .product-image__like {
-        bottom: 20px;
-      }
-    }
     @media all and (min-width: 1025px){
-        .product-image__like:hover {
-          background-image: url(/images/red_heart.png);
-        }
+      .product-image__like:hover {
+        background-image: url(/images/red_heart.png);
+      }
     }
     .product-image__like.active {
       background-image: url(/images/red_heart.png);
@@ -401,9 +396,9 @@
       margin-right: 10px;
     }
     @media all and (min-width: 1025px){
-        .add-favorites:hover .add-favorites__like {
-          background-image: url(/images/red_heart.png);
-        }
+      .add-favorites:hover .add-favorites__like {
+        background-image: url(/images/red_heart.png);
+      }
     }
     .add-favorites.active .add-favorites__like {
       background-image: url(/images/red_heart.png);
@@ -427,11 +422,6 @@
     }
     .add-favorites.active .add-favorites__text {
       display: none;
-    }
-    
-    .social-likes_single {
-        right: 0 !important;
-        left: initial !important;
     }
 	</style>
 	<script>
@@ -567,10 +557,7 @@
                     <div class="nav-city-wraper">
 
                         @if(!empty($holiday_icon))
-                            <a class="" href="/">
-                              <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" alt="" class="holiday-img visible-xs visible-sm">
-                            </a>
-                            
+                            <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[0].'.png') }}" alt="" class="holiday-img visible-xs visible-sm">
                             <img src="{{ asset('assets/front/images/holiday_icons/'.$holiday_icon[1].'.png') }}" alt="" class="holiday-img visible-md visible-lg">
                             <a class="navbar-brand logo visible-md visible-lg" href="/"></a>
                         @else
@@ -1380,87 +1367,106 @@ if(strpos(location.href, '/en/')){
 			})
 		});
 
+    function getCookie(name) {
+      let matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+      ));
+      return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function setCookie(name, value, options = {}) {
+      let date = new Date(Date.now() + 365 * 24 * 60 * 60);
+      date = date.toUTCString();
+
+      options = {
+        path: '/',
+        domain: 'floristum.ru',
+        expires: date
+        // при необходимости добавьте другие значения по умолчанию
+        ...options
+      };
+
+      if (options.expires.toUTCString) {
+        options.expires = options.expires.toUTCString();
+      }
+
+      let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+      for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+          updatedCookie += "=" + optionValue;
+        }
+      }
+
+      document.cookie = updatedCookie;
+    }
+
+    function updateFavorites() {
+      var elements = $(".product-image__like, .add-favorites");
+      var heart = $(".favorites-heart");
+      var idsString = getCookie('favorites');
+      if(idsString != ''){
+        var ids = idsString.split(',');
+        heart.addClass('active');
+        heart.text(ids.length);
+        elements.each(function(i, el){
+          var id = el.dataset.productId;
+          if(ids.includes(id)){
+            $(el).addClass('active');
+          }else{
+            $(el).removeClass('active');
+          }
+        })
+      }else {
+        heart.removeClass('active');
+        elements.removeClass('active');
+      }
+      
+    }
+    $(".product-image__like, .add-favorites").click(function(){
+      var id = this.dataset.productId;
+      var idsString = getCookie('favorites');
+      if(idsString != undefined){
+        var ids = idsString.split(',');
+        if(ids.includes(id)){
+          var newIds = ids.filter((el) => el !== id )
+          setCookie('favorites', newIds)
+        }else {
+          if(idsString == '') {
+            setCookie('favorites', id)
+          }else {
+            ids.push(id);
+            setCookie('favorites', ids)
+          }
+        }
+      }else {
+        setCookie('favorites', id)
+      }
+      updateFavorites()
+    })
+    
+    $(".product-image__close").click(function(){
+      var id = this.dataset.productId;
+      var idsString = getCookie('favorites');
+      if(idsString != ''){
+        var ids = idsString.split(',');
+        if(ids.includes(id)){
+          var newIds = ids.filter((el) => el !== id )
+          setCookie('favorites', newIds);
+          document.location.reload();
+        }
+      }
+      updateFavorites()
+    })
+    updateFavorites()
+
 		
 	</script>
 
 <!--lang switcher end-->
 <?php } ?>
-
-<script>
-function getCookie(name) {
-  let matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-  ));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  var domain = "domain=.floristum.ru";
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;" + domain;
-}
-
-function updateFavorites() {
-  var elements = $(".product-image__like, .add-favorites");
-  var heart = $(".favorites-heart");
-  var idsString = getCookie('favorites');
-  if(idsString != ''){
-    var ids = idsString.split(',');
-    heart.addClass('active');
-    heart.text(ids.length);
-    elements.each(function(i, el){
-      var id = el.dataset.productId;
-      if(ids.includes(id)){
-        $(el).addClass('active');
-      }else{
-        $(el).removeClass('active');
-      }
-    })
-  }else {
-    heart.removeClass('active');
-    elements.removeClass('active');
-  }
-  
-}
-$(".product-image__like, .add-favorites").click(function(){
-  var id = this.dataset.productId;
-  var idsString = getCookie('favorites');
-  if(idsString != undefined){
-    var ids = idsString.split(',');
-    if(ids.includes(id)){
-      var newIds = ids.filter((el) => el !== id )
-      setCookie('favorites', newIds, 365)
-    }else {
-      if(idsString == '') {
-        setCookie('favorites', id, 365)
-      }else {
-        ids.push(id);
-        setCookie('favorites', ids, 365)
-      }
-    }
-  }else {
-    setCookie('favorites', id, 365)
-  }
-  updateFavorites()
-})
-
-$(".product-image__close").click(function(){
-  var id = this.dataset.productId;
-  var idsString = getCookie('favorites');
-  if(idsString != ''){
-    var ids = idsString.split(',');
-    if(ids.includes(id)){
-      var newIds = ids.filter((el) => el !== id )
-      setCookie('favorites', newIds, 365);
-      document.location.reload();
-    }
-  }
-  updateFavorites()
-})
-updateFavorites()
-</script>
 
 @if(Auth::user() && Auth::user()->id === 427)
 <style src="/assets/test.css"></style>
