@@ -34,7 +34,7 @@
             <span data-product-id="{{ $_item['id'] }}" class="product-image__close">X</span>
           @endif
           @if(Route::currentRouteName() != 'favorites.show')
-            <span data-product-id="{{ $_item['id'] }}" class="product-image__like"></span>
+            <span data-product-id="{{ $_item['id'] }}" title="" class="product-image__like"></span>
           @endif
         </div>
 

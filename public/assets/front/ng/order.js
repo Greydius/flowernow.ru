@@ -146,10 +146,14 @@ $(document).ready(function() {
                 var receiving_date = $('[name="receiving_date"]');
                 var receiving_time = $('[name="receiving_time"]');
                 var customer_phone = $('.customer_phone:visible');
+                var customer_email = $('.order-email:visible');
+
+                var isEntity = $(".payment-type.entity").hasClass('active');
 
                 receiving_date.removeClass('error');
                 receiving_time.removeClass('error');
                 customer_phone.removeClass('error');
+                customer_email.removeClass('error');
 
 
                 telInput.filter(":visible").each(function () {
@@ -170,6 +174,16 @@ $(document).ready(function() {
                         $.notify("Введите номер телефона", "error");
                         customer_phone.addClass('error');
                         valid = false;
+                }
+
+                if (isEntity){
+                  if (customer_email.val() == '') {
+                    $.notify("Введите email", "error");
+                    customer_email.addClass('error');
+                  }else if (!customer_email.val().match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+                    $.notify("Введите корректный email", "error");
+                    customer_email.addClass('error');
+                  }
                 }
 
 

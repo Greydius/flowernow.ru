@@ -22,7 +22,16 @@
 		@yield('head')
 		
 		<link rel="shortcut icon" href="{{ asset('images/icons/favicon.ico') }}" type="image/x-icon">
-
+    <style>
+      .only-mobile {
+        display: none !important;
+      }
+      @media all and (max-width: 992px){
+        .only-mobile {
+          display: initial !important;
+        }
+      }
+    </style>
 		<script type="text/javascript">
 			var jsonData={};
 			var routes = {};
@@ -387,6 +396,18 @@
 									</span>
                                 </a>
                             </li>
+              <li class="m-menu__item only-mobile">
+                <a href="{{ route('logout') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon flaticon-logout"></i>
+                  <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                      <span class="m-menu__link-text">
+                        Выход
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </li>
 						</ul>
 					</div>
 					<!-- END: Aside Menu -->
@@ -467,7 +488,100 @@
 		<script type="text/javascript">
 			jsonData.shop = {!! $shop->toJson() !!};
 			angular.module("flowApp").constant("CSRF_TOKEN", '{{ csrf_token() }}');
-    	</script>
+      </script>
+      <script>
+
+		if ($(window).width() <= 991 && getPlatform() == 'Android') { // проверка на Андроид временна
+    		$(document).ready(function(){
+                $(".setCookie").click(function () {
+                $.cookie("dowloadAppBanner", "", { expires:1, path: '/' });
+                $("#bg_popup").hide();
+                });
+                 
+                if ( $.cookie("dowloadAppBanner") == null )
+                {
+                setTimeout(function(){
+                $("#bg_popup").show();
+                }, 0)
+                }
+                else { $("#bg_popup").hide();
+                }
+            });
+            $(document).ready(function(){
+                $("#setCookie").click(function () {
+                $.cookie("dowloadApp", "", { expires:1, path: '/' });
+                $("#bg_popup2").hide();
+                });
+                 
+                if ( $.cookie("dowloadApp") == null )
+                {
+                setTimeout(function(){
+                $('body').css('padding-top', '87px')
+                $("#bg_popup2").show();
+                }, 0)
+                }
+                else {
+                    $('.navbar-fixed-top').css('top', '0')
+        			$('.modal').css('top', '0')
+        			$('.translate_div').css('top', '80px')
+        			$('body').css('padding-top', '35px')
+                    $("#bg_popup2").hide()
+                }
+            });
+		}
+
+        if (getPlatform() == 'Android') { // проверка на Андроид временна
+        		if ($(window).width() <= 991 && getPlatform() !== 'Windows' && getPlatform() !== 'iPad') {
+        			$('.dowloadAppBanner').css('display','flex')
+        			$('.dowloadAppIcons').hide()
+        			$('.downloadApp').css('display', 'flex')
+        			$('.navbar-fixed-top').css('top', '58px')
+        			$('.translate_div').css('top', '120px')
+        			$('.modal').css('top', '58px')
+        			$('body').css('padding-top', '87px')
+        		//	$('body').css('overflowY', 'hidden')
+        		}
+            
+        }
+		
+		if (getPlatform() == 'iPhone' || getPlatform() == 'iPad') {
+			$('.downloadApp__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4').html('Floristum уже в App store! <span>Скачать приложение</span>')
+			$('.downloadApp__logoOS').attr('src', 'http://floristum.ru/assets/front/img/iOS.png')
+			$('.dowloadAppBanner__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4')
+			$('.dowloadAppBanner__text').html('Floristum уже в App store!')
+			// $('.dowloadAppBanner').css('display','flex')
+		}
+		if (getPlatform() == 'Windows') {
+			$('.dowloadAppBanner').hide()
+			if ($(window).width() > 991) {
+			    $('.dowloadAppIcons').show()
+			}
+    	}
+		$('.downloadApp__close').click(function(event) {
+			$(this).parent().hide()
+			$('.navbar-fixed-top').css('top', '0')
+			$('.modal').css('top', '0')
+			$('.translate_div').css('top', '80px')
+			$('body').css('padding-top', '35px')
+		});
+		$('.dowloadAppBanner__close').click(function(event) {
+		    $(this).parent().hide()
+			$('body').css({
+			    'overflowY': 'auto',
+			    'padding-top': '87px'
+			})
+			
+		});
+		$('.dowloadAppBanner__closeBtn').click(function(event) {
+		    $(this).parent().hide()
+			$('body').css({
+			    'overflowY': 'auto',
+			    'padding-top': '87px'
+			})
+		});
+
+		
+	</script>
 		<!--end::Base Scripts -->
 
 	</body>

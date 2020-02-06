@@ -23,9 +23,7 @@ class DomainMiddleware
             */
 
         $host = strtolower(request()->getHost());
-        $shortHost = str_replace('floristum.ru', '', $host);
-        $shortHost = str_replace('flowenow.ru', '', $shortHost);
-        $shortHost = str_replace('flownow.loc', '', $shortHost);
+        $shortHost = str_replace(env('APP_DOMAIN'), '', $host);
 
         $subdomains = explode('.', $shortHost);
         if(count($subdomains) > 2) {

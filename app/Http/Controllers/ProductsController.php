@@ -257,7 +257,12 @@ class ProductsController extends Controller
                         'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
                 ];
 
-                $size = getimagesize(public_path().$product->photoUrl);
+                if(strpos($product->photoUrl, 'http') === -1) {
+                  $size = getimagesize(public_path().$product->photoUrl);
+                }else {
+                  $size = getimagesize($product->photoUrl);
+                }
+                
                 if($size) {
                         $params['pageImageWidth'] = $size[0];
                         $params['pageImageHeight'] = $size[1];

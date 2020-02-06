@@ -25,7 +25,7 @@
         <div class="col-md-5">
 
             @if(count($product->photos) == 1)
-
+              <div class="product-wrapper">
                 <figure class="main-picture">
                     @if(empty($product->single))
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
@@ -36,7 +36,10 @@
                     @endif
 
                 </figure>
-
+                <div class="add-favorites" data-product-id="{{ $product->id }}">
+                  <span class="add-favorites__like"></span>
+                </div>
+              </div>
 
             @else
 
@@ -62,18 +65,11 @@
 
             @endif
 
-            <div class="product-card-bottom">
-              <div class="add-favorites" data-product-id="{{ $product->id }}">
-                <span class="add-favorites__like"></span>
-                <span class="add-favorites__text">Сохранить в избранное</span>
-                <span class="add-favorites__text--remove">Убрать из избранного</span>
-              </div>
-              <div class="social-likes social-likes_single" data-counters="no" data-single-title="Поделиться">
-                  <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
-                  <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
-                  <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
-              </div>
 
+            <div class="social-likes social-likes_single" data-counters="no" data-single-title="Поделиться">
+                <div class="facebook" title="Поделиться ссылкой на Фейсбуке">Facebook</div>
+                <div class="vkontakte" title="Поделиться ссылкой во Вконтакте">Вконтакте</div>
+                <div class="odnoklassniki" title="Поделиться ссылкой в Одноклассниках">Одноклассники</div>
             </div>
 
 

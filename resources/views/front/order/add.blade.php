@@ -240,13 +240,13 @@
                         </div>
 
                         <p class="h4"><strong>Когда доставить</strong></p>
-                        <div class="row">
+                        <div class="row delivery-wrapper">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input type="text" class="form-control datepicker" placeholder="Дата доставки" name="receiving_date" readonly>
+                                    <input type="text" class="form-control datepicker delivery-date" placeholder="Дата доставки" name="receiving_date" readonly>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 delivery-default-timepicker">
                                 <div class="form-group">
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
@@ -259,6 +259,7 @@
                                         <option value="с 18:00 до 20:00">с 18:00 до 20:00</option>
                                         <option value="с 20:00 до 22:00">с 20:00 до 22:00</option>
                                         <option value="с 22:00 до 24:00">с 22:00 до 24:00</option>
+                                        <option style="display: none" value="в течении дня">в течении дня</option>
                                         <!--
                                         <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
                                         <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
@@ -279,6 +280,40 @@
                                         -->
                                     </select>
                                 </div>
+                            </div>
+                            <div class="col-sm-6 delivery-love-days-timepicker">
+                                <div class="form-group">
+                                    <select class="form-control" name="receiving_time">
+                                        <option value="" selected="">Время доставки</option>
+                                        <option value="Время согласовать">Согласовать</option>
+                                        <option value="с 08:00 до 10:00">с 08:00 до 11:00</option>
+                                        <option value="с 10:00 до 12:00">с 11:00 до 14:00</option>
+                                        <option value="с 12:00 до 14:00">с 14:00 до 17:00</option>
+                                        <option value="с 14:00 до 16:00">с 17:00 до 20:00</option>
+                                        <option value="с 16:00 до 18:00">с 20:00 до 23:00</option>
+                                        <!--
+                                        <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
+                                        <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
+                                        <option value="с 10:00 до 11:00">с 10:00 до 11:00</option>
+                                        <option value="с 11:00 до 12:00">с 11:00 до 12:00</option>
+                                        <option value="с 12:00 до 13:00">с 12:00 до 13:00</option>
+                                        <option value="с 13:00 до 14:00">с 13:00 до 14:00</option>
+                                        <option value="с 14:00 до 15:00">с 14:00 до 15:00</option>
+                                        <option value="с 15:00 до 16:00">с 15:00 до 16:00</option>
+                                        <option value="с 16:00 до 17:00">с 16:00 до 17:00</option>
+                                        <option value="с 17:00 до 18:00">с 17:00 до 18:00</option>
+                                        <option value="с 18:00 до 19:00">с 18:00 до 19:00</option>
+                                        <option value="с 19:00 до 20:00">с 19:00 до 20:00</option>
+                                        <option value="с 20:00 до 21:00">с 20:00 до 21:00</option>
+                                        <option value="с 21:00 до 22:00">с 21:00 до 22:00</option>
+                                        <option value="с 22:00 до 23:00">с 22:00 до 23:00</option>
+                                        <option value="с 23:00 до 24:00">с 23:00 до 24:00</option>
+                                        -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 delivery-woman-days-hint">
+                                <div>Доставка 7-8 марта осуществляется <b>в течение дня до 22:00 по предварительному звонку</b>, при этом <span class="dashed-text" title="Получатель не узнаёт о том, что предмет доставки - цветы.">эффект сюрприза</span> сохраняется.</div>
                             </div>
                         </div>
                         <div class="form1">
@@ -317,21 +352,23 @@
                         <input type="hidden" name="products[]" value="<% product.id %>">
                         <div class="order-tabs">
                             <ul class="nav nav-tabs" role="tablist" id="payment_methods_list">
-                                <li role="presentation" class="active"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab" data-payment="card">
+                                <li role="presentation" class="active payment-type"><a href="#oplata1" aria-controls="oplata1" role="tab" data-toggle="tab" data-payment="card">
                                         <figure><img height="40" src="{{ asset('assets/front/img/karta.png') }}" alt="..."></figure>
                                         Банковская карта</a>
                                 </li>
 
-                                <li role="presentation">
+                                <li role="presentation" class="payment-type">
                                     <a href="#oplata2" aria-controls="profile" role="oplata2" data-toggle="tab" data-payment="cash">
                                         <figure><img  height="40" src="{{ asset('assets/front/img/nal.png') }}" alt="..."></figure>
                                         Наличные
                                     </a>
                                 </li>
 
-                                <li role="presentation"><a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs">
+                                <li role="presentation" class="payment-type entity">
+                                  <a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs">
                                         <figure><img height="40" src="{{ asset('assets/front/img/beznal.png') }}" alt="..."></figure>
-                                        Безнал для юр.</a>
+                                        Безнал для юр.
+                                  </a>
                                 </li>
                             </ul>
 
@@ -472,6 +509,12 @@
     <link href="{{ asset('assets/plugins/owl.carousel/owl.carousel.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('assets/plugins/owl.carousel/owl.theme.default.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css"/>
+    <style>
+      .dashed-text {
+        border-bottom: 1px dashed #555C69;
+        cursor: pointer;
+      }
+    </style>
 @stop
 
 @section('footer')
@@ -490,5 +533,45 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
     <script src="{{ asset('assets/front/ng/order.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
+    <script>
+      $(".dashed-text").tooltip();
+      $(".delivery-date").change(function(){
+        var date = $(this).val();
+        var dateWithoutYear = moment(date, "DD.MM.YYYY").format("DD.MM");
+
+        var isLoveDay = dateWithoutYear === '14.02';
+        var isWomanDays = dateWithoutYear === '07.03' || dateWithoutYear === '08.03';
+
+        var defaultTimepicker = $(".delivery-default-timepicker");
+        var loveDayTimepicker = $(".delivery-love-days-timepicker");
+        var womanDaysHint = $(".delivery-woman-days-hint");
+
+        function toDefault() {
+          defaultTimepicker.find('select').val('');
+          defaultTimepicker.find("select").attr("name", 'receiving_time');
+          defaultTimepicker.show();
+
+          loveDayTimepicker.find("select").attr("name", 'receiving_time2');
+          loveDayTimepicker.hide();
+          womanDaysHint.hide();
+        }
+
+        if(isWomanDays){
+          toDefault();
+          defaultTimepicker.hide();
+          defaultTimepicker.find('select').val('в течении дня');
+          womanDaysHint.show();
+        }else if(isLoveDay) {
+          toDefault();
+          defaultTimepicker.find("select").attr("name", 'receiving_time2');
+          defaultTimepicker.hide();
+
+          loveDayTimepicker.find("select").attr("name", 'receiving_time');
+          loveDayTimepicker.show();
+        }else {
+          toDefault();
+        }
+      })
+    </script>
 
 @stop

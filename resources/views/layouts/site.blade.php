@@ -385,11 +385,19 @@
       align-items: center;
     }
 
+    .product-wrapper {
+      position: relative;
+    }
+
     .add-favorites {
+      position: absolute;
+      right: 50%;
+      bottom: 5px;
       flex: 1;
       display: flex;
       justify-content: flex-start;
       align-items: center;
+      margin-right: -11.5px;
     }
 
     .add-favorites__like {
@@ -398,7 +406,6 @@
       height: 33px;
       background-image: url(/images/white_heart.png);
       cursor: pointer;
-      margin-right: 10px;
     }
     @media all and (min-width: 1025px){
         .add-favorites:hover .add-favorites__like {
@@ -427,11 +434,6 @@
     }
     .add-favorites.active .add-favorites__text {
       display: none;
-    }
-    
-    .social-likes_single {
-        right: 0 !important;
-        left: initial !important;
     }
 	</style>
 	<script>
@@ -1289,6 +1291,9 @@ if(strpos(location.href, '/en/')){
 
 </script>
 
+<!--lang switcher end-->
+<?php } ?>
+
 <script>
 
 		if ($(window).width() <= 991 && getPlatform() == 'Android') { // проверка на Андроид временна
@@ -1383,9 +1388,6 @@ if(strpos(location.href, '/en/')){
 		
 	</script>
 
-<!--lang switcher end-->
-<?php } ?>
-
 <script>
 function getCookie(name) {
   let matches = document.cookie.match(new RegExp(
@@ -1395,18 +1397,29 @@ function getCookie(name) {
 }
 
 function setCookie(cname, cvalue, exdays) {
+  var domainLink = window.location.host;
+  if(domainLink.split('.').length > 2){
+    var city = window.location.host.split('.', 1)[0];
+    domainLink = window.location.host.split(city)[1];
+  }
+  
   var d = new Date();
   d.setTime(d.getTime() + (exdays*24*60*60*1000));
   var expires = "expires="+ d.toUTCString();
-  var domain = "domain=.floristum.ru";
+  var domain = "domain=" + domainLink;
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;" + domain;
 }
+if($(window).width() >= 1025){
+  var favoritesButtons = $(".product-image__like, .add-favorites");
+  favoritesButtons.tooltip();  
+}
 
-function updateFavorites() {
+
+function updateFavorites(obj = null) {
   var elements = $(".product-image__like, .add-favorites");
   var heart = $(".favorites-heart");
   var idsString = getCookie('favorites');
-  if(idsString != ''){
+  if(idsString != '' && idsString != undefined){
     var ids = idsString.split(',');
     heart.addClass('active');
     heart.text(ids.length);
@@ -1414,8 +1427,22 @@ function updateFavorites() {
       var id = el.dataset.productId;
       if(ids.includes(id)){
         $(el).addClass('active');
+        $(el).attr('data-original-title', 'Убрать из избранного');
+        if(obj !== null){
+          obj.hide();
+          setTimeout(() => {
+            obj.show();
+          }, 300);
+        }
       }else{
         $(el).removeClass('active');
+        $(el).attr('data-original-title', 'Добавить в избранное');
+        if(obj !== null){
+          obj.hide();
+          setTimeout(() => {
+            obj.show();
+          }, 300);
+        }
       }
     })
   }else {
@@ -1443,7 +1470,7 @@ $(".product-image__like, .add-favorites").click(function(){
   }else {
     setCookie('favorites', id, 365)
   }
-  updateFavorites()
+  updateFavorites($(this))
 })
 
 $(".product-image__close").click(function(){
@@ -1459,7 +1486,7 @@ $(".product-image__close").click(function(){
   }
   updateFavorites()
 })
-updateFavorites()
+updateFavorites(null)
 </script>
 
 @if(Auth::user() && Auth::user()->id === 427)
