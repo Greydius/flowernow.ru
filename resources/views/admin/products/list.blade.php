@@ -74,7 +74,6 @@
                         </div>
 
                         <div class="col-md-3">
-                            <!--
                             <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
                                 <span>
                                     <i class="la la-arrows-v"></i>
@@ -83,7 +82,6 @@
                                     </span>
                                 </span>
                             </button>
-                            -->
                         </div>
 
                         <div class="col-md-3">

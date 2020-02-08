@@ -21,6 +21,10 @@ class Product extends MainModel
 
         public $promoCode;
 
+        public static $hiddenApi = [
+                'clientPrice', 'shop', 'deliveryTime', 'fullPrice', 'slug', 'shop_id'
+        ];
+
         public static $photoRules = [
                 'file' => 'required | mimes:jpeg,jpg,png,PNG,JPEG,JPG | max:15000',
         ];
@@ -564,5 +568,18 @@ class Product extends MainModel
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
                         ->whereNull('single')
                         ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
+        }
+
+        public static function validateField($fieldName, $fieldValue) {
+                $response = [
+                        'valid' => true
+                ];
+                $validator = \Illuminate\Support\Facades\Validator::make([$fieldName => $fieldValue], [$fieldName => self::$productRules[$fieldName]], self::$productRulesMessages);
+                if($validator->fails()) {
+                        $response['valid'] = false;
+                        $response['message'] = $validator->messages()->first();
+                }
+
+                return $response;
         }
 }
