@@ -37,7 +37,7 @@ Route::group(['namespace' => 'Api'], function () {
                 $popularProducts = [];
                 $innerRequest = new Request();
 
-                $productTypes = App\Model\ProductType::select(['id', 'name'])->where('show_on_main', '1')->inCity($cityId)->orderBy('priority')->get();
+                $productTypes = App\Model\ProductType::select(['id', 'name', 'icon'])->where('show_on_main', '1')->inCity($cityId)->orderBy('priority')->get();
                 foreach($productTypes as $productType) {
                         $productType->request = 'productType/'.$productType->id;
 
@@ -167,4 +167,109 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
 
                 return $order;
         });
+
+        Route::group(['prefix' => 'shop'], function() {
+                Route::get('/products', function(Request $request) {
+                        $user = $request->user();
+                        $shop = $user->getShop();
+
+                        $productRequestModel = $shop->products()->whereNull('single')->with(['compositions.flower', 'photos'])->orderByRaw("status = 0 DESC, status = 3 DESC, status = 2 DESC, status = 1 DESC, id DESC");
+
+                        $paginator = $productRequestModel->paginate(2);
+                        $data = $paginator->makeHidden(App\Model\Product::$hiddenApi);
+                        $paginator->data = $data;
+                        return $paginator;
+                });
+
+                Route::post('/product/{id}', function($id, Request $request) {
+                        $user = $request->user();
+                        $shop = $user->getShop();
+
+                        $product = App\Model\Product::where('id', $id)->where('shop_id', $shop->id)->firstOrFail();
+
+                        if ($request->has('name')) {
+                                $validator = App\Model\Product::validateField('name', $request->input('name'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['massage']
+                                        ], 400);
+                                }
+
+                                $product->name = $request->input('name');
+                        }
+
+                        if ($request->has('price')) {
+                                $validator = App\Model\Product::validateField('price', $request->input('price'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['message']
+                                        ], 400);
+                                }
+
+                                $product->price = $request->input('price');
+                        }
+
+                        if ($request->has('description')) {
+                                $validator = App\Model\Product::validateField('description', $request->input('description'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['message']
+                                        ], 400);
+                                }
+
+                                $product->description = $request->input('description');
+                        }
+
+                        if ($request->has('width')) {
+                                $validator = App\Model\Product::validateField('width', $request->input('width'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['message']
+                                        ], 400);
+                                }
+
+                                $product->width = $request->input('width');
+                        }
+
+                        if ($request->has('height')) {
+                                $validator = App\Model\Product::validateField('height', $request->input('height'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['message']
+                                        ], 400);
+                                }
+
+                                $product->height = $request->input('height');
+                        }
+
+                        if ($request->has('make_time')) {
+                                $validator = App\Model\Product::validateField('make_time', $request->input('make_time'));
+                                if (!$validator['valid']) {
+                                        return response()->json([
+                                                'error' => true,
+                                                'message' => $validator['message']
+                                        ], 400);
+                                }
+
+                                $product->make_time = $request->input('make_time');
+                        }
+
+                        if($product->save()) {
+                                return response()->json([
+                                        'error' => false,
+                                        'data' => $product->makeHidden(App\Model\Product::$hiddenApi)
+                                ], 200);
+                        }
+
+                        return response()->json([
+                                'error' => false
+                        ], 400);
+                });
+        });
+
 });
