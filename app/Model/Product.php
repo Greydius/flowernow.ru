@@ -438,8 +438,8 @@ class Product extends MainModel
                         })->where('price', '>', 0)
                         ->where('status', 1)
                         ->where('pause', 0)
-                        ->whereIn('single', $ids)
-                        ->orderBy(\DB::raw('RAND()'))->limit(6)->get();
+                        // ->whereIn('single', $ids)
+                        ->orderBy(\DB::raw('RAND()'))->limit(8)->get();
 
 
 

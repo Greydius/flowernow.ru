@@ -96,8 +96,8 @@ class ProductsController extends Controller
                         */
                 ];
 
-                $singleProductsIds = [];
-                //$singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
+                // $singleProductsIds = [];
+                $singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
                 if(empty($blocks)) {
                         $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
                 }
