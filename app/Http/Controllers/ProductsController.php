@@ -82,18 +82,14 @@ class ProductsController extends Controller
                 $productTypes = ProductType::where('show_on_main', '1')->get();
 
                 $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
-                        105, //красных тюльпанов
-                        97, //красных гвоздик
-                        /*
-                        105, //красных тюльпанов
-                        97, //красных гвоздик
-                        116, //красных пионов
-                        130, //разноцветных ирисов
-                        //138, //белых калл
-                        171, //белых фрезий
-                        183, //белых гортензий
-                        166 //белых анемонов
-                        */
+                  105, //красных тюльпанов
+                  97, //красных гвоздик
+                  116, //красных пионов
+                  130, //разноцветных ирисов
+                  //138, //белых калл
+                  171, //белых фрезий
+                  183, //белых гортензий
+                  166 //белых анемонов
                 ];
 
                 // $singleProductsIds = [];
@@ -1143,6 +1139,7 @@ class ProductsController extends Controller
                                         if(empty($request->flowers)) {
                                                 $request->flowers = [];
                                         }
+                                        print_r*
                                         $request->flowers = array_merge($request->flowers, [$flower->id]);
                                 }
                         }
