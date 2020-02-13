@@ -386,7 +386,7 @@ class Product extends MainModel
                               */
                       }
 
-                      static function popularSingle2($city_id = 637640, $ids = [], $orderRand = false, Request $request = null, $page = 1, $perPage = 15) {
+                      static function popularSingle2($city_id = 637640, $ids = [], $orderRand = true, Request $request = null, $page = 1, $perPage = 15) {
                               $products = Product::whereNotNull('single')
                                                 ->whereHas('shop', function($q) use($city_id)  {
                                                   $q->where('city_id', $city_id)->available();
@@ -426,11 +426,7 @@ class Product extends MainModel
                                       $query->where('city_id', $city_id)->available();
                               });
                               
-                              if($orderRand) {
-                                      $_products->orderBy(\DB::raw('RAND()'));
-                              } else {
-                                      $_products->orderByRaw(\DB::raw("FIELD(products.single, " . implode(',', $ids) . ")"));
-                              }
+                              $_products->orderBy(\DB::raw('RAND()'));
 
                               //\Log::debug($_products->toSql());
 
@@ -453,7 +449,7 @@ class Product extends MainModel
                                       ->where('status', 1)
                                       ->where('pause', 0)
                                       // ->whereIn('single', $ids)
-                                      ->orderBy(\DB::raw('RAND()'))->limit(8)->get();
+                                      ->inRandomOrder()->limit(8)->get();
 
 
 
