@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Http\Request;
 use App\Model\PromoCode;
+use App\Model\SingleProduct;
 
 class Product extends MainModel
 {
@@ -202,250 +203,263 @@ class Product extends MainModel
                                         */
                                 });
 
-/*
-                                $productRequest->whereHas('productType', function($query) use ($request) {
-                                        $query->where('slug', $request->product_type);
-                                });
-                                */
+              /*
+                                              $productRequest->whereHas('productType', function($query) use ($request) {
+                                                      $query->where('slug', $request->product_type);
+                                              });
+                                              */
 
-                        }
-/*
-                        if(!empty($request->product_type) && $request->product_type != 'all') {
-                                $productRequest->whereHas('productType', function($query) use ($request) {
-                                        $query->where('slug', $request->product_type);
-                                });
-                        }
-*/
+                                      }
+              /*
+                                      if(!empty($request->product_type) && $request->product_type != 'all') {
+                                              $productRequest->whereHas('productType', function($query) use ($request) {
+                                                      $query->where('slug', $request->product_type);
+                                              });
+                                      }
+              */
 
-                        if(!empty($request->productPrice)) {
-                                $price = Price::find($request->productPrice);
-                                if(!empty($price)) {
-                                        $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
-                                }
-                        }
+                                      if(!empty($request->productPrice)) {
+                                              $price = Price::find($request->productPrice);
+                                              if(!empty($price)) {
+                                                      $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                              }
+                                      }
 
-                        if(!empty($request->price_from)) {
-                                $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
-                        }
+                                      if(!empty($request->price_from)) {
+                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
+                                      }
 
-                        if(!empty($request->price_to)) {
-                                $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
-                        }
+                                      if(!empty($request->price_to)) {
+                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
+                                      }
 
-                        if(!empty($request->flowers)) {
+                                      if(!empty($request->flowers)) {
 
-                                $flowers = Flower::whereIn('id', $request->flowers)->get();
+                                              $flowers = Flower::whereIn('id', $request->flowers)->get();
 
-                                $flowersSearchKeys = [];
-                                if(!empty($flowers)) {
-                                        foreach($flowers as $flower) {
-                                                if(!empty($flower->search_key)) {
-                                                        $flowersSearchKeys = array_merge($flowersSearchKeys, explode(',', $flower->search_key));
-                                                }
-                                        }
-                                }
+                                              $flowersSearchKeys = [];
+                                              if(!empty($flowers)) {
+                                                      foreach($flowers as $flower) {
+                                                              if(!empty($flower->search_key)) {
+                                                                      $flowersSearchKeys = array_merge($flowersSearchKeys, explode(',', $flower->search_key));
+                                                              }
+                                                      }
+                                              }
 
-                                //dd($flowersSearchKeys);
+                                              //dd($flowersSearchKeys);
 
-                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
-                                        $query->whereHas('compositions', function($query) use ($request) {
-                                                $query->whereIn('flower_id', $request->flowers);
-                                        });
+                                              $productRequest->where(function ($query) use ($request, $flowersSearchKeys) {
+                                                      $query->whereHas('compositions', function($query) use ($request) {
+                                                              $query->whereIn('flower_id', $request->flowers);
+                                                      });
 
-                                        foreach($flowersSearchKeys as $pk) {
-                                                $query->orWhere('name', 'like', '%'.$pk.'%')
-                                                        ->orWhere('description', 'like', '%'.$pk.'%');
-                                        }
-                                });
+                                                      foreach($flowersSearchKeys as $pk) {
+                                                              $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                                      ->orWhere('description', 'like', '%'.$pk.'%');
+                                                      }
+                                              });
 
-                                /*
-                                $productRequest->whereHas('compositions', function($query) use ($request) {
-                                        $query->whereIn('flower_id', $request->flowers);
-                                });
-                                */
+                                              /*
+                                              $productRequest->whereHas('compositions', function($query) use ($request) {
+                                                      $query->whereIn('flower_id', $request->flowers);
+                                              });
+                                              */
 
-                        }
+                                      }
 
-                        /*
-                        if(!empty($request->flower)) {
-                                $productRequest->whereHas('productType', function($query) use ($request) {
-                                        $query->where('slug', $request->product_type);
-                                });
-                        }
-                        */
+                                      /*
+                                      if(!empty($request->flower)) {
+                                              $productRequest->whereHas('productType', function($query) use ($request) {
+                                                      $query->where('slug', $request->product_type);
+                                              });
+                                      }
+                                      */
 
-                        if(!empty($request->color)) {
+                                      if(!empty($request->color)) {
 
-                                $productRequest->where('color_id', (int)$request->color);
-                        }
+                                              $productRequest->where('color_id', (int)$request->color);
+                                      }
 
-                        if(!empty($request->shop_id)) {
+                                      if(!empty($request->shop_id)) {
 
-                                $productRequest->where('shop_id', (int)$request->shop_id);
-                        }
+                                              $productRequest->where('shop_id', (int)$request->shop_id);
+                                      }
 
-                        if(!empty($request->order)) {
-                                if($request->order == 'price') {
-                                        $productRequest->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
-                                        $productRequest->whereNotIn('product_type_id', [7, 8, 9, 10]);
-                                } elseif($request->order == 'rand') {
-                                        $productRequest->orderBy(\DB::raw('RAND()'));
-                                }
+                                      if(!empty($request->order)) {
+                                              if($request->order == 'price') {
+                                                      $productRequest->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
+                                                      $productRequest->whereNotIn('product_type_id', [7, 8, 9, 10]);
+                                              } elseif($request->order == 'rand') {
+                                                      $productRequest->orderBy(\DB::raw('RAND()'));
+                                              }
 
-                                //$productRequest->appends($request->order);
+                                              //$productRequest->appends($request->order);
 
-                        } else {
-                                $productRequest->orderBy('star', 'DESC');
-                        }
+                                      } else {
+                                              $productRequest->orderBy('star', 'DESC');
+                                      }
 
-                        if(!empty($request->q)) {
+                                      if(!empty($request->q)) {
 
-                                $queryString = $request->q;
-                                $queryString = str_replace(',', ' ', $queryString);
-                                $queryString = str_replace('.', ' ', $queryString);
-                                $queryString = str_replace('-', ' ', $queryString);
-                                $queryString = str_replace('+', ' ', $queryString);
-                                $queryString = str_replace('/', ' ', $queryString);
-                                $queryString = preg_replace('!\s+!', ' ', $queryString);
-                                $queries = explode(' ', $queryString);
-
-
-                                if(!empty($queries)) {
-
-                                        $flowersBuilder = Flower::where('name', 'like', '%'.$queries[0].'%')->orWhere('search_key', 'like', '%'.$queries[0].'%');
-                                        for($i=1; $i<count($queries); $i++) {
-                                                if(strlen($queries[$i]) > 1) {
-                                                        $flowersBuilder->orWhere('name', 'like', '%'.$queries[$i].'%')->orWhere('search_key', 'like', '%'.$queries[$i].'%');
-                                                }
-                                        }
-
-                                        $flowers = $flowersBuilder->get();
-
-                                        $flowersSearchKeys = [];
-                                        if(!empty($flowers)) {
-                                                foreach($flowers as $flower) {
-                                                        $flowersSearchKeys[] = $flower->id;
-                                                }
-                                        }
-
-                                        if(!empty($flowersSearchKeys)) {
-                                                $productRequest->where(function ($query) use ($request, $flowersSearchKeys, $queries) {
-                                                        $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
-                                                                $query->whereIn('flower_id', $flowersSearchKeys);
-                                                        });
-
-                                                        foreach($queries as $pk) {
-                                                                $query->orWhere(function ($query) use ($request, $pk) {
-                                                                        $query->orWhere('name', 'like', '%'.$pk.'%')
-                                                                                ->orWhere('description', 'like', '%'.$pk.'%');
-                                                                });
-                                                        }
-                                                });
-                                        } else {
-                                                foreach($queries as $pk) {
-                                                        $productRequest->where(function ($query) use ($request, $pk) {
-                                                                $query->Where('name', 'like', '%'.$pk.'%')
-                                                                        ->orWhere('description', 'like', '%'.$pk.'%');
-                                                        });
-                                                }
-                                        }
+                                              $queryString = $request->q;
+                                              $queryString = str_replace(',', ' ', $queryString);
+                                              $queryString = str_replace('.', ' ', $queryString);
+                                              $queryString = str_replace('-', ' ', $queryString);
+                                              $queryString = str_replace('+', ' ', $queryString);
+                                              $queryString = str_replace('/', ' ', $queryString);
+                                              $queryString = preg_replace('!\s+!', ' ', $queryString);
+                                              $queries = explode(' ', $queryString);
 
 
-                                }
-                        }
-                }
+                                              if(!empty($queries)) {
 
-                Paginator::currentPageResolver(function () use ($currentPage) {
-                        return $currentPage;
-                });
+                                                      $flowersBuilder = Flower::where('name', 'like', '%'.$queries[0].'%')->orWhere('search_key', 'like', '%'.$queries[0].'%');
+                                                      for($i=1; $i<count($queries); $i++) {
+                                                              if(strlen($queries[$i]) > 1) {
+                                                                      $flowersBuilder->orWhere('name', 'like', '%'.$queries[$i].'%')->orWhere('search_key', 'like', '%'.$queries[$i].'%');
+                                                              }
+                                                      }
 
-                //echo $productRequest->toSql(); exit();
+                                                      $flowers = $flowersBuilder->get();
 
-                if(!empty($request->shop_id) && $request->shop_id == 499) {
-                        //echo $productRequest->toSql(); exit();
-                        //echo $city_id; exit();
-                }
+                                                      $flowersSearchKeys = [];
+                                                      if(!empty($flowers)) {
+                                                              foreach($flowers as $flower) {
+                                                                      $flowersSearchKeys[] = $flower->id;
+                                                              }
+                                                      }
 
-                if(!empty($request->t)) {
-                        //dd($request);
-                        echo $productRequest->toSql(); exit();
-                        //echo $city_id; exit();
-                }
+                                                      if(!empty($flowersSearchKeys)) {
+                                                              $productRequest->where(function ($query) use ($request, $flowersSearchKeys, $queries) {
+                                                                      $query->whereHas('compositions', function($query) use ($request, $flowersSearchKeys) {
+                                                                              $query->whereIn('flower_id', $flowersSearchKeys);
+                                                                      });
 
-                $products = $productRequest->paginate($perPage);
-
-                return $products;
-
-                /*
-                return \DB::table('products')
-                        ->select('products.*', 'shops.name AS shop_name')
-                        ->join('shops', 'shops.id', '=', 'products.shop_id')
-                        ->where('shops.city_id', $city_id)
-                        ->where('price', '>', 0)->get();
-                */
-        }
-
-        static function popularSingle2($city_id, $ids = [], $orderRand = false, Request $request = null, $page = 1, $perPage = 15) {
-                $_products = Product::with(['shop' => function ($query) {
-                        $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                }])->join(\DB::raw('
-                (SELECT MIN(p.id) AS id, p.single FROM products p  
-                INNER JOIN shops ON shops.id = p.shop_id
-                INNER JOIN 
-                (SELECT products.single, MIN(products.price + shops.delivery_price) AS min_price
-                FROM products 
-                INNER JOIN shops ON shops.id = products.shop_id
-                WHERE shops.city_id = ' . (int)$city_id . '
-                '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
-                AND products.status = 1 
-                AND products.pause = 0 
-                AND products.price > 0 
-                '.(!empty($ids) ? ' AND products.single IN (' . implode(',', $ids) . ')' : '').'               
-                GROUP BY single) AS single ON single.single = p.single AND single.min_price = (p.price + shops.delivery_price)
-                WHERE shops.city_id = ' . (int)$city_id . '
-                '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
-                AND p.status = 1 
-                AND p.pause = 0 
-                AND p.price > 0 
-                '.(!empty($ids) ? 'AND p.single IN (' . implode(',', $ids) . ')' : '') .' GROUP BY p.single) AS single2
-            '), function ($join) {
-                        $join->on('products.id', '=', 'single2.id');
-                })->whereHas('shop', function ($query) use ($city_id) {
-                        $query->where('city_id', $city_id)->available();
-                });
-                
-                if($orderRand) {
-                        $_products->orderBy(\DB::raw('RAND()'));
-                } else {
-                        $_products->orderByRaw(\DB::raw("FIELD(products.single, " . implode(',', $ids) . ")"));
-                }
-
-                //\Log::debug($_products->toSql());
-
-             return $_products;
-        }
-
-        static function popularSingle($city_id, $ids = []) {
+                                                                      foreach($queries as $pk) {
+                                                                              $query->orWhere(function ($query) use ($request, $pk) {
+                                                                                      $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                                                              ->orWhere('description', 'like', '%'.$pk.'%');
+                                                                              });
+                                                                      }
+                                                              });
+                                                      } else {
+                                                              foreach($queries as $pk) {
+                                                                      $productRequest->where(function ($query) use ($request, $pk) {
+                                                                              $query->Where('name', 'like', '%'.$pk.'%')
+                                                                                      ->orWhere('description', 'like', '%'.$pk.'%');
+                                                                      });
+                                                              }
+                                                      }
 
 
+                                              }
+                                      }
+                              }
 
+                              Paginator::currentPageResolver(function () use ($currentPage) {
+                                      return $currentPage;
+                              });
 
+                              //echo $productRequest->toSql(); exit();
 
-                $_products = self::with(['shop'  => function($query) {
-                            $query->select(['id', 'name', 'delivery_price']);
-                        }])->whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id)->available();
-                        })->where('price', '>', 0)
-                        ->where('status', 1)
-                        ->where('pause', 0)
-                        ->whereIn('single', $ids)
-                        ->orderBy(\DB::raw('RAND()'))->limit(6)->get();
+                              if(!empty($request->shop_id) && $request->shop_id == 499) {
+                                      //echo $productRequest->toSql(); exit();
+                                      //echo $city_id; exit();
+                              }
+
+                              if(!empty($request->t)) {
+                                      //dd($request);
+                                      echo $productRequest->toSql(); exit();
+                                      //echo $city_id; exit();
+                              }
+
+                              $products = $productRequest->paginate($perPage);
+
+                              return $products;
+
+                              /*
+                              return \DB::table('products')
+                                      ->select('products.*', 'shops.name AS shop_name')
+                                      ->join('shops', 'shops.id', '=', 'products.shop_id')
+                                      ->where('shops.city_id', $city_id)
+                                      ->where('price', '>', 0)->get();
+                              */
+                      }
+
+                      static function popularSingle2($city_id = 637640, $ids = [], $orderRand = false, Request $request = null, $page = 1, $perPage = 15) {
+                              $products = Product::whereNotNull('single')
+                                                ->whereHas('shop', function($q) use($city_id)  {
+                                                  $q->where('city_id', $city_id)->available();
+                                                })
+                                                ->orderBy('price', 'asc')
+                                                ->groupBy('single')
+                                                ->inRandomOrder()
+                                                ->where('price', '>', 1)
+                                                ->where('status', '=', 1)
+                                                ->where('pause', '=', 0);
+
+                              $_products = Product::with(['shop' => function ($query) {
+                                      $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                              }])->join(\DB::raw('
+                              (SELECT p.id AS id, p.single FROM products p  
+                              INNER JOIN shops ON shops.id = p.shop_id
+                              INNER JOIN 
+                              (SELECT products.single, MIN(products.price + shops.delivery_price) AS min_price
+                              FROM products 
+                              INNER JOIN shops ON shops.id = products.shop_id
+                              WHERE shops.city_id = ' . (int)$city_id . '
+                              '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
+                              AND products.status = 1 
+                              AND products.pause = 0 
+                              AND products.price > 0 
+                              '.(!empty($ids) ? ' AND products.single IN (' . implode(',', $ids) . ')' : '').'               
+                              GROUP BY single) AS single ON single.single = p.single AND single.min_price = (p.price + shops.delivery_price)
+                              WHERE shops.city_id = ' . (int)$city_id . '
+                              '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
+                              AND p.status = 1 
+                              AND p.pause = 0 
+                              AND p.price > 0 
+                              '.(!empty($ids) ? 'AND p.single IN (' . implode(',', $ids) . ')' : '') .' GROUP BY p.single) AS single2
+                          '), function ($join) {
+                                      $join->on('products.id', '=', 'single2.id');
+                              })->whereHas('shop', function ($query) use ($city_id) {
+                                      $query->where('city_id', $city_id)->available();
+                              });
+                              
+                              if($orderRand) {
+                                      $_products->orderBy(\DB::raw('RAND()'));
+                              } else {
+                                      $_products->orderByRaw(\DB::raw("FIELD(products.single, " . implode(',', $ids) . ")"));
+                              }
+
+                              //\Log::debug($_products->toSql());
+
+                          // return $_products;
+                          return $products;
+                      }
+
+                      static function popularSingle($city_id, $ids = []) {
 
 
 
-                return $_products;
 
-/*
+
+                              $_products = self::with(['shop'  => function($query) {
+                                          $query->select(['id', 'name', 'delivery_price']);
+                                      }])->whereHas('shop', function($query) use ($city_id) {
+                                              $query->where('city_id', $city_id)->available();
+                                      })->whereNotNull('single')
+                                      ->where('price', '>', 0)
+                                      ->where('status', 1)
+                                      ->where('pause', 0)
+                                      // ->whereIn('single', $ids)
+                                      ->orderBy(\DB::raw('RAND()'))->limit(8)->get();
+
+
+
+                              return $_products;
+
+              /*
                 $_products = Product::with(['shop' => function ($query) {
                         $query->select(['id', 'name', 'delivery_price']);
                 }])->join(\DB::raw('
@@ -457,7 +471,7 @@ class Product extends MainModel
                     '), function ($join) {
                         $join->on('products.id', '=', 'single.id');
                 })->get();
-*/
+              */
 
 
                 $products = [];
