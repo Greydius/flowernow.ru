@@ -475,61 +475,12 @@ Floristum?</br></br>
 Чтобы поднять человеку настроение, достаточно преподнести живые цветы,
 оформленные в виде оригинального букета или корзины.
 </br></br>
-Мы предлагаем оценить цветочную тему шире, чем просто
-«сопровождающий элемент» ухаживания или «гарнир» подарка на день
-рождения. Современные флористические композиции активно используются
-для украшения интерьера. Живыми цветами можно оформить банкетный зал,
-сопроводить свадебную церемонию, украсить яхту или автомобиль, создать
-фруктово-конфетно-цветочные корзины на детском празднике и т.д.
+Мы предлагаем оценить подарочную тему шире, чем просто «сопровождающий элемент» ухаживания или «гарнир» подарка на день рождения. Современные флористические композиции активно используются для украшения интерьера. Живыми цветами можно оформить банкетный зал, офис, сопроводить свадебную церемонию, украсить яхту или автомобиль, создать фруктово-конфетно-цветочные корзины на детском празднике и т.д.
 </br></br>
-Оплата доставки цветов. Клиент можете рассчитаться картами VISA,
-MasterCard, VisaElectron, Maestro, МИР, а кроме того, картами
-международных платежных систем - это VisaInternational,
-MasterCardInternational, DinersClubInternational, AmericanExpress.
+Оплатить доставку вы можете по безналичному расчету. Клиент можете рассчитаться картами VISA, MasterCard, VisaElectron, Maestro, МИР, а кроме того, картами международных платежных систем - это VisaInternational, MasterCardInternational, DinersClubInternational, AmericanExpress.
 </p>
         
            <p> <br><br> <img src="{{ asset('images/dostavka_tsvetov_po_beznalu1.png') }}" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h4>Мы работаем и с юридическими лицами по безналичному расчету</h4>
 
 
-        <p>Для юридических лиц существует возможность заказать авторский букет
-и оплатить услугу по безналичному расчету. Наша сеть предоставляет
-полный пакет финдокументов на товар, приобретенный у нас. <a href="{{ route('front.corporate') }}">Доставка
-цветов по безналу</a> в {{ $current_city->name_prepositional }} – сейчас это очень популярная услуга.<br><br>
-При возникновении форс-мажорных обстоятельств деньги мгновенно
-возвращаются заказчику.
-</p>
-
-
-
-        <br><br>
-
-    </div>
-    @if(Route::currentRouteName() != 'favorites.show')
-      <a href="{{ route('favorites.show') }}" class="favorites-heart"></a>
-    @endif
-
-@endsection
-
-@section('head')
-    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.carousel.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.theme.default.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/front/js/typeahead.js/typeaheadjs.css') }}" />
-@stop
-
-@section('footer')
-
-    <script src="{{ asset('assets/plugins/OwlCarousel2-2.3.4/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>
-    <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>
-    <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>
-
-    <script type="text/javascript">
-
-            routes.products = '{!! route('api.products.popular') !!}';
-            $('.owl-carousel').owlCarousel({
-
-                    nav:true,
-
-            })
-    </script>
-@stop
+        <p>Для юридических лиц существует возможность заказать авторский букет с доставкой и о�
