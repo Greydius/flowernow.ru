@@ -118,6 +118,34 @@ class HomeController extends Controller
     }
 
     public function test(Request $request) {
+
+            $orders = Order::where('payed', 1)->select('phone')->distinct()->get();
+
+            foreach($orders as $key => $order) {
+                    $message = new \App\Model\Message();
+                    $message->message_type = 'sms';
+                    $message->send_to = $order->phone;
+                    $message->send_to = '+79119245792';
+                    $message->msg = json_encode(['text' => 'Закажите букет на 14 февр с 5% скидкой код 5F14']);
+                    $message->save();
+                    exit();
+            }
+
+            /*
+            $shops = Shop::where('id', '>', 12)->get();
+
+            foreach($shops as $shop) {
+                    $message = new \App\Model\Message();
+                    $message->message_type = 'email';
+                    $message->send_to = $shop->email;
+                    //$message->send_to = 'nkornushin@gmail.com';
+                    $message->msg = json_encode(['text' => view('email.shop14022020')->render(),
+                            'subject' => '14 февраля скоро :)']);
+                    $message->save();
+            }
+
+            exit();
+            */
 /*
             $shops = Shop::where('id', '>', 12)->get();
 
