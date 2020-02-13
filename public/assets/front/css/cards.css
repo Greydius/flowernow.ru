@@ -10,6 +10,10 @@
   cursor: pointer;
 }
 
+.product-image__qr {
+  display: none;
+}
+
 .product-item {
   background-color: transparent;
   perspective: 1000px;
