@@ -186,6 +186,11 @@ Route::get('/getPromoCodeinfo', [
         'as' => 'promoCodes.getInfo'
 ]);
 
+Route::get('/toApp', [
+        'uses' => 'ToAppController@redirect',
+        'as' => 'toApp.redirect'
+]);
+
 /* API */
 Route::group(['prefix' => 'api/v1'], function() {
         /* PRODUCTS*/

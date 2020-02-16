@@ -1,7 +1,8 @@
 
 
-<div class="col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6 {{ !empty($class) ? $class : '' }}">
-    <div class="media-item">
+<div class="product-item col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6 {{ !empty($class) ? $class : '' }}">
+  <div class="product-item__inner">
+    <div class="product-item__front media-item">
         @if(!empty($user) && $user->isSupervisor($current_city->id))
             <a href ng-click="editItem($event, {{ $_item['id'] }})" style="display: block; position: absolute; padding: 5px; z-index: 9;">
                 <i class="fa fa-pencil"></i>
@@ -36,6 +37,7 @@
           @if(Route::currentRouteName() != 'favorites.show')
             <span data-product-id="{{ $_item['id'] }}" title="" class="product-image__like"></span>
           @endif
+          <span class="product-image__qr">Открыть в приложении</span>
         </div>
 
         <div class="description-media-item">
@@ -67,4 +69,23 @@
         </div>
 
     </div>
+    <div class="product-item__back qr-item">
+      <a href="" class="qr-item__close">
+        <img src="{{ asset('assets/front/images/close.svg') }}" />
+      </a>
+      <div class="qr-item__image">
+        <img src="{{ asset('assets/front/images/qr-code.svg') }}" />
+      </div>
+      <div class="qr-item__description">
+        <div class="qr-item__download app-download">
+          <a href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="app-download__item ios">
+            <img src="{{ asset('assets/front/images/downloadIOS.svg') }}" alt="" class="">
+          </a>
+           <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="app-download__item andorid">
+            <img src="{{ asset('assets/front/images/downloadAndroid.svg') }}" alt="" class="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
