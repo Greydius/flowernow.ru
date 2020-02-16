@@ -963,7 +963,7 @@ class ProductsController extends Controller
           }finally{
             return response()->json($return, $return['statusCode']);            
           }
-        });
+        }
 
         public function apiPopular(Request $request) {
 
