@@ -387,9 +387,13 @@ class Product extends MainModel
                       }
 
                       static function popularSingle2($city_id = 637640, $ids = [], $orderRand = true, Request $request = null, $page = 1, $perPage = 15) {
+                              $parents_id = [];
                               $products = Product::whereNotNull('single')
                                                 ->whereHas('shop', function($q) use($city_id)  {
                                                   $q->where('city_id', $city_id)->available();
+                                                })
+                                                ->whereHas('singleProduct', function($q) use($parents_id)  {
+                                                  $q->where('visible', 1);
                                                 })
                                                 ->orderBy('price', 'asc')
                                                 ->groupBy('single')
@@ -445,11 +449,15 @@ class Product extends MainModel
                                       }])->whereHas('shop', function($query) use ($city_id) {
                                               $query->where('city_id', $city_id)->available();
                                       })->whereNotNull('single')
-                                      ->where('price', '>', 0)
-                                      ->where('status', 1)
-                                      ->where('pause', 0)
-                                      // ->whereIn('single', $ids)
-                                      ->inRandomOrder()->limit(8)->get();
+                                      ->whereHas('singleProduct', function($q)  {
+                                        $q->where('visible', 1);
+                                      })
+                                      ->orderBy('price', 'asc')
+                                      ->groupBy('single')
+                                      ->inRandomOrder()
+                                      ->where('price', '>', 1)
+                                      ->where('status', '=', 1)
+                                      ->where('pause', '=', 0)->limit(8)->get();
 
 
 
