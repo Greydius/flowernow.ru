@@ -483,4 +483,40 @@ Floristum?</br></br>
            <p> <br><br> <img src="{{ asset('images/dostavka_tsvetov_po_beznalu1.png') }}" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h4>Мы работаем и с юридическими лицами по безналичному расчету</h4>
 
 
-        <p>Для юридических лиц существует возможность заказать авторский букет с доставкой и о�
+        <p>Для юридических лиц существует возможность заказать авторский букет с доставкой и оплатить услугу по безналичному расчету. Наша сеть предоставляет полный пакет финдокументов на товар, приобретенный у нас. <a href="{{ route('front.corporate') }}">Доставка
+цветов по безналу</a> в {{ $current_city->name_prepositional }}  – сейчас это очень популярная услуга.	
+
+При возникновении форс-мажорных обстоятельств деньги мгновенно возвращаются заказчику	
+</p>	
+
+
+
+        <br><br>	
+
+    </div>	
+    @if(Route::currentRouteName() != 'favorites.show')	
+      <a href="{{ route('favorites.show') }}" class="favorites-heart"></a>	
+    @endif	
+
+@endsection	
+
+@section('head')	
+    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.carousel.min.css') }}" />	
+    <link rel="stylesheet" href="{{ asset('assets/plugins/OwlCarousel2-2.3.4/assets/owl.theme.default.min.css') }}" />	
+    <link rel="stylesheet" href="{{ asset('assets/front/js/typeahead.js/typeaheadjs.css') }}" />	
+@stop	
+
+@section('footer')	
+
+    <script src="{{ asset('assets/plugins/OwlCarousel2-2.3.4/owl.carousel.min.js') }}"></script>	
+    <script src="{{ asset('assets/front/js/typeahead.js/bloodhound.min.js') }}"></script>	
+    <script src="{{ asset('assets/front/js/typeahead.js/typeahead.jquery.js') }}"></script>	
+    <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>	
+
+    <script type="text/javascript">	
+            routes.products = '{!! route('api.products.popular') !!}';	
+            $('.owl-carousel').owlCarousel({	
+                    nav:true,	
+            })	
+    </script>	
+@stop
