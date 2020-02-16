@@ -736,7 +736,7 @@ class ProductsController extends Controller
 
         }
 
-        public function apiChangeStatusProduct($id, Request $request) {
+        public function apiAllProducts(Request $request) {
 
                 $return = [
                         'statusCode' => 200,
@@ -744,26 +744,12 @@ class ProductsController extends Controller
                 ];
 
                 try{
-                        $product = null;
-
-                        if($this->user->admin || $this->user->isSupervisor()) {
-                                $product = Product::find($id);
-                        }
-
-                        if(empty($product) || empty($request->status)) {
-                                throw new \Exception('Продукт не найден');
-                        } else {
-                                if($request->status >= 1 && $request->status <= 3) {
-                                        $product->status = $request->status;
-
-                                        if($request->status == 3) {
-                                                $product->status_comment = !empty($request->status_comment) ? $request->status_comment : null;
-                                                $product->status_comment_at = \Carbon::now()->format('Y-m-d H:i:s');
-                                        }
-
-                                        $product->save();
-                                }
-                        }
+                        $products = Product::where('price', '>', 0)->get();
+                        $return = [
+                          'statusCode' => 200,
+                          'message' => '',
+                          'data' => $products
+                        ];
 
                 } catch (\Exception $e){
                         $return['statusCode'] = 400;

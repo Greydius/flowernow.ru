@@ -13,10 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 
 Route::group(['namespace' => 'Api'], function () {
         Route::group(['namespace' => 'Auth'], function () {
@@ -25,146 +21,46 @@ Route::group(['namespace' => 'Api'], function () {
                 Route::post('logout', 'LogoutController')->middleware('auth:api');
         });
 
-        Route::get('/cities', function(Request $request) {
+        Route::group(['namespace' => 'Cities'], function () {
+          Route::get('/cities', 'CitiesController@cities');
 
-                $cities = App\Model\City::whereNotNull('slug')->with(['region'])->orderBy('population', 'DESC')->get();
-
-                return $cities;
-        });
-
-        Route::get('/main/{cityId}', function($cityId, Request $request) {
-                $return = [];
-                $popularProducts = [];
-                $innerRequest = new Request();
-
-                $productTypes = App\Model\ProductType::select(['id', 'name'])->where('show_on_main', '1')->inCity($cityId)->orderBy('priority')->get();
-                foreach($productTypes as $productType) {
-                        $productType->request = 'productType/'.$productType->id;
-
-                        $innerRequest->productType = $productType->id;
-                        $_popularProduct = [
-                                'name' => $productType->name,
-                                'products' => App\Model\Product::popular($cityId, $innerRequest, 1, 8),
-                                'request' => 'products/'.$productType->id
-                        ];
-
-                        $popularProducts[] = $_popularProduct;
-                }
-                $return['productTypes'] = $productTypes;
-                $return['products'] = $popularProducts;
-
-
-                return $return;
+          Route::get('/main/{cityId}', 'CitiesController@main'); 
         });
 
 });
 
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
-        Route::get('/orders', function(Request $request) {
-                // If the Content-Type and Accept headers are set to 'application/json',
-                // this will return a JSON structure. This will be cleaned up later.
-                $user = $request->user();
-                $shop = $user->getShop();
+        Route::group(['namespace' => 'Orders'], function () {
+          Route::get('/orders', 'OrdersController@orders');
 
-                //]]$request->status = 1;
+          Route::post('/order/{id}', 'OrdersController@order');
 
-                switch($request->status) {
-                        case 1:
-                                $status = 'new';
-                                break;
-                        case 2:
-                                $status = 'accepted';
-                                break;
-                        default:
-                                $status = 'completed';
-                }
+          Route::get('/freeOrders', 'OrdersController@freeOrders');
 
-                $model = App\Model\Order::where('shop_id', $shop->id)->with('orderLists.product')->orderBy('status');
-                if(!empty($request->status)) {
-                        $model->where('status', $status);
-                }
+          Route::post('/acceptFreeOrder/{id}', 'OrdersController@acceptFreeOrder');
 
-                return $model->get();
+          Route::post('/rejectionOrder/{id}', 'OrdersController@rejectionOrder');
         });
 
-        Route::post('/order/{id}', function($id, Request $request) {
-                $user = $request->user();
-                $shop = $user->getShop();
-
-                \Log::debug('status = '.$request->status);
-
-                $order = App\Model\Order::where('id',$id)->where('shop_id', $shop->id)->firstOrFail();
-                if(!empty($request->status)) {
-                        $order->status = $request->status;
-                        $order->save();
-                }
-
-                return $order;
-        });
-
-        Route::post('/user/addFirebaseToken', function(Request $request) {
-                $user = $request->user();
-                if(!empty($request->token)) {
-                        $user->firebase_token = $request->token;
-                        return $user->save();
-                }
-
-                return false;
-        });
-
-        Route::get('/freeOrders', function(Request $request) {
-                // If the Content-Type and Accept headers are set to 'application/json',
-                // this will return a JSON structure. This will be cleaned up later.
-                $user = $request->user();
-                $shop = $user->getShop();
-
-                switch($request->status) {
-                        case 1:
-                                $status = 'new';
-                                break;
-                        case 2:
-                                $status = 'accepted';
-                                break;
-                        default:
-                                $status = 'completed';
-                }
-                
-                $model = App\Model\Order::where('shop_id', '-1')->where('city_id', $shop->city_id)->where('prev_shop_id', '!=', $shop->id)->with('orderLists.product');
-                if(!empty($request->status)) {
-                        $model->where('status', $status);
-                }
-
-                return $model->get();
-        });
-
-        Route::post('/acceptFreeOrder/{id}', function($id, Request $request) {
-                $user = $request->user();
-                $shop = $user->getShop();
-
-                \Log::debug('status = '.$request->status);
-
-                $order = App\Model\Order::where('id',$id)->firstOrFail();
-                if($order->shop_id == -1) {
-                        $order->shop_id = $shop->id;
-                        $order->status = 2;
-                        $order->save();
-                } else {
-                        return response()->json(['error' => 'Этот заказ уже занят'], 500);
-                }
-
-                return $order;
-        });
-
-        Route::post('/rejectionOrder/{id}', function($id, Request $request) {
-                $user = $request->user();
-                $shop = $user->getShop();
-
-                $order = App\Model\Order::where('id',$id)->where('shop_id', $shop->id)->firstOrFail();
-
-                if($order->status == 'new') {
-                        $order->rejection();
-                }
-
-                return $order;
+        Route::group(['namespace' => 'Users'], function () {
+          Route::post('/user/addFirebaseToken', 'UsersController@addFirebaseToken');
+          Route::get('/user', 'UsersController@user');
         });
 });
+
+Route::group(['namespace' => 'Api'], function() {
+  Route::group(['prefix' => 'products', 'namespace' => 'Products'], function() {
+    Route::get('/', 'ProductsController@products');
+  });
+
+  Route::group(['prefix' => 'cart', 'namespace' => 'Cart'], function() {
+    Route::get('/{id}', 'CartController@cart');
+
+  });
+});
+
+Route::post('/cart', 'OrdersController@create');
+
+Route::post('payment/cloudpayments/checkpayment', 'OrdersController@checkpayment');
+
+Route::post('payment/cloudpayments/confirmpayment', 'OrdersController@confirmpayment');

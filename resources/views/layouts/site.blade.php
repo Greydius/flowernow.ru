@@ -625,7 +625,7 @@
                                     </div>
                                 @endif
                             </li>
-                            <li class="dropdown {{ !empty(request()->price_from) && !empty(request()->price_to) ? 'active' : ''}}" id="priceMenuItem">
+                            <!-- <li class="dropdown {{ !empty(request()->price_from) && !empty(request()->price_to) ? 'active' : ''}}" id="priceMenuItem">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Цены
                                 </a>
@@ -640,7 +640,7 @@
                                         </div>
                                     </div>
                                 @endif
-                            </li>
+                            </li> -->
                             <li class="dropdown {{ !empty(request()->color) ? 'active' : ''}}" id="colorMenuItem">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Цвет
