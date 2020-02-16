@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Api\Auth;
 
 use Illuminate\Http\Request;
@@ -17,8 +16,41 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+/** 
+ * @group Auth
+ * 
+ * Auth actions
+*/
+
 class RegisterController extends Controller
 {
+
+        /** 
+         * Register
+         * 
+          * * 'phone' => 'required|string|max:16|min:11|unique:users',
+          * * 'city_id' => 'required|integer',
+          * * 'shop_name' => 'required|string|max:255',
+          * * 'email' => 'required|string|email|max:255|unique:users',
+          * * 'password' => 'required|string|min:6'
+         * @response {
+                "success": false,
+                "error": {
+                    "phone": [
+                        "Этот телефон уже зарегестрирован в системе"
+                    ],
+                    "city_id": [
+                        "Выберите город"
+                    ],
+                    "shop_name": [
+                        "Введите название магазина"
+                    ],
+                    "email": [
+                        "Введите email"
+                    ]
+                }
+            }
+        */
         
         public function __invoke(Request $request)
         {
