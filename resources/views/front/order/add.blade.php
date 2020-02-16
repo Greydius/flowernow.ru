@@ -286,12 +286,13 @@
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
                                         <option value="Время согласовать">Согласовать</option>
-                                        <option value="с 08:00 до 10:00">с 08:00 до 11:00</option>
-                                        <option value="с 10:00 до 12:00">с 11:00 до 14:00</option>
-                                        <option value="с 12:00 до 14:00">с 14:00 до 17:00</option>
-                                        <option value="с 14:00 до 16:00">с 17:00 до 20:00</option>
-                                        <option value="с 16:00 до 18:00">с 20:00 до 23:00</option>
+                                        <option value="с 08:00 до 11:00">с 08:00 до 11:00</option>
+                                        <option value="с 11:00 до 14:00">с 11:00 до 14:00</option>
+                                        <option value="с 14:00 до 17:00">с 14:00 до 17:00</option>
+                                        <option value="с 17:00 до 20:00">с 17:00 до 20:00</option>
+                                        <option value="с 20:00 до 23:00">с 20:00 до 23:00</option>
                                         <!--
+                                          
                                         <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
                                         <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
                                         <option value="с 10:00 до 11:00">с 10:00 до 11:00</option>
