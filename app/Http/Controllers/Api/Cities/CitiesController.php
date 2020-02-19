@@ -2038,21 +2038,21 @@ class CitiesController extends Controller
                 $popularProducts = [];
                 $innerRequest = new Request();
 
-                $productTypes = ProductType::select(['id', 'name'])->where('show_on_main', '1')->inCity($cityId)->orderBy('priority')->get();
+                $productTypes = ProductType::select(['id', 'name', 'slug'])->where('show_on_main', '1')->inCity($cityId)->orderBy('priority')->get();
                 foreach($productTypes as $productType) {
                         $productType->request = 'productType/'.$productType->id;
 
                         $innerRequest->productType = $productType->id;
                         $_popularProduct = [
                                 'name' => $productType->name,
-                                'products' => Product::popular($cityId, $innerRequest, 1, 8),
-                                'request' => 'products/'.$productType->id
+                                'slug' => $productType->slug,
+                                'products' => Product::popular($cityId, $innerRequest, 1, 8)
                         ];
 
                         $popularProducts[] = $_popularProduct;
                 }
                 $return['productTypes'] = $productTypes;
-                $return['products'] = $popularProducts;
+                $return = $popularProducts;
 
 
                 return $return;

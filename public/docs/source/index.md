@@ -6032,6 +6032,1018 @@ fetch(url, {
 
 <!-- END_ed472662a7e53b721e0661f2842b02e7 -->
 
+#Products
+
+
+<!-- START_73123bf76e0c8a3894762f134aa9ae56 -->
+## api/products/{city_id}/{category_slug}
+> Example request:
+
+```bash
+curl -X GET -G "https://floristum.ru/api/products/1/1" 
+```
+
+```javascript
+const url = new URL("https://floristum.ru/api/products/1/1");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response => response.json())
+    .then(json => console.log(json));
+```
+
+
+> Example response (200):
+
+```json
+{
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
+}
+```
+
+### HTTP Request
+`GET api/products/{city_id}/{category_slug}`
+
+
+<!-- END_73123bf76e0c8a3894762f134aa9ae56 -->
+
+<!-- START_d7e310d943b60d7e9738e43e86d47f60 -->
+## api/products/{city_id}
+> Example request:
+
+```bash
+curl -X GET -G "https://floristum.ru/api/products/1" 
+```
+
+```javascript
+const url = new URL("https://floristum.ru/api/products/1");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response => response.json())
+    .then(json => console.log(json));
+```
+
+
+> Example response (200):
+
+```json
+{
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
+}
+```
+
+### HTTP Request
+`GET api/products/{city_id}`
+
+
+<!-- END_d7e310d943b60d7e9738e43e86d47f60 -->
+
+<!-- START_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
+## api/products
+> Example request:
+
+```bash
+curl -X GET -G "https://floristum.ru/api/products" 
+```
+
+```javascript
+const url = new URL("https://floristum.ru/api/products");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response => response.json())
+    .then(json => console.log(json));
+```
+
+
+> Example response (200):
+
+```json
+{
+    "current_page": 1,
+    "data": [
+        {
+            "id": 1886,
+            "shop_id": 62,
+            "name": "Букет номер четыре",
+            "slug": "buket-nomer-chetyre",
+            "price": 9920,
+            "description": "Состав букета\nРоза 31шт\nРоза кустовая 15шт\nГиацинты 10шт\nХамелациум 10шт\n\nУпаковка: атласная лента(цвет на выбор)\n\nВозможна корректировка состава и упаковки по желанию клиента.(Упаковка без изменения стоимости: крафт-бумага, органза, фетр и т.д.). Уважаемые покупатели! Цветы являются сезонным товаром и могут находиться на складе в ограниченном количестве. Также качество цветов, поступающих от производителя, может быть не всегда приемлемым. В этом случае мы совершаем эквивалентную замену цветов, предварительно согласовав этот вопрос с вами. Мы гарантируем неизменность стоимости и цветовой гаммы букета в случае замены.",
+            "photo": "p62_1519228779_42033.jpg",
+            "make_time": 720,
+            "width": 35,
+            "height": 55,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 2,
+            "product_type_id": 2,
+            "status": 1,
+            "status_comment": "\"Пожалуйста, заполните Профиль магазина, товары и сообщите о готовности получать заказы на service@floristum.ru\"",
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 90245251,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 2,
+            "clientPrice": 13396,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-nomer-chetyre",
+            "photoUrl": "\/uploads\/products\/62\/351x351_c\/p62_1519228779_42033.jpg",
+            "fullPrice": 13396,
+            "deliveryTime": "12ч.",
+            "shop": {
+                "id": 62,
+                "name": "Счастливые люди",
+                "delivery_price": "500.00",
+                "delivery_time": 120
+            },
+            "photos": [
+                {
+                    "id": 2624,
+                    "product_id": 1886,
+                    "photo": "p62_1519228779_42033.jpg",
+                    "created_at": "2018-02-21 18:59:39",
+                    "updated_at": "2019-05-05 13:40:18",
+                    "priority": 0,
+                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/62\\\/p62_1519228779_42033\",\"version\":1557052815,\"signature\":\"9bbf1d046898cc85f6a30929d06ba4c874368601\",\"width\":632,\"height\":632,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:15Z\",\"tags\":[],\"bytes\":79085,\"type\":\"upload\",\"etag\":\"769f4584b40ab67266fbc3cd4ee4894c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"},\"350x350\":{\"public_id\":\"350x350\\\/62\\\/p62_1519228779_42033\",\"version\":1557052817,\"signature\":\"9d45559edb7ea006e03b53187e80eaa54b62e518\",\"width\":350,\"height\":350,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:17Z\",\"tags\":[],\"bytes\":30555,\"type\":\"upload\",\"etag\":\"e95578be9f671e9bb81a0b383db16012\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"}}"
+                }
+            ]
+        },
+        {
+            "id": 33742,
+            "shop_id": 119,
+            "name": "Букет \"Нектарин\"",
+            "slug": "buket-nektarin-828",
+            "price": 3150,
+            "description": "Состав букета:\n1.Яблоки - 5 шт.\n2.Нектарин - 6 шт.\n3.Гранат- 1 (не очищенный)\n4.Клубника - 10 шт.\n5. Альстромерия - 3 шт.\n6.Рускус итало - 3 шт.\n7.Упаковка бумага \"Крафт\"- 1 шт.\n8.Верёвка - 1 упак.\n9.Техническая упаковка целлофан - 1 шт.",
+            "photo": "p119_1530717477_47214.png",
+            "make_time": 90,
+            "width": 35,
+            "height": 45,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 3,
+            "product_type_id": 9,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 3089681,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 9,
+            "clientPrice": 4445,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-nektarin-828",
+            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717477_47214.png",
+            "fullPrice": 4445,
+            "deliveryTime": "1ч. 30мин.",
+            "shop": {
+                "id": 119,
+                "name": "Dekor&Event",
+                "delivery_price": "350.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 35144,
+                    "product_id": 33742,
+                    "photo": "p119_1530717477_47214.png",
+                    "created_at": "2018-07-04 18:17:58",
+                    "updated_at": "2019-05-05 20:26:34",
+                    "priority": 0,
+                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717477_47214\",\"version\":1557077189,\"signature\":\"09ff2919072cfc6ac56204c586f1dd8cd7133788\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:29Z\",\"tags\":[],\"bytes\":583029,\"type\":\"upload\",\"etag\":\"cc934381efc5422aba5ee6854748cc80\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717477_47214\",\"version\":1557077193,\"signature\":\"f37c2d1a89cc887458c3759f22c604c34ca24c6c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:33Z\",\"tags\":[],\"bytes\":215503,\"type\":\"upload\",\"etag\":\"d5cdb4854382f970ed7249aef1d0561c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"}}"
+                }
+            ]
+        },
+        {
+            "id": 33772,
+            "shop_id": 119,
+            "name": "Букет \"Пончики\"",
+            "slug": "buket-ponchiki-866",
+            "price": 1863,
+            "description": "1.Коробка - 1 шт.\n2.Декор - бумага \"крафт,тишью@\n3.Пончики - 8 шт.\nКоличество пончиков меняется по желанию заказчика.",
+            "photo": "p119_1530717851_53988.png",
+            "make_time": 180,
+            "width": 70,
+            "height": 10,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 2,
+            "product_type_id": 10,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 8947970,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 9,
+            "clientPrice": 2772,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-ponchiki-866",
+            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717851_53988.png",
+            "fullPrice": 2772,
+            "deliveryTime": "3ч.",
+            "shop": {
+                "id": 119,
+                "name": "Dekor&Event",
+                "delivery_price": "350.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 35176,
+                    "product_id": 33772,
+                    "photo": "p119_1530717851_53988.png",
+                    "created_at": "2018-07-04 18:24:12",
+                    "updated_at": "2019-05-05 20:27:34",
+                    "priority": 0,
+                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717851_53988\",\"version\":1557077249,\"signature\":\"5f29f3b4624cf9f733a8e30b9c5d7f0c15bfedbc\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:29Z\",\"tags\":[],\"bytes\":434766,\"type\":\"upload\",\"etag\":\"30920efcc12fa99e12f00d834275c377\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717851_53988\",\"version\":1557077253,\"signature\":\"dae4899eaab509e7be41788e4abb03cde89abd3c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:33Z\",\"tags\":[],\"bytes\":158283,\"type\":\"upload\",\"etag\":\"42559cf5c6d27d7550b4df8b66bfe24e\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"}}"
+                }
+            ]
+        },
+        {
+            "id": 88392,
+            "shop_id": 119,
+            "name": "Композиция \"Капучино с макаруны\"",
+            "slug": "kompozitsiya-kapuchino-s-makaruny-451",
+            "price": 4550,
+            "description": "Композиция \"Капучино с  макаруни\"  Модная композиция! Хит 2019 года!!!     \nСостав композиции :                            \n1.Коробка с ящиком - 1шт.\n2.Оазис - 1шт.,\n2. Зелень микс, - 10 шт.,плющ- 3шт.,\n3.Гортензия - 1шт.,\n4.Хризантема \"Сантини\" - 3шт.,\n5.Роза капучино - 9шт.,\n6.Роза кустовая-7шт.,\n7.Пироженое \"Макаруны\" -  11-12шт.\n 8.Техническая упаковка целлофан, бумага по сезону - 2м.",
+            "photo": "p119_1557992194_31282.jpg",
+            "make_time": 240,
+            "width": 45,
+            "height": 35,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 10,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 85521738,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 9,
+            "clientPrice": 6265,
+            "url": "http:\/\/floristum.ru\/flowers\/kompozitsiya-kapuchino-s-makaruny-451",
+            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1557992194_31282.jpg",
+            "fullPrice": 6265,
+            "deliveryTime": "4ч.",
+            "shop": {
+                "id": 119,
+                "name": "Dekor&Event",
+                "delivery_price": "350.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 92535,
+                    "product_id": 88392,
+                    "photo": "p119_1557992194_31282.jpg",
+                    "created_at": "2019-05-16 10:36:36",
+                    "updated_at": "2019-05-16 10:36:36",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 99720,
+                    "product_id": 88392,
+                    "photo": "p119_1563261163_96771.jpg",
+                    "created_at": "2019-07-16 10:12:45",
+                    "updated_at": "2019-07-16 10:12:45",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 99722,
+                    "product_id": 88392,
+                    "photo": "p119_1563261221_48363.jpg",
+                    "created_at": "2019-07-16 10:13:42",
+                    "updated_at": "2019-07-16 10:13:42",
+                    "priority": 2,
+                    "cdn_response": null
+                },
+                {
+                    "id": 99723,
+                    "product_id": 88392,
+                    "photo": "p119_1563261271_67637.jpg",
+                    "created_at": "2019-07-16 10:14:32",
+                    "updated_at": "2019-07-16 10:14:32",
+                    "priority": 3,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 52309,
+            "shop_id": 159,
+            "name": "Корзина цветов \"Разноцветные фрезии в корзинке\"",
+            "slug": "korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
+            "price": 4191,
+            "description": "Корзина из 25-ти разноцветных фрезий с декоративной зеленью в корзине.",
+            "photo": "p159_1542648124_40993.jpg",
+            "make_time": 240,
+            "width": 30,
+            "height": 30,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 66018130,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 6099,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648124_40993.jpg",
+            "fullPrice": 6099,
+            "deliveryTime": "4ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 54525,
+                    "product_id": 52309,
+                    "photo": "p159_1542648124_40993.jpg",
+                    "created_at": "2018-11-19 20:22:04",
+                    "updated_at": "2018-11-19 20:22:04",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 54526,
+                    "product_id": 52309,
+                    "photo": "p159_1542648135_32325.jpg",
+                    "created_at": "2018-11-19 20:22:15",
+                    "updated_at": "2018-11-19 20:22:15",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 54527,
+                    "product_id": 52309,
+                    "photo": "p159_1542648141_42653.jpg",
+                    "created_at": "2018-11-19 20:22:22",
+                    "updated_at": "2018-11-19 20:22:22",
+                    "priority": 2,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 52310,
+            "shop_id": 159,
+            "name": "Корзина из роз \"Солнце\" (51 роза)",
+            "slug": "korzina-iz-roz-solntse-51-roza-685",
+            "price": 8821,
+            "description": "Корзина из 51 желтой кустовой розы с декоративной зеленью в корзине.",
+            "photo": "p159_1542648232_77966.jpg",
+            "make_time": 300,
+            "width": 55,
+            "height": 55,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 4,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 8489851,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 12118,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-roz-solntse-51-roza-685",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648232_77966.jpg",
+            "fullPrice": 12118,
+            "deliveryTime": "5ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 54528,
+                    "product_id": 52310,
+                    "photo": "p159_1542648232_77966.jpg",
+                    "created_at": "2018-11-19 20:23:52",
+                    "updated_at": "2018-11-19 20:23:52",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 54529,
+                    "product_id": 52310,
+                    "photo": "p159_1542648286_29168.jpg",
+                    "created_at": "2018-11-19 20:24:46",
+                    "updated_at": "2018-11-19 20:24:46",
+                    "priority": 1,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 52551,
+            "shop_id": 159,
+            "name": "Корзина из весенних цветов \"Весенняя яркая\"",
+            "slug": "korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
+            "price": 3614,
+            "description": "ирис 7, лизиантус 3, кустовая роза 2, тюльпан 10, статица 1, зелень, корзина",
+            "photo": "p159_1542727797_48085.jpg",
+            "make_time": 180,
+            "width": 45,
+            "height": 35,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 85532780,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 5349,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542727797_48085.jpg",
+            "fullPrice": 5349,
+            "deliveryTime": "3ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 54799,
+                    "product_id": 52551,
+                    "photo": "p159_1542727797_48085.jpg",
+                    "created_at": "2018-11-20 18:29:57",
+                    "updated_at": "2018-11-20 18:29:57",
+                    "priority": 0,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 53531,
+            "shop_id": 159,
+            "name": "Корзина с цветами, чаем и сладостями \"Matre\"",
+            "slug": "korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
+            "price": 5881,
+            "description": "Корзина в синенево-кремовых тонах из роз, фиолетовых фрезий, лизиантусов, белой альстромерии, а так же чаем в Ж\/Б, печеньем Ж\/Б, шоколадкой Lindt, в корзине.",
+            "photo": "p159_1543417022_53503.jpg",
+            "make_time": 240,
+            "width": 40,
+            "height": 40,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 10,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 5392223,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 9,
+            "clientPrice": 8296,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1543417022_53503.jpg",
+            "fullPrice": 8296,
+            "deliveryTime": "4ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 55830,
+                    "product_id": 53531,
+                    "photo": "p159_1543417022_53503.jpg",
+                    "created_at": "2018-11-28 17:57:02",
+                    "updated_at": "2018-11-28 17:57:02",
+                    "priority": 0,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 56355,
+            "shop_id": 159,
+            "name": "Корзина \"Ягоды с макарунами\"",
+            "slug": "korzina-yagody-s-makarunami-143",
+            "price": 5100,
+            "description": "Корзинка с ягодами: клубника 500 гр, ежевика 125 гр., малина 125 гр, голубика 125 гр, смородина 125 гр, макаруны 14 шт.",
+            "photo": "p159_1544627520_20940.jpg",
+            "make_time": 90,
+            "width": 30,
+            "height": 30,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 1,
+            "product_type_id": 9,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 71555701,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 4,
+            "clientPrice": 7280,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-yagody-s-makarunami-143",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1544627520_20940.jpg",
+            "fullPrice": 7280,
+            "deliveryTime": "1ч. 30мин.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 58778,
+                    "product_id": 56355,
+                    "photo": "p159_1544627520_20940.jpg",
+                    "created_at": "2018-12-12 18:12:00",
+                    "updated_at": "2018-12-12 18:12:00",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 58779,
+                    "product_id": 56355,
+                    "photo": "p159_1544627534_23526.jpg",
+                    "created_at": "2018-12-12 18:12:14",
+                    "updated_at": "2018-12-12 18:12:14",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 58780,
+                    "product_id": 56355,
+                    "photo": "p159_1544627544_63590.jpg",
+                    "created_at": "2018-12-12 18:12:24",
+                    "updated_at": "2018-12-12 18:12:24",
+                    "priority": 2,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 67110,
+            "shop_id": 159,
+            "name": "Корзина цветов \"Гламур\"",
+            "slug": "korzina-tsvetov-glamur-597",
+            "price": 6694,
+            "description": "Корзина в розово-сиреневых тонах из орхидей ванда 4 шт, роз Аква 5 шт, кустовых роз нежных оттенков 5 шт, лизиантусов 3 шт, сиреневая роза кения 5 шт, зелень грин белл 3 шт, розовых пионов 3 шт, салал 1 пачка, хлопок 3 шт.",
+            "photo": "p159_1549041505_31505.jpg",
+            "make_time": 240,
+            "width": 40,
+            "height": 40,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 70008696,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 9353,
+            "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-glamur-597",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1549041505_31505.jpg",
+            "fullPrice": 9353,
+            "deliveryTime": "4ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 70051,
+                    "product_id": 67110,
+                    "photo": "p159_1549041505_31505.jpg",
+                    "created_at": "2019-02-01 20:18:25",
+                    "updated_at": "2019-02-01 20:18:25",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 70052,
+                    "product_id": 67110,
+                    "photo": "p159_1549041529_18677.jpg",
+                    "created_at": "2019-02-01 20:18:49",
+                    "updated_at": "2019-02-01 20:18:49",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 70053,
+                    "product_id": 67110,
+                    "photo": "p159_1549041536_47857.jpg",
+                    "created_at": "2019-02-01 20:18:56",
+                    "updated_at": "2019-02-01 20:18:56",
+                    "priority": 2,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 87196,
+            "shop_id": 159,
+            "name": "Корзинка с розами \"Небольшой комплимент\"",
+            "slug": "korzinka-s-rozami-nebolshoy-kompliment-822",
+            "price": 1793,
+            "description": "Корзинка в розовых тонах из роз Аква 5 шт, кустовых роз 4 шт, салал, писташ.",
+            "photo": "p159_1557239651_41502.jpg",
+            "make_time": 180,
+            "width": 25,
+            "height": 25,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 2,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 87558269,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 4,
+            "clientPrice": 2981,
+            "url": "http:\/\/floristum.ru\/flowers\/korzinka-s-rozami-nebolshoy-kompliment-822",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1557239651_41502.jpg",
+            "fullPrice": 2981,
+            "deliveryTime": "3ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 91266,
+                    "product_id": 87196,
+                    "photo": "p159_1557239651_41502.jpg",
+                    "created_at": "2019-05-07 17:34:11",
+                    "updated_at": "2019-05-07 17:34:11",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 91267,
+                    "product_id": 87196,
+                    "photo": "p159_1557239668_73120.jpg",
+                    "created_at": "2019-05-07 17:34:28",
+                    "updated_at": "2019-05-07 17:34:28",
+                    "priority": 1,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 97249,
+            "shop_id": 159,
+            "name": "Корзинка цветов \"Этим летом\"",
+            "slug": "korzinka-tsvetov-etim-letom-649",
+            "price": 2838,
+            "description": "Корзина из минигербер красного, оранжевого, желтого цветов 11 шт, ромашек 3 шт, альстромерий белых 3 шт, рускус 15 шт, декоративные ленты 3 шт.",
+            "photo": "p159_1565023459_40697.jpg",
+            "make_time": 180,
+            "width": 35,
+            "height": 35,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 28423016,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 4340,
+            "url": "http:\/\/floristum.ru\/flowers\/korzinka-tsvetov-etim-letom-649",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1565023459_40697.jpg",
+            "fullPrice": 4340,
+            "deliveryTime": "3ч.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 101928,
+                    "product_id": 97249,
+                    "photo": "p159_1565023459_40697.jpg",
+                    "created_at": "2019-08-05 19:44:19",
+                    "updated_at": "2019-08-05 19:44:19",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 101929,
+                    "product_id": 97249,
+                    "photo": "p159_1565023525_86853.jpg",
+                    "created_at": "2019-08-05 19:45:25",
+                    "updated_at": "2019-08-05 19:45:25",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 101930,
+                    "product_id": 97249,
+                    "photo": "p159_1565023534_15392.jpg",
+                    "created_at": "2019-08-05 19:45:35",
+                    "updated_at": "2019-08-05 19:45:35",
+                    "priority": 2,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 111216,
+            "shop_id": 159,
+            "name": "Букет цветов \"Запах весны\"",
+            "slug": "buket-tsvetov-zapakh-vesny-247",
+            "price": 3484,
+            "description": "Букет из синих гиацинтов и желтых тюльпанов с декоративной зеленью в подарочной упаковке.",
+            "photo": "p159_1572003776_62940.jpg",
+            "make_time": 90,
+            "width": 40,
+            "height": 40,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 2,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 28961313,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 1,
+            "clientPrice": 5180,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-tsvetov-zapakh-vesny-247",
+            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1572003776_62940.jpg",
+            "fullPrice": 5180,
+            "deliveryTime": "1ч. 30мин.",
+            "shop": {
+                "id": 159,
+                "name": "Шарлотта",
+                "delivery_price": "650.00",
+                "delivery_time": 180
+            },
+            "photos": [
+                {
+                    "id": 116575,
+                    "product_id": 111216,
+                    "photo": "p159_1572003776_62940.jpg",
+                    "created_at": "2019-10-25 14:42:56",
+                    "updated_at": "2019-10-25 14:42:56",
+                    "priority": 0,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 111264,
+            "shop_id": 168,
+            "name": "Букет Розовых роз и Синих ирисов",
+            "slug": "buket-rozovykh-roz-i-sinikh-irisov-430",
+            "price": 1783,
+            "description": "Букет комплимент",
+            "photo": "p168_1572519118_29790.jpg",
+            "make_time": 30,
+            "width": 30,
+            "height": 40,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 2,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 6754928,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 3,
+            "clientPrice": 2668,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-rozovykh-roz-i-sinikh-irisov-430",
+            "photoUrl": "\/uploads\/products\/168\/351x351_c\/p168_1572519118_29790.jpg",
+            "fullPrice": 2668,
+            "deliveryTime": " 30мин.",
+            "shop": {
+                "id": 168,
+                "name": "Florpro",
+                "delivery_price": "350.00",
+                "delivery_time": 0
+            },
+            "photos": [
+                {
+                    "id": 116656,
+                    "product_id": 111264,
+                    "photo": "p168_1572519118_29790.jpg",
+                    "created_at": "2019-10-31 13:51:59",
+                    "updated_at": "2019-10-31 13:51:59",
+                    "priority": 0,
+                    "cdn_response": null
+                },
+                {
+                    "id": 116657,
+                    "product_id": 111264,
+                    "photo": "p168_1572519142_33655.jpg",
+                    "created_at": "2019-10-31 13:52:23",
+                    "updated_at": "2019-10-31 13:52:23",
+                    "priority": 1,
+                    "cdn_response": null
+                },
+                {
+                    "id": 116658,
+                    "product_id": 111264,
+                    "photo": "p168_1572519146_65652.jpg",
+                    "created_at": "2019-10-31 13:52:26",
+                    "updated_at": "2019-10-31 13:52:26",
+                    "priority": 2,
+                    "cdn_response": null
+                },
+                {
+                    "id": 116659,
+                    "product_id": 111264,
+                    "photo": "p168_1572519150_46517.jpg",
+                    "created_at": "2019-10-31 13:52:30",
+                    "updated_at": "2019-10-31 13:52:30",
+                    "priority": 3,
+                    "cdn_response": null
+                },
+                {
+                    "id": 116660,
+                    "product_id": 111264,
+                    "photo": "p168_1572519153_69971.jpg",
+                    "created_at": "2019-10-31 13:52:33",
+                    "updated_at": "2019-10-31 13:52:33",
+                    "priority": 4,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 11627,
+            "shop_id": 176,
+            "name": "Сладкие поздравления",
+            "slug": "sladkie-pozdravleniya",
+            "price": 4790,
+            "description": "Вкусная и ароматная корзина с цветами и клубникой , также сладкий комплимент : Коробка с макарунами",
+            "photo": "p176_1523963278_16147.jpeg",
+            "make_time": 240,
+            "width": 40,
+            "height": 35,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 4,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 594715,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 7,
+            "clientPrice": 7427,
+            "url": "http:\/\/floristum.ru\/flowers\/sladkie-pozdravleniya",
+            "photoUrl": "\/uploads\/products\/176\/351x351_c\/p176_1523963278_16147.jpeg",
+            "fullPrice": 7427,
+            "deliveryTime": "4ч.",
+            "shop": {
+                "id": 176,
+                "name": "Прованс",
+                "delivery_price": "1200.00",
+                "delivery_time": 240
+            },
+            "photos": [
+                {
+                    "id": 12670,
+                    "product_id": 11627,
+                    "photo": "p176_1523963278_16147.jpeg",
+                    "created_at": "2018-04-17 14:08:00",
+                    "updated_at": "2019-05-05 17:49:49",
+                    "priority": 0,
+                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/176\\\/p176_1523963278_16147\",\"version\":1557067786,\"signature\":\"41e1f20088fc8f7a8d550c2ea93a981e1b0ed64a\",\"width\":632,\"height\":632,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T14:49:46Z\",\"tags\":[],\"bytes\":149105,\"type\":\"upload\",\"etag\":\"48c8899176864c3b0973adf42ade341e\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067786\\\/632x632\\\/176\\\/p176_1523963278_16147.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067786\\\/632x632\\\/176\\\/p176_1523963278_16147.jpg\",\"original_filename\":\"p176_1523963278_16147\",\"original_extension\":\"jpeg\"},\"350x350\":{\"public_id\":\"350x350\\\/176\\\/p176_1523963278_16147\",\"version\":1557067788,\"signature\":\"7e5496b4f5debee9bff5a077086f194b665d00e2\",\"width\":350,\"height\":350,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T14:49:48Z\",\"tags\":[],\"bytes\":53455,\"type\":\"upload\",\"etag\":\"035ca484a2f097656765d9ac9513ef66\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067788\\\/350x350\\\/176\\\/p176_1523963278_16147.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067788\\\/350x350\\\/176\\\/p176_1523963278_16147.jpg\",\"original_filename\":\"p176_1523963278_16147\",\"original_extension\":\"jpeg\"}}"
+                }
+            ]
+        }
+    ],
+    "first_page_url": "http:\/\/localhost\/api\/products?page=1",
+    "from": 1,
+    "last_page": 136,
+    "last_page_url": "http:\/\/localhost\/api\/products?page=136",
+    "next_page_url": "http:\/\/localhost\/api\/products?page=2",
+    "path": "http:\/\/localhost\/api\/products",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": 15,
+    "total": 2035
+}
+```
+
+### HTTP Request
+`GET api/products`
+
+
+<!-- END_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
+
 #User
 
 
@@ -6124,915 +7136,6 @@ fetch(url, {
 
 #general
 
-
-<!-- START_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
-## api/products
-> Example request:
-
-```bash
-curl -X GET -G "https://floristum.ru/api/products" 
-```
-
-```javascript
-const url = new URL("https://floristum.ru/api/products");
-
-let headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-}
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (200):
-
-```json
-{
-    "current_page": 1,
-    "data": [
-        {
-            "id": 1886,
-            "shop_id": 62,
-            "name": "Букет номер четыре",
-            "slug": "buket-nomer-chetyre",
-            "price": 9920,
-            "description": "Состав букета\nРоза 31шт\nРоза кустовая 15шт\nГиацинты 10шт\nХамелациум 10шт\n\nУпаковка: атласная лента(цвет на выбор)\n\nВозможна корректировка состава и упаковки по желанию клиента.(Упаковка без изменения стоимости: крафт-бумага, органза, фетр и т.д.). Уважаемые покупатели! Цветы являются сезонным товаром и могут находиться на складе в ограниченном количестве. Также качество цветов, поступающих от производителя, может быть не всегда приемлемым. В этом случае мы совершаем эквивалентную замену цветов, предварительно согласовав этот вопрос с вами. Мы гарантируем неизменность стоимости и цветовой гаммы букета в случае замены.",
-            "photo": "p62_1519228779_42033.jpg",
-            "make_time": 720,
-            "width": 35,
-            "height": 55,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 2,
-            "product_type_id": 2,
-            "status": 1,
-            "status_comment": "\"Пожалуйста, заполните Профиль магазина, товары и сообщите о готовности получать заказы на service@floristum.ru\"",
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 78786949,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 2,
-            "clientPrice": 13396,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-nomer-chetyre",
-            "photoUrl": "\/uploads\/products\/62\/351x351_c\/p62_1519228779_42033.jpg",
-            "fullPrice": 13396,
-            "deliveryTime": "12ч.",
-            "shop": {
-                "id": 62,
-                "name": "Счастливые люди",
-                "delivery_price": "500.00",
-                "delivery_time": 120
-            },
-            "photos": [
-                {
-                    "id": 2624,
-                    "product_id": 1886,
-                    "photo": "p62_1519228779_42033.jpg",
-                    "created_at": "2018-02-21 18:59:39",
-                    "updated_at": "2019-05-05 13:40:18",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/62\\\/p62_1519228779_42033\",\"version\":1557052815,\"signature\":\"9bbf1d046898cc85f6a30929d06ba4c874368601\",\"width\":632,\"height\":632,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:15Z\",\"tags\":[],\"bytes\":79085,\"type\":\"upload\",\"etag\":\"769f4584b40ab67266fbc3cd4ee4894c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"},\"350x350\":{\"public_id\":\"350x350\\\/62\\\/p62_1519228779_42033\",\"version\":1557052817,\"signature\":\"9d45559edb7ea006e03b53187e80eaa54b62e518\",\"width\":350,\"height\":350,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:17Z\",\"tags\":[],\"bytes\":30555,\"type\":\"upload\",\"etag\":\"e95578be9f671e9bb81a0b383db16012\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"}}"
-                }
-            ]
-        },
-        {
-            "id": 33742,
-            "shop_id": 119,
-            "name": "Букет \"Нектарин\"",
-            "slug": "buket-nektarin-828",
-            "price": 3150,
-            "description": "Состав букета:\n1.Яблоки - 5 шт.\n2.Нектарин - 6 шт.\n3.Гранат- 1 (не очищенный)\n4.Клубника - 10 шт.\n5. Альстромерия - 3 шт.\n6.Рускус итало - 3 шт.\n7.Упаковка бумага \"Крафт\"- 1 шт.\n8.Верёвка - 1 упак.\n9.Техническая упаковка целлофан - 1 шт.",
-            "photo": "p119_1530717477_47214.png",
-            "make_time": 90,
-            "width": 35,
-            "height": 45,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 3,
-            "product_type_id": 9,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 37762545,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 4445,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-nektarin-828",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717477_47214.png",
-            "fullPrice": 4445,
-            "deliveryTime": "1ч. 30мин.",
-            "shop": {
-                "id": 119,
-                "name": "Dekor&Event",
-                "delivery_price": "350.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 35144,
-                    "product_id": 33742,
-                    "photo": "p119_1530717477_47214.png",
-                    "created_at": "2018-07-04 18:17:58",
-                    "updated_at": "2019-05-05 20:26:34",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717477_47214\",\"version\":1557077189,\"signature\":\"09ff2919072cfc6ac56204c586f1dd8cd7133788\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:29Z\",\"tags\":[],\"bytes\":583029,\"type\":\"upload\",\"etag\":\"cc934381efc5422aba5ee6854748cc80\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717477_47214\",\"version\":1557077193,\"signature\":\"f37c2d1a89cc887458c3759f22c604c34ca24c6c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:33Z\",\"tags\":[],\"bytes\":215503,\"type\":\"upload\",\"etag\":\"d5cdb4854382f970ed7249aef1d0561c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"}}"
-                }
-            ]
-        },
-        {
-            "id": 33772,
-            "shop_id": 119,
-            "name": "Букет \"Пончики\"",
-            "slug": "buket-ponchiki-866",
-            "price": 1863,
-            "description": "1.Коробка - 1 шт.\n2.Декор - бумага \"крафт,тишью@\n3.Пончики - 8 шт.\nКоличество пончиков меняется по желанию заказчика.",
-            "photo": "p119_1530717851_53988.png",
-            "make_time": 180,
-            "width": 70,
-            "height": 10,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 2,
-            "product_type_id": 10,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 24002621,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 2772,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-ponchiki-866",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717851_53988.png",
-            "fullPrice": 2772,
-            "deliveryTime": "3ч.",
-            "shop": {
-                "id": 119,
-                "name": "Dekor&Event",
-                "delivery_price": "350.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 35176,
-                    "product_id": 33772,
-                    "photo": "p119_1530717851_53988.png",
-                    "created_at": "2018-07-04 18:24:12",
-                    "updated_at": "2019-05-05 20:27:34",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717851_53988\",\"version\":1557077249,\"signature\":\"5f29f3b4624cf9f733a8e30b9c5d7f0c15bfedbc\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:29Z\",\"tags\":[],\"bytes\":434766,\"type\":\"upload\",\"etag\":\"30920efcc12fa99e12f00d834275c377\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717851_53988\",\"version\":1557077253,\"signature\":\"dae4899eaab509e7be41788e4abb03cde89abd3c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:33Z\",\"tags\":[],\"bytes\":158283,\"type\":\"upload\",\"etag\":\"42559cf5c6d27d7550b4df8b66bfe24e\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"}}"
-                }
-            ]
-        },
-        {
-            "id": 88392,
-            "shop_id": 119,
-            "name": "Композиция \"Капучино с макаруны\"",
-            "slug": "kompozitsiya-kapuchino-s-makaruny-451",
-            "price": 4550,
-            "description": "Композиция \"Капучино с  макаруни\"  Модная композиция! Хит 2019 года!!!     \nСостав композиции :                            \n1.Коробка с ящиком - 1шт.\n2.Оазис - 1шт.,\n2. Зелень микс, - 10 шт.,плющ- 3шт.,\n3.Гортензия - 1шт.,\n4.Хризантема \"Сантини\" - 3шт.,\n5.Роза капучино - 9шт.,\n6.Роза кустовая-7шт.,\n7.Пироженое \"Макаруны\" -  11-12шт.\n 8.Техническая упаковка целлофан, бумага по сезону - 2м.",
-            "photo": "p119_1557992194_31282.jpg",
-            "make_time": 240,
-            "width": 45,
-            "height": 35,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 10,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 55386723,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 6265,
-            "url": "http:\/\/floristum.ru\/flowers\/kompozitsiya-kapuchino-s-makaruny-451",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1557992194_31282.jpg",
-            "fullPrice": 6265,
-            "deliveryTime": "4ч.",
-            "shop": {
-                "id": 119,
-                "name": "Dekor&Event",
-                "delivery_price": "350.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 92535,
-                    "product_id": 88392,
-                    "photo": "p119_1557992194_31282.jpg",
-                    "created_at": "2019-05-16 10:36:36",
-                    "updated_at": "2019-05-16 10:36:36",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 99720,
-                    "product_id": 88392,
-                    "photo": "p119_1563261163_96771.jpg",
-                    "created_at": "2019-07-16 10:12:45",
-                    "updated_at": "2019-07-16 10:12:45",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 99722,
-                    "product_id": 88392,
-                    "photo": "p119_1563261221_48363.jpg",
-                    "created_at": "2019-07-16 10:13:42",
-                    "updated_at": "2019-07-16 10:13:42",
-                    "priority": 2,
-                    "cdn_response": null
-                },
-                {
-                    "id": 99723,
-                    "product_id": 88392,
-                    "photo": "p119_1563261271_67637.jpg",
-                    "created_at": "2019-07-16 10:14:32",
-                    "updated_at": "2019-07-16 10:14:32",
-                    "priority": 3,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 52309,
-            "shop_id": 159,
-            "name": "Корзина цветов \"Разноцветные фрезии в корзинке\"",
-            "slug": "korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
-            "price": 4191,
-            "description": "Корзина из 25-ти разноцветных фрезий с декоративной зеленью в корзине.",
-            "photo": "p159_1542648124_40993.jpg",
-            "make_time": 240,
-            "width": 30,
-            "height": 30,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 20645708,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 6099,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648124_40993.jpg",
-            "fullPrice": 6099,
-            "deliveryTime": "4ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 54525,
-                    "product_id": 52309,
-                    "photo": "p159_1542648124_40993.jpg",
-                    "created_at": "2018-11-19 20:22:04",
-                    "updated_at": "2018-11-19 20:22:04",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 54526,
-                    "product_id": 52309,
-                    "photo": "p159_1542648135_32325.jpg",
-                    "created_at": "2018-11-19 20:22:15",
-                    "updated_at": "2018-11-19 20:22:15",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 54527,
-                    "product_id": 52309,
-                    "photo": "p159_1542648141_42653.jpg",
-                    "created_at": "2018-11-19 20:22:22",
-                    "updated_at": "2018-11-19 20:22:22",
-                    "priority": 2,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 52310,
-            "shop_id": 159,
-            "name": "Корзина из роз \"Солнце\" (51 роза)",
-            "slug": "korzina-iz-roz-solntse-51-roza-685",
-            "price": 8821,
-            "description": "Корзина из 51 желтой кустовой розы с декоративной зеленью в корзине.",
-            "photo": "p159_1542648232_77966.jpg",
-            "make_time": 300,
-            "width": 55,
-            "height": 55,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 4,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 23464606,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 12118,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-roz-solntse-51-roza-685",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648232_77966.jpg",
-            "fullPrice": 12118,
-            "deliveryTime": "5ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 54528,
-                    "product_id": 52310,
-                    "photo": "p159_1542648232_77966.jpg",
-                    "created_at": "2018-11-19 20:23:52",
-                    "updated_at": "2018-11-19 20:23:52",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 54529,
-                    "product_id": 52310,
-                    "photo": "p159_1542648286_29168.jpg",
-                    "created_at": "2018-11-19 20:24:46",
-                    "updated_at": "2018-11-19 20:24:46",
-                    "priority": 1,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 52551,
-            "shop_id": 159,
-            "name": "Корзина из весенних цветов \"Весенняя яркая\"",
-            "slug": "korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
-            "price": 3614,
-            "description": "ирис 7, лизиантус 3, кустовая роза 2, тюльпан 10, статица 1, зелень, корзина",
-            "photo": "p159_1542727797_48085.jpg",
-            "make_time": 180,
-            "width": 45,
-            "height": 35,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 70489655,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 5349,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542727797_48085.jpg",
-            "fullPrice": 5349,
-            "deliveryTime": "3ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 54799,
-                    "product_id": 52551,
-                    "photo": "p159_1542727797_48085.jpg",
-                    "created_at": "2018-11-20 18:29:57",
-                    "updated_at": "2018-11-20 18:29:57",
-                    "priority": 0,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 53531,
-            "shop_id": 159,
-            "name": "Корзина с цветами, чаем и сладостями \"Matre\"",
-            "slug": "korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
-            "price": 5881,
-            "description": "Корзина в синенево-кремовых тонах из роз, фиолетовых фрезий, лизиантусов, белой альстромерии, а так же чаем в Ж\/Б, печеньем Ж\/Б, шоколадкой Lindt, в корзине.",
-            "photo": "p159_1543417022_53503.jpg",
-            "make_time": 240,
-            "width": 40,
-            "height": 40,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 10,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 18169109,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 8296,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1543417022_53503.jpg",
-            "fullPrice": 8296,
-            "deliveryTime": "4ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 55830,
-                    "product_id": 53531,
-                    "photo": "p159_1543417022_53503.jpg",
-                    "created_at": "2018-11-28 17:57:02",
-                    "updated_at": "2018-11-28 17:57:02",
-                    "priority": 0,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 56355,
-            "shop_id": 159,
-            "name": "Корзина \"Ягоды с макарунами\"",
-            "slug": "korzina-yagody-s-makarunami-143",
-            "price": 5100,
-            "description": "Корзинка с ягодами: клубника 500 гр, ежевика 125 гр., малина 125 гр, голубика 125 гр, смородина 125 гр, макаруны 14 шт.",
-            "photo": "p159_1544627520_20940.jpg",
-            "make_time": 90,
-            "width": 30,
-            "height": 30,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 1,
-            "product_type_id": 9,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 19729173,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 4,
-            "clientPrice": 7280,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-yagody-s-makarunami-143",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1544627520_20940.jpg",
-            "fullPrice": 7280,
-            "deliveryTime": "1ч. 30мин.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 58778,
-                    "product_id": 56355,
-                    "photo": "p159_1544627520_20940.jpg",
-                    "created_at": "2018-12-12 18:12:00",
-                    "updated_at": "2018-12-12 18:12:00",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 58779,
-                    "product_id": 56355,
-                    "photo": "p159_1544627534_23526.jpg",
-                    "created_at": "2018-12-12 18:12:14",
-                    "updated_at": "2018-12-12 18:12:14",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 58780,
-                    "product_id": 56355,
-                    "photo": "p159_1544627544_63590.jpg",
-                    "created_at": "2018-12-12 18:12:24",
-                    "updated_at": "2018-12-12 18:12:24",
-                    "priority": 2,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 67110,
-            "shop_id": 159,
-            "name": "Корзина цветов \"Гламур\"",
-            "slug": "korzina-tsvetov-glamur-597",
-            "price": 6694,
-            "description": "Корзина в розово-сиреневых тонах из орхидей ванда 4 шт, роз Аква 5 шт, кустовых роз нежных оттенков 5 шт, лизиантусов 3 шт, сиреневая роза кения 5 шт, зелень грин белл 3 шт, розовых пионов 3 шт, салал 1 пачка, хлопок 3 шт.",
-            "photo": "p159_1549041505_31505.jpg",
-            "make_time": 240,
-            "width": 40,
-            "height": 40,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 25181597,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 9353,
-            "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-glamur-597",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1549041505_31505.jpg",
-            "fullPrice": 9353,
-            "deliveryTime": "4ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 70051,
-                    "product_id": 67110,
-                    "photo": "p159_1549041505_31505.jpg",
-                    "created_at": "2019-02-01 20:18:25",
-                    "updated_at": "2019-02-01 20:18:25",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 70052,
-                    "product_id": 67110,
-                    "photo": "p159_1549041529_18677.jpg",
-                    "created_at": "2019-02-01 20:18:49",
-                    "updated_at": "2019-02-01 20:18:49",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 70053,
-                    "product_id": 67110,
-                    "photo": "p159_1549041536_47857.jpg",
-                    "created_at": "2019-02-01 20:18:56",
-                    "updated_at": "2019-02-01 20:18:56",
-                    "priority": 2,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 87196,
-            "shop_id": 159,
-            "name": "Корзинка с розами \"Небольшой комплимент\"",
-            "slug": "korzinka-s-rozami-nebolshoy-kompliment-822",
-            "price": 1793,
-            "description": "Корзинка в розовых тонах из роз Аква 5 шт, кустовых роз 4 шт, салал, писташ.",
-            "photo": "p159_1557239651_41502.jpg",
-            "make_time": 180,
-            "width": 25,
-            "height": 25,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 2,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 34705461,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 4,
-            "clientPrice": 2981,
-            "url": "http:\/\/floristum.ru\/flowers\/korzinka-s-rozami-nebolshoy-kompliment-822",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1557239651_41502.jpg",
-            "fullPrice": 2981,
-            "deliveryTime": "3ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 91266,
-                    "product_id": 87196,
-                    "photo": "p159_1557239651_41502.jpg",
-                    "created_at": "2019-05-07 17:34:11",
-                    "updated_at": "2019-05-07 17:34:11",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 91267,
-                    "product_id": 87196,
-                    "photo": "p159_1557239668_73120.jpg",
-                    "created_at": "2019-05-07 17:34:28",
-                    "updated_at": "2019-05-07 17:34:28",
-                    "priority": 1,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 97249,
-            "shop_id": 159,
-            "name": "Корзинка цветов \"Этим летом\"",
-            "slug": "korzinka-tsvetov-etim-letom-649",
-            "price": 2838,
-            "description": "Корзина из минигербер красного, оранжевого, желтого цветов 11 шт, ромашек 3 шт, альстромерий белых 3 шт, рускус 15 шт, декоративные ленты 3 шт.",
-            "photo": "p159_1565023459_40697.jpg",
-            "make_time": 180,
-            "width": 35,
-            "height": 35,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 24363243,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 4340,
-            "url": "http:\/\/floristum.ru\/flowers\/korzinka-tsvetov-etim-letom-649",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1565023459_40697.jpg",
-            "fullPrice": 4340,
-            "deliveryTime": "3ч.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 101928,
-                    "product_id": 97249,
-                    "photo": "p159_1565023459_40697.jpg",
-                    "created_at": "2019-08-05 19:44:19",
-                    "updated_at": "2019-08-05 19:44:19",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 101929,
-                    "product_id": 97249,
-                    "photo": "p159_1565023525_86853.jpg",
-                    "created_at": "2019-08-05 19:45:25",
-                    "updated_at": "2019-08-05 19:45:25",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 101930,
-                    "product_id": 97249,
-                    "photo": "p159_1565023534_15392.jpg",
-                    "created_at": "2019-08-05 19:45:35",
-                    "updated_at": "2019-08-05 19:45:35",
-                    "priority": 2,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 111216,
-            "shop_id": 159,
-            "name": "Букет цветов \"Запах весны\"",
-            "slug": "buket-tsvetov-zapakh-vesny-247",
-            "price": 3484,
-            "description": "Букет из синих гиацинтов и желтых тюльпанов с декоративной зеленью в подарочной упаковке.",
-            "photo": "p159_1572003776_62940.jpg",
-            "make_time": 90,
-            "width": 40,
-            "height": 40,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 2,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 684866,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 1,
-            "clientPrice": 5180,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-tsvetov-zapakh-vesny-247",
-            "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1572003776_62940.jpg",
-            "fullPrice": 5180,
-            "deliveryTime": "1ч. 30мин.",
-            "shop": {
-                "id": 159,
-                "name": "Шарлотта",
-                "delivery_price": "650.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 116575,
-                    "product_id": 111216,
-                    "photo": "p159_1572003776_62940.jpg",
-                    "created_at": "2019-10-25 14:42:56",
-                    "updated_at": "2019-10-25 14:42:56",
-                    "priority": 0,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 111264,
-            "shop_id": 168,
-            "name": "Букет Розовых роз и Синих ирисов",
-            "slug": "buket-rozovykh-roz-i-sinikh-irisov-430",
-            "price": 1783,
-            "description": "Букет комплимент",
-            "photo": "p168_1572519118_29790.jpg",
-            "make_time": 30,
-            "width": 30,
-            "height": 40,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 2,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 75769829,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 3,
-            "clientPrice": 2668,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-rozovykh-roz-i-sinikh-irisov-430",
-            "photoUrl": "\/uploads\/products\/168\/351x351_c\/p168_1572519118_29790.jpg",
-            "fullPrice": 2668,
-            "deliveryTime": " 30мин.",
-            "shop": {
-                "id": 168,
-                "name": "Florpro",
-                "delivery_price": "350.00",
-                "delivery_time": 0
-            },
-            "photos": [
-                {
-                    "id": 116656,
-                    "product_id": 111264,
-                    "photo": "p168_1572519118_29790.jpg",
-                    "created_at": "2019-10-31 13:51:59",
-                    "updated_at": "2019-10-31 13:51:59",
-                    "priority": 0,
-                    "cdn_response": null
-                },
-                {
-                    "id": 116657,
-                    "product_id": 111264,
-                    "photo": "p168_1572519142_33655.jpg",
-                    "created_at": "2019-10-31 13:52:23",
-                    "updated_at": "2019-10-31 13:52:23",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 116658,
-                    "product_id": 111264,
-                    "photo": "p168_1572519146_65652.jpg",
-                    "created_at": "2019-10-31 13:52:26",
-                    "updated_at": "2019-10-31 13:52:26",
-                    "priority": 2,
-                    "cdn_response": null
-                },
-                {
-                    "id": 116659,
-                    "product_id": 111264,
-                    "photo": "p168_1572519150_46517.jpg",
-                    "created_at": "2019-10-31 13:52:30",
-                    "updated_at": "2019-10-31 13:52:30",
-                    "priority": 3,
-                    "cdn_response": null
-                },
-                {
-                    "id": 116660,
-                    "product_id": 111264,
-                    "photo": "p168_1572519153_69971.jpg",
-                    "created_at": "2019-10-31 13:52:33",
-                    "updated_at": "2019-10-31 13:52:33",
-                    "priority": 4,
-                    "cdn_response": null
-                }
-            ]
-        },
-        {
-            "id": 11627,
-            "shop_id": 176,
-            "name": "Сладкие поздравления",
-            "slug": "sladkie-pozdravleniya",
-            "price": 4790,
-            "description": "Вкусная и ароматная корзина с цветами и клубникой , также сладкий комплимент : Коробка с макарунами",
-            "photo": "p176_1523963278_16147.jpeg",
-            "make_time": 240,
-            "width": 40,
-            "height": 35,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 10,
-            "product_type_id": 4,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 85141216,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 7,
-            "clientPrice": 7427,
-            "url": "http:\/\/floristum.ru\/flowers\/sladkie-pozdravleniya",
-            "photoUrl": "\/uploads\/products\/176\/351x351_c\/p176_1523963278_16147.jpeg",
-            "fullPrice": 7427,
-            "deliveryTime": "4ч.",
-            "shop": {
-                "id": 176,
-                "name": "Прованс",
-                "delivery_price": "1200.00",
-                "delivery_time": 240
-            },
-            "photos": [
-                {
-                    "id": 12670,
-                    "product_id": 11627,
-                    "photo": "p176_1523963278_16147.jpeg",
-                    "created_at": "2018-04-17 14:08:00",
-                    "updated_at": "2019-05-05 17:49:49",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/176\\\/p176_1523963278_16147\",\"version\":1557067786,\"signature\":\"41e1f20088fc8f7a8d550c2ea93a981e1b0ed64a\",\"width\":632,\"height\":632,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T14:49:46Z\",\"tags\":[],\"bytes\":149105,\"type\":\"upload\",\"etag\":\"48c8899176864c3b0973adf42ade341e\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067786\\\/632x632\\\/176\\\/p176_1523963278_16147.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067786\\\/632x632\\\/176\\\/p176_1523963278_16147.jpg\",\"original_filename\":\"p176_1523963278_16147\",\"original_extension\":\"jpeg\"},\"350x350\":{\"public_id\":\"350x350\\\/176\\\/p176_1523963278_16147\",\"version\":1557067788,\"signature\":\"7e5496b4f5debee9bff5a077086f194b665d00e2\",\"width\":350,\"height\":350,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T14:49:48Z\",\"tags\":[],\"bytes\":53455,\"type\":\"upload\",\"etag\":\"035ca484a2f097656765d9ac9513ef66\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067788\\\/350x350\\\/176\\\/p176_1523963278_16147.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557067788\\\/350x350\\\/176\\\/p176_1523963278_16147.jpg\",\"original_filename\":\"p176_1523963278_16147\",\"original_extension\":\"jpeg\"}}"
-                }
-            ]
-        }
-    ],
-    "first_page_url": "http:\/\/localhost\/api\/products?page=1",
-    "from": 1,
-    "last_page": 136,
-    "last_page_url": "http:\/\/localhost\/api\/products?page=136",
-    "next_page_url": "http:\/\/localhost\/api\/products?page=2",
-    "path": "http:\/\/localhost\/api\/products",
-    "per_page": 15,
-    "prev_page_url": null,
-    "to": 15,
-    "total": 2040
-}
-```
-
-### HTTP Request
-`GET api/products`
-
-
-<!-- END_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
 
 <!-- START_3045eab9b818156433434f751510823f -->
 ## api/cart/{id}

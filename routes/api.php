@@ -50,6 +50,8 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
 
 Route::group(['namespace' => 'Api'], function() {
   Route::group(['prefix' => 'products', 'namespace' => 'Products'], function() {
+    Route::get('/{city_id}/{category_slug}', 'ProductsController@cityCategoryProducts');
+    Route::get('/{city_id}', 'ProductsController@cityProducts');
     Route::get('/', 'ProductsController@products');
   });
 

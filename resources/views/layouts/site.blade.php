@@ -1127,8 +1127,16 @@
                         <div class="col-md-4">
                             <p><strong>Служба поддержки:</strong></p>
                             <p>
-                                <span class="h4 m-t-10">
-                                    <a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a>
+                                <span class="h4 m-t-10">                     <style type="text/css">my-email::after {
+    content: attr(data-domain);
+  }
+  my-email::before {
+    content: attr(data-user);
+  }</style>
+ 
+<!-- Впишите ниже в data-user и data-domain ваш логин email и домен --> 
+<my-email data-domain="floristum.ru" data-user="service">@</my-email>
+                          
                                     <br>
                                     <a class="footer-phone" href="tel:{{ config('site.phones.hot_normalized') }}">{{ config('site.phones.hot') }}</a>
                                 </span>

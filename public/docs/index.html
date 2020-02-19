@@ -5940,36 +5940,14 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>POST api/rejectionOrder/{id}</code></p>
 <!-- END_ed472662a7e53b721e0661f2842b02e7 -->
-<h1>User</h1>
-<!-- START_c149233fdb490055a84b51dd8bbedaf8 -->
-<h2>api/user/addFirebaseToken</h2>
+<h1>Products</h1>
+<!-- START_73123bf76e0c8a3894762f134aa9ae56 -->
+<h2>api/products/{city_id}/{category_slug}</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
-<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/user/addFirebaseToken" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user/addFirebaseToken");
-
-let headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-}
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<h3>HTTP Request</h3>
-<p><code>POST api/user/addFirebaseToken</code></p>
-<!-- END_c149233fdb490055a84b51dd8bbedaf8 -->
-<!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
-<h2>api/user</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/user" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user");
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/products/1/1" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/products/1/1");
 
 let headers = {
     "Accept": "application/json",
@@ -5986,27 +5964,61 @@ fetch(url, {
 <p>Example response (200):</p>
 </blockquote>
 <pre><code class="language-json">{
-    "id": 427,
-    "name": null,
-    "email": "a.elcheninov@mail.ru",
-    "confirmed": 1,
-    "confirmation_code": "ODv6zUdE9v9B4nrVHy9V19tRRik15h",
-    "created_at": "2019-11-01 00:00:00",
-    "updated_at": "2020-02-08 22:00:40",
-    "phone": "+79052122383",
-    "admin": 0,
-    "firebase_token": "e7hLQtpdx74:APA91bGTDwvnkH_b54g0uOsaqjsQ9vgVV3WVJdqjyRzU8SH-LjmL3VDuvNEm5swl026KiUn2tL2SpPaeCAJWY4uCkBLVWDaXTQSzoHnhho312U2hSrGXOfR-52aHLOIRhl9DKvBIN3Kv"
-}</code></pre>
-<blockquote>
-<p>Example response (401):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "Unauthenticated."
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
 }</code></pre>
 <h3>HTTP Request</h3>
-<p><code>GET api/user</code></p>
-<!-- END_2b6e5a4b188cb183c7e59558cce36cb6 -->
-<h1>general</h1>
+<p><code>GET api/products/{city_id}/{category_slug}</code></p>
+<!-- END_73123bf76e0c8a3894762f134aa9ae56 -->
+<!-- START_d7e310d943b60d7e9738e43e86d47f60 -->
+<h2>api/products/{city_id}</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/products/1" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/products/1");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/products/{city_id}</code></p>
+<!-- END_d7e310d943b60d7e9738e43e86d47f60 -->
 <!-- START_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
 <h2>api/products</h2>
 <blockquote>
@@ -6051,7 +6063,7 @@ fetch(url, {
             "status_comment": "\"Пожалуйста, заполните Профиль магазина, товары и сообщите о готовности получать заказы на service@floristum.ru\"",
             "pause": 0,
             "special_offer_id": null,
-            "sort": 78786949,
+            "sort": 90245251,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6098,7 +6110,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 37762545,
+            "sort": 3089681,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6145,7 +6157,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 24002621,
+            "sort": 8947970,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6192,7 +6204,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 55386723,
+            "sort": 85521738,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6266,7 +6278,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 20645708,
+            "sort": 66018130,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6331,7 +6343,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 23464606,
+            "sort": 8489851,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6387,7 +6399,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 70489655,
+            "sort": 85532780,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6434,7 +6446,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 18169109,
+            "sort": 5392223,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6481,7 +6493,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 19729173,
+            "sort": 71555701,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6546,7 +6558,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 25181597,
+            "sort": 70008696,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6611,7 +6623,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 34705461,
+            "sort": 87558269,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6667,7 +6679,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 24363243,
+            "sort": 28423016,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6732,7 +6744,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 684866,
+            "sort": 28961313,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6779,7 +6791,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 75769829,
+            "sort": 6754928,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6862,7 +6874,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 85141216,
+            "sort": 594715,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6900,11 +6912,78 @@ fetch(url, {
     "per_page": 15,
     "prev_page_url": null,
     "to": 15,
-    "total": 2040
+    "total": 2035
 }</code></pre>
 <h3>HTTP Request</h3>
 <p><code>GET api/products</code></p>
 <!-- END_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
+<h1>User</h1>
+<!-- START_c149233fdb490055a84b51dd8bbedaf8 -->
+<h2>api/user/addFirebaseToken</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/user/addFirebaseToken" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user/addFirebaseToken");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/user/addFirebaseToken</code></p>
+<!-- END_c149233fdb490055a84b51dd8bbedaf8 -->
+<!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
+<h2>api/user</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/user" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "id": 427,
+    "name": null,
+    "email": "a.elcheninov@mail.ru",
+    "confirmed": 1,
+    "confirmation_code": "ODv6zUdE9v9B4nrVHy9V19tRRik15h",
+    "created_at": "2019-11-01 00:00:00",
+    "updated_at": "2020-02-08 22:00:40",
+    "phone": "+79052122383",
+    "admin": 0,
+    "firebase_token": "e7hLQtpdx74:APA91bGTDwvnkH_b54g0uOsaqjsQ9vgVV3WVJdqjyRzU8SH-LjmL3VDuvNEm5swl026KiUn2tL2SpPaeCAJWY4uCkBLVWDaXTQSzoHnhho312U2hSrGXOfR-52aHLOIRhl9DKvBIN3Kv"
+}</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/user</code></p>
+<!-- END_2b6e5a4b188cb183c7e59558cce36cb6 -->
+<h1>general</h1>
 <!-- START_3045eab9b818156433434f751510823f -->
 <h2>api/cart/{id}</h2>
 <blockquote>

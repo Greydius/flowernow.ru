@@ -7,6 +7,10 @@ use Illuminate\Routing\Controller;
 
 use App\Model\Product;
 
+/**
+ * @group Products
+ */
+
 class ProductsController extends Controller
 {
   /**
@@ -124,6 +128,25 @@ class ProductsController extends Controller
   public function products(Request $request) {
 
     $model = Product::popular(637640, $request);
+
+    return $model;
+  }
+
+  public function cityProducts($city_id = 637640, Request $request) {
+
+    $model = Product::popular($city_id, $request);
+
+    return $model;
+  }
+
+  public function cityCategoryProducts($city_id = 637640, $category_slug, Request $request) {
+    if($category_slug == 'single') {
+      $request->single = true;
+    }else {
+      $request->product_type = $category_slug;
+    }
+    
+    $model = Product::popular($city_id, $request);
 
     return $model;
   }
