@@ -86,4 +86,13 @@ class User extends Authenticatable
                         }
                 })->count();
         }
+
+  public static function boot() {
+      parent::boot();
+      self::deleting(function($user) {
+            $user->shops()->each(function($shop) {
+              $shop->delete();
+            });
+      });
+  }
 }

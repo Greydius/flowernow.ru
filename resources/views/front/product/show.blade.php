@@ -28,8 +28,12 @@
               <div class="product-wrapper">
                 <figure class="main-picture">
                     @if(empty($product->single))
+                      @if($product->shop->inn = 2222863668)
+                        <img class="img-responsive" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                      @else 
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
-                         <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
+                      @endif
+                        <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
                     @else
                         <img class="img-responsive" data-ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
                          <figcaption data-ng-cloak=""><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> <% product.height %> см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> <% product.width %> см</figcaption>
@@ -49,13 +53,25 @@
 
                     <div class="demo">
                         <ul id="lightSlider">
-                            <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}">
+                            @if($product->shop->inn = 2222863668)
+                              <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}">
+                                <img src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" />
+                            </li>
+                            @else 
+                              <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}">
                                 <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" />
                             </li>
+                            @endif
                             @foreach($product->photos as $photo)
+                              @if($product->shop->inn = 2222863668)
+                                <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}">
+                                    <img src="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}" />
+                                </li>
+                               @else 
                                 <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}">
                                     <img src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$photo->photo) }}" />
                                 </li>
+                              @endif
                             @endforeach
                         </ul>
                     </div>

@@ -10,9 +10,9 @@
   cursor: pointer;
 }
 
-.product-image__qr {
+/* .product-image__qr {
   display: none;
-}
+} */
 
 .product-item {
   background-color: transparent;

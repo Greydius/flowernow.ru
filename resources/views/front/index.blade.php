@@ -480,7 +480,7 @@ Floristum?</br></br>
 Оплатить доставку вы можете по безналичному расчету. Клиент можете рассчитаться картами VISA, MasterCard, VisaElectron, Maestro, МИР, а кроме того, картами международных платежных систем - это VisaInternational, MasterCardInternational, DinersClubInternational, AmericanExpress.
 </p>
         
-           <p> <br><br> <img src="{{ asset('images/dostavka_tsvetov_po_beznalu1.png') }}" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25"> <h4>Мы работаем и с юридическими лицами по безналичному расчету</h4>
+           <p> <br><br> <img src="{{ asset('images/dostavka_tsvetov_po_beznalu1.png') }}" alt="Доставка цветов по безналу" align="right"  vspace="15" hspace="25">  <h2>Заказать и купить цветы от юридического лица по безналичному расчету</h2>
 
 
         <p>Для юридических лиц существует возможность заказать авторский букет с доставкой и оплатить услугу по безналичному расчету. Наша сеть предоставляет полный пакет финдокументов на товар, приобретенный у нас. <a href="{{ route('front.corporate') }}">Доставка

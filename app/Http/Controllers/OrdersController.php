@@ -938,6 +938,11 @@ class OrdersController extends Controller
                 }
         }
 
+        /**
+         * confirmSmsCode
+         * sms_code => 'string'
+         */
+
         public function confirmSmsCode($id, Request $request) {
                 $order = Order::findOrFail($id);
 

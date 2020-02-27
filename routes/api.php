@@ -60,7 +60,20 @@ Route::group(['namespace' => 'Api'], function() {
 });
 
 Route::post('/cart', 'OrdersController@create');
+Route::post('/confirmSmsCode', 'OrdersController@confirmSmsCode');
 
 Route::post('payment/cloudpayments/checkpayment', 'OrdersController@checkpayment');
 
 Route::post('payment/cloudpayments/confirmpayment', 'OrdersController@confirmpayment');
+
+
+Route::group(['namespace' => 'Api'], function() {
+  Route::group(['prefix' => 'tests', 'namespace' => 'Tests'], function() {
+    Route::get('/cities', 'TestsController@cities');
+    Route::post('/createShops', 'TestsController@createShops');
+    Route::delete('/deleteShops', 'TestsController@deleteShops');
+    Route::post('/updateShop/{id}', 'TestsController@updateShop');
+    Route::get('/createProducts', 'TestsController@createProducts');
+    Route::get('/createMainShopProducts', 'TestsController@createMainShopProducts');
+  });
+});

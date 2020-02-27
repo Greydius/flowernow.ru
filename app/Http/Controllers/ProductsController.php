@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Image;
 use App\Model\SpecialOffer;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductsController extends Controller
 {
@@ -843,6 +845,7 @@ class ProductsController extends Controller
         public function update(Request $request) {
 
                 $product = Product::findOrFail($request->input('id'));
+                $response = null;
 
                 $validator = Validator::make($request->all(), (!empty($product->dop) ? Product::$productDopRules : Product::$productRules), (!empty($product->dop) ? Product::$productDopRulesMessages : Product::$productRulesMessages));
 
@@ -915,10 +918,69 @@ class ProductsController extends Controller
                                 $product->save();
                         }
 
+                  if($product->shop_id == 350){
+                    $productCopies = Product::whereHas('shop', function (Builder $query) {
+                        $query->where('inn', '=', '2222863668');
+                    })->where('photo', '=', $product->photo)->get();
+
+                    $response = $productCopies;
+
+                    foreach($productCopies as $productCopy) {
+                      if($request->input('name') != $productCopy->name) {
+                              $productCopy->slug = Product::getNewProductSlug($request->input('name'));
+                      }
+
+                      $productCopy->name = $request->input('name');
+                      $productCopy->width = (int)$request->input('width');
+                      $productCopy->height = (int)$request->input('height');
+                      $productCopy->product_type_id = $request->input('product_type_id');
+                      $productCopy->color_id = $request->input('color_id');
+                      $productCopy->make_time = $request->input('make_time');
+                      $productCopy->description = $request->input('description');
+                      $productCopy->special_offer_id = $request->input('special_offer_id');
+
+                      $productCopy->compositions()->delete();
+
+                      $compositions = $request->input('compositions');
+                      $newCompositions = [];
+
+                      if (!empty($compositions)) {
+                              foreach ($compositions as $composition) {
+                                      if (!empty($composition['flower_id'])) {
+                                              if (!empty($composition['qty'])) {
+                                                      $newCompositions[] = [
+                                                              'flower_id' => $composition['flower_id'],
+                                                              'qty' => $composition['qty']
+                                                      ];
+                                              } else {
+                                                      return response()->json([
+                                                              'error' => true,
+                                                              'message' => 'Не указано кол-во в составе',
+                                                              'code' => 400
+                                                      ], 400);
+                                              }
+                                      }
+                              }
+
+                              $productCopy->compositions()->createMany($newCompositions);
+                      }
+
+                      $updated_at = $productCopy->updated_at;
+
+                      if($productCopy->save()) {
+                        if(!$this->user->admin && ($updated_at != $productCopy->updated_at || $productCopy->status == 0) && !$this->user->isSupervisor($shop->city_id)) {
+                                $productCopy->status = 2;
+                                $productCopy->save();
+                        }
+                      }
+                    }
+                  }
+
                         return response()->json([
                                 'error' => false,
                                 'code' => 200,
-                                'product' => $product
+                                'product' => $product,
+                                'info' => $response
                         ], 200);
                 }
 
@@ -933,7 +995,8 @@ class ProductsController extends Controller
         public function apiChangeStatusProduct($id, Request $request) {
           $return = [
             'statusCode' => 200,
-            'message' => ''
+            'message' => '',
+            'productCopies' => []
           ];
 
           try{
@@ -947,6 +1010,22 @@ class ProductsController extends Controller
               throw new \Exception('Продукт не найден');	
             } else {	
               if($request->status >= 1 && $request->status <= 3) {	
+                if($product->shop_id == 350){
+                  $productCopies = Product::whereHas('shop', function (Builder $query) {
+                      $query->where('inn', '=', '2222863668');
+                  })->where('slug', '=', $product->slug)->get();
+
+                  $return['productCopies'] = $productCopies;
+
+                  foreach($productCopies as $productCopy) {
+                    $productCopy->status = $request->status;
+                    if($request->status == 3) {
+                      $productCopy->status_comment = !empty($request->status_comment) ? $request->status_comment : null;
+                      $productCopy->status_comment_at = \Carbon::now()->format('Y-m-d H:i:s');	
+                    }	
+                    $productCopy->save();
+                  }
+                }
                 $product->status = $request->status;	
 
                 if($request->status == 3) {	
