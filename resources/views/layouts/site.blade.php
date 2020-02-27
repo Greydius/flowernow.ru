@@ -795,7 +795,7 @@
                     </div>
                 </div>
 
-                <div class="filter-block">
+                <!-- <div class="filter-block">
                     <label class="filter-block-title spoiler ">
                         <a href="#_filter-price" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
                             <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
@@ -836,7 +836,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="filter-block">
                     <label class="filter-block-title spoiler ">

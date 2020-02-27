@@ -827,4 +827,8 @@ class ShopsController extends Controller
         public function rules() {
                 return view('admin.shop.rules', []);
         }
+
+        public function rulesSingle() {
+                return view('admin.shop.rulesSingle', []);
+        }
 }

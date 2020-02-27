@@ -1160,7 +1160,6 @@ class ProductsController extends Controller
                                         if(empty($request->flowers)) {
                                                 $request->flowers = [];
                                         }
-                                        print_r*
                                         $request->flowers = array_merge($request->flowers, [$flower->id]);
                                 }
                         }
