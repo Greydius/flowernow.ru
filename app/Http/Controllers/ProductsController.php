@@ -919,9 +919,7 @@ class ProductsController extends Controller
                         }
 
                   if($product->shop_id == 350){
-                    $productCopies = Product::whereHas('shop', function (Builder $query) {
-                        $query->where('inn', '=', '2222863668');
-                    })->where('photo', '=', $product->photo)->get();
+                    $productCopies = Product::where('copy_id', '=', $product->id)->get();
 
                     $response = $productCopies;
 
@@ -1011,9 +1009,7 @@ class ProductsController extends Controller
             } else {	
               if($request->status >= 1 && $request->status <= 3) {	
                 if($product->shop_id == 350){
-                  $productCopies = Product::whereHas('shop', function (Builder $query) {
-                      $query->where('inn', '=', '2222863668');
-                  })->where('slug', '=', $product->slug)->get();
+                  $productCopies = Product::where('copy_id', '=', $product->id)->get();
 
                   $return['productCopies'] = $productCopies;
 
@@ -1239,7 +1235,6 @@ class ProductsController extends Controller
                                         if(empty($request->flowers)) {
                                                 $request->flowers = [];
                                         }
-                                        print_r*
                                         $request->flowers = array_merge($request->flowers, [$flower->id]);
                                 }
                         }

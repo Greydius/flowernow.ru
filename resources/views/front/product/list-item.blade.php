@@ -37,7 +37,10 @@
           @if(Route::currentRouteName() != 'favorites.show')
             <span data-product-id="{{ $_item['id'] }}" title="" class="product-image__like"></span>
           @endif
-          <span class="product-image__qr">Открыть в приложении</span>
+          <span class="product-image__qr">
+            <span class="product-image__qr--top">100 ₽ скидка</span>
+            <span class="product-image__qr--bottom">в приложении</span>
+          </span>
         </div>
 
         <div class="description-media-item">
@@ -73,6 +76,7 @@
       <a href="" class="qr-item__close">
         <img src="{{ asset('assets/front/images/close.svg') }}" />
       </a>
+      <a href="#" class="qr-item__link">Отправить ссылку на приложение</a>
       <div class="qr-item__image">
         <img src="{{ asset('assets/front/images/qr-code.svg') }}" />
       </div>

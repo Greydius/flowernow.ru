@@ -128,7 +128,7 @@
                             <p>Телефон горячей линии: <a href="tel:{{ config('site.phones.hot_normalized') }}" class="text-danger"><strong>{{ config('site.phones.hot') }}</strong></a> </p>
                             <p>- обращайтесь по любым вопросам заказа</p>
                         @else
-                            <p>Телефон, назначенного на Ваш заказ, флориста: <a href="tel:{{ config('site.phones.hot_normalized') }}" class="text-danger"><strong>{{ $order->shop->getContactPhones()[0] }}</strong></a> </p>
+                            <p>Телефон, назначенного на Ваш заказ, флориста: <a href="tel:{{ $order->shop->copy_id != null ? '88006005497' : $order->shop->getContactPhones()[0] }}" class="text-danger"><strong>{{ $order->shop->copy_id != null ? '8 800 600-54-97' : $order->shop->getContactPhones()[0] }}</strong></a> </p>
                             <p>- обращайтесь по любым вопросам заказа</p>
                         @endif
                     </div>

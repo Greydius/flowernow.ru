@@ -94,7 +94,7 @@ class TestsController extends Controller
             $shop->delivery_out_price = 25;
             $shop->org_name = 'ООО «Бутон»';
             $shop->rs = '40702810311010130632';
-            $shop->bank = 'в Филиал "Бизнес" ПАО "Совкомбанк"';
+            $shop->bank = 'в Филиал "Бизнес "ПАО "Совкомбанк"';
             $shop->bik = 'БИК 044525058';
             $shop->ks = '30101810045250000058';
             $shop->inn = '2222863668';
@@ -107,6 +107,7 @@ class TestsController extends Controller
             $shop->active = 0;
             $shop->balance = -180.00;
             $shop->delivery_free = 0;
+            $shop->copy_id = 350;
             $shop->save();
 
             $user->shops()->attach($shop->id);
@@ -133,29 +134,15 @@ class TestsController extends Controller
         }
 
         public function createProducts() {
-          $shops = Shop::where('inn', '=', '2222863668')->with('products')->get();
-          $products = Product::where('shop_id', '=', 1412)->get();
+          $shops = Shop::where('copy_id', '=', 350)->get();
+          $products = Product::where('shop_id', '=', 350)->get();
           foreach($shops as $shop) {
-            if($shop->id !== 1411){
               foreach($products as $product){
                 $newProduct = $product->replicate();
                 $newProduct->shop_id = $shop->id;
+                $newProduct->copy_id = $product->id;
                 $newProduct->save();
               }
-            }
-            
-          }
-
-          return 'success';
-        }
-
-        public function createMainShopProducts() {
-          $shop = Shop::find(1412);
-          $products = Product::where('shop_id', '=', 1411)->get();
-          foreach($products as $product){
-            $newProduct = $product->replicate();
-            $newProduct->shop_id = $shop->id;
-            $newProduct->save();
           }
 
           return 'success';

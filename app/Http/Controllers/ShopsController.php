@@ -479,7 +479,7 @@ class ShopsController extends Controller
                                 \DB::raw('(SELECT COUNT(*) FROM products WHERE products.shop_id = shops.id AND products.status = 3 AND products.single IS NULL AND products.deleted_at IS NULL) AS product_status_3'),
                                 \DB::raw('(SELECT COUNT(*) FROM feedback WHERE feedback.shop_id = shops.id and feedback.approved = 1) AS feedbacks_count'),
                                 \DB::raw('(SELECT DATE_FORMAT(feedback_date, \'%Y-%m-%d\') FROM feedback WHERE feedback.shop_id = shops.id and feedback.approved = 1 ORDER BY feedback_date DESC LIMIT 1) AS feedback_date')
-                        )->orderBy('id', 'desc');
+                        )->whereNull('copy_id')->orderBy('id', 'desc');
                         if(!empty($request->search)) {
                              $shop->where('name', 'like', "%$request->search%");
 

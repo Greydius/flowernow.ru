@@ -1,15 +1,48 @@
 .product-image__qr {
   position: absolute;
   left: 0;
-  top: 10px;
-  max-width: 95px;
-  background-color: #000;
-  color: #fff;
+  bottom: 5px;
+  max-width: 130px;
+  background-color: #fff;
+  color: #000;
   font-size: 11px;
-  padding: 5px 0 5px 10px;
+  padding: 2px 27px 2px 10px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 }
 
+.product-image__qr::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 12px;
+  height: 100%;
+  background-image: url(/assets/front/images/iphone.png);
+  background-repeat: no-repeat;
+  background-position: center;
+
+}
+
+.product-image__qr--top {
+  color: #df291e;
+  display: block;
+  line-height: 1;
+}
+
+.product-image__qr--bottom {
+  color: #000;
+  display: block;
+}
+
+.product-image__qr:hover .product-image__qr--bottom {
+  color: #df291e;
+}
+
+.product-image__qr:hover::after {
+  background-image: url(/assets/front/images/iphone_red.png);
+}
 /* .product-image__qr {
   display: none;
 } */
@@ -46,7 +79,7 @@
   background-color: #fff;
   border: 1px solid #eaeaea;
   transform: rotateY(180deg);
-  padding-top: 20px;
+  /* padding-top: 20px; */
 }
 
 .product-item__front {
@@ -57,6 +90,13 @@
 
 .qr-item {
 
+}
+
+.qr-item__link {
+  padding: 0px 15px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 .qr-item__close {
@@ -74,6 +114,7 @@
   width: 100%;
   margin-bottom: 15px;
   display: flex;
+  cursor: pointer;
 }
 
 .qr-item__image img {
@@ -102,4 +143,124 @@
   .product-image__qr {
     display: none;
   }
+}
+
+.app-sms-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  background: rgba(0, 0, 0, .5);
+}
+
+.app-sms-modal.active {
+  display: flex;
+}
+
+.app-sms-modal__wrapper {
+  max-width: 750px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  background: #fff;
+  position: relative;
+}
+
+.app-sms-modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 15px;
+}
+
+.app-sms-modal__close img {
+  width: 100%;
+}
+
+.app-sms-modal__image {
+  max-width: 264px;
+}
+
+.app-sms-modal__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 50px 10px;
+}
+
+.app-sms-modal__title {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.app-sms-modal__title-red {
+  color: #df291e;
+}
+
+.app-sms-modal__input-form {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.app-sms-modal__input-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.app-sms-modal__input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.app-sms-modal__input {
+  height: 34px;
+  padding: 5px 15px;
+  border: 1px solid rgb(128, 128, 128);
+  border-right: none;
+  flex: 1;
+}
+
+.app-sms-modal__input-button {
+  max-width: 103px;
+  font-size: 11px;
+  height: 34px;
+  padding: 0 5px 0 15px;
+  border: 1px solid rgb(128, 128, 128);
+  border-left: none;
+  background-color: #df291e;
+  color: #fff;
+  display: flex;
+  text-align: left;
+}
+
+.app-sms-modal__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-sms-modal__qr .qr-item__image {
+  width: 60%;
+  margin-bottom: 5px;
+  display: flex;
+}
+
+.app-sms-modal__qr .qr-item__download {
+  display: space-around;
+}
+
+.app-sms-modal__qr .app-download__item {
+  width: 30%;
+}
+
+.app-sms-modal__description {
+  font-size: 10px;
+  margin-top: 10px;
 }

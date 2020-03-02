@@ -73,7 +73,8 @@ Route::group(['namespace' => 'Api'], function() {
     Route::post('/createShops', 'TestsController@createShops');
     Route::delete('/deleteShops', 'TestsController@deleteShops');
     Route::post('/updateShop/{id}', 'TestsController@updateShop');
-    Route::get('/createProducts', 'TestsController@createProducts');
-    Route::get('/createMainShopProducts', 'TestsController@createMainShopProducts');
+    Route::post('/createProducts', 'TestsController@createProducts');
   });
 });
+
+Route::post('/sendSMSUrl', 'ToAppController@sendSMSUrl');

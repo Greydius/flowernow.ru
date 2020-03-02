@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=201900900') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190825') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/front/css/cards.css?v=20200209') }}">
 
     <!--[if lt IE 9]>
@@ -1160,6 +1161,51 @@
       <a href="{{ route('favorites.show') }}" class="favorites-heart"></a>
     @endif
 
+    <div class="app-sms-modal">
+      <div class="app-sms-modal__wrapper">
+        <a href="" class="app-sms-modal__close">
+          <img src="{{ asset('assets/front/images/close.svg') }}" />
+        </a>
+        <div class="app-sms-modal__block">
+          <div class="app-sms-modal__title">В приложении выгоднее и удобнее!</div>
+          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100 с букета в приложении!</div>
+
+          <form class="app-sms-modal__input-form">
+            <span class="app-sms-modal__input-title">Скачайте приложение Floristum по ссылке в смс:</span>
+            <div class="app-sms-modal__input-wrapper">
+              <input class="app-sms-modal__input phone" type="text" placeholder="+7 912 555 55 55">
+              <button class="app-sms-modal__input-button" type="submit">отправить ссылку по смс*</button>
+            </div>
+          </form>
+
+          <div class="app-sms-modal__qr-wrapper">
+            <span class="app-sms-modal__qr-title">Скачайте приложение отсканировав QR-код:</span>
+            <div class="app-sms-modal__qr qr-item">
+              <div class="qr-item__image">
+                <img src="{{ asset('assets/front/images/qr-code.svg') }}" />
+              </div>
+              <div class="qr-item__description">
+                <div class="qr-item__download app-download">
+                  <a href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="app-download__item ios">
+                    <img src="{{ asset('assets/front/images/downloadIOS.svg') }}" alt="" class="">
+                  </a>
+                  <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="app-download__item andorid">
+                    <img src="{{ asset('assets/front/images/downloadAndroid.svg') }}" alt="" class="">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-sms-modal__description">
+            *Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}" target="_blank">Политикой конфиденциальности</a>, <a class="text-muted" href="{{ route('front.personldata') }}" target="_blank">Соглашением о персональных данных</a> и <a class="text-muted" href="{{ route('front.agreement') }}" target="_blank">Публичной офертой</a>
+          </div>
+
+        </div>
+        <img class="app-sms-modal__image" src="/assets/front/images/iphoto.png">
+      </div>
+    </div>
+
 
     <script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
@@ -1176,6 +1222,7 @@
     <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
     <script src="{{ asset('assets/front/js/custom.js?v=20190717') }}"></script>
     <script src="{{ asset('assets/front/js/easy.qrcode.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('assets/front/js/cards.js?v=20200209') }}"></script>
 @yield('footer')
 
