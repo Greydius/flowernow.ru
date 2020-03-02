@@ -66,6 +66,7 @@ Route::group(['namespace' => 'Api'], function() {
   });
 });
 
+Route::post('/cart', 'OrdersController@create');
 Route::post('/confirmSmsCode/{id}', 'OrdersController@confirmSmsCode');
 
 Route::post('payment/cloudpayments/createpayment', 'OrdersController@create');
@@ -73,3 +74,16 @@ Route::post('payment/cloudpayments/createpayment', 'OrdersController@create');
 Route::post('payment/cloudpayments/checkpayment', 'OrdersController@checkpayment');
 
 Route::post('payment/cloudpayments/confirmpayment', 'OrdersController@confirmpayment');
+
+
+Route::group(['namespace' => 'Api'], function() {
+  Route::group(['prefix' => 'tests', 'namespace' => 'Tests'], function() {
+    Route::get('/cities', 'TestsController@cities');
+    Route::post('/createShops', 'TestsController@createShops');
+    Route::delete('/deleteShops', 'TestsController@deleteShops');
+    Route::post('/updateShop/{id}', 'TestsController@updateShop');
+    Route::post('/createProducts', 'TestsController@createProducts');
+  });
+});
+
+Route::post('/sendSMSUrl', 'ToAppController@sendSMSUrl');

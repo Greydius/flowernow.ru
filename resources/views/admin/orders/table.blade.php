@@ -21,10 +21,10 @@
 
         <tbody>
 
-        <tr ng-repeat="order in orders" >
+        <tr class="<% order.status == 'completed' ? '' : order.status == 'accepted' ? 'success-order' : order.status == 'new' ? 'new-order' : 'canceled-order' %>" ng-repeat="order in orders" >
             @if(!$user->admin)
                 <td>
-                    <span style="font-weight: bold"><% order.id %></span>
+                    <span style="font-weight: bold"><% order.id %><span class="reorder-icon"><% order.reorder == 1 ? 'V' : '' %></span></span>
                     <div ng-show="order.payed_at != ''">
                         <br>
                         <% order.payedDateFormat %>
@@ -67,7 +67,7 @@
             @else
                 <td>
                                     <span style="font-weight: bold">
-                                        <% order.id %>
+                                        <% order.id %><span class="reorder-icon"><% order.reorder == 1 ? 'V' : '' %></span>
                                         <i ng-show="order.finance_comment" class="la la-info text-warning" bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="<% order.finance_comment %>"></i>
                                     </span>
                     <br>
@@ -138,6 +138,21 @@
 </div>
 
 <style>
+.reorder-icon {
+  color: #bfde00;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.success-order {
+  background-color: rgb(226,239,218);
+}
+.new-order {
+  background-color: rgb(248,203,173);
+}
+.canceled-order {
+  background-color: rgb(255,242,204);
+}
 .m-badge.m-badge--info__green {
   background-color: hsla(117, 100%, 81%, 1);
 }

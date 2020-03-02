@@ -861,3 +861,5 @@ Route::get('/articles/{slug}', [
 Route::get('/sitemap.xml', 'SitemapController@index');
 
 Route::get('404', ['as' => '404', 'uses' => 'HomeController@notfound']);
+
+Route::get('/promo', 'PromoController@index');

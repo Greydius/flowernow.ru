@@ -50,7 +50,11 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/media.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom.css?v=201900900') }}">
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190825') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/front/css/cards.css?v=20200209') }}">
+    @if(request()->get('app') === 'true')
+      <link rel="stylesheet" href="{{ asset('assets/front/css/coupon-popup.css?v=20200302') }}">
+    @endif
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -476,6 +480,7 @@
             </a>
         </div>
     </div>
+    @if(request()->get('app') !== 'true')
     <div id="bg_popup">
         <div class="dowloadAppBanner">
             <button class="dowloadAppBanner__closeBtn setCookie" onclick="document.getElementById('bg_popup').style.display='none'; return false;"></button>
@@ -486,6 +491,7 @@
             <button class="dowloadAppBanner__close setCookie" onclick="document.getElementById('bg_popup').style.display='none'; return false;">Спасибо, не нужно</button>
         </div>
     </div>
+    @endif
     <div class="dowloadAppIcons">
        <a target="_blank" href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppIcons__item">
            <img src="http://floristum.ru/assets/front/img/playmarket.png" alt="">
@@ -1127,16 +1133,9 @@
                         <div class="col-md-4">
                             <p><strong>Служба поддержки:</strong></p>
                             <p>
-                                <span class="h4 m-t-10">                     <style type="text/css">my-email::after {
-    content: attr(data-domain);
-  }
-  my-email::before {
-    content: attr(data-user);
-  }</style>
- 
-<!-- Впишите ниже в data-user и data-domain ваш логин email и домен --> 
-<my-email data-domain="floristum.ru" data-user="service">@</my-email>
-                          
+                                <span class="h4 m-t-10">
+
+                                    <a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a>
                                     <br>
                                     <a class="footer-phone" href="tel:{{ config('site.phones.hot_normalized') }}">{{ config('site.phones.hot') }}</a>
                                 </span>
@@ -1167,6 +1166,55 @@
       <a href="{{ route('favorites.show') }}" class="favorites-heart"></a>
     @endif
 
+    <div class="app-sms-modal">
+      <div class="app-sms-modal__wrapper">
+        <a href="" class="app-sms-modal__close">
+          <img src="{{ asset('assets/front/images/close.svg') }}" />
+        </a>
+        <div class="app-sms-modal__block">
+          <div class="app-sms-modal__title">В приложении выгоднее и удобнее!</div>
+          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100 с букета в приложении!</div>
+
+          <form class="app-sms-modal__input-form">
+            <span class="app-sms-modal__input-title">Скачайте приложение Floristum по ссылке в смс:</span>
+            <div class="app-sms-modal__input-wrapper">
+              <input class="app-sms-modal__input phone" type="text" placeholder="+7 912 555 55 55">
+              <button class="app-sms-modal__input-button" type="submit">отправить ссылку по смс*</button>
+            </div>
+          </form>
+
+          <div class="app-sms-modal__qr-wrapper">
+            <span class="app-sms-modal__qr-title">Скачайте приложение отсканировав QR-код:</span>
+            <div class="app-sms-modal__qr qr-item">
+              <div class="qr-item__image">
+                <img src="{{ asset('assets/front/images/qr-code.svg') }}" />
+              </div>
+              <div class="qr-item__description">
+                <div class="qr-item__download app-download">
+                  <a href="https://apps.apple.com/ru/app/floristum/id1454760508" target="_blank" class="app-download__item ios">
+                    <img src="{{ asset('assets/front/images/downloadIOS.svg') }}" alt="" class="">
+                  </a>
+                  <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" target="_blank" class="app-download__item andorid">
+                    <img src="{{ asset('assets/front/images/downloadAndroid.svg') }}" alt="" class="">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-sms-modal__description">
+            *Нажимая на кнопку, вы подтверждаете свою дееспособность, а также согласие с <a class="text-muted" href="{{ route('front.privacy') }}" target="_blank">Политикой конфиденциальности</a>, <a class="text-muted" href="{{ route('front.personldata') }}" target="_blank">Соглашением о персональных данных</a> и <a class="text-muted" href="{{ route('front.agreement') }}" target="_blank">Публичной офертой</a>
+          </div>
+
+        </div>
+        <img class="app-sms-modal__image" src="/assets/front/images/iphoto.png">
+      </div>
+    </div>
+
+    @if(request()->get('app') === 'true')
+      @include('front.app.coupon-popup')
+    @endif
+
 
     <script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
@@ -1183,7 +1231,11 @@
     <script src="{{ asset('assets/front/ng/mainPage.js?v=20190123') }}"></script>
     <script src="{{ asset('assets/front/js/custom.js?v=20190717') }}"></script>
     <script src="{{ asset('assets/front/js/easy.qrcode.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('assets/front/js/cards.js?v=20200209') }}"></script>
+    @if(request()->get('app') === 'true')
+      <script src="{{ asset('assets/front/js/coupon-popup.js?v=20200302') }}"></script>
+    @endif
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
@@ -1305,6 +1357,7 @@ if(strpos(location.href, '/en/')){
 <!--lang switcher end-->
 <?php } ?>
 
+@if(request()->get('app') !== 'true')
 <script>
 
 		if ($(window).width() <= 991 && getPlatform() == 'Android') { // проверка на Андроид временна
@@ -1397,7 +1450,8 @@ if(strpos(location.href, '/en/')){
 		});
 
 		
-	</script>
+</script>
+@endif
 
 <script>
 function getCookie(name) {
