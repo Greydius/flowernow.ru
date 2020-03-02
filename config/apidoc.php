@@ -207,7 +207,7 @@ return [
      * If you want to use this, please be aware of the following rules:
      * - the image size must be 230 x 52
      */
-    'logo' => 'http://floristum.ru/assets/front/img/logo_floristum_160x34.png',
+    'logo' => 'https://floristum.ru/assets/front/img/logo_floristum_160x34.png',
 
     /*
      * Name for the group of routes which do not have a @group set.

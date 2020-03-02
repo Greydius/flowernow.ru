@@ -221,16 +221,16 @@ class Product extends MainModel
                                       if(!empty($request->productPrice)) {
                                               $price = Price::find($request->productPrice);
                                               if(!empty($price)) {
-                                                      $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                                      $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
                                               }
                                       }
 
                                       if(!empty($request->price_from)) {
-                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
+                                              $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
                                       }
 
                                       if(!empty($request->price_to)) {
-                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
+                                              $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
                                       }
 
                                       if(!empty($request->flowers)) {
@@ -538,16 +538,16 @@ class Product extends MainModel
                         }
                         */
 
-                        //return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                        //return secure_asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
 
                         return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                 }
 
-                //return asset('/uploads/single/632x632/'.$this->photo.'');
+                //return secure_asset('/uploads/single/632x632/'.$this->photo.'');
                 return \App\Helpers\AppHelper::RESIZER('/uploads/single/632x632/'.$this->photo, 351, 351, 1, NULL, 75);
 
-                //return asset('/uploads/single/'.$this->photo.'');
-                //return asset('http://via.placeholder.com/600x600');
+                //return secure_asset('/uploads/single/'.$this->photo.'');
+                //return secure_asset('https://via.placeholder.com/600x600');
         }
 
         public function getDeliveryTimeAttribute() {

@@ -61,7 +61,7 @@
                         <option value="completed" ng-show="order.status == 'completed' || order.status == 'accepted'">Выполнен</option>
                     </select>
 
-                    <span class="m-badge  m-badge--info m-badge--wide" ng-show="order.status == 'completed'">Выполнен</span>
+                    <span class="m-badge  m-badge--info m-badge--info__green m-badge--wide" ng-show="order.status == 'completed'">Выполнен</span>
 
                 </td>
             @else
@@ -127,7 +127,7 @@
                         <option value="completed" ng-show="order.status == 'completed' || order.status == 'accepted'">Выполнен</option>
                     </select>
 
-                    <span class="m-badge  m-badge--info m-badge--wide" ng-show="order.status == 'completed'">Выполнен</span>
+                    <span class="m-badge  m-badge--info m-badge--info__green m-badge--wide" ng-show="order.status == 'completed'">Выполнен</span>
 
                 </td>
             @endif
@@ -136,3 +136,9 @@
         </tbody>
     </table>
 </div>
+
+<style>
+.m-badge.m-badge--info__green {
+  background-color: hsla(117, 100%, 81%, 1);
+}
+</style>

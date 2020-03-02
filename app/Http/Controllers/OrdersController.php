@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @group Orders
+ */
+
 class OrdersController extends Controller
 {
     //
@@ -41,6 +45,36 @@ class OrdersController extends Controller
 
                 return view('front.order.add',$params);
         }
+
+        /**
+         * create
+         * ### Создание заказа (required)
+         * * 'receiving_date' => 'required | date_format:"d.m.Y"' || '19.02.2020'
+         * * 'receiving_time' => 'required' || 'с 14:00 до 16:00'
+         * * 'phone' => 'required' || '+79052122383'
+         * * products[]: 'required | product_id' || 113170
+         * * qty: 'number' || 1
+         * ### Others:
+         * * promo_code: 'string' || '1FBgHH'
+         * * text: 'string' || 'Тест'
+         * * recipient_name: 'string' || 'Тест'
+         * * recipient_phone: 'string' || '+998999999999'
+         * * name[]: 'string' || 'Тест'
+         * * recipient_address: 'string' || 'Тест'
+         * * delivery_out: 'on' || 'off'
+         * * delivery_out_distance: 'number' || 10
+         * * recipient_info: 'string' || 'Тест'
+         * * anonymous: 'on' || 'off'
+         * * recipient_photo: 'on' || 'off'
+         * * email: 'emaul' || 'test@test.test'
+         * * payment: 'card' || 'cash' || 'rs'
+         * ### IF UR:
+         * * ur_name: 'string' || ''
+         * * ur_inn: 'string' || ''
+         * * ur_kpp: 'string' || ''
+         * * ur_address: 'string' || ''
+         * * ur_bank: 'string' || ''
+         */
 
         function create(Request $request) {
                 $order = Input::all();
@@ -937,6 +971,11 @@ class OrdersController extends Controller
                         return redirect()->route('front.index');
                 }
         }
+
+        /**
+         * confirmSmsCode
+         * sms_code => 'string'
+         */
 
         public function confirmSmsCode($id, Request $request) {
                 $order = Order::findOrFail($id);

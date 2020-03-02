@@ -159,7 +159,7 @@ class Order extends MainModel
 
                 $shop = $this->shop;
 
-                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'http://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
+                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'https://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
                 
                 //return route('order.details', ['key' => $this->key]);
                 return $href;

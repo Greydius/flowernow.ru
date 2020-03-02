@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02c859beb1601388ef84a85d340b71fe",
+    "content-hash": "bc44cb84f1ad75d8a29597363a411934",
     "packages": [
         {
             "name": "cloudinary/cloudinary_php",
@@ -4265,6 +4265,36 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2017-11-27T11:13:29+00:00"
+        },
+        {
+            "name": "troytft/cloud-payments-client",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Troytft/cloud-payments-client.git",
+                "reference": "5e45ee22ab5936adc3ef079fc1a77a8a0a150017"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Troytft/cloud-payments-client/zipball/5e45ee22ab5936adc3ef079fc1a77a8a0a150017",
+                "reference": "5e45ee22ab5936adc3ef079fc1a77a8a0a150017",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CloudPayments\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Client for CloudPayments.ru",
+            "time": "2018-12-28T12:03:24+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
