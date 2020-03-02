@@ -538,16 +538,16 @@ class Product extends MainModel
                         }
                         */
 
-                        //return asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
+                        //return secure_asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
 
                         return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                 }
 
-                //return asset('/uploads/single/632x632/'.$this->photo.'');
+                //return secure_asset('/uploads/single/632x632/'.$this->photo.'');
                 return \App\Helpers\AppHelper::RESIZER('/uploads/single/632x632/'.$this->photo, 351, 351, 1, NULL, 75);
 
-                //return asset('/uploads/single/'.$this->photo.'');
-                //return asset('http://via.placeholder.com/600x600');
+                //return secure_asset('/uploads/single/'.$this->photo.'');
+                //return secure_asset('https://via.placeholder.com/600x600');
         }
 
         public function getDeliveryTimeAttribute() {

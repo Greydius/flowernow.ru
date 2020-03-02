@@ -576,7 +576,7 @@ class ShopsController extends Controller
                         'id' => $shop->id
                 ], false);
 
-                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'http://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
+                $href = !empty($shop->city->slug) && $shop->city->slug != 'moskva' ? 'https://'.$shop->city->slug.'.floristum.ru'.$href : 'https://floristum.ru'.$href;
 
                 $src = "https://floristum.ru/assets/front/img/logo_floristum_mini.png";
 

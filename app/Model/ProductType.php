@@ -30,6 +30,6 @@ class ProductType extends MainModel
         }
 
         public function getPhotoAttribute() {
-                return asset('assets/front/img/ico/'.$this->icon);
+                return secure_asset('assets/front/img/ico/'.$this->icon);
         }
 }
