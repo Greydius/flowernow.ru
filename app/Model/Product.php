@@ -221,16 +221,16 @@ class Product extends MainModel
                                       if(!empty($request->productPrice)) {
                                               $price = Price::find($request->productPrice);
                                               if(!empty($price)) {
-                                                      $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                                      $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
                                               }
                                       }
 
                                       if(!empty($request->price_from)) {
-                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
+                                              $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) >= '.(int)$request->price_from.' ');
                                       }
 
                                       if(!empty($request->price_to)) {
-                                              $productRequest->whereRaw('get_client_price(price, shop_id)+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
+                                              $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id) <= '.(int)$request->price_to.' ');
                                       }
 
                                       if(!empty($request->flowers)) {

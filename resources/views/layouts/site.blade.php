@@ -626,7 +626,7 @@
                                     </div>
                                 @endif
                             </li>
-                            <!-- <li class="dropdown {{ !empty(request()->price_from) && !empty(request()->price_to) ? 'active' : ''}}" id="priceMenuItem">
+                            <li class="dropdown {{ !empty(request()->price_from) && !empty(request()->price_to) ? 'active' : ''}}" id="priceMenuItem">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Цены
                                 </a>
@@ -641,7 +641,7 @@
                                         </div>
                                     </div>
                                 @endif
-                            </li> -->
+                            </li>
                             <li class="dropdown {{ !empty(request()->color) ? 'active' : ''}}" id="colorMenuItem">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     Цвет
@@ -795,7 +795,7 @@
                     </div>
                 </div>
 
-                <!-- <div class="filter-block">
+                <div class="filter-block">
                     <label class="filter-block-title spoiler ">
                         <a href="#_filter-price" aria-expanded="false" data-toggle="collapse" rel="nofollow" class="collapsed">
                             <i class="glyphicon glyphicon-menu-up" aria-hidden="true"></i>
@@ -836,7 +836,7 @@
                             </li>
                         </ul>
                     </div>
-                </div> -->
+                </div>
 
                 <div class="filter-block">
                     <label class="filter-block-title spoiler ">
