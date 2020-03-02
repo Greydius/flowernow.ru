@@ -42,7 +42,7 @@ class ToAppController extends Controller
     $Android = stripos($agent,"Android");
 
     if( $iPod || $iPhone || $iPad ){
-      return redirect('https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4');
+      return redirect('https://apps.apple.com/ru/app/floristum/id1454760508');
     }else if($Android){
       return redirect('https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US');
     }else {
@@ -63,7 +63,7 @@ class ToAppController extends Controller
     }
 
     try {
-            Sms::instance()->send($request->phone, 'Скачать приложение Floristum: https://cutt.ly/Ir7gpps');
+            Sms::instance()->send($request->phone, 'Скачать приложение Floristum: https://clck.ru/ML6Jz');
     } catch (Exception $e) {
             return response()->json([
                 'errors' => ['time' => ['Ошибка отправки СМС']]
