@@ -52,6 +52,9 @@
     <link rel="stylesheet" href="{{ asset('assets/front/css/custom_media.css?v=20190825') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/front/css/cards.css?v=20200209') }}">
+    @if(request()->get('app') === 'true')
+      <link rel="stylesheet" href="{{ asset('assets/front/css/coupon-popup.css?v=20200302') }}">
+    @endif
 
     <!--[if lt IE 9]>
     <script src="{{ asset('assets/front/css/js/html5shiv.min.js') }}"></script>
@@ -1206,6 +1209,10 @@
       </div>
     </div>
 
+    @if(request()->get('app') === 'true')
+      @include('front.app.coupon-popup')
+    @endif
+
 
     <script src="{{ asset('assets/front/js/jquery-3.2.0.min.js') }}"></script>
     <script src="{{ asset('assets/front/js/jquery.cookie.js') }}"></script>
@@ -1224,6 +1231,9 @@
     <script src="{{ asset('assets/front/js/easy.qrcode.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('assets/front/js/cards.js?v=20200209') }}"></script>
+    @if(request()->get('app') === 'true')
+      <script src="{{ asset('assets/front/js/coupon-popup.js?v=20200302') }}"></script>
+    @endif
 @yield('footer')
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
