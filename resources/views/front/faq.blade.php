@@ -192,7 +192,15 @@
 
 <p>Оформляя первый заказ на нашем сервисе как юридическое лицо, вам автоматически высылается письмо с договором и счетом. Полученный договор вы должны заполнить, подписать и отправить на нашу почту в количестве двух экземпляров. Один из них потом мы отправим вам обратно.<span id="registraciya" name="registraciya"></span></p>
 
-<p>Если вам интересно увидеть договор перед оформлением заказа, то свяжитесь с нами здесь: <a href="mailto:service@floristum.ru"><strong>service@floristum.ru</strong></a></p>
+<p>Если вам интересно увидеть договор перед оформлением заказа, то свяжитесь с нами: <style type="text/css">my-email::after {
+    content: attr(data-domain);
+  }
+  my-email::before {
+    content: attr(data-user);
+  }</style>
+ 
+<!-- Впишите ниже в data-user и data-domain ваш логин email и домен --> 
+<my-email data-domain="floristum.ru" data-user="service">@</my-email></p>
 
 <p><strong>25. Как происходит регистрация?</strong><span id="minimum" name="minimum"></span></p>
 

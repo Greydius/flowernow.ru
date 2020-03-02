@@ -37,7 +37,7 @@
               <div id="toc">
       </div>
                     <ul class="toc-footer">
-                                  <li><a href='http://github.com/mpociot/documentarian'>Documentation Powered by Documentarian</a></li>
+                                  <li><a href='https://github.com/mpociot/documentarian'>Documentation Powered by Documentarian</a></li>
                             </ul>
             </div>
     <div class="page-wrapper">
@@ -46,7 +46,7 @@
           <!-- START_INFO -->
 <h1>Info</h1>
 <p>Welcome to the generated API reference.
-<a href="http://floristum.ru/docs/collection.json">Get Postman Collection</a></p>
+<a href="https://floristum.ru/docs/collection.json">Get Postman Collection</a></p>
 <!-- END_INFO -->
 <h1>Auth</h1>
 <p>Auth actions</p>
@@ -2955,7 +2955,7 @@ fetch(url, {
         "name_prepositional": "Новом Уренгое",
         "metro": 0,
         "population": 120,
-        "slug": "novyy-urengoy",
+        "slug": "noviy-urengoy",
         "popular": 0,
         "region": {
             "id": 662330,
@@ -3116,6 +3116,26 @@ fetch(url, {
         "metro": 0,
         "population": 110,
         "slug": "dolgoprudnyi",
+        "popular": 0,
+        "region": {
+            "id": 637680,
+            "name": "Московская область",
+            "created_at": "2017-12-24 15:58:01",
+            "updated_at": "2017-12-24 16:15:52",
+            "used": 1,
+            "code": null,
+            "codes": null,
+            "tz": "UTC+3:00"
+        }
+    },
+    {
+        "id": 639300,
+        "name": "Реутов",
+        "region_id": 637680,
+        "name_prepositional": "Реутове",
+        "metro": 0,
+        "population": 107,
+        "slug": "Reutov",
         "popular": 0,
         "region": {
             "id": 637680,
@@ -5434,15 +5454,204 @@ fetch(url, {
 <blockquote>
 <p>Example response (200):</p>
 </blockquote>
-<pre><code class="language-json">{
-    "productTypes": [],
-    "products": []
-}</code></pre>
+<pre><code class="language-json">[]</code></pre>
 <h3>HTTP Request</h3>
 <p><code>GET api/main/{cityId}</code></p>
 <!-- END_a4d5223badd5566efbb334a0818791e2 -->
 <h1>Orders</h1>
 <p>Orders actions</p>
+<!-- START_fcc544b1fbe5b42bdc87db0f8f19cf89 -->
+<h2>submit</h2>
+<p>Required:</p>
+<ul>
+<li>order_id</li>
+<li>cardHolderName</li>
+<li>cryptogram</li>
+</ul>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/submitpayment" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/submitpayment");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "error": false,
+    "message": "Успешно",
+    "order": {
+        "id": 40596,
+        "shop_id": 869,
+        "city_id": null,
+        "recipient_name": null,
+        "recipient_phone": null,
+        "recipient_address": null,
+        "recipient_flat": null,
+        "recipient_info": null,
+        "recipient_self": 0,
+        "receiving_date": "2020-02-27",
+        "receiving_time": "Согласовать",
+        "anonymous": 1,
+        "name": null,
+        "phone": "11111",
+        "email": null,
+        "text": null,
+        "status": "new",
+        "payed": 0,
+        "payment": "card",
+        "key": "OifLzhnJyPjFy2he",
+        "payed_at": null,
+        "delivery_out_distance": 0,
+        "delivery_out_price": null,
+        "delivery_price": "510.00",
+        "ur_name": null,
+        "ur_inn": null,
+        "ur_kpp": null,
+        "ur_address": null,
+        "ur_bank": null,
+        "ur_email": "",
+        "promo_code_id": 2798,
+        "confirmed": 1,
+        "photo": null,
+        "finance_comment": null,
+        "accepted_at": null,
+        "recipient_photo": 0,
+        "prev_shop_id": null,
+        "amount": 14,
+        "amountShop": 1156,
+        "receivingDateFormat": "27 февраля 2020",
+        "payedDateFormat": null,
+        "createdAtFormat": "27 февраля 2020 02:24"
+    },
+    "order_list": {
+        "id": 3600,
+        "order_id": 40596,
+        "product_id": 117356,
+        "single": 0,
+        "qty": 1,
+        "shop_price": 646,
+        "client_price": 14,
+        "created_at": "2020-02-27 02:24:43",
+        "updated_at": "2020-02-27 02:24:43",
+        "package_id": null,
+        "package_price": 0
+    },
+    "result": {
+        "Model": {
+            "TransactionId": 308907076,
+            "PaReq": "eJxVUU1zgjAQ\/SsMd0yI4ctZ4tBqpx6kTouHHiNEpSOgATrqr2+CoDanfW+zu2\/fwvRcHIxfIeu8KkPTHmHTEGVaZXm5C8118mb55pRBspdCzL5E2krBYCnqmu+EkWeh6eKtH2CPWP6GcIti4Vp8oyAlgeAu5YGHbZPBKvoUJwb9IKbmjAigAaqOMt3zsmHA09PLImaEYOxhQD2EQsjFjCny\/jw7AHSjoeSFYNtDJfO6aYuRbAF1FKRVWzbywlw6BjQAaOWB7ZvmOEHouQgB0hlADzWrVke16nTOMxYnEY6vEV0mc\/tjthjHP3NneV1fPpLvEJD+ARlvhJKphBLiGRhPsDMZO4A6HnihJTCbYr3aDcBRz4ieM88MKMulusiww4BAnI9VKdQP5eM9BvRQ\/Pqu3UwbZZCPA0qp4xJbO9pRuj5XZiij3a6BBoB0EeqPhfo7q+jf\/f8A5tG1Qg==",
+            "AcsUrl": "https:\/\/ds1.mirconnect.ru:443\/sc\/pareq",
+            "IFrameIsAllowed": true,
+            "FrameWidth": null,
+            "FrameHeight": null
+        },
+        "InnerResult": null,
+        "Success": false,
+        "Message": null
+    },
+    "code": 200
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment/cloudpayments/submitpayment</code></p>
+<!-- END_fcc544b1fbe5b42bdc87db0f8f19cf89 -->
+<!-- START_450fd212d40272e0847d41ebc4efe659 -->
+<h2>post3ds</h2>
+<ul>
+<li>transactionId -&gt; int</li>
+<li>paRes =&gt; string</li>
+</ul>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/post3ds" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/post3ds");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "error": false,
+    "message": "Успешно",
+    "result": {
+        "Model": {
+            "ReasonCode": 5006
+        },
+        "InnerResult": null,
+        "Success": false,
+        "Message": "Транзакция не найдена"
+    },
+    "code": 200
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment/cloudpayments/post3ds</code></p>
+<!-- END_450fd212d40272e0847d41ebc4efe659 -->
+<!-- START_f69abc6f9c08f922234c4e1cf27e25d1 -->
+<h2>checkPromoCode</h2>
+<ul>
+<li>code =&gt; &#039;string&#039; || code || XZ2G4</li>
+</ul>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/checkPromoCode" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/checkPromoCode");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "error": false,
+    "data": {
+        "id": 1,
+        "code": "XZ2G4",
+        "value": 5,
+        "code_type": "percent",
+        "settings": null,
+        "used_on": "2018-03-29 14:35:29",
+        "created_at": "2018-03-29 10:41:37",
+        "updated_at": "2018-03-29 14:35:29",
+        "reusable": 0,
+        "text": "5%"
+    },
+    "code": 200
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/checkPromoCode</code></p>
+<!-- END_f69abc6f9c08f922234c4e1cf27e25d1 -->
 <!-- START_f9301c03a9281c0847565f96e6f723de -->
 <h2>api/orders</h2>
 <blockquote>
@@ -5940,14 +6149,14 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>POST api/rejectionOrder/{id}</code></p>
 <!-- END_ed472662a7e53b721e0661f2842b02e7 -->
-<h1>User</h1>
-<!-- START_c149233fdb490055a84b51dd8bbedaf8 -->
-<h2>api/user/addFirebaseToken</h2>
+<!-- START_7618e172dd775f5dbe7c734861f55532 -->
+<h2>confirmSmsCode</h2>
+<p>sms_code =&gt; &#039;string&#039;</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
-<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/user/addFirebaseToken" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user/addFirebaseToken");
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/confirmSmsCode/1" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/confirmSmsCode/1");
 
 let headers = {
     "Accept": "application/json",
@@ -5961,15 +6170,110 @@ fetch(url, {
     .then(response =&gt; response.json())
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
-<p><code>POST api/user/addFirebaseToken</code></p>
-<!-- END_c149233fdb490055a84b51dd8bbedaf8 -->
-<!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
-<h2>api/user</h2>
+<p><code>POST api/confirmSmsCode/{id}</code></p>
+<!-- END_7618e172dd775f5dbe7c734861f55532 -->
+<!-- START_83112a65fb604be54373873131919b3e -->
+<h2>create</h2>
+<h3>Создание заказа (required)</h3>
+<ul>
+<li>&#039;receiving_date&#039; =&gt; &#039;required | date_format:&quot;d.m.Y&quot;&#039; || &#039;19.02.2020&#039;</li>
+<li>&#039;receiving_time&#039; =&gt; &#039;required&#039; || &#039;с 14:00 до 16:00&#039;</li>
+<li>&#039;phone&#039; =&gt; &#039;required&#039; || &#039;+79052122383&#039;</li>
+<li>products[]: &#039;required | product_id&#039; || 113170</li>
+<li>qty: &#039;number&#039; || 1
+<h3>Others:</h3></li>
+<li>promo_code: &#039;string&#039; || &#039;1FBgHH&#039;</li>
+<li>text: &#039;string&#039; || &#039;Тест&#039;</li>
+<li>recipient_name: &#039;string&#039; || &#039;Тест&#039;</li>
+<li>recipient_phone: &#039;string&#039; || &#039;+998999999999&#039;</li>
+<li>name[]: &#039;string&#039; || &#039;Тест&#039;</li>
+<li>recipient_address: &#039;string&#039; || &#039;Тест&#039;</li>
+<li>delivery_out: &#039;on&#039; || &#039;off&#039;</li>
+<li>delivery_out_distance: &#039;number&#039; || 10</li>
+<li>recipient_info: &#039;string&#039; || &#039;Тест&#039;</li>
+<li>anonymous: &#039;on&#039; || &#039;off&#039;</li>
+<li>recipient_photo: &#039;on&#039; || &#039;off&#039;</li>
+<li>email: &#039;emaul&#039; || &#039;test@test.test&#039;</li>
+<li>payment: &#039;card&#039; || &#039;cash&#039; || &#039;rs&#039;
+<h3>IF UR:</h3></li>
+<li>ur_name: &#039;string&#039; || &#039;&#039;</li>
+<li>ur_inn: &#039;string&#039; || &#039;&#039;</li>
+<li>ur_kpp: &#039;string&#039; || &#039;&#039;</li>
+<li>ur_address: &#039;string&#039; || &#039;&#039;</li>
+<li>ur_bank: &#039;string&#039; || &#039;&#039;</li>
+</ul>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
-<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/user" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user");
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/createpayment" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/createpayment");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment/cloudpayments/createpayment</code></p>
+<!-- END_83112a65fb604be54373873131919b3e -->
+<!-- START_96da0bd4f2ebecacb9c7bea66c039c9a -->
+<h2>api/payment/cloudpayments/checkpayment</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/checkpayment" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/checkpayment");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment/cloudpayments/checkpayment</code></p>
+<!-- END_96da0bd4f2ebecacb9c7bea66c039c9a -->
+<!-- START_ac5a076b85213979160b4430592e7412 -->
+<h2>api/payment/cloudpayments/confirmpayment</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/confirmpayment" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/confirmpayment");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment/cloudpayments/confirmpayment</code></p>
+<!-- END_ac5a076b85213979160b4430592e7412 -->
+<h1>Products</h1>
+<!-- START_73123bf76e0c8a3894762f134aa9ae56 -->
+<h2>api/products/{city_id}/{category_slug}</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/products/1/1" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/products/1/1");
 
 let headers = {
     "Accept": "application/json",
@@ -5986,27 +6290,61 @@ fetch(url, {
 <p>Example response (200):</p>
 </blockquote>
 <pre><code class="language-json">{
-    "id": 427,
-    "name": null,
-    "email": "a.elcheninov@mail.ru",
-    "confirmed": 1,
-    "confirmation_code": "ODv6zUdE9v9B4nrVHy9V19tRRik15h",
-    "created_at": "2019-11-01 00:00:00",
-    "updated_at": "2020-02-08 22:00:40",
-    "phone": "+79052122383",
-    "admin": 0,
-    "firebase_token": "e7hLQtpdx74:APA91bGTDwvnkH_b54g0uOsaqjsQ9vgVV3WVJdqjyRzU8SH-LjmL3VDuvNEm5swl026KiUn2tL2SpPaeCAJWY4uCkBLVWDaXTQSzoHnhho312U2hSrGXOfR-52aHLOIRhl9DKvBIN3Kv"
-}</code></pre>
-<blockquote>
-<p>Example response (401):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "Unauthenticated."
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
 }</code></pre>
 <h3>HTTP Request</h3>
-<p><code>GET api/user</code></p>
-<!-- END_2b6e5a4b188cb183c7e59558cce36cb6 -->
-<h1>general</h1>
+<p><code>GET api/products/{city_id}/{category_slug}</code></p>
+<!-- END_73123bf76e0c8a3894762f134aa9ae56 -->
+<!-- START_d7e310d943b60d7e9738e43e86d47f60 -->
+<h2>api/products/{city_id}</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/products/1" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/products/1");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "current_page": 1,
+    "data": [],
+    "first_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "from": null,
+    "last_page": 1,
+    "last_page_url": "http:\/\/localhost\/api\/products\/1?page=1",
+    "next_page_url": null,
+    "path": "http:\/\/localhost\/api\/products\/1",
+    "per_page": 15,
+    "prev_page_url": null,
+    "to": null,
+    "total": 0
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/products/{city_id}</code></p>
+<!-- END_d7e310d943b60d7e9738e43e86d47f60 -->
 <!-- START_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
 <h2>api/products</h2>
 <blockquote>
@@ -6033,216 +6371,189 @@ fetch(url, {
     "current_page": 1,
     "data": [
         {
-            "id": 1886,
-            "shop_id": 62,
-            "name": "Букет номер четыре",
-            "slug": "buket-nomer-chetyre",
-            "price": 9920,
-            "description": "Состав букета\nРоза 31шт\nРоза кустовая 15шт\nГиацинты 10шт\nХамелациум 10шт\n\nУпаковка: атласная лента(цвет на выбор)\n\nВозможна корректировка состава и упаковки по желанию клиента.(Упаковка без изменения стоимости: крафт-бумага, органза, фетр и т.д.). Уважаемые покупатели! Цветы являются сезонным товаром и могут находиться на складе в ограниченном количестве. Также качество цветов, поступающих от производителя, может быть не всегда приемлемым. В этом случае мы совершаем эквивалентную замену цветов, предварительно согласовав этот вопрос с вами. Мы гарантируем неизменность стоимости и цветовой гаммы букета в случае замены.",
-            "photo": "p62_1519228779_42033.jpg",
-            "make_time": 720,
+            "id": 55632,
+            "shop_id": 152,
+            "name": "Букет из 21 желтой розы",
+            "slug": "buket-iz-21-zheltoy-rozy-259",
+            "price": 1317,
+            "description": "Букет из 21 (70см) желтой розы.",
+            "photo": "p152_1544528803_85101.jpg",
+            "make_time": 120,
+            "width": 25,
+            "height": 70,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 4,
+            "product_type_id": 1,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 60103432,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 4,
+            "clientPrice": 2063,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-iz-21-zheltoy-rozy-259",
+            "photoUrl": "\/uploads\/products\/152\/351x351_c\/p152_1544528803_85101.jpg",
+            "fullPrice": 2063,
+            "deliveryTime": "2ч.",
+            "shop": {
+                "id": 152,
+                "name": "Цветочный Гид",
+                "delivery_price": "350.00",
+                "delivery_time": 150
+            },
+            "photos": [
+                {
+                    "id": 58051,
+                    "product_id": 55632,
+                    "photo": "p152_1544528803_85101.jpg",
+                    "created_at": "2018-12-11 14:46:43",
+                    "updated_at": "2018-12-11 14:46:43",
+                    "priority": 0,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 57312,
+            "shop_id": 152,
+            "name": "Букет букет из 41 альстромерии микс",
+            "slug": "buket-buket-iz-41-alstromerii-miks-605",
+            "price": 3342,
+            "description": "Пышный букет из разноцветной альстромерии.",
+            "photo": "p152_1545045380_73107.jpg",
+            "make_time": 60,
+            "width": 50,
+            "height": 60,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 10,
+            "product_type_id": 1,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 53292817,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 4,
+            "clientPrice": 4695,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-buket-iz-41-alstromerii-miks-605",
+            "photoUrl": "\/uploads\/products\/152\/351x351_c\/p152_1545045380_73107.jpg",
+            "fullPrice": 4695,
+            "deliveryTime": "1ч.",
+            "shop": {
+                "id": 152,
+                "name": "Цветочный Гид",
+                "delivery_price": "350.00",
+                "delivery_time": 150
+            },
+            "photos": [
+                {
+                    "id": 59768,
+                    "product_id": 57312,
+                    "photo": "p152_1545045380_73107.jpg",
+                    "created_at": "2018-12-17 14:16:20",
+                    "updated_at": "2018-12-17 14:16:20",
+                    "priority": 0,
+                    "cdn_response": null
+                }
+            ]
+        },
+        {
+            "id": 63651,
+            "shop_id": 152,
+            "name": "Букет из 31 кустовой розы микс",
+            "slug": "buket-iz-31-kustovoy-rozy-miks-378",
+            "price": 1620,
+            "description": "Кустовые розы относится к роду шиповников, которые появились на Земле примерно 40 млн. лет назад. На сегодняшний день данный род объединяет примерно 250 видов различных растений и больше 200 тыс. сортов. Сначала роза именовалась древнеперсидским словом «wrodon», затем в греческом языке ее стали называть «rhodon». Позже данное слово было преобразовано римлянами в «rosa». В умеренных и теплых областях Северного полушария можно повстречать розы в диких условиях, они не уступают в красоте и превосходном аромате садовым формам. На сегодняшний день садоводы выращивают самые различные сорта и гибриды данного растения, которые отличаются удивительной красотой цветков. Они пользуются особой популярностью не только у цветоводов, садоводов и ландшафтных дизайнеров, но и у всех любителей прекрасного.",
+            "photo": "p152_1547768337_55248.jpg",
+            "make_time": 30,
             "width": 35,
             "height": 55,
             "dop": 0,
             "approved": 0,
-            "color_id": 2,
-            "product_type_id": 2,
-            "status": 1,
-            "status_comment": "\"Пожалуйста, заполните Профиль магазина, товары и сообщите о готовности получать заказы на service@floristum.ru\"",
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 78786949,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 2,
-            "clientPrice": 13396,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-nomer-chetyre",
-            "photoUrl": "\/uploads\/products\/62\/351x351_c\/p62_1519228779_42033.jpg",
-            "fullPrice": 13396,
-            "deliveryTime": "12ч.",
-            "shop": {
-                "id": 62,
-                "name": "Счастливые люди",
-                "delivery_price": "500.00",
-                "delivery_time": 120
-            },
-            "photos": [
-                {
-                    "id": 2624,
-                    "product_id": 1886,
-                    "photo": "p62_1519228779_42033.jpg",
-                    "created_at": "2018-02-21 18:59:39",
-                    "updated_at": "2019-05-05 13:40:18",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/62\\\/p62_1519228779_42033\",\"version\":1557052815,\"signature\":\"9bbf1d046898cc85f6a30929d06ba4c874368601\",\"width\":632,\"height\":632,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:15Z\",\"tags\":[],\"bytes\":79085,\"type\":\"upload\",\"etag\":\"769f4584b40ab67266fbc3cd4ee4894c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052815\\\/632x632\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"},\"350x350\":{\"public_id\":\"350x350\\\/62\\\/p62_1519228779_42033\",\"version\":1557052817,\"signature\":\"9d45559edb7ea006e03b53187e80eaa54b62e518\",\"width\":350,\"height\":350,\"format\":\"jpg\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T10:40:17Z\",\"tags\":[],\"bytes\":30555,\"type\":\"upload\",\"etag\":\"e95578be9f671e9bb81a0b383db16012\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557052817\\\/350x350\\\/62\\\/p62_1519228779_42033.jpg\",\"original_filename\":\"p62_1519228779_42033\"}}"
-                }
-            ]
-        },
-        {
-            "id": 33742,
-            "shop_id": 119,
-            "name": "Букет \"Нектарин\"",
-            "slug": "buket-nektarin-828",
-            "price": 3150,
-            "description": "Состав букета:\n1.Яблоки - 5 шт.\n2.Нектарин - 6 шт.\n3.Гранат- 1 (не очищенный)\n4.Клубника - 10 шт.\n5. Альстромерия - 3 шт.\n6.Рускус итало - 3 шт.\n7.Упаковка бумага \"Крафт\"- 1 шт.\n8.Верёвка - 1 упак.\n9.Техническая упаковка целлофан - 1 шт.",
-            "photo": "p119_1530717477_47214.png",
-            "make_time": 90,
-            "width": 35,
-            "height": 45,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 3,
-            "product_type_id": 9,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 37762545,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 4445,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-nektarin-828",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717477_47214.png",
-            "fullPrice": 4445,
-            "deliveryTime": "1ч. 30мин.",
-            "shop": {
-                "id": 119,
-                "name": "Dekor&amp;Event",
-                "delivery_price": "350.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 35144,
-                    "product_id": 33742,
-                    "photo": "p119_1530717477_47214.png",
-                    "created_at": "2018-07-04 18:17:58",
-                    "updated_at": "2019-05-05 20:26:34",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717477_47214\",\"version\":1557077189,\"signature\":\"09ff2919072cfc6ac56204c586f1dd8cd7133788\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:29Z\",\"tags\":[],\"bytes\":583029,\"type\":\"upload\",\"etag\":\"cc934381efc5422aba5ee6854748cc80\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077189\\\/632x632\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717477_47214\",\"version\":1557077193,\"signature\":\"f37c2d1a89cc887458c3759f22c604c34ca24c6c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:26:33Z\",\"tags\":[],\"bytes\":215503,\"type\":\"upload\",\"etag\":\"d5cdb4854382f970ed7249aef1d0561c\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077193\\\/350x350\\\/119\\\/p119_1530717477_47214.png\",\"original_filename\":\"p119_1530717477_47214\"}}"
-                }
-            ]
-        },
-        {
-            "id": 33772,
-            "shop_id": 119,
-            "name": "Букет \"Пончики\"",
-            "slug": "buket-ponchiki-866",
-            "price": 1863,
-            "description": "1.Коробка - 1 шт.\n2.Декор - бумага \"крафт,тишью@\n3.Пончики - 8 шт.\nКоличество пончиков меняется по желанию заказчика.",
-            "photo": "p119_1530717851_53988.png",
-            "make_time": 180,
-            "width": 70,
-            "height": 10,
-            "dop": 0,
-            "approved": 0,
-            "color_id": 2,
-            "product_type_id": 10,
-            "status": 1,
-            "status_comment": null,
-            "pause": 0,
-            "special_offer_id": null,
-            "sort": 24002621,
-            "single": null,
-            "status_comment_at": null,
-            "star": 1,
-            "block_id": 9,
-            "clientPrice": 2772,
-            "url": "http:\/\/floristum.ru\/flowers\/buket-ponchiki-866",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1530717851_53988.png",
-            "fullPrice": 2772,
-            "deliveryTime": "3ч.",
-            "shop": {
-                "id": 119,
-                "name": "Dekor&amp;Event",
-                "delivery_price": "350.00",
-                "delivery_time": 180
-            },
-            "photos": [
-                {
-                    "id": 35176,
-                    "product_id": 33772,
-                    "photo": "p119_1530717851_53988.png",
-                    "created_at": "2018-07-04 18:24:12",
-                    "updated_at": "2019-05-05 20:27:34",
-                    "priority": 0,
-                    "cdn_response": "{\"632x632\":{\"public_id\":\"632x632\\\/119\\\/p119_1530717851_53988\",\"version\":1557077249,\"signature\":\"5f29f3b4624cf9f733a8e30b9c5d7f0c15bfedbc\",\"width\":632,\"height\":632,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:29Z\",\"tags\":[],\"bytes\":434766,\"type\":\"upload\",\"etag\":\"30920efcc12fa99e12f00d834275c377\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077249\\\/632x632\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"},\"350x350\":{\"public_id\":\"350x350\\\/119\\\/p119_1530717851_53988\",\"version\":1557077253,\"signature\":\"dae4899eaab509e7be41788e4abb03cde89abd3c\",\"width\":350,\"height\":350,\"format\":\"png\",\"resource_type\":\"image\",\"created_at\":\"2019-05-05T17:27:33Z\",\"tags\":[],\"bytes\":158283,\"type\":\"upload\",\"etag\":\"42559cf5c6d27d7550b4df8b66bfe24e\",\"placeholder\":false,\"url\":\"http:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"secure_url\":\"https:\\\/\\\/res.cloudinary.com\\\/floristum\\\/image\\\/upload\\\/v1557077253\\\/350x350\\\/119\\\/p119_1530717851_53988.png\",\"original_filename\":\"p119_1530717851_53988\"}}"
-                }
-            ]
-        },
-        {
-            "id": 88392,
-            "shop_id": 119,
-            "name": "Композиция \"Капучино с макаруны\"",
-            "slug": "kompozitsiya-kapuchino-s-makaruny-451",
-            "price": 4550,
-            "description": "Композиция \"Капучино с  макаруни\"  Модная композиция! Хит 2019 года!!!     \nСостав композиции :                            \n1.Коробка с ящиком - 1шт.\n2.Оазис - 1шт.,\n2. Зелень микс, - 10 шт.,плющ- 3шт.,\n3.Гортензия - 1шт.,\n4.Хризантема \"Сантини\" - 3шт.,\n5.Роза капучино - 9шт.,\n6.Роза кустовая-7шт.,\n7.Пироженое \"Макаруны\" -  11-12шт.\n 8.Техническая упаковка целлофан, бумага по сезону - 2м.",
-            "photo": "p119_1557992194_31282.jpg",
-            "make_time": 240,
-            "width": 45,
-            "height": 35,
-            "dop": 0,
-            "approved": 0,
             "color_id": 10,
-            "product_type_id": 10,
+            "product_type_id": 1,
             "status": 1,
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 55386723,
+            "sort": 5581026,
             "single": null,
             "status_comment_at": null,
             "star": 1,
-            "block_id": 9,
-            "clientPrice": 6265,
-            "url": "http:\/\/floristum.ru\/flowers\/kompozitsiya-kapuchino-s-makaruny-451",
-            "photoUrl": "\/uploads\/products\/119\/351x351_c\/p119_1557992194_31282.jpg",
-            "fullPrice": 6265,
-            "deliveryTime": "4ч.",
+            "block_id": 1,
+            "clientPrice": 2456,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-iz-31-kustovoy-rozy-miks-378",
+            "photoUrl": "\/uploads\/products\/152\/351x351_c\/p152_1547768337_55248.jpg",
+            "fullPrice": 2456,
+            "deliveryTime": " 30мин.",
             "shop": {
-                "id": 119,
-                "name": "Dekor&amp;Event",
+                "id": 152,
+                "name": "Цветочный Гид",
                 "delivery_price": "350.00",
-                "delivery_time": 180
+                "delivery_time": 150
             },
             "photos": [
                 {
-                    "id": 92535,
-                    "product_id": 88392,
-                    "photo": "p119_1557992194_31282.jpg",
-                    "created_at": "2019-05-16 10:36:36",
-                    "updated_at": "2019-05-16 10:36:36",
+                    "id": 66475,
+                    "product_id": 63651,
+                    "photo": "p152_1547768337_55248.jpg",
+                    "created_at": "2019-01-18 02:38:57",
+                    "updated_at": "2019-01-18 02:38:57",
                     "priority": 0,
                     "cdn_response": null
-                },
+                }
+            ]
+        },
+        {
+            "id": 63654,
+            "shop_id": 152,
+            "name": "Букет из 11 пионовидных кустовых роз",
+            "slug": "buket-iz-11-pionovidnykh-kustovykh-roz-489",
+            "price": 1418,
+            "description": "Кустовые розы относится к роду шиповников, которые появились на Земле примерно 40 млн. лет назад. На сегодняшний день данный род объединяет примерно 250 видов различных растений и больше 200 тыс. сортов. Сначала роза именовалась древнеперсидским словом «wrodon», затем в греческом языке ее стали называть «rhodon». Позже данное слово было преобразовано римлянами в «rosa». В умеренных и теплых областях Северного полушария можно повстречать розы в диких условиях, они не уступают в красоте и превосходном аромате садовым формам. На сегодняшний день садоводы выращивают самые различные сорта и гибриды данного растения, которые отличаются удивительной красотой цветков. Они пользуются особой популярностью не только у цветоводов, садоводов и ландшафтных дизайнеров, но и у всех любителей прекрасного.",
+            "photo": "p152_1547770209_75031.jpg",
+            "make_time": 30,
+            "width": 20,
+            "height": 55,
+            "dop": 0,
+            "approved": 0,
+            "color_id": 2,
+            "product_type_id": 1,
+            "status": 1,
+            "status_comment": null,
+            "pause": 0,
+            "special_offer_id": null,
+            "sort": 2651361,
+            "single": null,
+            "status_comment_at": null,
+            "star": 1,
+            "block_id": 4,
+            "clientPrice": 2194,
+            "url": "http:\/\/floristum.ru\/flowers\/buket-iz-11-pionovidnykh-kustovykh-roz-489",
+            "photoUrl": "\/uploads\/products\/152\/351x351_c\/p152_1547770209_75031.jpg",
+            "fullPrice": 2194,
+            "deliveryTime": " 30мин.",
+            "shop": {
+                "id": 152,
+                "name": "Цветочный Гид",
+                "delivery_price": "350.00",
+                "delivery_time": 150
+            },
+            "photos": [
                 {
-                    "id": 99720,
-                    "product_id": 88392,
-                    "photo": "p119_1563261163_96771.jpg",
-                    "created_at": "2019-07-16 10:12:45",
-                    "updated_at": "2019-07-16 10:12:45",
-                    "priority": 1,
-                    "cdn_response": null
-                },
-                {
-                    "id": 99722,
-                    "product_id": 88392,
-                    "photo": "p119_1563261221_48363.jpg",
-                    "created_at": "2019-07-16 10:13:42",
-                    "updated_at": "2019-07-16 10:13:42",
-                    "priority": 2,
-                    "cdn_response": null
-                },
-                {
-                    "id": 99723,
-                    "product_id": 88392,
-                    "photo": "p119_1563261271_67637.jpg",
-                    "created_at": "2019-07-16 10:14:32",
-                    "updated_at": "2019-07-16 10:14:32",
-                    "priority": 3,
+                    "id": 66478,
+                    "product_id": 63654,
+                    "photo": "p152_1547770209_75031.jpg",
+                    "created_at": "2019-01-18 03:10:09",
+                    "updated_at": "2019-01-18 03:10:09",
+                    "priority": 0,
                     "cdn_response": null
                 }
             ]
@@ -6252,7 +6563,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина цветов \"Разноцветные фрезии в корзинке\"",
             "slug": "korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
-            "price": 4191,
+            "price": 3772,
             "description": "Корзина из 25-ти разноцветных фрезий с декоративной зеленью в корзине.",
             "photo": "p159_1542648124_40993.jpg",
             "make_time": 240,
@@ -6266,15 +6577,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 20645708,
+            "sort": 24516965,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 7,
-            "clientPrice": 6099,
+            "clientPrice": 5554,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-raznotsvetnye-frezii-v-korzinke-892",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648124_40993.jpg",
-            "fullPrice": 6099,
+            "fullPrice": 5554,
             "deliveryTime": "4ч.",
             "shop": {
                 "id": 159,
@@ -6317,7 +6628,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина из роз \"Солнце\" (51 роза)",
             "slug": "korzina-iz-roz-solntse-51-roza-685",
-            "price": 8821,
+            "price": 7939,
             "description": "Корзина из 51 желтой кустовой розы с декоративной зеленью в корзине.",
             "photo": "p159_1542648232_77966.jpg",
             "make_time": 300,
@@ -6331,15 +6642,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 23464606,
+            "sort": 74766483,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 7,
-            "clientPrice": 12118,
+            "clientPrice": 10971,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-roz-solntse-51-roza-685",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542648232_77966.jpg",
-            "fullPrice": 12118,
+            "fullPrice": 10971,
             "deliveryTime": "5ч.",
             "shop": {
                 "id": 159,
@@ -6373,7 +6684,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина из весенних цветов \"Весенняя яркая\"",
             "slug": "korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
-            "price": 3614,
+            "price": 3253,
             "description": "ирис 7, лизиантус 3, кустовая роза 2, тюльпан 10, статица 1, зелень, корзина",
             "photo": "p159_1542727797_48085.jpg",
             "make_time": 180,
@@ -6387,15 +6698,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 70489655,
+            "sort": 60471889,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 7,
-            "clientPrice": 5349,
+            "clientPrice": 4879,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-iz-vesennikh-tsvetov-vesennyaya-yarkaya-763",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1542727797_48085.jpg",
-            "fullPrice": 5349,
+            "fullPrice": 4879,
             "deliveryTime": "3ч.",
             "shop": {
                 "id": 159,
@@ -6420,7 +6731,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина с цветами, чаем и сладостями \"Matre\"",
             "slug": "korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
-            "price": 5881,
+            "price": 5293,
             "description": "Корзина в синенево-кремовых тонах из роз, фиолетовых фрезий, лизиантусов, белой альстромерии, а так же чаем в Ж\/Б, печеньем Ж\/Б, шоколадкой Lindt, в корзине.",
             "photo": "p159_1543417022_53503.jpg",
             "make_time": 240,
@@ -6434,15 +6745,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 18169109,
+            "sort": 98064119,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 9,
-            "clientPrice": 8296,
+            "clientPrice": 7531,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-s-tsvetami-chaem-i-sladostyami-matre-659",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1543417022_53503.jpg",
-            "fullPrice": 8296,
+            "fullPrice": 7531,
             "deliveryTime": "4ч.",
             "shop": {
                 "id": 159,
@@ -6467,7 +6778,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина \"Ягоды с макарунами\"",
             "slug": "korzina-yagody-s-makarunami-143",
-            "price": 5100,
+            "price": 4590,
             "description": "Корзинка с ягодами: клубника 500 гр, ежевика 125 гр., малина 125 гр, голубика 125 гр, смородина 125 гр, макаруны 14 шт.",
             "photo": "p159_1544627520_20940.jpg",
             "make_time": 90,
@@ -6481,15 +6792,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 19729173,
+            "sort": 2893975,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 4,
-            "clientPrice": 7280,
+            "clientPrice": 6617,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-yagody-s-makarunami-143",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1544627520_20940.jpg",
-            "fullPrice": 7280,
+            "fullPrice": 6617,
             "deliveryTime": "1ч. 30мин.",
             "shop": {
                 "id": 159,
@@ -6532,7 +6843,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзина цветов \"Гламур\"",
             "slug": "korzina-tsvetov-glamur-597",
-            "price": 6694,
+            "price": 6025,
             "description": "Корзина в розово-сиреневых тонах из орхидей ванда 4 шт, роз Аква 5 шт, кустовых роз нежных оттенков 5 шт, лизиантусов 3 шт, сиреневая роза кения 5 шт, зелень грин белл 3 шт, розовых пионов 3 шт, салал 1 пачка, хлопок 3 шт.",
             "photo": "p159_1549041505_31505.jpg",
             "make_time": 240,
@@ -6546,15 +6857,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 25181597,
+            "sort": 4947706,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 7,
-            "clientPrice": 9353,
+            "clientPrice": 8483,
             "url": "http:\/\/floristum.ru\/flowers\/korzina-tsvetov-glamur-597",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1549041505_31505.jpg",
-            "fullPrice": 9353,
+            "fullPrice": 8483,
             "deliveryTime": "4ч.",
             "shop": {
                 "id": 159,
@@ -6597,7 +6908,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзинка с розами \"Небольшой комплимент\"",
             "slug": "korzinka-s-rozami-nebolshoy-kompliment-822",
-            "price": 1793,
+            "price": 1614,
             "description": "Корзинка в розовых тонах из роз Аква 5 шт, кустовых роз 4 шт, салал, писташ.",
             "photo": "p159_1557239651_41502.jpg",
             "make_time": 180,
@@ -6611,15 +6922,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 34705461,
+            "sort": 51304137,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 4,
-            "clientPrice": 2981,
+            "clientPrice": 2749,
             "url": "http:\/\/floristum.ru\/flowers\/korzinka-s-rozami-nebolshoy-kompliment-822",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1557239651_41502.jpg",
-            "fullPrice": 2981,
+            "fullPrice": 2749,
             "deliveryTime": "3ч.",
             "shop": {
                 "id": 159,
@@ -6653,7 +6964,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Корзинка цветов \"Этим летом\"",
             "slug": "korzinka-tsvetov-etim-letom-649",
-            "price": 2838,
+            "price": 2554,
             "description": "Корзина из минигербер красного, оранжевого, желтого цветов 11 шт, ромашек 3 шт, альстромерий белых 3 шт, рускус 15 шт, декоративные ленты 3 шт.",
             "photo": "p159_1565023459_40697.jpg",
             "make_time": 180,
@@ -6667,15 +6978,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 24363243,
+            "sort": 83703454,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 7,
-            "clientPrice": 4340,
+            "clientPrice": 3971,
             "url": "http:\/\/floristum.ru\/flowers\/korzinka-tsvetov-etim-letom-649",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1565023459_40697.jpg",
-            "fullPrice": 4340,
+            "fullPrice": 3971,
             "deliveryTime": "3ч.",
             "shop": {
                 "id": 159,
@@ -6718,7 +7029,7 @@ fetch(url, {
             "shop_id": 159,
             "name": "Букет цветов \"Запах весны\"",
             "slug": "buket-tsvetov-zapakh-vesny-247",
-            "price": 3484,
+            "price": 3136,
             "description": "Букет из синих гиацинтов и желтых тюльпанов с декоративной зеленью в подарочной упаковке.",
             "photo": "p159_1572003776_62940.jpg",
             "make_time": 90,
@@ -6732,15 +7043,15 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 684866,
+            "sort": 24069951,
             "single": null,
             "status_comment_at": null,
             "star": 1,
             "block_id": 1,
-            "clientPrice": 5180,
+            "clientPrice": 4727,
             "url": "http:\/\/floristum.ru\/flowers\/buket-tsvetov-zapakh-vesny-247",
             "photoUrl": "\/uploads\/products\/159\/351x351_c\/p159_1572003776_62940.jpg",
-            "fullPrice": 5180,
+            "fullPrice": 4727,
             "deliveryTime": "1ч. 30мин.",
             "shop": {
                 "id": 159,
@@ -6779,7 +7090,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 75769829,
+            "sort": 83366809,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6862,7 +7173,7 @@ fetch(url, {
             "status_comment": null,
             "pause": 0,
             "special_offer_id": null,
-            "sort": 85141216,
+            "sort": 47002296,
             "single": null,
             "status_comment_at": null,
             "star": 1,
@@ -6893,18 +7204,85 @@ fetch(url, {
     ],
     "first_page_url": "http:\/\/localhost\/api\/products?page=1",
     "from": 1,
-    "last_page": 136,
-    "last_page_url": "http:\/\/localhost\/api\/products?page=136",
+    "last_page": 105,
+    "last_page_url": "http:\/\/localhost\/api\/products?page=105",
     "next_page_url": "http:\/\/localhost\/api\/products?page=2",
     "path": "http:\/\/localhost\/api\/products",
     "per_page": 15,
     "prev_page_url": null,
     "to": 15,
-    "total": 2040
+    "total": 1572
 }</code></pre>
 <h3>HTTP Request</h3>
 <p><code>GET api/products</code></p>
 <!-- END_86e0ac5d4f8ce9853bc22fd08f2a0109 -->
+<h1>User</h1>
+<!-- START_c149233fdb490055a84b51dd8bbedaf8 -->
+<h2>api/user/addFirebaseToken</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/user/addFirebaseToken" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user/addFirebaseToken");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/user/addFirebaseToken</code></p>
+<!-- END_c149233fdb490055a84b51dd8bbedaf8 -->
+<!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
+<h2>api/user</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET -G "https://floristum.ru/api/user" </code></pre>
+<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/user");
+
+let headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+}
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (200):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "id": 427,
+    "name": null,
+    "email": "a.elcheninov@mail.ru",
+    "confirmed": 1,
+    "confirmation_code": "ODv6zUdE9v9B4nrVHy9V19tRRik15h",
+    "created_at": "2019-11-01 00:00:00",
+    "updated_at": "2020-02-08 22:00:40",
+    "phone": "+79052122383",
+    "admin": 0,
+    "firebase_token": "e7hLQtpdx74:APA91bGTDwvnkH_b54g0uOsaqjsQ9vgVV3WVJdqjyRzU8SH-LjmL3VDuvNEm5swl026KiUn2tL2SpPaeCAJWY4uCkBLVWDaXTQSzoHnhho312U2hSrGXOfR-52aHLOIRhl9DKvBIN3Kv"
+}</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/user</code></p>
+<!-- END_2b6e5a4b188cb183c7e59558cce36cb6 -->
+<h1>general</h1>
 <!-- START_3045eab9b818156433434f751510823f -->
 <h2>api/cart/{id}</h2>
 <blockquote>
@@ -7008,72 +7386,6 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>GET api/cart/{id}</code></p>
 <!-- END_3045eab9b818156433434f751510823f -->
-<!-- START_ffc9879f3ac5b6304e7047c50762e044 -->
-<h2>api/cart</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/cart" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/cart");
-
-let headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-}
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<h3>HTTP Request</h3>
-<p><code>POST api/cart</code></p>
-<!-- END_ffc9879f3ac5b6304e7047c50762e044 -->
-<!-- START_96da0bd4f2ebecacb9c7bea66c039c9a -->
-<h2>api/payment/cloudpayments/checkpayment</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/checkpayment" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/checkpayment");
-
-let headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-}
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<h3>HTTP Request</h3>
-<p><code>POST api/payment/cloudpayments/checkpayment</code></p>
-<!-- END_96da0bd4f2ebecacb9c7bea66c039c9a -->
-<!-- START_ac5a076b85213979160b4430592e7412 -->
-<h2>api/payment/cloudpayments/confirmpayment</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST "https://floristum.ru/api/payment/cloudpayments/confirmpayment" </code></pre>
-<pre><code class="language-javascript">const url = new URL("https://floristum.ru/api/payment/cloudpayments/confirmpayment");
-
-let headers = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-}
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<h3>HTTP Request</h3>
-<p><code>POST api/payment/cloudpayments/confirmpayment</code></p>
-<!-- END_ac5a076b85213979160b4430592e7412 -->
 <!-- START_4157e0edf1bceccf85f04a2d1851670c -->
 <h2>api/v1/products</h2>
 <blockquote>

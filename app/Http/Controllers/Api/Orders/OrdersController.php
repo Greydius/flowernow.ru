@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 use App\Model\Order;
+use App\Model\OrderList;
 use App\Model\Product;
 use App\Model\ProductType;
+use App\Model\PromoCode;
 
 /** 
  * @group Orders
@@ -100,7 +102,7 @@ class OrdersController extends Controller
                     "star": 0,
                     "block_id": 5,
                     "clientPrice": 7,
-                    "url": "http://floristum.ru/flowers/obrazets-stilya-431",
+                    "url": "https://floristum.ru/flowers/obrazets-stilya-431",
                     "photoUrl": "/uploads/products/397/351x351_c/p397_1539851897_77754.jpg",
                     "fullPrice": 7,
                     "deliveryTime": "1ч. 30мин.",
@@ -305,7 +307,7 @@ class OrdersController extends Controller
                     "star": 0,
                     "block_id": 2,
                     "clientPrice": 2094,
-                    "url": "http://floristum.ru/flowers/buket-5-1525362195",
+                    "url": "https://floristum.ru/flowers/buket-5-1525362195",
                     "photoUrl": "/uploads/products/191/351x351_c/p191_1525362195_21203.jpeg",
                     "fullPrice": 2094,
                     "deliveryTime": "1ч.",
@@ -487,5 +489,315 @@ class OrdersController extends Controller
                 }
 
                 return $order;
+        }
+
+        /**
+         * submit
+         * Required:
+         * * order_id
+         * * cardHolderName
+         * * cryptogram
+         * 
+         * @response {
+    "error": false,
+    "message": "Успешно",
+    "order": {
+        "id": 40596,
+        "shop_id": 869,
+        "city_id": null,
+        "recipient_name": null,
+        "recipient_phone": null,
+        "recipient_address": null,
+        "recipient_flat": null,
+        "recipient_info": null,
+        "recipient_self": 0,
+        "receiving_date": "2020-02-27",
+        "receiving_time": "Согласовать",
+        "anonymous": 1,
+        "name": null,
+        "phone": "11111",
+        "email": null,
+        "text": null,
+        "status": "new",
+        "payed": 0,
+        "payment": "card",
+        "key": "OifLzhnJyPjFy2he",
+        "payed_at": null,
+        "delivery_out_distance": 0,
+        "delivery_out_price": null,
+        "delivery_price": "510.00",
+        "ur_name": null,
+        "ur_inn": null,
+        "ur_kpp": null,
+        "ur_address": null,
+        "ur_bank": null,
+        "ur_email": "",
+        "promo_code_id": 2798,
+        "confirmed": 1,
+        "photo": null,
+        "finance_comment": null,
+        "accepted_at": null,
+        "recipient_photo": 0,
+        "prev_shop_id": null,
+        "amount": 14,
+        "amountShop": 1156,
+        "receivingDateFormat": "27 февраля 2020",
+        "payedDateFormat": null,
+        "createdAtFormat": "27 февраля 2020 02:24"
+    },
+    "order_list": {
+        "id": 3600,
+        "order_id": 40596,
+        "product_id": 117356,
+        "single": 0,
+        "qty": 1,
+        "shop_price": 646,
+        "client_price": 14,
+        "created_at": "2020-02-27 02:24:43",
+        "updated_at": "2020-02-27 02:24:43",
+        "package_id": null,
+        "package_price": 0
+    },
+    "result": {
+        "Model": {
+            "TransactionId": 308907076,
+            "PaReq": "eJxVUU1zgjAQ/SsMd0yI4ctZ4tBqpx6kTouHHiNEpSOgATrqr2+CoDanfW+zu2/fwvRcHIxfIeu8KkPTHmHTEGVaZXm5C8118mb55pRBspdCzL5E2krBYCnqmu+EkWeh6eKtH2CPWP6GcIti4Vp8oyAlgeAu5YGHbZPBKvoUJwb9IKbmjAigAaqOMt3zsmHA09PLImaEYOxhQD2EQsjFjCny/jw7AHSjoeSFYNtDJfO6aYuRbAF1FKRVWzbywlw6BjQAaOWB7ZvmOEHouQgB0hlADzWrVke16nTOMxYnEY6vEV0mc/tjthjHP3NneV1fPpLvEJD+ARlvhJKphBLiGRhPsDMZO4A6HnihJTCbYr3aDcBRz4ieM88MKMulusiww4BAnI9VKdQP5eM9BvRQ/Pqu3UwbZZCPA0qp4xJbO9pRuj5XZiij3a6BBoB0EeqPhfo7q+jf/f8A5tG1Qg==",
+            "AcsUrl": "https://ds1.mirconnect.ru:443/sc/pareq",
+            "IFrameIsAllowed": true,
+            "FrameWidth": null,
+            "FrameHeight": null
+        },
+        "InnerResult": null,
+        "Success": false,
+        "Message": null
+    },
+    "code": 200
+}
+         */
+        public function submit(Request $request) {
+                $order_id = $request->order_id;
+                if($order_id) {
+                  $order = Order::find($order_id);
+                  $orderList = OrderList::where('order_id', '=', $order_id)->firstOrFail();
+                  $transaction = null;
+                  $client = null;
+                  if(!empty($order)){
+                    try {
+                      // $client = new \CloudPayments\Manager(\Config::get('cloudpayments.publicId'), \Config::get('cloudpayments.pwd'));
+                      // $client = new \CloudPayments\Manager('pk_b9fae63a24c9731f3ad2f3b367b8b', 'a32f1f45a80da2b008a39d59093e2fc5');
+                      function prepareHeaders($headers) {
+                        $flattened = array();
+
+                        foreach ($headers as $key => $header) {
+                          if (is_int($key)) {
+                            $flattened[] = $header;
+                          } else {
+                            $flattened[] = $key.': '.$header;
+                          }
+                        }
+
+                        return implode("\r\n", $flattened);
+                      }
+                      $ipAddress = '87.236.16.11';
+                      $cardHolderName = $request->cardHolderName;
+                      $cryptogram = $request->cryptogram;
+                      $params = [];
+                      // $transaction = $client->chargeCard($orderList->client_price, 'RUB', $ipAddress, $cardHolderName, $cryptogram, $params = [], $requireConfirmation = false);
+                      $url = 'https://api.cloudpayments.ru/payments/cards/charge';
+                      $data = array(
+                        'Amount' => $orderList->client_price, 
+                        'Currency' => 'RUB',
+                        'IpAddress' => $ipAddress,
+                        'Name' => $cardHolderName,
+                        'CardCryptogramPacket' => $cryptogram,
+                        'InvoiceId' => $order_id
+                      );
+
+                      $headers = array(
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Authorization' => 'Basic cGtfNTBlMzYyMmUwMmIzMWVjNjFiZmJkZjJkYTNhMGM6OTI2YThhODliMzMwMjMwYjdjMjRmZmZhZjY3NzE5YTI=',
+                      );
+                      $options = array(
+                          'http' => array(
+                              'header'  => prepareHeaders($headers),
+                              'method'  => 'POST',
+                              'content' => http_build_query($data)
+                          )
+                      );
+                      $context  = stream_context_create($options);
+                      $result = file_get_contents($url, false, $context);
+
+                      return response()->json([
+                              'error' => false,
+                              'message' => 'Успешно',
+                              'order' => $order,
+                              'order_list' => $orderList,
+                              'result' => json_decode($result),
+                              'code' => 200
+                      ], 200);
+                    } catch(\Exception $e) {
+                      return response()->json([
+                              'error' => true,
+                              'e' => $e,
+                              'message' => 'Ошибка транзакции',
+                              'params' => [
+                                'price' => $orderList->client_price,
+                                'ipAddress' => $ipAddress,
+                                'cardHolderName' => $cardHolderName, 
+                                'cryptogram' => $cryptogram
+                              ],
+                              'code' => 400
+                      ], 400);
+                    }
+                  } else {
+                    return response()->json([
+                            'error' => true,
+                            'message' => 'Заказ не найден',
+                            'code' => 400
+                    ], 400);
+                  }
+                }else {
+                  return response()->json([
+                          'error' => true,
+                          'message' => 'Требуется order_id',
+                          'code' => 400
+                  ], 400);
+                }
+        }
+
+        /**
+         * post3ds
+         * * transactionId -> int
+         * * paRes => string
+         * @response {
+    "error": false,
+    "message": "Успешно",
+    "result": {
+        "Model": {
+            "ReasonCode": 5006
+        },
+        "InnerResult": null,
+        "Success": false,
+        "Message": "Транзакция не найдена"
+    },
+    "code": 200
+}
+         */
+
+        public function post3ds(Request $request) {
+                $tID = $request->transactionId;
+                $paRes = $request->paRes;
+                if($tID != '' && $paRes != '') {
+                  
+                    try {
+                        function prepareHeaders($headers) {
+                        $flattened = array();
+
+                        foreach ($headers as $key => $header) {
+                          if (is_int($key)) {
+                            $flattened[] = $header;
+                          } else {
+                            $flattened[] = $key.': '.$header;
+                          }
+                        }
+
+                        return implode("\r\n", $flattened);
+                      }
+                      
+                      $url = 'https://api.cloudpayments.ru/payments/cards/post3ds';
+                      $data = array(
+                        'TransactionId' => $tID, 
+                        'PaRes' => $paRes,
+                      );
+
+                      $headers = array(
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Authorization' => 'Basic cGtfNTBlMzYyMmUwMmIzMWVjNjFiZmJkZjJkYTNhMGM6OTI2YThhODliMzMwMjMwYjdjMjRmZmZhZjY3NzE5YTI=',
+                      );
+                      $options = array(
+                          'http' => array(
+                              'header'  => prepareHeaders($headers),
+                              'method'  => 'POST',
+                              'content' => http_build_query($data)
+                          )
+                      );
+                      $context  = stream_context_create($options);
+                      $result = file_get_contents($url, false, $context);
+
+                      return response()->json([
+                              'error' => false,
+                              'message' => 'Успешно',
+                              'result' => json_decode($result),
+                              'code' => 200
+                      ], 200);
+                    } catch(\Exception $e) {
+                      return response()->json([
+                              'error' => true,
+                              'e' => $e,
+                              'message' => 'Ошибка',
+                              'params' => [
+                                'price' => $orderList->client_price,
+                                'ipAddress' => $ipAddress,
+                                'cardHolderName' => $cardHolderName, 
+                                'cryptogram' => $cryptogram
+                              ],
+                              'code' => 400
+                      ], 400);
+                    }
+                }else {
+                  return response()->json([
+                          'error' => true,
+                          'message' => 'Требуется transactionId и paRes',
+                          'code' => 400
+                  ], 400);
+                }
+        }
+
+        /**
+         * checkPromoCode
+         * * code => 'string' || code || XZ2G4
+         * @response {
+    "error": false,
+    "data": {
+        "id": 1,
+        "code": "XZ2G4",
+        "value": 5,
+        "code_type": "percent",
+        "settings": null,
+        "used_on": "2018-03-29 14:35:29",
+        "created_at": "2018-03-29 10:41:37",
+        "updated_at": "2018-03-29 14:35:29",
+        "reusable": 0,
+        "text": "5%"
+    },
+    "code": 200
+}
+         */
+
+        public function checkPromoCode(Request $request) {
+                $code = $request->code;
+
+                if($code) {
+                  $promoCode = PromoCode::where('code', '=', $code)->get();
+                  if(count($promoCode) > 0) {
+                    return response()->json([
+                            'error' => false,
+                            'data' => $promoCode[0],
+                            'code' => 200
+                    ], 200);
+                  } else {
+                    return response()->json([
+                            'error' => true,
+                            'message' => 'Не найдено',
+                            'code' => 404
+                    ], 404);
+                  }
+                }else {
+                  return response()->json([
+                          'error' => true,
+                          'message' => 'Требуется code',
+                          'code' => 400
+                  ], 400);
+                }
         }
 }

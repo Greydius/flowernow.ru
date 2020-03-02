@@ -36,7 +36,7 @@ class CartController extends Controller
           "star": 1,
           "block_id": 2,
           "clientPrice": 13396,
-          "url": "http://floristum.ru/flowers/buket-nomer-chetyre",
+          "url": "https://floristum.ru/flowers/buket-nomer-chetyre",
           "photoUrl": "/uploads/products/62/351x351_c/p62_1519228779_42033.jpg",
           "fullPrice": 13396,
           "deliveryTime": "12ч.",

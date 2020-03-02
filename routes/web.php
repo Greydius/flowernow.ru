@@ -235,6 +235,11 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'shops.rules'
         ]);
 
+        Route::get('rules/single', [
+                'uses' => 'ShopsController@rulesSingle',
+                'as' => 'shops.rulesSingle'
+        ]);
+
         /*SINGLE PRODUCTS*/
         Route::get('single', [
                 'uses' => 'ProductsController@single',

@@ -27,6 +27,12 @@ Route::group(['namespace' => 'Api'], function () {
           Route::get('/main/{cityId}', 'CitiesController@main'); 
         });
 
+        Route::group(['namespace' => 'Orders'], function () {
+          Route::post('payment/cloudpayments/submitpayment', 'OrdersController@submit');
+          Route::post('payment/cloudpayments/post3ds', 'OrdersController@post3ds');
+          Route::post('/checkPromoCode', 'OrdersController@checkPromoCode');
+        });
+
 });
 
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
@@ -50,17 +56,20 @@ Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {
 
 Route::group(['namespace' => 'Api'], function() {
   Route::group(['prefix' => 'products', 'namespace' => 'Products'], function() {
+    Route::get('/{city_id}/{category_slug}', 'ProductsController@cityCategoryProducts');
+    Route::get('/{city_id}', 'ProductsController@cityProducts');
     Route::get('/', 'ProductsController@products');
   });
 
   Route::group(['prefix' => 'cart', 'namespace' => 'Cart'], function() {
     Route::get('/{id}', 'CartController@cart');
-
   });
 });
 
 Route::post('/cart', 'OrdersController@create');
-Route::post('/confirmSmsCode', 'OrdersController@confirmSmsCode');
+Route::post('/confirmSmsCode/{id}', 'OrdersController@confirmSmsCode');
+
+Route::post('payment/cloudpayments/createpayment', 'OrdersController@create');
 
 Route::post('payment/cloudpayments/checkpayment', 'OrdersController@checkpayment');
 

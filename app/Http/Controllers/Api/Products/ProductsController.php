@@ -7,6 +7,10 @@ use Illuminate\Routing\Controller;
 
 use App\Model\Product;
 
+/**
+ * @group Products
+ */
+
 class ProductsController extends Controller
 {
   /**
@@ -38,7 +42,7 @@ class ProductsController extends Controller
             "star": 1,
             "block_id": 2,
             "clientPrice": 13396,
-            "url": "http://floristum.ru/flowers/buket-nomer-chetyre",
+            "url": "https://floristum.ru/flowers/buket-nomer-chetyre",
             "photoUrl": "/uploads/products/62/351x351_c/p62_1519228779_42033.jpg",
             "fullPrice": 13396,
             "deliveryTime": "12ч.",
@@ -85,7 +89,7 @@ class ProductsController extends Controller
             "star": 1,
             "block_id": 9,
             "clientPrice": 4445,
-            "url": "http://floristum.ru/flowers/buket-nektarin-828",
+            "url": "https://floristum.ru/flowers/buket-nektarin-828",
             "photoUrl": "/uploads/products/119/351x351_c/p119_1530717477_47214.png",
             "fullPrice": 4445,
             "deliveryTime": "1ч. 30мин.",
@@ -108,12 +112,12 @@ class ProductsController extends Controller
             ]
         }
     ],
-    "first_page_url": "http://floristum.ru/api/products?page=1",
+    "first_page_url": "https://floristum.ru/api/products?page=1",
     "from": 1,
     "last_page": 136,
-    "last_page_url": "http://floristum.ru/api/products?page=136",
-    "next_page_url": "http://floristum.ru/api/products?page=2",
-    "path": "http://floristum.ru/api/products",
+    "last_page_url": "https://floristum.ru/api/products?page=136",
+    "next_page_url": "https://floristum.ru/api/products?page=2",
+    "path": "https://floristum.ru/api/products",
     "per_page": 15,
     "prev_page_url": null,
     "to": 15,
@@ -124,6 +128,30 @@ class ProductsController extends Controller
   public function products(Request $request) {
 
     $model = Product::popular(637640, $request);
+
+    return $model;
+  }
+
+  public function cityProducts($city_id = 637640, Request $request) {
+
+    $model = Product::popular($city_id, $request);
+
+    return $model;
+  }
+
+  public function cityCategoryProducts($city_id = 637640, $category_slug, Request $request) {
+    $page = 1;
+    if($category_slug == 'single') {
+      $request->single = true;
+    }else {
+      $request->product_type = $category_slug;
+    }
+
+    if($request->page != null) {
+      $page = $request->page;
+    }
+    
+    $model = Product::popular($city_id, $request, $page);
 
     return $model;
   }
