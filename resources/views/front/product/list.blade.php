@@ -136,7 +136,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="edit-product-price">
-                                                Цена <span class="text-danger must-have">*</span>
+                                                Цена - <span class="text-danger must-have">*</span>
                                             </label>
                                             <div class="m-input-icon m-input-icon--right">
                                                 <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, руб." id="edit-product-price">
