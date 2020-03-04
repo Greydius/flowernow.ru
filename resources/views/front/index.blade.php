@@ -500,4 +500,9 @@ Floristum?</br></br>
     <script src="{{ asset('assets/front/js/index.js?v=2_3') }}"></script>	
 
     <script type="text/javascript">	
-   
+            routes.products = '{!! route('api.products.popular') !!}';	
+            $('.owl-carousel').owlCarousel({	
+                    nav:true,	
+            })	
+    </script>	
+@stop

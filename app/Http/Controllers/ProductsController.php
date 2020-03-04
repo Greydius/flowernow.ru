@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Validator;
 use Image;
 use App\Model\SpecialOffer;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductsController extends Controller
@@ -223,6 +224,10 @@ class ProductsController extends Controller
                         $feedbacks = $feedback1->merge($feedback2);
                 } else {
                         $feedbacks = $feedback2;
+                }
+
+                if($request->get('app') === 'true' || $request->cookie('app') === 'true') {
+                  Cookie::queue(Cookie::make('app', 'true', 1800000, '/', '.' . $request->getHttpHost(), false, false));
                 }
 
 
