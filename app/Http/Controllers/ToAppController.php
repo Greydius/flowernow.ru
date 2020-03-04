@@ -63,7 +63,7 @@ class ToAppController extends Controller
     }
 
     try {
-            Sms::instance()->send($request->phone, 'Скачать приложение Floristum: https://clck.ru/ML6Jz');
+            Sms::instance()->send($request->phone, 'Скачать приложение Floristum: https://floristum.ru/1');
     } catch (Exception $e) {
             return response()->json([
                 'errors' => ['time' => ['Ошибка отправки СМС']]
