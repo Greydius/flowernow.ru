@@ -191,6 +191,11 @@ Route::get('/toApp', [
         'as' => 'toApp.redirect'
 ]);
 
+Route::get('/1', [
+        'uses' => 'ToAppController@redirect',
+        'as' => 'toApp.redirect'
+]);
+
 /* API */
 Route::group(['prefix' => 'api/v1'], function() {
         /* PRODUCTS*/
