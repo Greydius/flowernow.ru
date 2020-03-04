@@ -23,6 +23,7 @@
         <br>
     </div>
 
+
     @if(count($popularProducts) || count($singleProducts) || count($blocks))
 
         <div class="container" ng-controller="mainPage">
