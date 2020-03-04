@@ -53,7 +53,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/front/css/cards.css?v=20200209') }}">
     @if(request()->get('app') === 'true')
-      <link rel="stylesheet" href="{{ asset('assets/front/css/coupon-popup.css?v=20200302') }}">
+      <link rel="stylesheet" href="{{ asset('assets/front/css/coupon-popup.css?v=202003021518') }}">
     @endif
 
     <!--[if lt IE 9]>
@@ -98,7 +98,7 @@
 		.dowloadAppIcons__item:nth-child(2) {
 		    margin-top: 10px;
 		    
-		    display: none; /* временно */
+		    /* display: none; временно */
 		}
 		.dowloadAppIcons__item  img {
 		    display: block;
@@ -493,12 +493,12 @@
     </div>
     @endif
     <div class="dowloadAppIcons">
+      <a target="_blank" href="https://apps.apple.com/ru/app/floristum/id1454760508" class="dowloadAppIcons__item">
+          <img src="http://floristum.ru/assets/front/img/appstore.png" alt="">
+      </a>
        <a target="_blank" href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppIcons__item">
            <img src="http://floristum.ru/assets/front/img/playmarket.png" alt="">
        </a>
-      <a target="_blank" href="https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4" class="dowloadAppIcons__item">
-          <img src="http://floristum.ru/assets/front/img/appstore.png" alt="">
-      </a>
     </div>
 
 <div data-ng-app="flowApp">
@@ -1414,10 +1414,10 @@ if(strpos(location.href, '/en/')){
         }
 		
 		if (getPlatform() == 'iPhone' || getPlatform() == 'iPad') {
-			$('.downloadApp__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4').html('Floristum уже в App store! <span>Скачать приложение</span>')
+			$('.downloadApp__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4').html('Скидка 100р в приложении! <span>Скачать приложение</span>')
 			$('.downloadApp__logoOS').attr('src', 'http://floristum.ru/assets/front/img/iOS.png')
 			$('.dowloadAppBanner__link').attr('href', 'https://apps.apple.com/us/app/floristum-shop/id1490079810?ign-mpt=uo%3D4')
-			$('.dowloadAppBanner__text').html('Floristum уже в App store!')
+			$('.dowloadAppBanner__text').html('Скидка 100р в приложении!')
 			// $('.dowloadAppBanner').css('display','flex')
 		}
 		if (getPlatform() == 'Windows') {
