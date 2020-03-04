@@ -480,7 +480,7 @@
             </a>
         </div>
     </div>
-    @if(request()->get('app') !== 'true')
+    @if(request()->get('app') !== 'true' && request()->cookie('app') !== 'true')
     <div id="bg_popup">
         <div class="dowloadAppBanner">
             <button class="dowloadAppBanner__closeBtn setCookie" onclick="document.getElementById('bg_popup').style.display='none'; return false;"></button>
@@ -1357,7 +1357,7 @@ if(strpos(location.href, '/en/')){
 <!--lang switcher end-->
 <?php } ?>
 
-@if(request()->get('app') !== 'true')
+@if(request()->get('app') !== 'true' && request()->cookie('app') !== 'true')
 <script>
 
 		if ($(window).width() <= 991 && getPlatform() == 'Android') { // проверка на Андроид временна
@@ -1558,5 +1558,4 @@ updateFavorites(null)
 <style src="/assets/test.css"></style>
 <script src="/assets/test.js"></script>
 @endif
-</body>
-</html>
+</bod
