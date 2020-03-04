@@ -475,7 +475,7 @@
             <img src="http://floristum.ru/assets/front/img/logo_mobile.png" alt="" class="downloadApp__logo">
             <img src="http://floristum.ru/assets/front/img/android.png" alt="" class="downloadApp__logoOS">
             <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="downloadApp__link">
-                Floristum уже в Google play!
+                Скидка 100р в приложении!
                 <span>Скачать приложение</span>
             </a>
         </div>
@@ -486,7 +486,7 @@
             <button class="dowloadAppBanner__closeBtn setCookie" onclick="document.getElementById('bg_popup').style.display='none'; return false;"></button>
             <img src="http://floristum.ru/assets/front/img/downloadAppBannerImg.jpg" alt="" class="dowloadAppBanner__img">
             <img src="http://floristum.ru/assets/front/img/downloadAppBannerLogo.png" alt="" class="dowloadAppBanner__logo">
-            <div class="dowloadAppBanner__text">Floristum уже в Google play!</div>
+            <div class="dowloadAppBanner__text">Скидка 100р в приложении!</div>
             <a href="https://play.google.com/store/apps/details?id=ru.floristum.app&hl=en_US" class="dowloadAppBanner__link">Скачать приложение</a>
             <button class="dowloadAppBanner__close setCookie" onclick="document.getElementById('bg_popup').style.display='none'; return false;">Спасибо, не нужно</button>
         </div>
