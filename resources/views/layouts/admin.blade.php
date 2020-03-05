@@ -194,7 +194,7 @@
 								</a>
 							</li>
 
-							<li class="m-menu__item {{ \Request::route()->getName() == 'products.single' || \Request::route()->getName() == 'products.single.category' ? 'm-menu__item--active' : null }}">
+							<!-- <li class="m-menu__item {{ \Request::route()->getName() == 'products.single' || \Request::route()->getName() == 'products.single.category' ? 'm-menu__item--active' : null }}">
 								<a  href="{{ route('products.single') }}" class="m-menu__link ">
 									<i class="m-menu__link-icon fa fa-pagelines"></i>
 									<span class="m-menu__link-title">
@@ -206,7 +206,7 @@
 										</span>
 									</span>
 								</a>
-							</li>
+							</li> -->
 
 							@if(!$user->admin)
 							<li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.profile' ? 'm-menu__item--active' : null }}" >

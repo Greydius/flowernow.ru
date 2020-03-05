@@ -238,7 +238,8 @@ class ProductsController extends Controller
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
                         'lowPriceProducts' => $lowPriceProducts,
-                        'singleProducts' => $singleProducts,
+                        // 'singleProducts' => $singleProducts,
+                        'singleProducts' => [],
                         'currentType' => $currentType,
                         'specialOffers' => $specialOffers,
                         'specialOfferProducts' => $specialOfferProducts,
@@ -249,7 +250,7 @@ class ProductsController extends Controller
 
         public function show($slug) {
 
-                $product = Product::where('slug', $slug)->with('shop.city')->with('compositions.flower')->with('singleProduct')->withTrashed()->firstOrFail();
+                $product = Product::where('slug', $slug)->whereNull('single')->with('shop.city')->with('compositions.flower')->with('singleProduct')->withTrashed()->firstOrFail();
 
                 $params = [
                         'product' => $product,
@@ -1247,7 +1248,8 @@ class ProductsController extends Controller
                 } elseif(count($queries) == 1) {
                         if($queries[0] == 'single') {
                                 $request->single = true;
-                                return $this->catalog($request);
+                                // return $this->catalog($request);
+                                return redirect()->route('front.index');
                         } elseif($queries[0] == 'archive') {
                                 $request->deleted = true;
                                 return $this->catalog($request);

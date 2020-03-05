@@ -602,9 +602,9 @@
                                                 @foreach ($_productTypes as $type)
                                                     <li data-id="{{ $type->id }}" data-slug="{{ $type->slug }}" class="{{ !empty(request()->product_type_filter) && request()->product_type_filter == $type->slug ? 'active' : null }}"><img src="{{ asset('assets/front/img/ico/'.$type->icon) }}" alt="{{ $type->alt_name }}"> {{ $type->name }}</li>
                                                 @endforeach
-                                                <li data-id="" data-slug="single" class="{{ !empty(request()->single) ? 'active' : null }}">
+                                                <!-- <li data-id="" data-slug="single" class="{{ !empty(request()->single) ? 'active' : null }}">
                                                     <img src="{{ asset('assets/front/img/ico/poshtuchno.png') }}" alt=""> Поштучно
-                                                </li>
+                                                </li> -->
                                             </ul>
                                         </div>
                                     </div>
