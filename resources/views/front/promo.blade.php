@@ -6,16 +6,20 @@
   <table style="width:100%">
     <tr>
       <th>Название</th>
+      <th>Товаров на 03.03</th>
+      <th>Товаров сейчас</th>
       <th>Логин</th>
       <th>Пароль</th>
       <th>Активен</th>
     </tr>
-    @foreach($users as $user)
+    @foreach($shops as $shop)
     <tr>
-      <td>{{ $user->shops[0]->name }}</td>
-      <td>{{ $user->phone }}</td>
-      <td>{{ $user->shops[0]->city_id }}</td>
-      <td><input class="shop-active" type="checkbox" id="{{ $user->shops[0]->id }}" name="{{ $user->shops[0]->id }}" {{ $user->shops[0]->active == 1 ? 'checked' : '' }} value="1" /><label for="{{ $user->shops[0]->id }}">Toggle</label></td>
+      <td>{{ $shop->name }}</td>
+      <td>425</td>
+      <td>{{ $shop->shop_total_products }}</td>
+      <td>{{ $shop->users[0]->phone }}</td>
+      <td>{{ $shop->city_id }}</td>
+      <td><input class="shop-active" type="checkbox" id="{{ $shop->id }}" name="{{ $shop->id }}" {{ $shop->active == 1 ? 'checked' : '' }} value="1" /><label for="{{ $shop->id }}">Toggle</label></td>
     </tr>
     @endforeach
   </table>

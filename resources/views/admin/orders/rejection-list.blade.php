@@ -48,7 +48,7 @@
                                             <a href="<% orderList.product.url %>" target="_blank"><% orderList.product.name %></a> - <% orderList.qty %> шт.
                                         </span>
                                     <br>
-                                    <% order.amountShop %> руб.
+                                    <% order.amountShop %> ₽
                                 </td>
                                 <td style="word-break: break-all;">
                                     <% order.recipient_address + (order.recipient_flat ? ', кв./оф. ' + order.recipient_flat : '') %>

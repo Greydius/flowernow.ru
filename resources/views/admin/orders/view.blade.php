@@ -54,7 +54,7 @@
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
                                                             @if($order->payment == 'cash' && $order->confirmed && $order->status != 'completed')
-                                                                <span class="text-danger"><strong>Получите {{ $order->amount() }} руб. наличными с заказчика!</strong></span>
+                                                                <span class="text-danger"><strong>Получите {{ $order->amount() }} ₽ наличными с заказчика!</strong></span>
                                                             @endif
 
                                                             @if($order->payed && $order->payment != 'cash')
@@ -626,7 +626,7 @@
                         </div>
                     </div>
                 @endif
-
+                @if($user->admin)
                 @if($order->shop_id != -1 && $order->status != \App\Model\Order::$STATUS_COMPLETED)
                         <div class="col-lg-12 hidden-print">
                             <div class="m-portlet  m-portlet--border-bottom-brand ">
@@ -654,6 +654,7 @@
                             </div>
                         </div>
                         @include('admin.orders.modals.rejection')
+                @endif
                 @endif
 
                 @if($user->admin)

@@ -45,7 +45,7 @@ class PromoCode extends MainModel
         }
 
         public function getTextAttribute() {
-                return $this->value.($this->code_type == 'percent' ? '%' : 'руб.');
+                return $this->value.($this->code_type == 'percent' ? '%' : '₽');
         }
 
 }

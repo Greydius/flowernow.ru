@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col m--align-right">
                                         <span class="m-widget1__number m--font-brand">
-                                            {{ number_format($user->getShop()->balance, 2) }} руб.
+                                            {{ number_format($user->getShop()->balance, 2) }} ₽
                                         </span>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="col m--align-right">
                                         <span class="m-widget1__number m--font-success">
-                                            {{ number_format($outputAvailable, 2) }} руб.
+                                            {{ number_format($outputAvailable, 2) }} ₽
                                         </span>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="amount" class="form-control-label">
-                                    Сумма: {{ number_format($outputAvailable, 2) }} руб.
+                                    Сумма: {{ number_format($outputAvailable, 2) }} ₽
                                 </label>
                                 <input type="hidden" name="amount" value="{{ $outputAvailable }}">
                             </div>

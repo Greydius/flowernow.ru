@@ -109,7 +109,7 @@
                                                 </div>
 
                                                 <div class="text-center">
-                                                    <button class="btn btn-<% btnDopClass(dopProduct) %> btn-xs" data-ng-click="addDopProduct(dopProduct)"><% dopProduct.clientPrice %> руб.</button>
+                                                    <button class="btn btn-<% btnDopClass(dopProduct) %> btn-xs" data-ng-click="addDopProduct(dopProduct)"><% dopProduct.clientPrice %> ₽</button>
                                                 </div>
 
                                             </div>
@@ -139,7 +139,7 @@
                                                     </div>
 
                                                     <div class="text-center">
-                                                        <button class="btn btn-<% btnDopClass({{ $item->id }}) %> btn-xs" data-ng-click="addDopProduct({{ $item->id }})">{{ $item->clientPrice }} руб.</button>
+                                                        <button class="btn btn-<% btnDopClass({{ $item->id }}) %> btn-xs" data-ng-click="addDopProduct({{ $item->id }})">{{ $item->clientPrice }} ₽</button>
                                                     </div>
 
                                                 </div>

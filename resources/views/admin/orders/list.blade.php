@@ -21,15 +21,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h3>Прошедший месяц</h3>
-                        <p>Средний заказ: {{ $stat['lastMonth']['avgOrderPrice'] }} руб.</p>
+                        <p>Средний заказ: {{ $stat['lastMonth']['avgOrderPrice'] }} ₽</p>
                         <p>Среднее кол-во заказов: {{ $stat['lastMonth']['avgPayedOrders'] }} шт.</p>
-                        <p>Оборот: {{ $stat['lastMonth']['ordersSumForPeriod'] }} руб.</p>
+                        <p>Оборот: {{ $stat['lastMonth']['ordersSumForPeriod'] }} ₽</p>
                     </div>
                     <div class="col-md-6">
                         <h3>Текущий месяц</h3>
-                        <p>Средний заказ: {{ $stat['currentMonth']['avgOrderPrice'] }} руб.</p>
+                        <p>Средний заказ: {{ $stat['currentMonth']['avgOrderPrice'] }} ₽</p>
                         <p>Среднее кол-во заказов: {{ $stat['currentMonth']['avgPayedOrders'] }} шт.</p>
-                        <p>Оборот: {{ $stat['currentMonth']['ordersSumForPeriod'] }} руб.</p>
+                        <p>Оборот: {{ $stat['currentMonth']['ordersSumForPeriod'] }} ₽</p>
                     </div>
                 </div>
             @endif
@@ -42,6 +42,16 @@
 
                                 <input type="checkbox" value="1" ng-model="ur_only" name="ur_only" id="ur_only" {{ app('request')->input('ur_only') ? 'checked' : '' }} ng-change="changeUr()">
                                 Только заказы Юр.Лиц
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group m-form__group">
+                            <label class="m-checkbox">
+
+                                <input type="checkbox" value="1" ng-model="new_only" name="new_only" id="new_only" {{ app('request')->input('new_only') ? 'checked' : '' }} ng-change="changeUr()">
+                                Только новые
                                 <span></span>
                             </label>
                         </div>

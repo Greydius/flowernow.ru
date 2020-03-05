@@ -48,7 +48,7 @@
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions" style="padding: 5px; font-weight: bold">
                                 <p>Кол-во <% product.qty_from %> - <% product.qty_to %></p>
-                                <p ng-show="!product.edit_mode">Цена за шт.: <% product.price ? product.price : 0 %> руб.
+                                <p ng-show="!product.edit_mode">Цена за шт.: <% product.price ? product.price : 0 %> ₽
                                     <a href class="btn btn-info m-btn m-btn--icon btn-sm m-btn--icon-only" ng-click="product.edit_mode = true">
                                         <i class="fa fa-pencil"></i>
                                     </a>

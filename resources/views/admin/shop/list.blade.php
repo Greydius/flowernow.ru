@@ -49,7 +49,7 @@
                             <th>#</th>
                             <th>Название</th>
                             <th style="width: 110px;">Телефон</th>
-                            <th style="width: 110px;">Доставка (руб.)</th>
+                            <th style="width: 110px;">Доставка (₽)</th>
                             <th style="width: 160px;">Изм. товара</th>
                             <th style="width: 160px;">Кол-во товара</th>
                             <th style="width: 160px;">Кол-во отзывов</th>
