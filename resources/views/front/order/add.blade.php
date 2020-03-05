@@ -250,16 +250,16 @@
                                 <div class="form-group">
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
-                                        <option value="Время согласовать">Согласовать</option>
-                                        <option value="с 08:00 до 10:00">с 08:00 до 10:00</option>
-                                        <option value="с 10:00 до 12:00">с 10:00 до 12:00</option>
-                                        <option value="с 12:00 до 14:00">с 12:00 до 14:00</option>
-                                        <option value="с 14:00 до 16:00">с 14:00 до 16:00</option>
-                                        <option value="с 16:00 до 18:00">с 16:00 до 18:00</option>
-                                        <option value="с 18:00 до 20:00">с 18:00 до 20:00</option>
-                                        <option value="с 20:00 до 22:00">с 20:00 до 22:00</option>
-                                        <option value="с 22:00 до 24:00">с 22:00 до 24:00</option>
-                                        <option style="display: none" value="в течении дня">в течении дня</option>
+                                        <option data-time-start="00:00" data-time-end="23:59" value="Время согласовать">Согласовать</option>
+                                        <option data-time-start="08:00" data-time-end="09:59" value="с 08:00 до 10:00">с 08:00 до 10:00</option>
+                                        <option data-time-start="10:00" data-time-end="11:59" value="с 10:00 до 12:00">с 10:00 до 12:00</option>
+                                        <option data-time-start="12:00" data-time-end="13:59" value="с 12:00 до 14:00">с 12:00 до 14:00</option>
+                                        <option data-time-start="14:00" data-time-end="15:59" value="с 14:00 до 16:00">с 14:00 до 16:00</option>
+                                        <option data-time-start="16:00" data-time-end="17:59" value="с 16:00 до 18:00">с 16:00 до 18:00</option>
+                                        <option data-time-start="18:00" data-time-end="19:59" value="с 18:00 до 20:00">с 18:00 до 20:00</option>
+                                        <option data-time-start="20:00" data-time-end="21:59" value="с 20:00 до 22:00">с 20:00 до 22:00</option>
+                                        <option data-time-start="22:00" data-time-end="23:59" value="с 22:00 до 24:00">с 22:00 до 24:00</option>
+                                        <option data-time-start="00:00" data-time-end="23:59" style="display: none" value="в течении дня">в течении дня</option>
                                         <!--
                                         <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
                                         <option value="с 09:00 до 10:00">с 09:00 до 10:00</option>
@@ -530,11 +530,13 @@
     <script src="{{ asset('assets/plugins/intl-tel-input-12.1.0/js/intlTelInput.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/plugins/notifyjs/notify.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('assets/plugins/moment/moment.min.js') }}" type="text/javascript"></script>
+    <script src="https://momentjs.com/downloads/moment-timezone-with-data-10-year-range.min.js" type="text/javascript"></script>
     <script src="{{ asset('assets/plugins/owl.carousel/owl.carousel.min.js') }}" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/locales/bootstrap-datepicker.ru.min.js" type="text/javascript"></script>
     <script src="{{ asset('assets/front/ng/order.js?v='.rand(1, 9999)) }}" type="text/javascript"></script>
     <script>
+      moment.tz.setDefault("Europe/Moscow");
       $(".dashed-text").tooltip();
       $(".delivery-date").change(function(){
         var date = $(this).val();
@@ -571,6 +573,27 @@
           loveDayTimepicker.show();
         }else {
           toDefault();
+        }
+
+        // If is same date - check time
+        const select = $('.delivery-default-timepicker select');
+        const options = select.find('option');
+        const currentDateTime = moment();
+
+        if(moment(date, 'DD.MM.YYYY').isSame(currentDateTime, 'day')) {
+          options.each(function(i, el){
+            const startTime = $(el).attr('data-time-end');
+            const dateString = `${date} ${startTime}`;
+            const checkDate = moment(dateString, 'DD.MM.YYYY HH:mm');
+            console.log(currentDateTime, checkDate);
+            if(currentDateTime.isAfter(checkDate)) {
+              $(el).attr('disabled', true);
+            }
+          });
+        }else {
+          options.each(function(i, el) {
+            $(el).attr('disabled', false);
+          });
         }
       })
     </script>
