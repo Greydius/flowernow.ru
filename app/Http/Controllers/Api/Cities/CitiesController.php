@@ -83,7 +83,9 @@ class CitiesController extends Controller
         {
 
                 
-                $cities = City::whereNotNull('slug')->with(['region'])->orderBy('population', 'DESC')->get();
+                $cities = City::whereNotNull('slug')->where('id', '!=', 633600)->whereHas('region', function($q){
+                  $q->where('id', '!=', 621550);
+                })->with(['region'])->orderBy('population', 'DESC')->get();
 
                 return $cities;
         }
