@@ -24,7 +24,8 @@ angular.module('flowApp').controller('ordersList', function($scope, $element, $h
                                 'search': $scope.search_str,
                                 'page': $scope.currentPage,
                                 'shopId': $scope.shopId ? $scope.shopId : null,
-                                'ur': $('#ur_only').is(':checked')
+                                'ur': $('#ur_only').is(':checked'),
+                                'new': $('#new_only').is(':checked')
                         }
 
                 }).then(function (response) {

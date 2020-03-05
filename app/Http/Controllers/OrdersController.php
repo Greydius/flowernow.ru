@@ -553,6 +553,10 @@ class OrdersController extends Controller
                                         $orderModel->where('payment', 'rs');
                                 }
 
+                                if(!empty($request->new) && $request->new == 'true') {
+                                        $orderModel->where('status', 'new');
+                                }
+
                                 $orders_data = json_decode($orderModel->paginate($perPage)->toJson(), true);
                                 $orders = $orders_data['data'];
                                 unset($orders_data['data']);

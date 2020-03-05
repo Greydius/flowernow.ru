@@ -43,43 +43,43 @@ class ProductsController extends Controller
                 $specialOffers = null;
                 $specialOfferProducts = [];
 
-                if(!empty($this->current_city) && $this->current_city->id == 637640 && empty($request->product_type)) {
+                // if(!empty($this->current_city) && $this->current_city->id == 637640 && empty($request->product_type)) {
 
-                        $productRequest = Product::with(['shop'  => function($query) {
-                                $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                        }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$this->current_city->id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
-                                ->where('price', '>', 0)
-                                ->where('dop', 0)
-                                ->where('status', 1)
-                                ->where('pause', 0)
-                                ->whereNull('single')
-                                ->orderBy('star', 'DESC')
-                                ->orderBy('sort', 'DESC');
+                //         $productRequest = Product::with(['shop'  => function($query) {
+                //                 $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                //         }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$this->current_city->id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
+                //                 ->where('price', '>', 0)
+                //                 ->where('dop', 0)
+                //                 ->where('status', 1)
+                //                 ->where('pause', 0)
+                //                 ->whereNull('single')
+                //                 ->orderBy('star', 'DESC')
+                //                 ->orderBy('sort', 'DESC');
 
-                        $blocks = Block::all();
-                        $blockRequest = [];
-                        foreach($blocks as $key => $block) {
-                                $blockRequest[$key] = clone $productRequest;
-                                $blockRequest[$key]->where('block_id', $block->id)->limit($block->items);
-                        }
+                //         $blocks = Block::all();
+                //         $blockRequest = [];
+                //         foreach($blocks as $key => $block) {
+                //                 $blockRequest[$key] = clone $productRequest;
+                //                 $blockRequest[$key]->where('block_id', $block->id)->limit($block->items);
+                //         }
 
-                        for($i=1; $i< count($blockRequest); $i++) {
-                                $blockRequest[0]->unionAll($blockRequest[$i]);
-                        }
+                //         for($i=1; $i< count($blockRequest); $i++) {
+                //                 $blockRequest[0]->unionAll($blockRequest[$i]);
+                //         }
 
-                        $blockProducts = $blockRequest[0]->get();
+                //         $blockProducts = $blockRequest[0]->get();
 
-                        foreach($blocks as $key => &$block) {
-                                $products = [];
-                                foreach($blockProducts as $product) {
-                                        if($product->block_id == $block->id) {
-                                                $products[] = $product;
-                                        }
-                                }
+                //         foreach($blocks as $key => &$block) {
+                //                 $products = [];
+                //                 foreach($blockProducts as $product) {
+                //                         if($product->block_id == $block->id) {
+                //                                 $products[] = $product;
+                //                         }
+                //                 }
 
-                                $blocks[$key]->products = $products;
-                        }
-                }
+                //                 $blocks[$key]->products = $products;
+                //         }
+                // }
 
 
                 $productTypes = ProductType::where('show_on_main', '1')->get();

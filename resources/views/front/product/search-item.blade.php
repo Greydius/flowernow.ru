@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col-xs-12 buy">
                 <a href="/cart/<% product.id %>" class="btn btn-danger btn-outline buy-btn">Заказать</a>
-                <p><strong class="price-media-item"><% product.clientPrice %> руб.</strong> <a href="#" class="name"><% product.name %></a></p>
+                <p><strong class="price-media-item"><% product.clientPrice %> ₽</strong> <a href="#" class="name"><% product.name %></a></p>
                 <p class="delivery-line"><img src="{{ asset('assets/front/img/ico/deliverycar.svg') }}" alt="Скорость доставки цветов"> доставка цветов
                     <% product.deliveryTime ? product.deliveryTime : 'от 2ч.' %>
                 </p>

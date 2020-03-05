@@ -52,7 +52,7 @@
                                         <a href="<% orderList.product.url %>" target="_blank"><% orderList.product.name %></a> - <% orderList.qty %> шт.
                                     </span>
                     <br>
-                    <% order.amountShop %> руб.
+                    <% order.amountShop %> ₽
                 </td>
                 <td>
                     <select class="form-control" id="change-status-<% order.id %>" ng-model="order.status" ng-change="changeStatus(order, '<% order.status %>')" ng-hide="order.status == 'completed'">
@@ -113,7 +113,7 @@
                                         <a href="<% orderList.product.url %>" target="_blank"><% orderList.product.name %></a> - <% orderList.qty %> шт.
                                     </span>
                     <br>
-                    <% order.amount %> руб. / <% order.amountShop %> руб.
+                    <% order.amount %> ₽ / <% order.amountShop %> ₽
                     <div ng-show="order.promo_code_id" class="text-danger" style="font-size: 10px">
                         Скидка по промо: <% order.promo.text %>
                     </div>

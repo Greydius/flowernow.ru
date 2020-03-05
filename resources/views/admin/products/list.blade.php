@@ -238,7 +238,7 @@
                                         <div class="m-widget4__ext text-warning" ng-show="product.pause == 1">
                                             На паузе
                                         </div>
-
+                                        <div class="admin-product-price"><% product.fullPrice %><span class="admin-product-price__currency">₽</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -348,10 +348,10 @@
                                 <div class="row">
                                     <div class="col-md-{{ !$isDop ? '6' : '12' }}">
                                         <label for="edit-product-price">
-                                            Цена <span class="text-danger must-have">*</span>
+                                            Цена (<span class="red-bold-text">комиссию ПРИБАВИМ к вашей цене</span>) <span class="text-danger must-have">*</span>
                                         </label>
                                         <div class="m-input-icon m-input-icon--right">
-                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, руб." id="edit-product-price">
+                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, ₽" id="edit-product-price">
                                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                                 <span>
                                                     <i class="fa fa-rub"></i>
@@ -749,6 +749,25 @@
                 top: -5px;
                 right: 0;
                 cursor: pointer;
+        }
+
+        .admin-product-price {
+            text-align: right;
+            padding-right: 15px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .admin-product-price__currency {
+          font-size: 14px;
+          vertical-align: bottom;
+        }
+
+        .red-bold-text {
+          color: #f4516c;
+          font-weight: 600;
+          vertical-align: middle;
+          font-size: 8.5px;
         }
     </style>
 @stop

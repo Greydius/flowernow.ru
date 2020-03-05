@@ -54,7 +54,7 @@
                                                     <div class="m-widget4__info">
                                                         <span class="m-widget4__title">
                                                             @if($order->payment == 'cash' && $order->confirmed && $order->status != 'completed')
-                                                                <span class="text-danger"><strong>Получите {{ $order->amount() }} руб. наличными с заказчика!</strong></span>
+                                                                <span class="text-danger"><strong>Получите {{ $order->amount() }} ₽ наличными с заказчика!</strong></span>
                                                             @endif
 
                                                             @if($order->payed && $order->payment != 'cash')

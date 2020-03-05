@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Model\Shop;
 
 /**
  * @group Promo
@@ -13,9 +14,9 @@ use App\User;
 class PromoController extends Controller
 {
         public function index() {
-                $users = User::where('confirmation_code', '=', 'eGSbgWeVWdGz9YPQVxhoesx2wIigFq')->with('shops')->get();
+                $shops = Shop::where('copy_id', '=', 350)->with('users')->get();
                 return response()->view('front.promo', [
-                        'users' => $users
+                        'shops' => $shops
                 ]);
         }
 }

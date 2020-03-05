@@ -139,7 +139,7 @@
                                                 Цена - <span class="text-danger must-have">*</span>
                                             </label>
                                             <div class="m-input-icon m-input-icon--right">
-                                                <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, руб." id="edit-product-price">
+                                                <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, ₽" id="edit-product-price">
                                                 <span class="m-input-icon__icon m-input-icon__icon--right">
                                                 <span>
                                                     <i class="fa fa-rub"></i>

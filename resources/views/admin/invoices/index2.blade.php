@@ -37,7 +37,7 @@
                                 <td>{{ $invoice->shop->frozenBalance }}</td>
                                 <td>{{ $invoice->shop->availableOutBalance }}</td>
                                 <td>
-                                    {{ $invoice->amount }} руб.<br>
+                                    {{ $invoice->amount }} ₽<br>
                                     {{ $invoice->created_at }}
                                 </td>
                                 <td>

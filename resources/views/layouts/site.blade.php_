@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('pageTitle', 'Доставка цветов в '.$current_city->name_prepositional.' | Заказать цветы с круглосуточной бесплатной доставкой в '.$current_city->name_prepositional.' | Интернет магазин цветов')</title>
 
-    <meta name="description" content="@yield('pageDescription', 'Доставка цветов и букетов в '.$current_city->name_prepositional.', области, России. Федеральная курьерская служба доставки букетов цветов. Выбор букетов и подарков. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 руб.')">
+    <meta name="description" content="@yield('pageDescription', 'Доставка цветов и букетов в '.$current_city->name_prepositional.', области, России. Федеральная курьерская служба доставки букетов цветов. Выбор букетов и подарков. Бесплатная круглосуточная доставка! Заказать цветы онлайн от 900 ₽')">
     <meta name="keywords" content="@yield('pageKeywords', 'доставка, цветы, '.$current_city->name.', область, заказать, онлайн, круглосуточно, бесплатная, на дом, в офис, интернет, магазин, растения, россии, букеты')">
     <meta name="yandex-verification" content="bdbc1bcf29169555" />
 

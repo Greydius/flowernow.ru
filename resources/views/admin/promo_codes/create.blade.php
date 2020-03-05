@@ -105,7 +105,7 @@
                     <div class="m-portlet__body">
                         @foreach($promoCodes as $item)
                             <div>
-                                {{ $item->code }} - {{ $item->value . ($item->code_type == 'percent' ? '%' : 'руб.')}}
+                                {{ $item->code }} - {{ $item->value . ($item->code_type == 'percent' ? '%' : '₽')}}
                                 <form class="m-form m-form--fit m-form--label-align-right" method="post" action="{{ route('admin.promoCodes.delete', ['id' => $item->id]) }}" style="float: right;">
                                     <button type="submit" class="btn btn-danger">Удалить</button>
                                     {{ csrf_field() }}

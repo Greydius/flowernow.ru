@@ -16,7 +16,7 @@
 
             <p>Магазин: <a href="{{ route('shop.products', ['id' => $shop->id]) }}">{{ $shop->name }}</a></p>
 
-            <p>Цена: {{ $order->amountF }} руб.</p>
+            <p>Цена: {{ $order->amountF }} ₽</p>
 
             <p>Адрес доставки: {{ $order->recipient_address }}</p>
 
