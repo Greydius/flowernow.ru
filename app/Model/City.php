@@ -149,8 +149,22 @@ class City extends MainModel
                 return $this->hasOne('App\Model\Agent');
         }
 
+        public function todayCountProducts() {
+                return $this->hasOne('App\Model\TodayCountProduct');
+        }
+
         public function shops() {
                 return $this->hasMany('App\Model\Shop');
+        }
+
+        function products() {
+                return $this->hasManyThrough('App\Model\Product', 'App\Model\Shop');
+        }
+
+        function getTotalProductsAttribute() {
+                return $this->hasManyThrough('App\Model\Product', 'App\Model\Shop')->whereHas('shop', function($q){
+                  $q->where('active', '=', 1);
+                })->where('pause', '=', 0)->where('status', '=', 1)->whereNull('single')->count();
         }
 
         public static function popular($limit = 10, $random = true) {

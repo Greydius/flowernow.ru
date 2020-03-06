@@ -286,7 +286,7 @@
                             </div>
                         @endif
 
-                        @if(!empty($lowPriceProducts) && count($lowPriceProducts))
+                        @if(false)
                             <div data-ng-hide="isFiltered">
                                 <div class="hidden-lg hidden-md hidden-xs">
                                     <br><br>
@@ -295,7 +295,7 @@
                                 <br class="hidden-lg hidden-md">
 
                                 <div class="row">
-                                    @foreach($lowPriceProducts as $_item)
+                                    @foreach($randProducts as $_item)
                                         @include('front.product.list-item', ['col' => 3])
                                     @endforeach
                                 </div>

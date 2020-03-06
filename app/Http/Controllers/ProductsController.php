@@ -37,7 +37,7 @@ class ProductsController extends Controller
                 $blocks = [];
                 $city_id = $this->current_city->id;
                 $promoText = null;
-                $lowPriceProducts = null;
+                $randProducts = null;
                 $singleProducts = null;
                 $currentType = null;
                 $specialOffers = null;
@@ -124,7 +124,7 @@ class ProductsController extends Controller
                                         //$request->product_type = $productType->slug;
                                         $request->productType = $productType->id;
                                         $item['productType'] = $productType;
-                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 8);
+                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 12);
                                         $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
                                         if($item['popularProductCount']) {
                                                 $popularProducts[] = $item;
@@ -175,7 +175,7 @@ class ProductsController extends Controller
                         }
                 }
                 /*
-                $lowPriceProducts = Product::whereHas('shop', function($query) use ($city_id) {
+                $randProducts = Product::whereHas('shop', function($query) use ($city_id) {
                                 $query->where('city_id', $city_id)->available();
                         })
                         ->where('price', '>', 0)
@@ -190,10 +190,10 @@ class ProductsController extends Controller
                         if(!empty($popularProduct) && $popularProduct->total() <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'price';
-                                $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
-                                //dd($lowPriceProducts);
+                                $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
+                                //dd($randProducts);
                         } else {
-                                $lowPriceProducts = Product::lowPriceProducts($city_id)->take(12)->get();
+                                $randProducts = Product::randProducts($city_id)->take(12)->get();
                         }
                 }
 
@@ -237,7 +237,7 @@ class ProductsController extends Controller
                         'promoText' => $promoText,
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
-                        'lowPriceProducts' => $lowPriceProducts,
+                        'randProducts' => $randProducts,
                         // 'singleProducts' => $singleProducts,
                         'singleProducts' => [],
                         'currentType' => $currentType,
@@ -1283,15 +1283,15 @@ class ProductsController extends Controller
                         $title = 'Архив букетов';
                 }
 
-                $lowPriceProducts = null;
+                $randProducts = null;
 
                 if($request->q) {
                         $title = 'Поиск "'.$request->q.'"';
 
                         if(!empty($popularProduct) && $popularProduct->total() <= 30) {
                                 $request2 = new Request();
-                                $request2->order = 'price';
-                                $lowPriceProducts = Product::popular($this->current_city->id, $request2, 1, 76);
+                                $request2->order = 'rand';
+                                $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
                         }
                 }
 
@@ -1317,7 +1317,7 @@ class ProductsController extends Controller
                         'title'                 => $title,
                         'meta'                  => $meta,
                         'popularProduct'        => $popularProduct,
-                        'lowPriceProducts'      => $lowPriceProducts,
+                        'randProducts'      => $randProducts,
                         'prices'                => Price::all(),
                         'sizes'                 => Size::all(),
                         'productTypes'          => $productTypes,

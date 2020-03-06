@@ -51,17 +51,17 @@
                 @endif
 
 
-                @if($popularProduct->total() <= 30 && count($lowPriceProducts))
-                        <h3 class="margin-top-null top30"><strong>Самые низкие цены</strong></h3>
+                @if($popularProduct->total() <= 30)
+                        <h3 class="margin-top-null top30"><strong>Вам также может понравится:</strong></h3>
                         <div class="row">
-                            @foreach($lowPriceProducts as $_item)
+                            @foreach($randProducts as $_item)
 
                                 @include('front.product.list-item', ['col' => 3])
 
                             @endforeach
                         </div>
 
-                        {{ $lowPriceProducts->withPath('/catalog?order=price')->links() }}
+                        {{ $randProducts->withPath('/catalog?order=price')->links() }}
                 @endif
 
             @else
@@ -70,17 +70,17 @@
                     <div class="col-md-12">
                         <h4 class="md-mt-30 md-mb-50 text-center">К сожалению нет букетов выбранной категории.</h4>
 
-                        @if(count($lowPriceProducts))
-                            <h3 class="margin-top-null top30"><strong>Самые низкие цены</strong></h3>
+                        @if(count($randProducts))
+                            <h3 class="margin-top-null top30"><strong>Вам также может понравится</strong></h3>
                             <div class="row">
-                                @foreach($lowPriceProducts as $_item)
+                                @foreach($randProducts as $_item)
 
                                     @include('front.product.list-item', ['col' => 3])
 
                                 @endforeach
                             </div>
 
-                            {{ $lowPriceProducts->withPath('/catalog?order=price')->links() }}
+                            {{ $randProducts->withPath('/catalog?order=price')->links() }}
                         @endif
                     </div>
                 </div>
