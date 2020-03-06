@@ -6,7 +6,7 @@
   <table style="width:100%">
     <tr>
       <th>Название</th>
-      <th>Товаров на 03.03</th>
+      <th>Товаров сегодня</th>
       <th>Товаров сейчас</th>
       <th>Логин</th>
       <th>Пароль</th>
@@ -15,8 +15,8 @@
     @foreach($shops as $shop)
     <tr>
       <td>{{ $shop->name }}</td>
-      <td>425</td>
-      <td>{{ $shop->shop_total_products }}</td>
+      <td>{{ $shop->city->todayCountProducts->count }}</td>
+      <td>{{ $shop->city->total_products }}</td>
       <td>{{ $shop->users[0]->phone }}</td>
       <td>{{ $shop->city_id }}</td>
       <td><input class="shop-active" type="checkbox" id="{{ $shop->id }}" name="{{ $shop->id }}" {{ $shop->active == 1 ? 'checked' : '' }} value="1" /><label for="{{ $shop->id }}">Toggle</label></td>

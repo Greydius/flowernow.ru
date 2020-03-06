@@ -33,6 +33,8 @@ Route::group(['namespace' => 'Api'], function () {
           Route::post('/checkPromoCode', 'OrdersController@checkPromoCode');
         });
 
+        Route::get('/updateProductsCount', 'TodayCountProductsController@update');
+
 });
 
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function() {

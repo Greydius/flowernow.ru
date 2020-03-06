@@ -578,7 +578,7 @@ class Product extends MainModel
                 }
         }
 
-        public static function lowPriceProducts($city_id) {
+        public static function randProducts($city_id) {
                 return Product::whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
                 /*whereHas('shop', function($query) use ($city_id) {
                         $query->where('city_id', $city_id)->available();
@@ -588,7 +588,7 @@ class Product extends MainModel
                         ->where('pause', 0)
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
                         ->whereNull('single')
-                        ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))');
+                        ->inRandomOrder();
         }
 
         public static function validateField($fieldName, $fieldValue) {

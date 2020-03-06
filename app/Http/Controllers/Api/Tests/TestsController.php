@@ -23,43 +23,13 @@ class TestsController extends Controller
         public function cities() {
                 $regions = Region::with('cities')->get();
 
-                $results = [];
-                $i = 0;
+                $results = '';
                 foreach($regions as $region) {
                   foreach($region['cities'] as $k => $city) {
-                    if($city->slug !== null && $i < 300 ) {
-                    if($i >= 250){
-
-                      $url = 'https://api.beget.com/api/domain/changePhpVersion';
-                      $data = array(
-                        'login' => 'mihast6k', 
-                        'passwd' => 'RPdNV5Q&',
-                        'input_format' => 'json',
-                        'output_format' => 'json',
-                        'input_data' => json_encode(
-                          array(
-                            'full_fqdn' => $city['slug'] . '.floristum.com',
-                            'php_version' => '7.1'
-                          )
-                        )
-                      );
-
-                      // use key 'http' even if you send the request to https://...
-                      $options = array(
-                          'http' => array(
-                              'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                              'method'  => 'POST',
-                              'content' => http_build_query($data)
-                          )
-                      );
-                      $context  = stream_context_create($options);
-                      $result = file_get_contents($url, false, $context);
-                      $results[] = $result;
-                    }
-                      $i++;
+                    if($city->slug !== null) {
+                      $results .= ', ' . $city->slug . '.floristum.ru';
                     }
                   }
-
                 }
                 return $results;
         }
