@@ -251,14 +251,18 @@
                                     <select class="form-control" name="receiving_time">
                                         <option value="" selected="">Время доставки</option>
                                         <option data-time-start="00:00" data-time-end="23:59" value="Время согласовать">Согласовать</option>
-                                        <option data-time-start="08:00" data-time-end="09:59" value="с 08:00 до 10:00">с 08:00 до 10:00</option>
-                                        <option data-time-start="10:00" data-time-end="11:59" value="с 10:00 до 12:00">с 10:00 до 12:00</option>
-                                        <option data-time-start="12:00" data-time-end="13:59" value="с 12:00 до 14:00">с 12:00 до 14:00</option>
-                                        <option data-time-start="14:00" data-time-end="15:59" value="с 14:00 до 16:00">с 14:00 до 16:00</option>
-                                        <option data-time-start="16:00" data-time-end="17:59" value="с 16:00 до 18:00">с 16:00 до 18:00</option>
-                                        <option data-time-start="18:00" data-time-end="19:59" value="с 18:00 до 20:00">с 18:00 до 20:00</option>
-                                        <option data-time-start="20:00" data-time-end="21:59" value="с 20:00 до 22:00">с 20:00 до 22:00</option>
-                                        <option data-time-start="22:00" data-time-end="23:59" value="с 22:00 до 24:00">с 22:00 до 24:00</option>
+                                        <option data-time-start="00:00" data-time-end="00:00" value="с 00:00 до 02:00">с 00:00 до 02:00</option>
+                                        <option data-time-start="00:00" data-time-end="01:59" value="с 02:00 до 04:00">с 02:00 до 04:00</option>
+                                        <option data-time-start="02:00" data-time-end="03:59" value="с 04:00 до 06:00">с 04:00 до 06:00</option>
+                                        <option data-time-start="04:00" data-time-end="05:59" value="с 06:00 до 08:00">с 06:00 до 08:00</option>
+                                        <option data-time-start="06:00" data-time-end="07:59" value="с 08:00 до 10:00">с 08:00 до 10:00</option>
+                                        <option data-time-start="08:00" data-time-end="09:59" value="с 10:00 до 12:00">с 10:00 до 12:00</option>
+                                        <option data-time-start="10:00" data-time-end="11:59" value="с 12:00 до 14:00">с 12:00 до 14:00</option>
+                                        <option data-time-start="12:00" data-time-end="13:59" value="с 14:00 до 16:00">с 14:00 до 16:00</option>
+                                        <option data-time-start="14:00" data-time-end="15:59" value="с 16:00 до 18:00">с 16:00 до 18:00</option>
+                                        <option data-time-start="16:00" data-time-end="17:59" value="с 18:00 до 20:00">с 18:00 до 20:00</option>
+                                        <option data-time-start="18:00" data-time-end="19:59" value="с 20:00 до 22:00">с 20:00 до 22:00</option>
+                                        <option data-time-start="20:00" data-time-end="21:59" value="с 22:00 до 24:00">с 22:00 до 24:00</option>
                                         <option data-time-start="00:00" data-time-end="23:59" style="display: none" value="в течении дня">в течении дня</option>
                                         <!--
                                         <option value="с 08:00 до 09:00">с 08:00 до 09:00</option>
@@ -559,7 +563,8 @@
           womanDaysHint.hide();
         }
 
-        if(isWomanDays){
+        // if(isWomanDays){
+        if(false){
           toDefault();
           defaultTimepicker.hide();
           defaultTimepicker.find('select').val('в течении дня');
@@ -584,9 +589,10 @@
           options.each(function(i, el){
             const startTime = $(el).attr('data-time-end');
             const dateString = `${date} ${startTime}`;
-            const checkDate = moment(dateString, 'DD.MM.YYYY HH:mm');
-            console.log(currentDateTime, checkDate);
-            if(currentDateTime.isAfter(checkDate)) {
+            const checkDate = moment(dateString, 'DD.MM.YYYY hh:mm');
+            const nextDateTime = currentDateTime;
+            console.log(nextDateTime, checkDate)
+            if(nextDateTime.isAfter(checkDate)) {
               $(el).attr('disabled', true);
             }
           });

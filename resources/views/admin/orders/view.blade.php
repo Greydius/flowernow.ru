@@ -657,6 +657,37 @@
                 @endif
                 @endif
 
+                <div class="col-lg-12 hidden-print print-widget">
+                    <div class="m-portlet  m-portlet--border-bottom-brand ">
+                        <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                            <div class="m-widget26">
+
+                                <div class="m-form">
+                                    {{ csrf_field() }}
+
+
+                                    <div class="row">
+                                        <a href="javascript:window.print();" class="col-lg-12 print-widget__wrapper">
+                                            <span class="m-portlet__head-icon hidden-print print-widget__icon">
+                                                <span>
+                                                    <i class="la la-print"></i>
+                                                </span>
+                                            </span>
+                                            <h3 class="m-portlet__head-text print-widget__text">
+                                                Распечатать
+                                            </h3>
+                                        </a>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
                 @if($user->admin)
                     @if($order->payed)
                         <div class="col-lg-12 hidden-print">
@@ -867,6 +898,32 @@
 
 @section('head')
     <link href="{{ asset('assets/admin/css/print.css') }}" rel="stylesheet" type="text/css"/>
+    <style>
+      .print-widget {
+
+      }
+
+      .print-widget__wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .print-widget__icon {
+
+      }
+
+      .print-widget__icon i {
+        font-size: 30px;
+      }
+
+      .print-widget__text {
+        display: inline-block;
+        margin: 0;
+        margin-left: 10px;
+        color: #575962;
+      }
+    </style>
 @stop
 
 @section('footer')
