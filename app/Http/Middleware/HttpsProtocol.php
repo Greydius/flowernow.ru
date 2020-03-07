@@ -24,7 +24,7 @@ class HttpsProtocol
             &&
           ($request->getHttpHost() === 'floristum.ru' || $request->getHttpHost() === 'floristum.com')
         ) {
-          // return redirect()->secure($request->getRequestUri());
+          return redirect()->secure($request->getRequestUri());
         }
         return $next($request);
     }
