@@ -18,7 +18,11 @@
                 <div class="media order-total-cost">
                     <div class="media-left">
                         @if(empty($product->single))
-                            <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
+                            @if($product->copy_id !== null)
+                              <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="...">
+                            @else
+                              <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
+                            @endif
                         @else
                             <img class="media-object img-circle" width="80" height="80" ng-src="<% product.photoUrl %>" src="{{ asset('/uploads/single/'.$product->photo) }}" alt="...">
                         @endif
