@@ -248,9 +248,11 @@ class ProductsController extends Controller
                 ]);
         }
 
-        public function show($slug) {
+        public function show($slug, Request $request) {
 
-                $product = Product::where('slug', $slug)->whereNull('single')->with('shop.city')->with('compositions.flower')->with('singleProduct')->withTrashed()->firstOrFail();
+                $product = Product::where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($request){
+                  $q->where('city_id', '=', $this->current_city->id);
+                })->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
                 $params = [
                         'product' => $product,
