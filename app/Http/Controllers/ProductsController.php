@@ -300,6 +300,58 @@ class ProductsController extends Controller
                 return view('front.product.show', $params);
         }
 
+        public function showProduct($city_id, $slug) {
+
+                $product = Product::where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($city_id){
+                  $q->where('city_id', '=', $city_id);
+                })->with('compositions.flower')->with('singleProduct')->firstOrFail();
+
+                $params = [
+                        'product' => $product,
+                        'shopIsAvailable' => Shop::where('id', $product->shop->id)->available()->count(),
+                        'pageImage' => $product->photoUrl,
+                        'pageTitle' => 'Доставка '.$product->name.' в г '.$product->shop->city->name.' - Заказ цветов',
+                        'pageDescription' => 'Заказ доставки '.$product->name.' в г '.$product->shop->city->name.': цветы в офис, на дом, другой город.',
+                        'pageKeywords' => $product->name.', букет, цветы, доставка, заказ, '.$product->shop->city->name,
+                ];
+
+                $size = getimagesize(public_path().$product->photoUrl);
+                
+                if($size) {
+                        $params['pageImageWidth'] = $size[0];
+                        $params['pageImageHeight'] = $size[1];
+                }
+
+
+                if(!empty($product->single)) {
+                        if(empty($product->singleProduct)) {
+                                return redirect()->route('front.index');
+                        }
+                        $singleProductIds = [];
+                        $singleProducts = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->get();
+
+                        foreach ($singleProducts as $item) {
+                                $singleProductIds[] = $item->id;
+                        }
+
+                        $shopSingleProducts = Product::where('shop_id', $product->shop_id)->whereIn('single', $singleProductIds)->where('price', '>', 0)->with('singleProduct')->get();
+                        $params['shopSingleProducts'] = $shopSingleProducts;
+                }
+
+                $feedbacksCount = Feedback::where('shop_id', $product->shop_id)->where('approved', 1)->count();
+                $feedbacks = Feedback::where('shop_id', $product->shop_id)->where('approved', 1)->orderBy('feedback_date', 'desc')->take(10)->get();
+                $params['feedbacksCount'] = $feedbacksCount;
+                $params['feedbacks'] = $feedbacks;
+
+                $request = new Request();
+                $request->shop_id = $product->shop_id;
+                $request->notIn = [$product->id];
+                $request->order = 'rand';
+                $params['products'] = Product::popular($this->current_city->id, $request, 1, 9);
+
+                return view('front.product.show', $params);
+        }
+
         public function products() {
 
                 $times = \App\Helpers\Data::times();

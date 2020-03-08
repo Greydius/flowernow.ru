@@ -31,7 +31,8 @@
 
             <div class="free_phone hidden-xs">
                 <b>8 800 600-54-97</b>
-                <span>Звонок бесплатный</span>
+                <span>
+Или напишите на <b>service@floristum.ru</b></span>
             </div>
 
             @include('front.product.search')

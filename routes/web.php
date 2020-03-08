@@ -34,6 +34,11 @@ Route::get('/flowers/{slug}', [
         'as' => 'product.show'
 ]);
 
+Route::get('/flower/{city_id}/{slug}', [
+        'uses' => 'ProductsController@showProduct',
+        'as' => 'product.showProduct'
+]);
+
 Route::get('/favorites/', [
         'uses' => 'FavoritesController@index',
         'as' => 'favorites.show'
