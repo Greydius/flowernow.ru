@@ -70,7 +70,7 @@
                                                         <div class="m-widget4__item">
 
                                                             <div class="m-widget4__img m-widget4__img--logo">
-                                                                <a href="/flowers/{{ $item->product->slug }}" target="_blank">
+                                                                <a href="/flower/{{ $order->shop->city->id }}/{{ $item->product->slug }}" target="_blank">
                                                                     <img src="{{ $item->product->photoUrl }}" alt="">
                                                                 </a>
                                                             </div>
