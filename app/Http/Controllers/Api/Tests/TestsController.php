@@ -117,4 +117,18 @@ class TestsController extends Controller
 
           return 'success';
         }
+
+        public function sendMarchEmails() {
+          $shops = Shop::where('copy_id', '!=', 350)->get();
+          foreach($shops as $shop) {
+            $message = new \App\Model\Message();
+            $message->message_type = 'email';
+            $message->send_to = $shop->email;
+            $message->msg = json_encode(['text' => view('email.shop08032020')->render(),
+                    'subject' => 'Ваши заказы Floristum.ru']);
+            $message->save();
+          }
+
+          return 'success';
+        }
 }
