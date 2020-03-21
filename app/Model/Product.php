@@ -516,7 +516,9 @@ class Product extends MainModel
                 }
 
                 if(empty($this->single)) {
-                        return ceil(ceil($this->price * (1+(config('settings.product_commission')/100))) + $this->shop->delivery_price);
+                    $ss=config('settings.product_commission');
+                    
+                        return ceil(ceil((int)$this->price * (1+((int)$ss/100))) + $this->shop->delivery_price);
                 }
 
                 $singleProduct = $this->singleProduct()->first();

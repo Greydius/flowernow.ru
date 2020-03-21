@@ -119,7 +119,7 @@ class TestsController extends Controller
         }
 
         public function sendMarchEmails() {
-          $shops = Shop::where('copy_id', '!=', 350)->get();
+          $shops = Shop::where('copy_id', '=', null)->get();
           foreach($shops as $shop) {
             $message = new \App\Model\Message();
             $message->message_type = 'email';
