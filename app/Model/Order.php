@@ -115,34 +115,62 @@ class Order extends MainModel
 
         //возвращает сумму заказа
         public function amountShop() {
-                $amount = 0;
-                $commission = $this->commission == null ? 30 : $this->commission;
-                
-                foreach ($this->orderLists()->get() as $orderList) {
-                        $amount += ($orderList->shop_price * $orderList->qty);
-                }
+                $date = \Carbon::create(2020, 4, 12, 13, 00, 00);
 
-                $delivery_amount = $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
-                $delivery_amount_with_commission = $delivery_amount * (1-($commission/100));
-
-                $amount_with_commission = $amount * (1-($commission/100));
-
-                if($this->report_price != null && $this->report_price != 0){
-                  if($this->report_shop_price != null && $this->report_shop_price != 0){
-                    return $this->report_shop_price;
-                  }else if($this->payment == Order::$PAYMENT_CASH) {
-                    return (-1)*($this->report_price - ($this->report_price * (1-($commission/100))));
-                  }else {
-                    return $this->report_price * (1-($commission/100));
-                  }
+                if(\Carbon::parse($this->created_at)->greaterThanOrEqualTo($date)){
+                  $amount = 0;
+                  $commission = $this->commission == null ? 25 : $this->commission;
                   
+                  foreach ($this->orderLists()->get() as $orderList) {
+                          $amount += ($orderList->shop_price * $orderList->qty);
+                  }
+
+                  $delivery_amount = $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
+                  $delivery_amount_with_commission = $delivery_amount * (1-($commission/100));
+
+                  $amount_with_commission = $amount * (1-($commission/100));
+
+                  if($this->report_price != null && $this->report_price != 0){
+                    if($this->report_shop_price != null && $this->report_shop_price != 0){
+                      return $this->report_shop_price;
+                    }else if($this->payment == Order::$PAYMENT_CASH) {
+                      return (-1)*($this->report_price - ($this->report_price * (1-($commission/100))));
+                    }else {
+                      return $this->report_price * (1-($commission/100));
+                    }
+                    
+                  } else {
+                    if($this->payment == Order::$PAYMENT_CASH) {
+                            return (-1)*($this->amount() - ($amount_with_commission + $delivery_amount_with_commission));
+                    }
+                    
+                    return $amount_with_commission + $delivery_amount_with_commission;
+                  }  
                 } else {
-                  if($this->payment == Order::$PAYMENT_CASH) {
-                          return (-1)*($this->amount() - ($amount_with_commission + $delivery_amount_with_commission));
-                  }
+                  if($this->report_price != null && $this->report_price != 0){
+                    if($this->report_shop_price != null && $this->report_shop_price != 0){
+                      return $this->report_shop_price;
+                    }else if($this->payment == Order::$PAYMENT_CASH) {
+                      return (-1)*($this->report_price - ($this->report_price * (1-($commission/100))));
+                    }else {
+                      return $this->report_price * (1-($commission/100));
+                    }
+                    
+                  } else {
+                    $amount = 0;
+                    foreach ($this->orderLists()->get() as $orderList) {
+                            $amount += ($orderList->shop_price * $orderList->qty);
+                    }
+
+                    if($this->payment == Order::$PAYMENT_CASH) {
+                            return (-1)*($this->amount() - $amount - ($this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0)));
+                    }
+
+                    return $amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
+                  } 
                   
-                  return $amount_with_commission + $delivery_amount_with_commission;
                 }
+                
                 
         }
 
