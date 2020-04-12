@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Model\Order;
 use App\Model\Shop;
 use App\Model\ShopReport;
+use App\ConfirmedReport;
 use App\Helpers\Sms;
 use Illuminate\Console\Command;
 use Dompdf\Dompdf;
@@ -46,7 +47,7 @@ class GenerateReports extends Command
                 //$reportDate = '2019-05-13';
 
                 //$date = \Carbon\Carbon::parse($reportDate);
-                $date = new \Carbon\Carbon('first day of last month');
+                $date = new \Carbon\Carbon('first day of this month');
 
                 $shops = Shop::with(['users'])->whereExists(function ($query) use ($date) {
                         $query->select(\DB::raw(1))
@@ -59,82 +60,88 @@ class GenerateReports extends Command
 
                 foreach($shops as $shop) {
 
+                  $confirmedReport = new ConfirmedReport();
+                  $confirmedReport->shop_id = $shop->id;
+                  $confirmedReport->date = \Carbon::now()->format('Y-m');
+                  $confirmedReport->save();
 
-                        $dompdf = new Dompdf();
-                        $dompdf->set_option('isRemoteEnabled', true);
-                        $dompdf->set_option('isHtml5ParserEnabled', true);
 
-                        //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
-                        //$date = \Carbon::now()->subMonth();
+                        // $dompdf = new Dompdf();
+                        // $dompdf->set_option('isRemoteEnabled', true);
+                        // $dompdf->set_option('isHtml5ParserEnabled', true);
 
-                        $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->where('payment', '!=', 'cash')->first();
+                        // //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+                        // //$date = \Carbon::now()->subMonth();
 
-                        $orderReq = Order::where('shop_id', $shop->id)
-                                ->where(function ($query) use ($date) {
-                                        $query->where(function ($query) use ($date) {
-                                                $query->where('payment', '=', 'cash')
-                                                        ->where('payed', '=', '1')
-                                                        ->where('confirmed', '=', '1')
-                                                        ->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
-                                        })->orWhere(function ($query) use ($date) {
-                                                $query->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
-                                        });
-                                });
+                        // $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->where('payment', '!=', 'cash')->first();
 
-                        $viewOptions = [
-                                'date' => clone $date,
-                                'firstOrder' => $firstOrder,
-                                'orders' => $orderReq->get(),
-                                'shop' => Shop::find($shop->id),
-                                'type' => 'pdf'
-                                //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
-                                //'order' => $order
-                        ];
+                        // $orderReq = Order::where('shop_id', $shop->id)
+                        //         ->where(function ($query) use ($date) {
+                        //                 $query->where(function ($query) use ($date) {
+                        //                         $query->where('payment', '=', 'cash')
+                        //                                 ->where('payed', '=', '1')
+                        //                                 ->where('confirmed', '=', '1')
+                        //                                 ->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
+                        //                 })->orWhere(function ($query) use ($date) {
+                        //                         $query->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'));
+                        //                 });
+                        //         });
 
-                        $view = view('reports.report', $viewOptions)->render();
+                        // $viewOptions = [
+                        //         'date' => clone $date,
+                        //         'firstOrder' => $firstOrder,
+                        //         'orders' => $orderReq->get(),
+                        //         'shop' => Shop::find($shop->id),
+                        //         'type' => 'pdf'
+                        //         //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                        //         //'order' => $order
+                        // ];
 
-                        //echo $view; exit();
+                        // $view = view('reports.report', $viewOptions)->render();
 
-                        $dompdf->loadHtml($view, 'UTF-8');
+                        // //echo $view; exit();
 
-                        // (Optional) Setup the paper size and orientation
-                        //$dompdf->setPaper('A4', 'landscape');
+                        // $dompdf->loadHtml($view, 'UTF-8');
 
-                        // Render the HTML as PDF
-                        $dompdf->render();
+                        // // (Optional) Setup the paper size and orientation
+                        // //$dompdf->setPaper('A4', 'landscape');
 
-                        // Output the generated PDF to Browser
-                        //$dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
+                        // // Render the HTML as PDF
+                        // $dompdf->render();
 
-                        $orderWarnings = $orderReq->whereNotNull('finance_comment')->count();
+                        // // Output the generated PDF to Browser
+                        // //$dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
 
-                        $report = new ShopReport();
+                        // $orderWarnings = $orderReq->whereNotNull('finance_comment')->count();
 
-                        $output = $dompdf->output();
+                        // $report = new ShopReport();
 
-                        $report->shop_id = $shop->id;
-                        $report->report_date = $date->startOfMonth()->format('Y-m-d');
-                        $report->ext = 'pdf';
-                        $report->file = base64_encode($output);
-                        $report->warning = $orderWarnings;
-                        $report->save();
+                        // $output = $dompdf->output();
 
-                        //$date2 = \Carbon\Carbon::parse($reportDate);
-                        $date2 = new \Carbon\Carbon('first day of last month');
+                        // $report->shop_id = $shop->id;
+                        // $report->report_date = $date->startOfMonth()->format('Y-m-d');
+                        // $report->ext = 'pdf';
+                        // $report->file = base64_encode($output);
+                        // $report->warning = $orderWarnings;
+                        // $report->save();
 
-                        $viewOptions['type'] = 'docx';
-                        $viewOptions['date'] = clone $date2;
+                        // //$date2 = \Carbon\Carbon::parse($reportDate);
+                        // $date2 = new \Carbon\Carbon('first day of last month');
 
-                        $view = view('reports.report', $viewOptions)->render();
-                        $report = new ShopReport();
+                        // $viewOptions['type'] = 'docx';
+                        // $viewOptions['date'] = clone $date2;
 
-                        $report->shop_id = $shop->id;
-                        $report->report_date = $date2->startOfMonth()->format('Y-m-d');
-                        $report->ext = 'docx';
-                        $report->file = base64_encode($view);
-                        $report->warning = $orderWarnings;
-                        $report->save();
+                        // $view = view('reports.report', $viewOptions)->render();
+                        // $report = new ShopReport();
+
+                        // $report->shop_id = $shop->id;
+                        // $report->report_date = $date2->startOfMonth()->format('Y-m-d');
+                        // $report->ext = 'docx';
+                        // $report->file = base64_encode($view);
+                        // $report->warning = $orderWarnings;
+                        // $report->save();
                 }
+                
 
 
         }

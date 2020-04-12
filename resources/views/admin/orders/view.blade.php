@@ -448,7 +448,11 @@
                                         <div class="m-demo-icon__preview">
                                             <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
                                         </div>
-                                        {{ $order->amount() }} р.
+                                        @if($order->report_price == 0 || $order->report_price == null)
+                                          {{ $order->amount() }} р.
+                                        @else
+                                          <span title="оригинальная: {{$order->amount()}} р.">{{ $order->report_price }} р.</span>
+                                        @endif
                                         <small>
                                             Цена
                                         </small>
@@ -687,6 +691,40 @@
 
                     </div>
                 </div>
+                @if($user->admin)
+                <div class="col-lg-12 hidden-print print-widget">
+                    <div class="m-portlet  m-portlet--border-bottom-brand ">
+                        <div class="m-portlet__body" style="padding: 2.2rem 5px; text-align: center;">
+                            <form action="{{ route('admin.order.changePrice', ['id' => $order->id]) }}" method="POST" class="m-widget26">
+
+                                <div class="m-form">
+                                    {{ csrf_field() }}
+
+
+                                    <div class="">
+                                        <div>Корректировка цены:</div>
+                                        <div class="report__price">
+                                          <span>Цена: </span>
+                                          <input min="-999999" max="999999" name="price" value="{{ $order->report_price == null && $order->report_price == 0 ? $order->amount() : $order->report_price }}" type="number">
+                                        </div>
+                                        <div class="report__price">
+                                          <span>Магазину: </span>
+                                          <input name="shop_price" value="{{ $order->report_shop_price == null && $order->report_shop_price == 0 ? $order->amountShop() : $order->report_shop_price }}" min="-999999" max="999999" type="number">
+                                        </div>
+                                        <div>
+                                          <button>Изменить</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                @endif
 
                 @if($user->admin)
                     @if($order->payed)
@@ -922,6 +960,20 @@
         margin: 0;
         margin-left: 10px;
         color: #575962;
+      }
+      .report__price {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+      }
+
+      .report__price span {
+        width: 80px;
+        text-align: left;
+      }
+
+      .report__price input {
+        flex: 1;
       }
     </style>
 @stop

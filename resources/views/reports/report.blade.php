@@ -134,13 +134,13 @@
             <td>{{ $indexKey + 1 }}</td>
             <td>{{ $order->payment == 'cash' ? $order->created_at : $order->payed_at }}</td>
             <td>{{ $order->id }}{{ !empty($order->finance_comment) ? '' : '' }}</td>
-            <td>{{ number_format($order->amount, 2, '.', ' ') }} {{ $order->payment == 'cash' ? 'оплачено наличными Продавцу' : '' }}</td>
-            <td>{{ number_format($order->payment != 'cash' ? $order->amount - $order->amountShop : (-1)*$order->amountShop, 2, '.', ' ') }}</td>
+            <td>{{ number_format( ($order->report_price != 0 ? $order->report_price : $order->amount), 2, '.', ' ') }} {{ $order->payment == 'cash' ? 'оплачено наличными Продавцу' : '' }}</td>
+            <td>{{ number_format($order->payment != 'cash' ? ($order->report_price != 0 ? $order->report_price : $order->amount) - $order->amountShop : (-1)*$order->amountShop, 2, '.', ' ') }}</td>
             <td>{{ number_format($order->amountShop, 2, '.', ' ') }}</td>
         </tr>
         @php
-            $total1 += $order->payment != 'cash' ? $order->amount : 0;
-            $total2 += $order->payment != 'cash' ? ($order->amount - $order->amountShop) : ((-1)*$order->amountShop);
+            $total1 += $order->payment != 'cash' ? ($order->report_price != 0 ? $order->report_price : $order->amount) : 0;
+            $total2 += $order->payment != 'cash' ? ($order->report_price != 0 ? $order->report_price : $order->amount - $order->amountShop) : ((-1)*$order->amountShop);
             $total3 += $order->payment != 'cash' ? $order->amountShop : $order->amountShop;
         @endphp
     @endforeach
@@ -170,11 +170,9 @@
     <tr>
         <td width="50%">
             <p>Отчет сдал:</p>
-
-            @if($type == 'pdf')
-                <img src="https://floristum.ru/images/pechat.png">
-            @else
-
+                @if($type == 'pdf')
+                  <img src="https://floristum.ru/images/pechat.png">
+                @else
                 <p>ООО "ФЛН"</p>
 
                 ИНН/ КПП 7807189999/ 780701001
@@ -197,10 +195,7 @@
                 <br><br>
 
                 М.П.
-
-
-            @endif
-
+                @endif
         </td>
         <td width="50%">
             <p>Отчет принял:</p>

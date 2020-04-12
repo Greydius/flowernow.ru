@@ -99,11 +99,11 @@
 
                                 @foreach($invoicesOld as $invoice)
                                     <tr>
-                                        <td>{{ $invoice->shop->name }}</td>
-                                        <td>{{ $invoice->shop->frozenBalance }}</td>
-                                        <td>{{ $invoice->shop->availableOutBalance }}</td>
+                                        <td>{{ $invoice->shop->name }} ({{ $invoice->shop->id }})</td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="frozen">{{ $invoice->shop->frozenBalance }}</a></td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="available">{{ $invoice->shop->availableOutBalance }}</a></td>
                                         <td>
-                                            {{ $invoice->amount }} ₽<br>
+                                            <a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="out" data-id="{{ $invoice->id }}">{{ $invoice->amount }}</a> ₽<br>
                                             {{ $invoice->created_at }}
                                         </td>
                                         <td>

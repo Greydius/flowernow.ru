@@ -151,6 +151,7 @@ class OrdersController extends Controller
                                 $order->ur_bank = $request->ur_bank;
                                 $order->ur_email = !empty($request->ur_email) ? $request->ur_email : '';
                                 $order->confirmed = $order->payment == Order::$PAYMENT_CASH ? 0 : 1;
+                                $order->commission = (int)config('settings.product_commission');
 
                                 if(!empty($request->delivery_out)) {
                                         $order->delivery_out_distance = (int)$request->delivery_out_distance;
@@ -338,6 +339,15 @@ class OrdersController extends Controller
                 return response()->json([
                         'code' => $code
                 ], 200);
+        }
+
+        function changePrice($id, Request $request) {
+          $order = Order::find($id);
+          $order->report_price = (int) $request->price;
+          $order->report_shop_price = (int) $request->shop_price;
+          $order->save();
+
+          return redirect()->back();
         }
 
         function confirmpayment(Request $request) {

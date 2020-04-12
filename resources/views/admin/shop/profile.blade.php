@@ -88,6 +88,14 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if($user->admin)
+                                    <li class="nav-item m-tabs__item">
+                                        <a class="nav-link m-tabs__link" data-toggle="tab" href="#report_editor" role="tab">
+                                            <i class="la la-clipboard"></i>
+                                            Редактор отчётов
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                             <div class="tab-content" id="profile-content">
                                 <div class="tab-pane active" id="m_name" role="tabpanel">
@@ -970,6 +978,58 @@
                                                     <tr>
                                                         <td>{{ \App\Helpers\AppHelper::ruMonth($report->report_date->format('m'), 2) }} {{ $report->report_date->format('Y') }}</td>
                                                         <td><a href="{{ route('admin.shop.getReportFile', ['id' => $report->id]) }}" target="_blank"><i class="fa fa-file-<?=($report->ext == 'pdf' ? 'pdf' : 'word')?>-o"></i></a></td>
+                                                    </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                @endif
+
+                                @if($user->admin)
+                                <div class="tab-pane" id="report_editor" role="tabpanel">
+
+                                    <div class="m-portlet__body">
+
+                                        <div class="form-group m-form__group">
+                                            <table style=" width: 100%">
+                                                <tr>
+                                                    <td>Дата</td>
+                                                    <td>Кол-во заказов</td>
+                                                    <td>Общая цена</td>
+                                                    <td>С учетом комиссии</td>
+                                                    <td>Скачать</td>
+                                                    <td>Изменить</td>
+                                                    <td>Подтвердить</td>
+                                                </tr>
+                                                @foreach($confirmedReports as $confirmedReport)
+                                                    <tr>
+                                                        <td>{{ $confirmedReport['date'] }}</td>
+                                                        <td>{{ $confirmedReport['orders_count'] }}</td>
+                                                        <td>{{ $confirmedReport['total_price'] }}</td>
+                                                        <td>{{ $confirmedReport['shop_price'] }}</td>
+                                                        <td>
+                                                          <a href="{{ route('admin.shop.getConfirmedReport', ['id' => $confirmedReport['id']]) }}">PDF</a>
+                                                          /
+                                                          <a href="{{ route('admin.shop.getConfirmedReportDoc', ['id' => $confirmedReport['id']]) }}">DOC</a>
+                                                        </td>
+                                                        <td>
+                                                          @if($confirmedReport['confirmed'] != 1)
+                                                            <a href="{{ route('admin.shop.editConfirmedReport', ['id' => $confirmedReport['id']]) }}">Изменить</a>
+                                                          @else
+                                                            Не доступно
+                                                          @endif
+                                                        </td>
+                                                        <td>
+                                                          @if($confirmedReport['confirmed'] != 1)
+                                                          <form action="{{ route('admin.shop.confirmedReport', ['id' => $confirmedReport['id']]) }}" method="GET">
+                                                            <button>Подтвердить</button>
+                                                          </form>
+                                                          @else
+                                                            Подтвержден
+                                                          @endif
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </table>

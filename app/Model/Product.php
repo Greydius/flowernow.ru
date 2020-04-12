@@ -221,16 +221,16 @@ class Product extends MainModel
                                       if(!empty($request->productPrice)) {
                                               $price = Price::find($request->productPrice);
                                               if(!empty($price)) {
-                                                      $productRequest->whereRaw('price*1.3+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
+                                                      $productRequest->whereRaw('price+(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)*' . (1+(config('settings.product_commission')/100)) . '  BETWEEN '.(int)$price->price_from.' AND '.(int)$price->price_to);
                                               }
                                       }
 
                                       if(!empty($request->price_from)) {
-                                              $productRequest->whereRaw('(price*1.3 +(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)) >= '.(int)$request->price_from.' ');
+                                              $productRequest->whereRaw('(price +(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))*' . (1+(config('settings.product_commission')/100)) . ' >= '.(int)$request->price_from.' ');
                                       }
 
                                       if(!empty($request->price_to)) {
-                                              $productRequest->whereRaw('(price*1.3 +(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id)) <= '.(int)$request->price_to.' ');
+                                              $productRequest->whereRaw('(price +(SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))*' . (1+(config('settings.product_commission')/100)) . ' <= '.(int)$request->price_to.' ');
                                       }
 
                                       if(!empty($request->flowers)) {
@@ -516,12 +516,12 @@ class Product extends MainModel
                 }
 
                 if(empty($this->single)) {
-                        return ceil(ceil($this->price * (1+(config('settings.product_commission')/100))) + $this->shop->delivery_price);
+                        return ceil(ceil($this->price + $this->shop->delivery_price));
                 }
 
                 $singleProduct = $this->singleProduct()->first();
                 $qty = !empty($this->qty) ? $this->qty : $singleProduct->qty_from;
-                return ceil(ceil($this->price * $qty * (1+(config('settings.single_product_commission')/100))) + $this->shop->delivery_price);
+                return ceil(ceil($this->price * $qty + $this->shop->delivery_price));
         }
 
         public function getUrlAttribute() {
