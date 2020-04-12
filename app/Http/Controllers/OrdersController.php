@@ -636,7 +636,7 @@ class OrdersController extends Controller
                                 $shops = Shop::get();
                         }
 
-                        if($order->receiving_time != 'Время согласовать' && $order->receiving_time != 'в течении дня') {
+                        if($order->receiving_time != 'Время согласовать' && $order->receiving_time != 'в течении дня' && $order->receiving_time != 'Согласовать') {
                                 $tz = str_replace('UTC', '', $shop->city->region->tz);
                                 $receiving_time_array = AppHelper::orderTimeToArray($order->receiving_time);
                                 $fromTime = $order->receiving_date.' '.$receiving_time_array[0];
