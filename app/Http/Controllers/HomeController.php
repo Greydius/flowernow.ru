@@ -66,7 +66,7 @@ class HomeController extends Controller
     public function corporate() {
             $productTypes = ProductType::where('show_on_main', '1')->get();
             $city_id = $this->current_city->id;
-            $lowPriceProducts = Product::lowPriceProducts($city_id)->take(9)->get();
+            $lowPriceProducts = Product::randProducts($city_id)->take(9)->get();
 
             $popularProducts = [];
             $item = [];

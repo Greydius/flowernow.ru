@@ -171,7 +171,7 @@
         <td width="50%">
             <p>Отчет сдал:</p>
 
-            @if($type == 'pdf')
+            @if(true)
                 <img src="https://floristum.ru/images/pechat.png">
             @else
 
