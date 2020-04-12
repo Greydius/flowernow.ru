@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AppHelper;
 use App\Model\Product;
+use App\ConfirmedReport;
 use App\Model\Order;
 use App\Model\Shop;
 use App\Model\ShopAddress;
@@ -55,11 +56,150 @@ class ShopsController extends Controller
                         } while($reportDate < $nowDate);
                 }
 
+                $confirmedReports = ConfirmedReport::where('shop_id', $shop->id)->get();
+
+                $confirmedReportsWithData = [];
+
+                foreach($confirmedReports as $confirmedReport) {
+
+                  $explodedDate = explode('-', $confirmedReport->date);
+                  $year = $explodedDate[0];
+                  $month = $explodedDate[1];
+
+                  $orders = $shop->orders()
+                            ->where('payed', 1)
+                            ->whereYear('created_at', '=', $year)
+                            ->whereMonth('created_at', '=', $month)->get();
+
+                  $total_price = 0;
+                  $shop_price = 0;
+
+                  foreach($orders as $order) {
+                    $commission = $order->commission == null ? (int) config('settings.product_commission') : $order->commission;
+                    if($order->report_price == null) {
+                      $total_price += $order->amount();
+                      $shop_price += $order->amountShop();
+                    }else {
+                      $total_price += $order->report_price;
+                      $shop_price += $order->report_price * (1- $commission);
+                    }
+                  }
+
+                  $confirmedReportsWithData[] = array(
+                    "id" => $confirmedReport->id,
+                    "date" => $confirmedReport->date,
+                    "confirmed" => $confirmedReport->confirmed,
+                    "orders_count" => count($orders),
+                    "total_price" => $total_price,
+                    "shop_price" => $shop_price
+                  );
+                }
+
                 return view('admin.shop.profile', [
                         'shop' => $shop,
                         'reportsDate' => $reportsDate,
-                        'reports' => $shop->reports()->orderBy('report_date')->get()
+                        'reports' => $shop->reports()->orderBy('report_date')->get(),
+                        'confirmedReports' => $confirmedReportsWithData
                 ]);
+        }
+
+        public function reports() {
+          $confirmedReports = ConfirmedReport::all();
+
+          $groupedReports = [];
+
+          foreach($confirmedReports as $confirmedReport) {
+
+            $explodedDate = explode('-', $confirmedReport->date);
+            $year = $explodedDate[0];
+            $month = $explodedDate[1];
+
+            $shop = $confirmedReport->shop;
+
+            $orders = $shop->orders()
+                      ->where('payed', 1)
+                      ->whereYear('created_at', '=', $year)
+                      ->whereMonth('created_at', '=', $month)->get();
+
+            $total_price = 0;
+            $shop_price = 0;
+
+            foreach($orders as $order) {
+              $commission = $order->commission == null ? (int) config('settings.product_commission') : $order->commission;
+              if($order->report_price == null) {
+                $total_price += $order->amount();
+                $shop_price += $order->amountShop();
+              }else {
+                $total_price += $order->report_price;
+                $shop_price += $order->amountShop();
+              }
+            }
+
+            $confirmedReportsWithData = array(
+              "id" => $confirmedReport->id,
+              "date" => $confirmedReport->date,
+              "confirmed" => $confirmedReport->confirmed,
+              "orders_count" => count($orders),
+              "total_price" => $total_price,
+              "shop_price" => $shop_price,
+              "shop_name" => $shop->name
+            );
+
+            $groupedReports[$confirmedReport->date][] = $confirmedReportsWithData;
+
+
+          }
+
+          return view('admin.reports.lists', [
+                  'groupedReports' => $groupedReports
+          ]);
+        }
+
+        public function shopReports() {
+          $shop = $this->user->getShop();
+
+          $confirmedReports = ConfirmedReport::where('shop_id', $shop->id)->get();
+
+          $confirmedReportsWithData = [];
+
+          foreach($confirmedReports as $confirmedReport) {
+
+            $explodedDate = explode('-', $confirmedReport->date);
+            $year = $explodedDate[0];
+            $month = $explodedDate[1];
+
+            $orders = $shop->orders()
+                      ->where('payed', 1)
+                      ->whereYear('created_at', '=', $year)
+                      ->whereMonth('created_at', '=', $month)->get();
+
+            $total_price = 0;
+            $shop_price = 0;
+
+            foreach($orders as $order) {
+              $commission = $order->commission == null ? (int) config('settings.product_commission') : $order->commission;
+              if($order->report_price == null) {
+                $total_price += $order->amount();
+                $shop_price += $order->amountShop();
+              }else {
+                $total_price += $order->report_price;
+                $shop_price += $order->report_price * (1- $commission);
+              }
+            }
+
+            $confirmedReportsWithData[] = array(
+              "id" => $confirmedReport->id,
+              "date" => $confirmedReport->date,
+              "confirmed" => $confirmedReport->confirmed,
+              "orders_count" => count($orders),
+              "total_price" => $total_price,
+              "shop_price" => $shop_price
+            );
+          }
+
+          return view('reports.edit', [
+                  'confirmedReports' => $confirmedReportsWithData
+          ]);
         }
 
         public function profile2() {
@@ -681,7 +821,8 @@ class ShopsController extends Controller
                         'date' => clone $date,
                         'firstOrder' => $firstOrder,
                         'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
-                        'shop' => Shop::find($shop->id)
+                        'shop' => Shop::find($shop->id),
+                        'type' => 'pdf'
                         //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
                         //'order' => $order
                 ])->render();
@@ -701,6 +842,142 @@ class ShopsController extends Controller
 
 
                 exit();
+        }
+
+        public function confirmedReport($id, Request $request) {
+          $confirmedReport = ConfirmedReport::find($id);
+          $confirmedReport->confirmed = 1;
+          $confirmedReport->save();
+          return redirect()->back();
+        }
+
+        public function updateConfirmedReport($id, Request $request) {
+          $report_prices = $request->report_price;
+          foreach($report_prices as $k => $report_price) {
+            $order = Order::find($k);
+            $order->report_price = (int) $report_price;
+            $order->save();
+          }
+
+          return redirect()->back();
+        }
+
+        public function editConfirmedReport($id, Request $request) {
+          $confirmedReport = ConfirmedReport::find($id);
+
+          $shop = Shop::find($confirmedReport->shop_id);
+
+          $explodedDate = explode('-', $confirmedReport->date);
+          $year = $explodedDate[0];
+          $month = $explodedDate[1];
+
+          $orders = $shop->orders()
+                    ->where('payed', 1)
+                    ->whereYear('created_at', '=', $year)
+                    ->whereMonth('created_at', '=', $month)->get();
+          
+          return view('reports.change', [
+            "orders" => $orders
+          ]);
+        }
+
+        public function getConfirmedReport($id, Request $request) {
+
+                $confirmedReport = ConfirmedReport::find($id);
+
+                $shop = Shop::with(['users'])->findOrFail($confirmedReport->shop_id);
+                $user_id = $this->user->id;
+
+                if(!$this->user->admin) {
+                        $user_shop = $this->user->getShop();
+                        if($user_shop->id != $shop->id) {
+                                return response()->json([
+                                        'error' => true,
+                                        'code'  => 403
+                                ], 403);
+                        }
+                } else {
+                        $user_id = $shop->users[0]->id;
+                }
+
+                $dompdf = new Dompdf();
+                $dompdf->set_option('isRemoteEnabled', true);
+                $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+                //$date = \Carbon::now()->subMonth();
+                $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
+                $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->first();
+
+                $view = view('reports.report', [
+                        'date' => clone $date,
+                        'firstOrder' => $firstOrder,
+                        'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                        'shop' => Shop::find($shop->id),
+                        'type' => 'pdf'
+                        //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                        //'order' => $order
+                ])->render();
+
+                //echo $view; exit();
+
+                $dompdf->loadHtml($view, 'UTF-8');
+
+                // (Optional) Setup the paper size and orientation
+                //$dompdf->setPaper('A4', 'landscape');
+
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Output the generated PDF to Browser
+                $dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
+
+
+                exit();
+        }
+
+        public function getConfirmedReportDoc($id, Request $request) {
+
+                $confirmedReport = ConfirmedReport::find($id);
+
+                $shop = Shop::with(['users'])->findOrFail($confirmedReport->shop_id);
+                $user_id = $this->user->id;
+
+                if(!$this->user->admin) {
+                        $user_shop = $this->user->getShop();
+                        if($user_shop->id != $shop->id) {
+                                return response()->json([
+                                        'error' => true,
+                                        'code'  => 403
+                                ], 403);
+                        }
+                } else {
+                        $user_id = $shop->users[0]->id;
+                }
+
+                $dompdf = new Dompdf();
+                $dompdf->set_option('isRemoteEnabled', true);
+                $dompdf->set_option('isHtml5ParserEnabled', true);
+
+                //$date = date('d').' '.\App\Helpers\AppHelper::ruMonth(date('m')).' '.date('Y').' г.';
+                //$date = \Carbon::now()->subMonth();
+                $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
+                $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->first();
+
+                        $view = view('reports.report', [
+                                'date' => clone $date,
+                                'firstOrder' => $firstOrder,
+                                'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                                'shop' => Shop::find($shop->id),
+                                'type' => 'doc'
+                                //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
+                                //'order' => $order
+                        ])->render();
+
+                        return response($view, 200, [
+                            'Content-Type' => 'application/vnd.ms-word',
+                            'Content-Disposition' => 'attachment; filename="report.doc"',
+                        ]);
         }
 
         public function getReportCmd(Request $request) {

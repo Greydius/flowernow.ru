@@ -113,7 +113,7 @@
                                         <a href="<% orderList.product.url %>" target="_blank"><% orderList.product.name %></a> - <% orderList.qty %> шт.
                                     </span>
                     <br>
-                    <% order.amount %> ₽ / <% order.amountShop %> ₽
+                    <% order.report_price == 0 || order.report_price == null ? order.amount : order.report_price %> ₽ / <% order.amountShop %> ₽
                     <div ng-show="order.promo_code_id" class="text-danger" style="font-size: 10px">
                         Скидка по промо: <% order.promo.text %>
                     </div>

@@ -54,6 +54,11 @@ class Shop extends MainModel
                 return $this->hasMany('App\Model\Order');
         }
 
+        // relation for orders
+        function confirmedReports() {
+                return $this->hasMany('App\ConfirmedReport');
+        }
+
         // relation for Invoice
         function invoices() {
                 return $this->hasMany('App\Model\Invoice');

@@ -339,6 +339,12 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.orders.rejection'
         ]);
 
+
+        Route::get('shop/reports', [
+                'uses' => 'ShopsController@shopReports',
+                'as' => 'admin.shop.shopReports'
+        ]);
+
         /* SHOPS*/
 
         Route::group(['middleware' => 'is-admin'], function () {
@@ -661,6 +667,42 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
         Route::post('shop/getReport/{id}', [
                 'uses' => 'ShopsController@getReport',
                 'as' => 'admin.shop.getReport'
+        ]);
+
+        Route::post('order/{id}/changePrice', [
+                'uses' => 'OrdersController@changePrice',
+                'as' => 'admin.order.changePrice'
+        ]);
+
+        Route::get('shop/getConfirmedReport/{id}', [
+                'uses' => 'ShopsController@getConfirmedReport',
+                'as' => 'admin.shop.getConfirmedReport'
+        ]);
+
+        Route::get('shop/getConfirmedReportDoc/{id}', [
+                'uses' => 'ShopsController@getConfirmedReportDoc',
+                'as' => 'admin.shop.getConfirmedReportDoc'
+        ]);
+
+        Route::get('shop/editConfirmedReport/{id}', [
+                'uses' => 'ShopsController@editConfirmedReport',
+                'as' => 'admin.shop.editConfirmedReport'
+        ]);
+
+        Route::post('shop/editConfirmedReport/{id}', [
+                'uses' => 'ShopsController@updateConfirmedReport',
+                'as' => 'admin.shop.updateConfirmedReport'
+        ]);
+
+        Route::get('reports', [
+                'uses' => 'ShopsController@reports',
+                'as' => 'admin.reports'
+        ]);
+
+
+        Route::get('shop/confirmedReport/{id}', [
+                'uses' => 'ShopsController@confirmedReport',
+                'as' => 'admin.shop.confirmedReport'
         ]);
 
         Route::get('report/getReportCmd', [
