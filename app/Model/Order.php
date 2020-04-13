@@ -175,7 +175,7 @@ class Order extends MainModel
         }
 
         public function getAmountShopAttribute() {
-                return $this->amountShop();
+                return ceil($this->amountShop());
         }
 
         public function getStatusNameAttribute() {

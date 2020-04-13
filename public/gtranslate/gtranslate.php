@@ -210,6 +210,7 @@ foreach($response_headers as $header) {
 //echo $headers_sent;
 
 // TODO: modify URLs
+if($_GET['_city'] == null){
 $html = str_ireplace($host, $_SERVER['HTTP_HOST'] . '/' . $glang, $html);
 $html = str_ireplace('href="/', 'href="/' . $glang . '/', $html);
 $html = preg_replace('/href=\"\/' . $glang . '\/(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)\//i', 'href="/$1/', $html); // fix double language code
@@ -217,7 +218,15 @@ $html = str_ireplace('href="/' . $glang . '//', 'href="//', $html);
 $html = str_ireplace('action="/', 'action="/' . $glang . '/', $html);
 $html = str_ireplace('action="/' . $glang . '//', 'action="//', $html);
 $html = str_ireplace('action="//' . $_SERVER['HTTP_HOST'], 'action="//' . $_SERVER['HTTP_HOST'] . '/' . $glang, $html);
-
+} else {
+$html = str_ireplace($host, $_SERVER['HTTP_HOST'] . '/' . $glang . '/' . $_GET['_city'], $html);
+$html = str_ireplace('href="/', 'href="/' . $glang . '/' . $_GET['_city'] . "/", $html);
+$html = preg_replace('/href=\"\/' . $glang . '\/(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)\//i', 'href="/$1/' . $_GET['_city'] . '/', $html); // fix double language code
+$html = str_ireplace('href="/' . $glang . '//', 'href="//', $html);
+$html = str_ireplace('action="/', 'action="/' . $glang . '/' . $_GET['_city'] . "/", $html);
+$html = str_ireplace('action="/' . $glang . '//', 'action="//', $html);
+$html = str_ireplace('action="//' . $_SERVER['HTTP_HOST'], 'action="//' . $_SERVER['HTTP_HOST'] . '/' . $glang . "/" . $_GET['_city'], $html);
+}
 // jReviews specific
 $html = str_ireplace('var s2AjaxUri = "/', 'var s2AjaxUri = "/'.$glang.'/', $html);
 
