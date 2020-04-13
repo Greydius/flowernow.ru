@@ -1,0 +1,77 @@
+#AuthName "For registered members only"
+#AuthType Basic
+#require valid-user
+#AuthUserFile /home/m/mihast6k/flowenow.ru/public/.htpasswd
+
+# Cache Control and Enable CORS
+
+RewriteCond %{HTTP_HOST} ^(moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb)\.floristum\.ru
+RewriteRule ^(en)$ https://floristum.ru/en/%1 [L,QSA,R]
+
+RewriteCond %{HTTP_HOST} ^(moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb)\.floristum\.ru
+RewriteRule ^(en)/$ https://floristum.ru/en/%1 [L,QSA,R]
+
+RewriteRule ^(en)/(moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb)$ /$1/?_city=$2 [L,QSA,CO=_city:$2:.floristum.ru:86400:/]
+RewriteRule ^(en)/(moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb)/(.*)$ /$1/$3/?_city=$2 [L,QSA,CO=_city:$2:.floristum.ru:86400:/]
+
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+# gtranslate config
+  RewriteRule ^(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)/(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)/(.*)$ /$1/$3 [R=301,L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)/(.*)$ /gtranslate/gtranslate.php?glang=$1&gurl=$2 [L,QSA]
+   RewriteRule ^(af|sq|am|ar|hy|az|eu|be|bn|bs|bg|ca|ceb|ny|zh-CN|zh-TW|co|hr|cs|da|nl|en|eo|et|tl|fi|fr|fy|gl|ka|de|el|gu|ht|ha|haw|iw|hi|hmn|hu|is|ig|id|ga|it|ja|jw|kn|kk|km|ko|ku|ky|lo|la|lv|lt|lb|mk|mg|ms|ml|mt|mi|mr|mn|my|ne|no|ps|fa|pl|pt|pa|ro|ru|sm|gd|sr|st|sn|sd|si|sk|sl|so|es|su|sw|sv|tg|ta|te|th|tr|uk|ur|uz|vi|cy|xh|yi|yo|zu)$ /$1/ [R=301,L]
+
+ 
+
+
+    #RewriteCond %{HTTP_HOST} ^(www\.)?floristum\.ru$ [NC]
+    #RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    #RewriteRule ^(.*)$ https://floristum.ru/$1 [R=301,L]
+
+    #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    #RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    #RewriteCond %{HTTPS} !on
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+
+
+    #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+    #RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+    #RewriteCond %{HTTPS} !on
+    #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?flowenow\.ru$ [NC]
+    RewriteRule ^(.*)$ https://floristum.ru/$1 [R=301,L]
+
+
+    RewriteCond %{HTTP_HOST} ^moskva\.floristum\.ru   [NC]
+    RewriteRule ^ https://floristum.ru/$1  [R=301,L]
+
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+    
+ RewriteCond %{HTTP_HOST} ^www.floristum.ru$ [NC]
+RewriteRule ^(.*)$ https://floristum.ru/$1 [R=301,L]
+
+</IfModule>
