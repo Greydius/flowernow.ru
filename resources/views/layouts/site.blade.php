@@ -31,6 +31,10 @@
 
     <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap-3.3.4.min.css') }}">
 
+    <script>
+      const currentCity = '{{ request()->_cn != false ? request()->_cn : "moskov" }}'
+    </script>
+    
     <script type='text/javascript'>
             //<![CDATA[
             function loadCSS(e, t, n) { "use strict"; var i = window.document.createElement("link"); var o = t || window.document.getElementsByTagName("script")[0]; i.rel = "stylesheet"; i.href = e; i.media = "only x"; o.parentNode.insertBefore(i, o); setTimeout(function () { i.media = n || "all" }) }

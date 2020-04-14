@@ -33,8 +33,8 @@ class DomainMiddleware
         $subdomain = current($subdomains);
 
         if(empty($subdomain) || $subdomain == 'www') {
-                if($request->_city != false) {
-                  $subdomain = $request->_city;
+                if($request->_cn != false) {
+                  $subdomain = $request->_cn;
                 } else {
                   $subdomain = 'moskva';
                 }     
