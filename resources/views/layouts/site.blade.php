@@ -31,6 +31,10 @@
 
     <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap-3.3.4.min.css') }}">
 
+    <script>
+      const currentCity = '{{ request()->_cn != false ? request()->_cn : "moskov" }}'
+    </script>
+    
     <script type='text/javascript'>
             //<![CDATA[
             function loadCSS(e, t, n) { "use strict"; var i = window.document.createElement("link"); var o = t || window.document.getElementsByTagName("script")[0]; i.rel = "stylesheet"; i.href = e; i.media = "only x"; o.parentNode.insertBefore(i, o); setTimeout(function () { i.media = n || "all" }) }
@@ -1174,7 +1178,7 @@
         </a>
         <div class="app-sms-modal__block">
           <div class="app-sms-modal__title">В приложении выгоднее и удобнее!</div>
-          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100 с букета в приложении!</div>
+          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100₽ с букета в приложении!</div>
 
           <form class="app-sms-modal__input-form">
             <span class="app-sms-modal__input-title">Скачайте приложение Floristum по ссылке в смс:</span>
@@ -1293,14 +1297,6 @@
     </script>
 </div>
 
-<?php
-/*
-use Illuminate\Support\Facades\Input;
-$get_input = Input::all();
-print_r($get_input);
-*/
-if( substr_count($_SERVER['HTTP_HOST'],'.') == 1){
-?>
 <!--lang switcher-->
 <style>
 .translate_div{-moz-transform: rotate(-90deg);
@@ -1342,7 +1338,9 @@ function strpos (haystack, needle, offset) {
 }
  
 if(strpos(location.href, '/en/')){
-	$('.translate_div a').attr('href', location.href.replace("/en/", '/'));
+  let href = location.href.replace("/en/", '/').replace(/\/moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb/, '');
+	$('.translate_div a').attr('href', href);
+
 	$('.translate_div span').html('Русский');
 	$('.translate_div img').attr('src', '/images/ru_translate.png');
 	current_lang = 'en';
@@ -1354,9 +1352,6 @@ if(strpos(location.href, '/en/')){
 }
 
 </script>
-
-<!--lang switcher end-->
-<?php } ?>
 
 @if(request()->get('app') !== 'true' && request()->cookie('app') !== 'true')
 <script>

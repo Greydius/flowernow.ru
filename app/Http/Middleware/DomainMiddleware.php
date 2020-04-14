@@ -33,7 +33,11 @@ class DomainMiddleware
         $subdomain = current($subdomains);
 
         if(empty($subdomain) || $subdomain == 'www') {
-                $subdomain = 'moskva';
+                if($request->_cn != false) {
+                  $subdomain = $request->_cn;
+                } else {
+                  $subdomain = 'moskva';
+                }     
         }
 
         if($subdomain == 'spb') {

@@ -165,7 +165,11 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 				//window.history.pushState({path:newurl},'',newurl);
                  
 				if(current_lang == 'en'){
-					newurl = newurl.replace(".ru", '.ru/en');
+          if (currentCity != 'moskov') {
+            newurl = newurl.replace(".ru", `.ru/en/${currentCity}`);
+          } else {
+            newurl = newurl.replace(".ru", `.ru/en/`);
+          }
 				} 
 				//console.log(current_lang+'-'+newurl);
 				window.location = newurl;
@@ -259,6 +263,14 @@ angular.module('flowApp').controller('mainPage', function($scope, $element, $htt
 
         $scope.mobileChangeUrl = function(path) {
                 var newurl = $scope.prepareUrl(path);
+
+                if (current_lang == 'en') {
+                  if (currentCity != 'moskov') {
+                    newurl = newurl.replace(".ru", `.ru/en/${currentCity}`);
+                  } else {
+                    newurl = newurl.replace(".ru", `.ru/en/`);
+                  }
+                }
 
                 console.log(newurl);
 
