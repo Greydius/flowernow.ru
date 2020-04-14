@@ -113,6 +113,9 @@ $(document).ready(function() {
                 return false;
         }).on('click', '.create-order-ur', function () {
                 var form = $(this).parents('form');
+                var button = $(".create-order-ur");
+          button.attr('disabled', true);
+          $(".clock-wrapper-outer").addClass('active');
 
                 if(fromValidateUr()) {
                         $('[name="phone"]').val($('.customer_phone:visible').intlTelInput("getNumber", intlTelInputUtils.numberFormat.E164));
@@ -124,6 +127,8 @@ $(document).ready(function() {
                         $('html, body').animate({
                                 scrollTop: $(".error", form).eq(0).offset().top - 80
                         }, 500);
+                  button.attr('disabled', false);
+                  $(".clock-wrapper-outer").removeClass('active');
                 }
 
                 return false;
@@ -264,6 +269,9 @@ $(document).ready(function() {
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                                 preloader('hide');
                                 $.notify(XMLHttpRequest.responseJSON.message, "error");
+                                var button = $(".create-order-ur");
+                                button.attr('disabled', false);
+                                $(".clock-wrapper-outer").removeClass('active');
                         }
                 });
         }

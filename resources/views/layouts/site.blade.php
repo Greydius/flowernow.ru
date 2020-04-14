@@ -1174,7 +1174,7 @@
         </a>
         <div class="app-sms-modal__block">
           <div class="app-sms-modal__title">В приложении выгоднее и удобнее!</div>
-          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100 с букета в приложении!</div>
+          <div class="app-sms-modal__title app-sms-modal__title-red">Скидка 100₽ с букета в приложении!</div>
 
           <form class="app-sms-modal__input-form">
             <span class="app-sms-modal__input-title">Скачайте приложение Floristum по ссылке в смс:</span>

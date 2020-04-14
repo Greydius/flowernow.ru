@@ -3,7 +3,7 @@
 <div class="product-item col-sm-{{ !empty($col) ? $col : '4' }} col-xs-6 {{ !empty($class) ? $class : '' }}">
   <div class="product-item__inner">
     <div class="product-item__front media-item">
-        @if(!empty($user) && $user->isSupervisor($current_city->id))
+        @if(!empty($user) && ($user->isSupervisor($current_city->id) || $user->admin))
             <a href ng-click="editItem($event, {{ $_item['id'] }})" style="display: block; position: absolute; padding: 5px; z-index: 9;">
                 <i class="fa fa-pencil"></i>
             </a>
