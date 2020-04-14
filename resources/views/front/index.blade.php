@@ -28,7 +28,7 @@
 
         <div class="container" ng-controller="mainPage">
 
-            @if(!empty($user) && $user->isSupervisor($current_city->id))
+            @if(!empty($user) && ($user->isSupervisor($current_city->id) || $user->admin))
                 <script type="text/ng-template" id="edit-item-modal.html">
                     <div class="modal fade" id="m_modal_1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">

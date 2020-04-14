@@ -28,4 +28,15 @@ class CitiesController extends Controller
 
                 return response()->json($cities);
         }
+
+        public function cities(Request $request) {
+          $cities = City::whereNotNull('slug')->orderBy('population', 'DESC')->get();
+          
+          $citiesString = "";
+
+          foreach($cities as $city) {
+            $citiesString .= $city->slug . "|";
+          }
+          return $citiesString;
+        }
 }

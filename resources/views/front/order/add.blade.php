@@ -510,6 +510,12 @@
 
 
     </div>
+    <div class="clock-wrapper-outer">
+      <div class="clock-wrapper">
+        <div class="clock"></div>
+        <div class="clock"></div>
+      </div>
+    </div>
 
 @endsection
 
@@ -523,6 +529,187 @@
         border-bottom: 1px dashed #555C69;
         cursor: pointer;
       }
+      .clock-wrapper-outer {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 999999999999;
+        top: 0;
+        left: 0;
+      }
+      .clock-wrapper-outer.active {
+        display: flex;
+      }
+      .clock-wrapper {
+        position: releative;
+        width: 50px;
+        height: 100px;
+        -webkit-transform-origin: center center;
+                transform-origin: center center;
+        -webkit-animation: rotate 3s .75s ease-in-out infinite;
+                animation: rotate 3s .75s ease-in-out infinite;
+      }
+      .clock-wrapper:before, .clock-wrapper:after {
+        z-index: -1;
+        content: "";
+        border: solid 4px rgba(0, 0, 0, 0.2);
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+        border-radius: 50%;
+        -webkit-clip-path: inset(0 60% 0 0);
+                clip-path: inset(0 60% 0 0);
+        width: 100%;
+        height: 50%;
+        -webkit-animation: shadow 3s .75s linear infinite;
+                animation: shadow 3s .75s linear infinite;
+        opacity: 0;
+      }
+      .clock-wrapper:after {
+        position: absolute;
+        top: -1px;
+        left: -18px;
+      }
+      .clock-wrapper:before {
+        position: absolute;
+        bottom: -1px;
+        right: -18px;
+        -webkit-transform: rotate(180deg);
+                transform: rotate(180deg);
+      }
+
+      .clock {
+        position: relative;
+        width: 0;
+        height: 0;
+        border-top: solid 50px #df291e;
+        border-bottom: solid 25px transparent;
+        border-left: solid 25px transparent;
+        border-right: solid 25px transparent;
+      }
+      .clock:before, .clock:after {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: -47px;
+        width: 0;
+        height: 0;
+        border-top: solid 44px #f3f3f3;
+        border-bottom: solid 20px transparent;
+        border-left: solid 20px transparent;
+        border-right: solid 20px transparent;
+      }
+      .clock:after {
+        border-top: solid 44px #df291e;
+        will-change: transform;
+        -webkit-animation: clock1 3s linear infinite;
+                animation: clock1 3s linear infinite;
+      }
+      .clock:last-child {
+        -webkit-transform: rotate(180deg) translateY(50px);
+                transform: rotate(180deg) translateY(50px);
+      }
+      .clock:last-child:after {
+        -webkit-transform: scale(0);
+                transform: scale(0);
+        -webkit-animation: clock2 3s linear infinite;
+                animation: clock2 3s linear infinite;
+      }
+
+      @-webkit-keyframes clock1 {
+        20%, 50% {
+          -webkit-transform: scale(0);
+                  transform: scale(0);
+        }
+        70%, 100% {
+          -webkit-transform: scale(1);
+                  transform: scale(1);
+        }
+      }
+
+      @keyframes clock1 {
+        20%, 50% {
+          -webkit-transform: scale(0);
+                  transform: scale(0);
+        }
+        70%, 100% {
+          -webkit-transform: scale(1);
+                  transform: scale(1);
+        }
+      }
+      @-webkit-keyframes clock2 {
+        20%, 50% {
+          -webkit-transform: scale(1);
+                  transform: scale(1);
+        }
+        70%,100% {
+          -webkit-transform: scale(0);
+                  transform: scale(0);
+        }
+      }
+      @keyframes clock2 {
+        20%, 50% {
+          -webkit-transform: scale(1);
+                  transform: scale(1);
+        }
+        70%,100% {
+          -webkit-transform: scale(0);
+                  transform: scale(0);
+        }
+      }
+      @-webkit-keyframes shadow {
+        10% {
+          opacity: 1;
+        }
+        20%, 50% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 1;
+        }
+        70%,100% {
+          opacity: 0;
+        }
+      }
+      @keyframes shadow {
+        10% {
+          opacity: 1;
+        }
+        20%, 50% {
+          opacity: 0;
+        }
+        60% {
+          opacity: 1;
+        }
+        70%,100% {
+          opacity: 0;
+        }
+      }
+      @-webkit-keyframes rotate {
+        20%, 50% {
+          -webkit-transform: rotate(180deg);
+                  transform: rotate(180deg);
+        }
+        70%, 100% {
+          -webkit-transform: rotate(360deg);
+                  transform: rotate(360deg);
+        }
+      }
+      @keyframes rotate {
+        20%, 50% {
+          -webkit-transform: rotate(180deg);
+                  transform: rotate(180deg);
+        }
+        70%, 100% {
+          -webkit-transform: rotate(360deg);
+                  transform: rotate(360deg);
+        }
+      }
+
     </style>
 @stop
 

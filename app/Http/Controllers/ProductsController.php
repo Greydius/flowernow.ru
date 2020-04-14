@@ -884,9 +884,8 @@ class ProductsController extends Controller
 
                 try{
                         $product = Product::find($id);
-                        $shop = $this->user->getShop();
 
-                        if(empty($product) || !isset($request->star) || !$this->user->isSupervisor($product->shop->city->id)) {
+                        if(empty($product) || !isset($request->star)) {
                                 throw new \Exception('Продукт не найден');
                         } else {
                                 $product->star = (int)$request->star ? 1 : 0;
