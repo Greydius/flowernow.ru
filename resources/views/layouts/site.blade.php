@@ -976,7 +976,13 @@
 
                                 @foreach($popular_city as $key => $city_item)
                                     <div class="city-popular">
-                                        <p><a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a></p>
+                                        <p>
+                                          @if(request()->_cn != false)
+                                            <a href="http://<?=$city_item->slug?>.floristum.ru/en/{{ $city_item->slug }}"><?=$city_item->name?></a>
+                                          @else
+                                            <a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a>
+                                          @endif
+                                        </p>
                                         <p class="text-muted"></p>
                                     </div>
 
@@ -1338,8 +1344,12 @@ function strpos (haystack, needle, offset) {
 }
  
 if(strpos(location.href, '/en/')){
-  let href = location.href.replace("/en/", '/').replace(/\/moskva|sankt-peterburg|novosibirsk|ekaterinburg|omsk|nizhniy-novgorod|chelyabinsk|samara|ufa|rostov-na-donu|perm|voronezh|kazan|krasnoyarsk|volgograd|saratov|krasnodar|tolyatti|barnaul|izhevsk|tyumen|ulyanovsk|khabarovsk|yaroslavl|vladivostok|irkutsk|makhachkala|orenburg|novokuznetsk|tomsk|kemerovo|ryazan|naberezhnye-chelny|astrakhan|penza|lipetsk|tula|kirov|balashikha|cheboksary|kaliningrad|kursk|magnitogorsk|ulan-ude|tver|bryansk|ivanovo|stavropol|belgorod|sochi|nizhniy-tagil|arkhangelsk|chita|vladimir|kaluga|sevastopol|kurgan|smolensk|simferopol|volzhskiy|orel|surgut|cherepovets|vologda|yakutsk|vladikavkaz|saransk|murmansk|groznyy|sterlitamak|tambov|kostroma|petrozavodsk|nizhnevartovsk|yoshkar-ola|taganrog|novorossiysk|komsomolsk-na-amure|siktyvkar|nizhnekamsk|dzerzhinsk|zelenograd|nalchik|shakhty|bratsk|angarsk|orsk|blagoveshchensk|engels|velikiy-novgorod|staryy-oskol|khimki|pskov|biysk|anapa|balakovo|prokopyevsk|podolsk|korolev|yuzhno-sakhalinsk|armavir|rybinsk|severodvinsk|abakan|lyubertsy|mytishchi|petropavlovsk-kamchatskiy|norilsk|syzran|ussuriysk|kamensk-uralskiy|novocherkassk|zlatoust|krasnogorsk|elektrostal|kolomna|maykop|pyatigorsk|miass|kerch|kolpino|berezniki|khasavyurt|zheleznodorozhnyy|odintsovo|kovrov|pushkin|cherkessk|kislovodsk|novocheboksarsk|pervouralsk|domodedovo|neftekamsk|serpukhov|nefteyugansk|novomoskovsk|kamyshin|noviy-urengoy|dimitrovgrad|nevinnomyssk|kyzyl|bataysk|obninsk|pushkino|noyabrsk|dolgoprudnyi|Reutov|seversk|artem|elets|elista|sergiev-posad|voskresensk|glazov|zheleznogorsk|essentuki|novotroitsk|berdsk|ukhta|nazran|khanty-mansiysk|sarapul|gatchina|michurinsk|magadan|velikiye-luki|gubkin|kiselevsk|kineshma|kuznetsk|eysk|egorevsk|shadrinsk|azov|ozersk|kropotkin|gelendzhik|viborg|chernogorsk|birobidzhan|kirovo-chepetsk|vsevolozhsk|slavyansk-na-kubani|tuymazy|feodosiya|verkhnyaya-pyshma|georgievsk|kstovo|belogorsk|leninogorsk|kogalym|gorno-altaisk|rossosch|klintsy|krymsk|aleksandrov|vorkuta|salsk|rzhev|urus-martan|izberbash|prokhladniy|neryungri|apatity|volzhsk|severomorsk|vyazma|krasnokamensk|monchegorsk|moskovskiy|borovichi|salekhard|livny|kanash|ruzaevka|nadym|mozdok|temryuk|scherbinka|sovetsk|elizovo|akhtubinsk|yablonovskiy|korsakov|kandalaksha|adler|kasimov|poykovskiy|zaraysk|kondopoga|ust-dzheguta|slavgorod|Gusev|tara|bakhchisaray|ipatovo|krasnoobsk|naryan-mar|byi|severobaykalsk|Pushchino|bobrov|kaltan|mayma|shumikha|inza|kaa-khem|petrovsk-zabaykalskiy|anadyr|zelenogorsk|lagan|vytegra|zadonsk|mesyagutovo|obluchye|tavrichanka|magas|poselok-iskateley|ola|bilibino|krasnaya-polyana|spb/, '');
-	$('.translate_div a').attr('href', href);
+  @if(request()->_cn != false)
+  let href = "http://{{ request()->_cn }}.floristum.ru";
+  @else
+  let href = "http://floristum.ru";
+  @endif
+  $('.translate_div a').attr('href', href);
 
 	$('.translate_div span').html('Русский');
 	$('.translate_div img').attr('src', '/images/ru_translate.png');
@@ -1554,4 +1564,4 @@ updateFavorites(null)
 <style src="/assets/test.css"></style>
 <script src="/assets/test.js"></script>
 @endif
-</bod
+</body>
