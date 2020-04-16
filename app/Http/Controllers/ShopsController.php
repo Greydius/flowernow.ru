@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 use Image;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Storage;
 
 class ShopsController extends Controller
 {
@@ -139,6 +140,7 @@ class ShopsController extends Controller
               "id" => $confirmedReport->id,
               "date" => $confirmedReport->date,
               "confirmed" => $confirmedReport->confirmed,
+              "file" => $confirmedReport->file,
               "orders_count" => count($orders),
               "total_price" => $total_price,
               "shop_price" => $shop_price,
@@ -154,6 +156,72 @@ class ShopsController extends Controller
                   'groupedReports' => $groupedReports
           ]);
         }
+
+        public function clearReport($id) {
+          $confirmedReport = ConfirmedReport::find($id);
+          $confirmedReport->file = null;
+          $confirmedReport->save();
+
+          return redirect()->back();
+        }
+
+        public function uploadReport($id, Request $request) {
+          $confirmedReport = ConfirmedReport::find($id);
+          if(!$request->hasFile('report')) {
+            return redirect()->back();
+          }
+
+          $file = $request->report->storeAs('public', $id . '.docx');
+
+          $confirmedReport->file = $file;
+          $confirmedReport->save();
+
+          return redirect()->back();
+        }
+        
+        public function uploadedReport($id) {
+
+          $confirmedReport = ConfirmedReport::find($id);
+
+          $shop = Shop::find($confirmedReport->shop_id);
+
+          $document = \PhpOffice\PhpWord\IOFactory::load('test_report.docx');
+          $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($document, 'HTML');
+
+          $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
+          $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->first();
+
+          $dompdf = new Dompdf();
+                $dompdf->set_option('isRemoteEnabled', true);
+                $dompdf->set_option('isHtml5ParserEnabled', true);
+
+          $view = view('reports.report_part', [
+                  'date' => clone $date,
+                  'firstOrder' => $firstOrder,
+                  'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                  'shop' => Shop::find($confirmedReport->shop_id),
+                  'html' => $objWriter->getWriterPart('Body')->write()
+          ])->render();
+
+          //echo $view; exit();
+
+                $dompdf->loadHtml($view, 'UTF-8');
+
+                // (Optional) Setup the paper size and orientation
+                //$dompdf->setPaper('A4', 'landscape');
+
+                // Render the HTML as PDF
+                $dompdf->render();
+
+                // Output the generated PDF to Browser
+                $dompdf->stream('report_'.$shop->id.'_'.$date->format('Y-m').'.pdf');
+
+
+                exit();
+
+          // $objWriter->save('php://output');
+        }
+        
 
         public function shopReports() {
           $shop = $this->user->getShop();
@@ -191,6 +259,7 @@ class ShopsController extends Controller
               "id" => $confirmedReport->id,
               "date" => $confirmedReport->date,
               "confirmed" => $confirmedReport->confirmed,
+              "file" => $confirmedReport->file,
               "orders_count" => count($orders),
               "total_price" => $total_price,
               "shop_price" => $shop_price
@@ -877,7 +946,9 @@ class ShopsController extends Controller
                     ->whereMonth('created_at', '=', $month)->get();
           
           return view('reports.change', [
-            "orders" => $orders
+            "orders" => $orders,
+            "id" => $id,
+            "file" => $confirmedReport->file
           ]);
         }
 

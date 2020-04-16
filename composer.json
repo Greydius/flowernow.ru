@@ -17,7 +17,7 @@
         "laravel/passport": "^4.0",
         "laravel/tinker": "~1.0",
         "payprocessing/atol-online": "^1.0",
-        "phpoffice/phpword": "^0.16.0",
+        "phpoffice/phpword": "^0.17.0",
         "scriptixru/sypexgeo": "0.2.*@dev",
         "troytft/cloud-payments-client": "^0.1.0",
         "watson/autologin": "^0.5.3"

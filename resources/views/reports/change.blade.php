@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-<div id="change-report-app">
+<!-- <div id="change-report-app">
 <table>
   <tr>
     <td>№ п/п</td>
@@ -30,13 +30,34 @@
     <td v-html="totalShop"></td>
     <td v-html="totalReport"></td>
   </tr>
-</table>
+</table> -->
 
-<form action="" method="POST">
+<!-- <form action="" method="POST">
 {{ csrf_field() }}
 <input v-for="order of orders" :key="order.id" type="hidden" :name="'report_price[' + order.id+ ']'" :value="order.report_price">
 <button>Сохранить</button>
+</form> -->
+<h3>Загрузить файл</h3>
+<form action="{{ route('admin.uploadReport', ['id' => $id]) }}" method="POST" enctype='multipart/form-data'>
+{{ csrf_field() }}
+<input type="file" name="report">
+<button>Сохранить</button>
+<br>
 </form>
+<br><br>
+@if($file != false)
+<h3>Очистить файл</h3>
+<form action="{{ route('admin.clearReport', ['id' => $id]) }}" method="POST" enctype='multipart/form-data'>
+{{ csrf_field() }}
+<button>Очистить</button>
+<br>
+</form>
+<br><br>
+@endif
+@if($file != false)
+<h3>Скачать файл</h3>
+<a href="/storage/{{ $id }}.docx">Скачать</a>
+@endif
 </div>
 
 @endsection
@@ -47,7 +68,7 @@
 @stop
 
 @section('footer')
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 
 <script type="text/javascript">
@@ -105,5 +126,5 @@ const app = new Vue({
     }
   }
 })
-</script>
+</script> -->
 @stop

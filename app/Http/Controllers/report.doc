@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        @font-face {
+            font-family: "fontbold";
+            src: url("Roboto-Regular.ttf");
+        }
+
+        body { font-family:  'Times New Roman', DejaVu Sans, sans-serif; font-size: 14px }
+
+        h1, h2, h3, h4 {
+            text-align: center;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            color: #333;
+            background-color: #333;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+
+        .table-border {
+            border-collapse: collapse;
+        }
+
+        .table-border td, .table-border th {
+            border: 1px solid black;
+        }
+
+        .table-border-top {
+            border-top: 1px solid black;
+        }
+
+        .table-border-right {
+            border-right: 1px solid black;
+        }
+
+        .table-border-bottom {
+            border-bottom: 1px solid black;
+        }
+
+        .table-border-left {
+            border-left: 1px solid black;
+        }
+
+        .no-border {
+            border: 0px !important;
+        }
+
+        .no-border-top {
+            border-top: 0px !important;
+        }
+
+        .no-border-right {
+            border-right: 0px !important;
+        }
+
+        .no-border-bottom {
+            border-bottom: 0px !important;
+        }
+
+        .no-border-left {
+            border-left: 0px !important;
+        }
+
+    </style>
+</head>
+<body style="width: 708px;">
+
+<table border="0">
+    <tr>
+        <td>
+            <center>
+                Отчет агента за <strong>апрель 2020г.</strong>
+                <br>
+                по агентскому договору от 28.06.2018г.
+            </center>
+        </td>
+    </tr>
+</table>
+
+<table border="0">
+    <tr>
+        <td style="float: left;" width="50%">
+            "30" апреля 2020 г.
+        </td>
+        <td style="float: right; text-align: right" width="50%">
+            г. Санкт-Петербург
+        </td>
+    </tr>
+</table>
+
+<table border="0">
+    <tr>
+        <td>
+            Продавец, ИП Шайхутдинов Радик Рашитович, поручил, а Агент,
+            ООО "ФЛН", в лице генерального директора Степановой Л.Ю.,
+            за период c "01" апреля 2020 г. по "30" апреля 2020 г.
+            заключил следующие сделки с покупателями:
+        </td>
+    </tr>
+</table>
+
+
+<table class="table-border">
+    <tr>
+        <th>№<br>п/п</th>
+        <th>Дата<br>заказа</th>
+        <th>Номер заказа</th>
+        <th>Получена плата<br>за товар от<br>покупателей, ₽</th>
+        <th>Сумма<br>вознаграждения<br>Агента, ₽</th>
+        <th>Сумма к<br>перечислению<br>Продавцу, ₽</th>
+    </tr>
+        
+        <tr>
+            <td>1</td>
+            <td>2020-04-01 09:13:23</td>
+            <td>41708</td>
+            <td>4 200.00 </td>
+            <td>700.00</td>
+            <td>3 500.00</td>
+        </tr>
+            
+        <tr>
+            <td>2</td>
+            <td>2020-04-02 19:44:52</td>
+            <td>41737</td>
+            <td>1 875.00 </td>
+            <td>375.00</td>
+            <td>1 500.00</td>
+        </tr>
+            
+        <tr>
+            <td>3</td>
+            <td>2020-04-06 21:20:22</td>
+            <td>41879</td>
+            <td>1 875.00 </td>
+            <td>375.00</td>
+            <td>1 500.00</td>
+        </tr>
+            
+    <tr>
+        <td colspan="3" align="right">
+            <b>Итого:</b>
+        </td>
+        <td>
+            <b>7 950.00</b>
+        </td>
+        <td>
+            <b>1 450.00</b>
+        </td>
+        <td>
+            <b>6 500.00</b>
+        </td>
+    </tr>
+</table>
+
+<p>Сумма заключенных сделок с покупателями за вычетом агентского вознаграждения составила 6500 (шесть тысяч пятьсот ) рублей 00 копеек. НДС не облагается</p>
+<p>Вознаграждение Агента составило 1450 (одна тысяча четыреста пятьдесят ) рублей 00 копеек. НДС не облагается</p>
+
+<p>Настоящий Отчет является актом оказанных услуг.</p>
+
+<table border="0">
+    <tr>
+        <td width="50%">
+            <p>Отчет сдал:</p>
+                                <p>ООО "ФЛН"</p>
+
+                ИНН/ КПП 7807189999/ 780701001
+                <br>
+                Юр. адрес: 198206, г. Санкт-Петербург,
+                <br>
+                ул. Адмирала Трибуца, д.7, кв.66
+                <br>
+                Расчетный счет: 40702810410000256068 в
+                <br>
+                АО "ТИНЬКОФФ БАНК"
+                <br>
+                БИК Банка: 044525974
+                <br>
+                Корр. счет: 30101810145250000974
+                <br>
+                Генеральный директор
+                <br><br>
+                ________________/Степанова Л.Ю./
+                <br><br>
+
+                М.П.
+                        </td>
+        <td width="50%">
+            <p>Отчет принял:</p>
+            <br><br>
+
+            ИП Шайхутдинов Радик Рашитович
+            <br>
+            Юр. адрес: 
+            <br>
+            Расчетный счет: 40802810003500005744 в
+            <br>
+            ТОЧКА ПАО БАНКА
+            <br>
+            БИК Банка: 044525999
+            <br>
+            Корр. счет: 30101810845250000999
+            <br>
+            ИНН: 781416623737
+            <br>
+            КПП: 
+            <br><br>
+            __________________________________
+            <br><br>
+            ________________/________________/
+
+        </td>
+    </tr>
+</table>
+
+<br><br><br>
+<table class="table-border">
+    <tr>
+        <td>
+            Акт считается подтвержденным, если в адрес ООО "ФЛН" не направлен Протокол разногласий к данному акту до 31.05.2020
+
+        </td>
+    </tr>
+</table>
+<br><br><br>
+
+
+</body>
+</html>

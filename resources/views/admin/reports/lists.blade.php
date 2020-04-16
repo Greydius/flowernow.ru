@@ -33,9 +33,17 @@
                       <td>{{ $confirmedReport['total_price'] }}</td>
                       <td>{{ $confirmedReport['shop_price'] }}</td>
                       <td>
-                        <a href="{{ route('admin.shop.getConfirmedReport', ['id' => $confirmedReport['id']]) }}">PDF</a>
+                        @if($confirmedReport['file'] == false)
+                          <a href="{{ route('admin.shop.getConfirmedReport', ['id' => $confirmedReport['id']]) }}">PDF</a>
+                        @else
+                          <a href="{{ route('admin.uploadedReport', ['id' => $confirmedReport['id']]) }}">PDF</a>
+                        @endif
                         /
-                        <a href="{{ route('admin.shop.getConfirmedReportDoc', ['id' => $confirmedReport['id']]) }}">DOC</a>
+                        @if($confirmedReport['file'] == false)
+                          <a href="{{ route('admin.shop.getConfirmedReportDoc', ['id' => $confirmedReport['id']]) }}">DOC</a>
+                        @else
+                          <a href="/storage/{{ $confirmedReport['id'] }}.docx">DOC</a>
+                        @endif
                       </td>
                       <td>
                         @if($confirmedReport['confirmed'] != 1)

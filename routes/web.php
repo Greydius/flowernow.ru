@@ -699,6 +699,21 @@ Route::group(['prefix' => 'admin',  'middleware' => 'auth'], function() {
                 'as' => 'admin.reports'
         ]);
 
+        Route::get('reports/uploadedReport/{id}', [
+                'uses' => 'ShopsController@uploadedReport',
+                'as' => 'admin.uploadedReport'
+        ]);
+
+        Route::post('reports/uploadReport/{id}', [
+                'uses' => 'ShopsController@uploadReport',
+                'as' => 'admin.uploadReport'
+        ]);
+
+        Route::post('reports/clearReport/{id}', [
+                'uses' => 'ShopsController@clearReport',
+                'as' => 'admin.clearReport'
+        ]);
+
 
         Route::get('shop/confirmedReport/{id}', [
                 'uses' => 'ShopsController@confirmedReport',
