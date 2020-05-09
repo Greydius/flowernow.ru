@@ -141,6 +141,14 @@ angular.module('flowApp').controller('productsList', function($scope, $element, 
                         });
                 });
         }
+
+        $scope.getTotal = function (item) {
+          return Number(item.price != false ? item.price : 0) + Number(item.shop.delivery_price);
+        }
+
+        $scope.getTotalPercent = function (item, percent) {
+          return Math.round((Number(item.price != false ? item.price : 0) + Number(item.shop.delivery_price)) * (percent/100));
+        }
         
         $scope.deleteItem = function (item) {
 

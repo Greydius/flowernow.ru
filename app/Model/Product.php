@@ -159,7 +159,7 @@ class Product extends MainModel
                 */
 
                 $productRequest = self::with(['shop'  => function($query) {
-                        $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
+                        $query->select(['id', 'name', 'delivery_price', 'delivery_time', 'city_id']);
                 }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
                         ->where('price', '>', 0)
                         ->where('dop', 0)

@@ -351,12 +351,24 @@
                                             Цена (<span class="red-bold-text">включая коммисию {{ config('settings.product_commission') }}%</span>) <span class="text-danger must-have">*</span>
                                         </label>
                                         <div class="m-input-icon m-input-icon--right">
-                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена, ₽" id="edit-product-price">
+                                            <input type="text" class="form-control form-control-sm m-input" ng-model="item.price" placeholder="Цена букета без доставки, ₽" id="edit-product-price">
                                             <span class="m-input-icon__icon m-input-icon__icon--right">
                                                 <span>
                                                     <i class="fa fa-rub"></i>
                                                 </span>
                                             </span>
+                                        </div>
+                                        <div>
+                                          <div>
+                                          +<% item.shop.delivery_price %> ₽ доставка 
+                                          @if($user->admin)
+                                            (<a href="/admin/shop/<% item.shop.id %>#delivery">изменить</a>)
+                                          @else
+                                            (<a href="/admin/shop#delivery">изменить</a>)
+                                          @endif
+                                          </div>
+                                          <div ng-show="item.price" style="padding-left: 15px;">Покупатель оплатит:</div>
+                                          <div ng-show="item.price"><b style="font-weight: 600;">= <% getTotal(item) %>₽</b> (<span class="red-bold-text">включая коммисию {{ config('settings.product_commission') }}% : (<% getTotalPercent(item, {{ config('settings.product_commission') }}) %> ₽)</span>)</div>
                                         </div>
                                     </div>
 
