@@ -64,7 +64,7 @@
                                 </div>
                             </div>
 
-                            @if($outputAvailable)
+                            <!-- @if($outputAvailable)
                                 <div class="m-widget1__item">
                                     <div class="row m-row--no-padding align-items-center">
 
@@ -72,8 +72,10 @@
 
                                     </div>
                                 </div>
-                            @endif
+                            @endif -->
+
                         </div>
+                        <div style="padding: 10px 30px; color: red;">Выплаты приостановлены по тех. причинам до 24.05.2020</div>
                         <!--end:: Widgets/Stats2-1 -->
                     </div>
 

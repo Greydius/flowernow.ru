@@ -166,7 +166,7 @@ class Shop extends MainModel
                         ->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))
                         ->sum('amount');
 
-                return $amount;
+                return ceil($amount);
         }
 
         public function getFrozenBalanceAttribute() {
@@ -189,7 +189,7 @@ class Shop extends MainModel
 
                         $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
 
-                        $ordersA = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereIn('id', $availableOrderIds)->get();
+                        $ordersA = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereNotIn('id', $orderIds)->whereIn('id', $availableOrderIds)->get();
 
                         $ordersASum = 0;
                         foreach($ordersA as $orderA) {
@@ -198,7 +198,7 @@ class Shop extends MainModel
                         //print_r($orders); exit();
 
                 $outBalance = $ordersASum;
-                return round(($outBalance >= 0 ? $outBalance : 0));
+                return ($outBalance >= 0 ? $outBalance : 0);
         }
 
         public function getAvailableOutBalanceAttribute() {

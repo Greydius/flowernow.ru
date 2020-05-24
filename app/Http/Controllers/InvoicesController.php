@@ -196,7 +196,7 @@ class InvoicesController extends Controller
 
                                 $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
 
-                                $orders = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereIn('id', $availableOrderIds)->get();
+                                $orders = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereNotIn('id', $orderIds)->whereIn('id', $availableOrderIds)->get();
                                 //print_r($orders); exit();
                                 break;
                         case 'out':

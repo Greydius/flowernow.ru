@@ -190,103 +190,110 @@ class OrdersController extends Controller
                                                         //$item->promoCode->save();
                                                 }
                                         }
-                                }
                                 
-                                if($orderListCount) {
-                                        \DB::commit();
+                                  if($orderListCount) {
+                                          \DB::commit();
 
-                                        try {
-                                                if($order->payment == Order::$PAYMENT_RS) {
+                                          try {
+                                                  if($order->payment == Order::$PAYMENT_RS) {
 
-                                                        $link = route('admin.order.view', ['id' => $order->id]);
-                                                        try {
-                                                                $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
-                                                        } catch (\Exception $e) {
-                                                                $shortLink = $link;
-                                                        }
+                                                          $link = route('admin.order.view', ['id' => $order->id]);
+                                                          try {
+                                                                  $shortLink = \App\Helpers\AppHelper::urlShortener($link)->id;
+                                                          } catch (\Exception $e) {
+                                                                  $shortLink = $link;
+                                                          }
 
-                                                        //sms for admins
-                                                        Sms::instance()->send('+79119245792', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
-                                                        Sms::instance()->send('+79052122383', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
+                                                          //sms for admins
+                                                          Sms::instance()->send('+79119245792', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
+                                                          Sms::instance()->send('+79052122383', 'Юр. '.$order->id.'. Одобрить - '.$shortLink );
 
-                                                        $order->generateInvoice();
+                                                          $order->generateInvoice();
 
-                                                        if($order->invoicePath && $order->email) {
-                                                                Mail::send('email.rsNewOrder', ['order' => $order,], function ($message) use ($order) {
-                                                                        $message->to([$order->email])
-                                                                                ->subject('Счет от Floristum.ru №' . $order->id)
-                                                                                ->attach($order->invoicePath);
-                                                                });
-                                                        }
+                                                          if($order->invoicePath && $order->email) {
+                                                                  Mail::send('email.rsNewOrder', ['order' => $order,], function ($message) use ($order) {
+                                                                          $message->to([$order->email])
+                                                                                  ->subject('Счет от Floristum.ru №' . $order->id)
+                                                                                  ->attach($order->invoicePath);
+                                                                  });
+                                                          }
 
-                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
-                                                                $message->to(['service@floristum.ru'])
-                                                                        ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
+                                                          Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                                                                  $message->to(['service@floristum.ru'])
+                                                                          ->subject('Создан новый заказ для ЮР. ЛИЦА №'. $order->id);
 
-                                                                if($order->invoicePath) {
-                                                                        $message->attach($order->invoicePath);
-                                                                }
-                                                        });
-                                                        
-                                                } elseif($order->payment == Order::$PAYMENT_CARD) {
-                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
-                                                                $message->to('service@floristum.ru')
-                                                                        ->subject('Создан новый заказ №'. $order->id);
-                                                        });
-                                                } else {
-                                                        Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
-                                                                $message->to('service@floristum.ru')
-                                                                        ->subject('Создан новый заказ №'. $order->id.' ЗА НАЛ.');
-                                                        });
-                                                }
-                                        } catch(\Exception $e){
-                                                \Log::debug('Ошибка юрика.'.$e->getMessage());
-                                        }
+                                                                  if($order->invoicePath) {
+                                                                          $message->attach($order->invoicePath);
+                                                                  }
+                                                          });
+                                                          
+                                                  } elseif($order->payment == Order::$PAYMENT_CARD) {
+                                                          Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                                                                  $message->to('service@floristum.ru')
+                                                                          ->subject('Создан новый заказ №'. $order->id);
+                                                          });
+                                                  } else {
+                                                          Mail::send('email.adminNewOrder', ['order' => $order, 'shop' => $shop], function ($message) use ($order) {
+                                                                  $message->to('service@floristum.ru')
+                                                                          ->subject('Создан новый заказ №'. $order->id.' ЗА НАЛ.');
+                                                          });
+                                                  }
+                                          } catch(\Exception $e){
+                                                  \Log::debug('Ошибка юрика.'.$e->getMessage());
+                                          }
 
-                                        $response = [
-                                                'order_id' => $order->id,
-                                                'message' => '',
-                                                'code' => 200
-                                        ];
+                                          $response = [
+                                                  'order_id' => $order->id,
+                                                  'message' => '',
+                                                  'code' => 200
+                                          ];
 
-                                        if($order->payment == Order::$PAYMENT_CARD) {
-                                                $cloudpaymentsDetails = [
-                                                        'publicId'      => \Config::get('cloudpayments.publicId'),  //id из личного кабинета
-                                                        'description'   => 'Заказ №'.$order->id, //назначение
-                                                        'amount'        => $order->amount(), //сумма
-                                                        'currency'      => 'RUB', //валюта
-                                                        'invoiceId'     => $order->id, //номер заказа  (необязательно)
-                                                        'accountId'     => $order->email, //идентификатор плательщика (необязательно)
-                                                        'data'          => [
-                                                                'link' => $order->getDetailsLink()
-                                                        ]
-                                                ];
+                                          if($order->payment == Order::$PAYMENT_CARD) {
+                                                  $cloudpaymentsDetails = [
+                                                          'publicId'      => \Config::get('cloudpayments.publicId'),  //id из личного кабинета
+                                                          'description'   => 'Заказ №'.$order->id, //назначение
+                                                          'amount'        => $order->amount(), //сумма
+                                                          'currency'      => 'RUB', //валюта
+                                                          'invoiceId'     => $order->id, //номер заказа  (необязательно)
+                                                          'accountId'     => $order->email, //идентификатор плательщика (необязательно)
+                                                          'data'          => [
+                                                                  'link' => $order->getDetailsLink()
+                                                          ]
+                                                  ];
 
-                                                $response['cloudpayments'] = $cloudpaymentsDetails;
-                                        } elseif($order->payment == Order::$PAYMENT_RS) {
-                                                $response['link'] = route('order.details', ['key' => $order->key]);
-                                        } elseif($order->payment == Order::$PAYMENT_CASH) {
-                                                try {
-                                                        $code = $order->sendSms();
-                                                        $order->sms_code = $code;
-                                                        $order->sms_send_at = date('Y-m-d H:i:s');
-                                                        if($order->save()) {
-                                                                $response['sms_send'] = true;
-                                                        }
-                                                } catch(\Exception $e){
+                                                  $response['cloudpayments'] = $cloudpaymentsDetails;
+                                          } elseif($order->payment == Order::$PAYMENT_RS) {
+                                                  $response['link'] = route('order.details', ['key' => $order->key]);
+                                          } elseif($order->payment == Order::$PAYMENT_CASH) {
+                                                  try {
+                                                          $code = $order->sendSms();
+                                                          $order->sms_code = $code;
+                                                          $order->sms_send_at = date('Y-m-d H:i:s');
+                                                          if($order->save()) {
+                                                                  $response['sms_send'] = true;
+                                                          }
+                                                  } catch(\Exception $e){
 
-                                                }
-                                        }
+                                                  }
+                                          }
 
-                                        return response()->json($response, 200);
+                                          return response()->json($response, 200);
 
+                                  } else {
+                                          \DB::rollback();
+                                          return response()->json([
+                                                  'error' => true,
+                                                  'message' => 'Ошибка! Обратитесь в службу поддержки.',
+                                                  'code' => 400
+                                          ], 400);
+                                  }
                                 } else {
-                                        \DB::rollback();
-                                        return response()->json([
-                                                'error' => true,
-                                                'message' => 'Ошибка! Обратитесь в службу поддержки.',
-                                                'code' => 400
-                                        ], 400);
+                                  \DB::rollback();
+                                          return response()->json([
+                                                  'error' => true,
+                                                  'message' => 'Ошибка! Обратитесь в службу поддержки.',
+                                                  'code' => 400
+                                          ], 400);
                                 }
 
                         } catch(\Exception $e){

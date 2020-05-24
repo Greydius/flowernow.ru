@@ -102,7 +102,7 @@ class Order extends MainModel
                         $amount += $orderList->client_price;
                 }
 
-                return $amount + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
+                return ceil($amount + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0));
         }
 
         public function getAmountAttribute() {
@@ -132,28 +132,28 @@ class Order extends MainModel
 
                   if($this->report_price != null && $this->report_price != 0){
                     if($this->report_shop_price != null && $this->report_shop_price != 0){
-                      return $this->report_shop_price;
+                      return floor($this->report_shop_price);
                     }else if($this->payment == Order::$PAYMENT_CASH) {
-                      return (-1)*($this->report_price - ($this->report_price * (1-($commission/100))));
+                      return floor((-1)*($this->report_price - ($this->report_price * (1-($commission/100)))));
                     }else {
-                      return $this->report_price * (1-($commission/100));
+                      return floor($this->report_price * (1-($commission/100)));
                     }
                     
                   } else {
                     if($this->payment == Order::$PAYMENT_CASH) {
-                            return (-1)*($this->amount() - ($amount_with_commission + $delivery_amount_with_commission));
+                            return floor((-1)*($this->amount() - ($amount_with_commission + $delivery_amount_with_commission)));
                     }
                     
-                    return $amount_with_commission + $delivery_amount_with_commission;
+                    return floor($amount_with_commission + $delivery_amount_with_commission);
                   }  
                 } else {
                   if($this->report_price != null && $this->report_price != 0){
                     if($this->report_shop_price != null && $this->report_shop_price != 0){
-                      return $this->report_shop_price;
+                      return floor($this->report_shop_price);
                     }else if($this->payment == Order::$PAYMENT_CASH) {
-                      return (-1)*($this->report_price - ($this->report_price * (1-($commission/100))));
+                      return floor((-1)*($this->report_price - ($this->report_price * (1-($commission/100)))));
                     }else {
-                      return $this->report_price * (1-($commission/100));
+                      return floor($this->report_price * (1-($commission/100)));
                     }
                     
                   } else {
@@ -163,10 +163,10 @@ class Order extends MainModel
                     }
 
                     if($this->payment == Order::$PAYMENT_CASH) {
-                            return (-1)*($this->amount() - $amount - ($this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0)));
+                            return floor((-1)*($this->amount() - $amount - ($this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0))));
                     }
 
-                    return $amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0);
+                    return floor($amount + $this->delivery_price + $this->delivery_out_distance * (!empty($this->delivery_out_price) ? $this->delivery_out_price : 0));
                   } 
                   
                 }
