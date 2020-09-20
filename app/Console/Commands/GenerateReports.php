@@ -47,7 +47,7 @@ class GenerateReports extends Command
                 //$reportDate = '2019-05-13';
 
                 //$date = \Carbon\Carbon::parse($reportDate);
-                $date = new \Carbon\Carbon('first day of this month');
+                $date = new \Carbon\Carbon('first day of last month');
 
                 $shops = Shop::with(['users'])->whereExists(function ($query) use ($date) {
                         $query->select(\DB::raw(1))
@@ -59,11 +59,15 @@ class GenerateReports extends Command
                 //dd(count($shops));
 
                 foreach($shops as $shop) {
-
-                  $confirmedReport = new ConfirmedReport();
-                  $confirmedReport->shop_id = $shop->id;
-                  $confirmedReport->date = \Carbon::now()->format('Y-m');
-                  $confirmedReport->save();
+                 
+                  $dateF = $date->format('Y-m');
+                  if(!ConfirmedReport::where('shop_id', $shop->id)->where('date', $dateF)->count()) {
+                    $confirmedReport = new ConfirmedReport();
+                    $confirmedReport->shop_id = $shop->id;
+                    $confirmedReport->date = $dateF;
+                    $confirmedReport->save();
+                  }
+                  
 
 
                         // $dompdf = new Dompdf();

@@ -176,7 +176,8 @@ class InvoicesController extends Controller
 
                 $orders = array();
 
-                $toDate = !empty($request->toDate) ? \Carbon\Carbon::parse($request->toDate) : \Carbon\Carbon::now();
+                $toDate = !empty($request->toDate) ? \Carbon\Carbon::parse($request->toDate) : \Carbon\Carbon::parse(date('Y-m-d H:i:s'));
+                $dateB = date('Y-m-d H:i:s');
                 $threeDay = 60*60*24*3;
                 $threeDayDate = $toDate->subDays(3);
 

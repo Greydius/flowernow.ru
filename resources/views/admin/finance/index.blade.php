@@ -64,7 +64,7 @@
                                 </div>
                             </div>
 
-                            <!-- @if($outputAvailable)
+                            @if($outputAvailable)
                                 <div class="m-widget1__item">
                                     <div class="row m-row--no-padding align-items-center">
 
@@ -72,10 +72,10 @@
 
                                     </div>
                                 </div>
-                            @endif -->
+                            @endif
 
                         </div>
-                        <div style="padding: 10px 30px; color: red;">Ведутся технические работы в разделе до 26.05.20. Данные могут отображаться не верно в период работ. Приносим извинения за неудобства.</div>
+                        <!-- <div style="padding: 10px 30px; color: red;">Ведутся технические работы в разделе до 03.06.20. Данные могут отображаться не верно в период работ. Приносим извинения за неудобства.</div> -->
                         <!--end:: Widgets/Stats2-1 -->
                     </div>
 

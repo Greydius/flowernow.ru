@@ -13,6 +13,7 @@ use App\Model\ShopWorker;
 use App\Model\Feedback;
 use App\Model\Banner;
 use App\Model\ShopReport;
+use App\Model\Transaction;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -117,10 +118,32 @@ class ShopsController extends Controller
 
             $shop = $confirmedReport->shop;
 
-            $orders = $shop->orders()
-                      ->where('payed', 1)
-                      ->whereYear('created_at', '=', $year)
-                      ->whereMonth('created_at', '=', $month)->get();
+            // $ordersC = $shop->orders()
+            //           ->where('status', 'completed')
+            //           ->where('payment', 'cash')
+            //           ->whereYear('created_at', '=', $year)
+            //           ->whereMonth('created_at', '=', $month)->get();
+
+            $ordersA = $shop->orders()
+                      ->whereYear('payed_at', '=', $year)
+                      ->whereMonth('payed_at', '=', $month)->get();
+
+            // $orders = $ordersC->merge($ordersA);
+
+            $ordersCashUnfiltered = Order::where('shop_id', $shop->id)->where('status', '=', 'completed')->where('payment', '=', 'cash')->get();
+            $ordersCashFiltered = [];
+
+            foreach($ordersCashUnfiltered as $order) {
+                $hasTransaction =  Transaction::where('action', 'order')
+                                            ->where('action_id', $order->id)
+                                            ->whereYear('created_at', '=', $year)
+                                            ->whereMonth('created_at', '=', $month)->count() != 0;
+                if($hasTransaction) {
+                    $ordersCashFiltered[] = $order;
+                }
+                
+            }
+            $orders = $ordersA->merge($ordersCashFiltered);
 
             $total_price = 0;
             $shop_price = 0;
@@ -128,11 +151,20 @@ class ShopsController extends Controller
             foreach($orders as $order) {
               $commission = $order->commission == null ? (int) config('settings.product_commission') : $order->commission;
               if($order->report_price == null) {
-                $total_price += $order->amount();
-                $shop_price += $order->amountShop();
+                if($order->payment == 'cash') {
+                  $shop_price += $order->amountShop();
+                } else {
+                  $total_price += $order->amount();
+                  $shop_price += $order->amountShop();
+                }
+                
               }else {
-                $total_price += $order->report_price;
-                $shop_price += $order->amountShop();
+                if($order->payment == 'cash') {
+                  $shop_price += $order->amountShop();
+                } else {
+                  $total_price += $order->report_price;
+                  $shop_price += $order->amountShop();
+                }
               }
             }
 
@@ -185,7 +217,7 @@ class ShopsController extends Controller
 
           $shop = Shop::find($confirmedReport->shop_id);
 
-          $document = \PhpOffice\PhpWord\IOFactory::load('test_report.docx');
+          $document = \PhpOffice\PhpWord\IOFactory::load('storage/' . $confirmedReport->id . '.docx');
           $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($document, 'HTML');
 
           $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
@@ -979,11 +1011,45 @@ class ShopsController extends Controller
                 //$date = \Carbon::now()->subMonth();
                 $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
                 $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->first();
+                $ordersP = Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get();
+                // $ordersC = Order::where('shop_id', $shop->id)->where('status', '=', 'completed')->where('payment', '=', 'cash')->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get();
+                $ordersCashUnfiltered = Order::where('shop_id', $shop->id)->where('status', '=', 'completed')->where('payment', '=', 'cash')->get();
+                $ordersCashFiltered = [];
 
+                // foreach($ordersCashUnfiltered as $order) {
+                //     if($order->completed_at === null) {
+                //         if($order->receiving_at != null){
+                //             $received_date = \Carbon\Carbon::createFromFormat('Y-m-d', $order->receiving_at);
+                //             if(
+                //                 $received_date->gte($date->startOfMonth()->format('Y-m-d 00:00:00')) &&
+                //                 $received_date->lte($date->endOfMonth()->format('Y-m-d 23:59:59'))) {
+                //                 $ordersCashFiltered[] = $order;
+                //             }    
+                //         }
+                //     } elseif(
+                //         $order->completed_at->gte($date->startOfMonth()->format('Y-m-d 00:00:00')) &&
+                //         $order->completed_at->lte($date->endOfMonth()->format('Y-m-d 23:59:59'))
+                //     ) {
+                //         $ordersCashFiltered[] = $order;
+                //     }
+                // }
+                foreach($ordersCashUnfiltered as $order) {
+                    $hasTransaction =  Transaction::where('action', 'order')
+                                                ->where('action_id', $order->id)
+                                                ->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))
+                                                ->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))
+                                                ->count() != 0;
+                    if($hasTransaction) {
+                        $ordersCashFiltered[] = $order;
+                    }
+                    
+                }
+                $orders = $ordersP->merge($ordersCashFiltered);
+                
                 $view = view('reports.report', [
                         'date' => clone $date,
                         'firstOrder' => $firstOrder,
-                        'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                        'orders' => $orders,
                         'shop' => Shop::find($shop->id),
                         'type' => 'pdf'
                         //'header' => 'Счет на оплату № '.$order->id.' от '.$date,
@@ -1034,11 +1100,48 @@ class ShopsController extends Controller
                 //$date = \Carbon::now()->subMonth();
                 $date = \Carbon\Carbon::createFromFormat('Y-m', $confirmedReport->date);
                 $firstOrder = Order::where('shop_id', $shop->id)->where('payed', 1)->first();
+                $ordersP = Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get();
+                // $ordersC = Order::where('shop_id', $shop->id)->where('status', '=', 'completed')->where('payment', '=', 'cash')->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get();
+                // $orders = $ordersP->merge($ordersC);
+
+                $ordersCashUnfiltered = Order::where('shop_id', $shop->id)->where('status', '=', 'completed')->where('payment', '=', 'cash')->get();
+                $ordersCashFiltered = [];
+
+                // foreach($ordersCashUnfiltered as $order) {
+                //     if($order->completed_at === null) {
+                //         if($order->receiving_at != null){
+                //             $received_date = \Carbon\Carbon::createFromFormat('Y-m-d', $order->receiving_at);
+                //             if(
+                //                 $received_date->gte($date->startOfMonth()->format('Y-m-d 00:00:00')) &&
+                //                 $received_date->lte($date->endOfMonth()->format('Y-m-d 23:59:59'))) {
+                //                 $ordersCashFiltered[] = $order;
+                //             }    
+                //         }
+                //     } elseif(
+                //         $order->completed_at->gte($date->startOfMonth()->format('Y-m-d 00:00:00')) &&
+                //         $order->completed_at->lte($date->endOfMonth()->format('Y-m-d 23:59:59'))
+                //     ) {
+                //         $ordersCashFiltered[] = $order;
+                //     }
+                // }
+
+                foreach($ordersCashUnfiltered as $order) {
+                    $hasTransaction =  Transaction::where('action', 'order')
+                                                ->where('action_id', $order->id)
+                                                ->where('created_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))
+                                                ->where('created_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))
+                                                ->count() != 0;
+                    if($hasTransaction) {
+                        $ordersCashFiltered[] = $order;
+                    }
+                    
+                }
+                $orders = $ordersP->merge($ordersCashFiltered);
 
                         $view = view('reports.report', [
                                 'date' => clone $date,
                                 'firstOrder' => $firstOrder,
-                                'orders' => Order::where('shop_id', $shop->id)->where('payed_at', '>=', $date->startOfMonth()->format('Y-m-d 00:00:00'))->where('payed_at', '<=', $date->endOfMonth()->format('Y-m-d 23:59:59'))->get(),
+                                'orders' => $orders,
                                 'shop' => Shop::find($shop->id),
                                 'type' => 'doc'
                                 //'header' => 'Счет на оплату № '.$order->id.' от '.$date,

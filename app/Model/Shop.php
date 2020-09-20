@@ -175,25 +175,35 @@ class Shop extends MainModel
 
         public function availableOutBalance() {
           $shop = $this;
-          $toDate = !empty($request->toDate) ? \Carbon\Carbon::parse($request->toDate) : \Carbon\Carbon::now();
+          $toDate = \Carbon\Carbon::parse(date('Y-m-d H:i:s'));
+          $dateB = date('Y-m-d H:i:s');
                 $threeDay = 60*60*24*3;
                 $threeDayDate = $toDate->subDays(3);
 
-                $orderIds = Transaction::where('id', '>', 103)->where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()-(60*60*24*3) ))->pluck('action_id')->toArray();
+                $orderIds = Transaction::where('id', '>', 103)->where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time() -(60*60*24*3) ))->pluck('action_id')->toArray();
+                $orderCIds = Transaction::where('id', '>', 103)->where('shop_id', $shop->id)->where('action', 'order')->where('amount', '<', 0)->where('created_at', '>=', date('Y-m-d H:i:s', time()  ))->pluck('action_id')->toArray();
 
                         if(empty($orderIds)) {
                                 $orderIds[] = 0;
                         }
-                        $lastOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('created_at', '<', $toDate->toDateTimeString())->orderBy('created_at', 'DESC')->first();
-                        $dateFrom = !empty($lastOutputTransaction) ? \Carbon\Carbon::parse($lastOutputTransaction->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
+                        $lastOutputTransaction = Transaction::where('shop_id', $shop->id)->where('action', 'out')->where('created_at', '<', $dateB)->orderBy('created_at', 'DESC')->first();
+                        $dateFrom = !empty($lastOutputTransaction) ? \Carbon\Carbon::parse($lastOutputTransaction->created_at)->subDays(3) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
+                        $dateFromB = !empty($lastOutputTransaction) ? \Carbon\Carbon::parse($lastOutputTransaction->created_at) : \Carbon\Carbon::parse('2010-10-10 00:00:00');
 
                         $availableOrderIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '>', 0)->where('created_at', '>', $dateFrom->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
 
-                        $ordersA = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereNotIn('id', $orderIds)->whereIn('id', $availableOrderIds)->get();
+                        $ordersA = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereIn('id', $availableOrderIds)->whereNotIn('id', $orderIds)->get();
+
+                        $availableOrderCIds = Transaction::where('shop_id', $shop->id)->where('action', 'order')->where('amount', '<', 0)->where('created_at', '>', $dateFromB->format('Y-m-d H:i:s'))->pluck('action_id')->toArray();
+                        $ordersC = Order::where('shop_id', $shop->id)->where('status', 'completed')->whereIn('id', $availableOrderCIds)->whereNotIn('id', $orderCIds)->get();
 
                         $ordersASum = 0;
                         foreach($ordersA as $orderA) {
                           $ordersASum += $orderA->amountShop();
+                        }
+
+                        foreach($ordersC as $orderC) {
+                          $ordersASum += $orderC->amountShop();
                         }
                         //print_r($orders); exit();
 
