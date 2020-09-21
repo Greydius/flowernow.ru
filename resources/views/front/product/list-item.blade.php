@@ -13,7 +13,11 @@
             </a>
         @endif
         <div class="product-image">
-          <a href="/flowers/{{ $_item['slug'] }}" class="product-image">
+          @if(request()->deleted === true)
+            <a href="/flower/{{ $_item['shop']->city_id }}/{{ $_item['slug'] }}" class="product-image">
+          @else
+            <a href="/flowers/{{ $_item['slug'] }}" class="product-image">
+          @endif
               <figure>
                   <img class="img-responsive lazy" data-src="{{ $_item['photoUrl'] }}">
 

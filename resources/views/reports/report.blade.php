@@ -141,7 +141,7 @@
         @php
             $total1 += $order->payment != 'cash' ? ($order->report_price != 0 ? $order->report_price : $order->amount) : 0;
             $total2 += $order->payment != 'cash' ? ($order->report_price != 0 ? $order->report_price : $order->amount - $order->amountShop) : ((-1)*$order->amountShop);
-            $total3 += $order->payment != 'cash' ? $order->amountShop : $order->amountShop;
+            $total3 += $order->amountShop;
         @endphp
     @endforeach
 
@@ -153,7 +153,7 @@
             <b>{{ number_format($total1, 2, '.', ' ') }}</b>
         </td>
         <td>
-            <b>{{ number_format($total2, 2, '.', ' ') }}</b>
+            <b>{{ number_format($total1 - $total3, 2, '.', ' ') }}</b>
         </td>
         <td>
             <b>{{ number_format($total3, 2, '.', ' ') }}</b>
@@ -162,7 +162,7 @@
 </table>
 
 <p>Сумма заключенных сделок с покупателями за вычетом агентского вознаграждения составила {{ $total3 }} {{ \App\Helpers\AppHelper::num2str($total3, true) }}. НДС не облагается</p>
-<p>Вознаграждение Агента составило {{ $total2 }} {{ \App\Helpers\AppHelper::num2str($total2, true) }}. НДС не облагается</p>
+<p>Вознаграждение Агента составило {{ $total1 - $total3 }} {{ \App\Helpers\AppHelper::num2str($total1 - $total3, true) }}. НДС не облагается</p>
 
 <p>Настоящий Отчет является актом оказанных услуг.</p>
 

@@ -449,9 +449,9 @@
                                             <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
                                         </div>
                                         @if($order->report_price == 0 || $order->report_price == null)
-                                          {{ $order->amount() }} р.
+                                          {{ round($order->amount()) }} р.
                                         @else
-                                          <span title="оригинальная: {{$order->amount()}} р.">{{ $order->report_price }} р.</span>
+                                          <span title="оригинальная: {{$order->amount()}} р.">{{ round($order->report_price) }} р.</span>
                                         @endif
                                         <small>
                                             Цена
@@ -475,7 +475,7 @@
                                         <i class="flaticon-coins"   style="font-size: 2.5rem;"></i>
                                     </div>
                                     @if($order->payment != 'cash')
-                                        {{ $order->amountShop() }} р.
+                                        {{ round($order->amountShop()) }} р.
                                         <small>
                                             Вам
                                         </small>
@@ -483,7 +483,7 @@
                                         <small>
                                             Со счета удерживается комиссия
                                         </small>
-                                        {{ $order->amountShop()*(-1) }} р.
+                                        {{ round($order->amountShop()*(-1)) }} р.
                                     @endif
                                 </div>
 

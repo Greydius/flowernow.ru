@@ -13,7 +13,7 @@
     ?>
     @foreach($orders as $order)
         <?
-                $amount = $order->amount();
+                $amount = $order->report_price != false ? $order->report_price : $order->amount();
                 $amountShop = $order->amountShop();
                 $commission = $order->payment == 'cash' ? $amountShop*(-1) : ($amount - $amountShop);
                 $amountCommissionTotal += $commission;
@@ -22,16 +22,17 @@
         <tr>
             <td><a href="{{ route('admin.order.view', ['id' => $order->id]) }}" target="_blank">{{ $order->id }}</a></td>
             <td>{{ $order->payed_at }}</td>
-            <td>{{ $order->amount() }}</td>
-            <td>{{ $order->amountShop() }}</td>
-            <td>{{ $commission }}</td>
+            <td>{{ round($amount) }}</td>
+            <td>{{ round($order->amountShop()) }}</td>
+            <td>{{ round($commission) }}</td>
             <td>{{ $order->finance_comment }}</td>
         </tr>
     @endforeach
     <tr>
         <td colspan="3" class="font-weight-bold">Итого:</td>
-        <td>{{ $amountShopTotal }}</td>
-        <td>{{ $amountCommissionTotal }}</td>
+        <td>{{ round($amountShopTotal) }}</td>
+        <td>{{ round($amountCommissionTotal) }}</td>
         <td></td>
     </tr>
 </table>
+<!--  -->

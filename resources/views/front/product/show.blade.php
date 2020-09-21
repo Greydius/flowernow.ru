@@ -160,7 +160,7 @@
 
                     <br><br>
                     @if($shopIsAvailable && empty($product->deleted_at))
-                        <a href="{{ route('order.add', ['product_id' => $product->id]) }}" id="go_to_order" class="btn btn-lg btn-warning btn-block">
+                        <a href="/cart/{{ $product->id }}" id="go_to_order" class="btn btn-lg btn-warning btn-block">
                             <strong>Оформить заказ</strong>
                         </a>
                     @endif

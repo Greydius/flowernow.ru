@@ -29,9 +29,9 @@
                   @foreach($groupedReport as $confirmedReport)
                   <tr>
                       <td>{{ $confirmedReport['shop_name'] }}</td>
-                      <td>{{ $confirmedReport['total_price'] - abs($confirmedReport['shop_price']) }}</td>
-                      <td>{{ $confirmedReport['total_price'] }}</td>
-                      <td>{{ $confirmedReport['shop_price'] }}</td>
+                      <td>{{ round($confirmedReport['total_price'] - abs($confirmedReport['shop_price'])) }}</td>
+                      <td>{{ round($confirmedReport['total_price']) }}</td>
+                      <td>{{ round($confirmedReport['shop_price']) }}</td>
                       <td>
                         @if($confirmedReport['file'] == false)
                           <a href="{{ route('admin.shop.getConfirmedReport', ['id' => $confirmedReport['id']]) }}">PDF</a>

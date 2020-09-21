@@ -42,10 +42,10 @@
                                 @foreach($invoicesNew as $invoice)
                                     <tr>
                                         <td>{{ $invoice->shop->name }} ({{ $invoice->shop->id }})</td>
-                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="frozen">{{ $invoice->shop->frozenBalance }}</a></td>
-                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="available">{{ $invoice->shop->availableOutBalance }}</a></td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="frozen">{{ round($invoice->shop->frozenBalance) }}</a></td>
+                                        <td><a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="available">{{ round($invoice->shop->availableOutBalance) }}</a></td>
                                         <td>
-                                            <a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="out" data-id="{{ $invoice->id }}">{{ $invoice->amount }}</a> ₽<br>
+                                            <a href="#" data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $invoice->shop->id }}" data-type="out" data-id="{{ $invoice->id }}">{{ round($invoice->amount) }}</a> ₽<br>
                                             {{ $invoice->created_at }}
                                         </td>
                                         <td>
@@ -213,11 +213,11 @@
                         @foreach($shops as $shop)
                             <tr>
                                 <td>{{ $shop->name }}</td>
-                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="frozen">{{ $shop->frozenBalance }}</a></td>
-                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="available">{{ $shop->availableOutBalance }}</a></td>
-                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="out">{{ $shop->invoiceAmount }}</a></td>
-                                <td>{{ $shop->totalBalance }}</td>
-                                <td>{{ $shop->total }}</td>
+                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="frozen">{{ round($shop->frozenBalance) }}</a></td>
+                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="available">{{ round($shop->availableOutBalance) }}</a></td>
+                                <td><a href="#"  data-toggle="modal" data-target="#info_modal" data-shop_id="{{ $shop->id }}" data-type="out">{{ round($shop->invoiceAmount) }}</a></td>
+                                <td>{{ round($shop->totalBalance) }}</td>
+                                <td>{{ round($shop->total) }}</td>
                             </tr>
                             <?php
                             $frozenBalanceTotal += $shop->frozenBalance;

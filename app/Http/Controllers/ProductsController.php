@@ -302,7 +302,7 @@ class ProductsController extends Controller
 
         public function showProduct($city_id, $slug) {
 
-                $product = Product::where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($city_id){
+                $product = Product::withTrashed()->where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($city_id){
                   $q->where('city_id', '=', $city_id);
                 })->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
