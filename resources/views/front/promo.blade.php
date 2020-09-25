@@ -1,15 +1,31 @@
 @extends('layouts.site')
 
+@php
+  $spells = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я'];
+@endphp
+
 @section('content')
 
 <div class="container">
+  <div class="spells">
+    <h2>Города: </h2>
+    <div class="spells-wrapper">
+      @foreach($spells as $spell)
+        @if(request()->spell !== $spell)
+          <a href="?spell={{$spell}}">{{ $spell }}</a>
+        @else
+          <span>{{ $spell }}</span>
+        @endif
+      @endforeach
+    </div>
+    
+  </div>
   <table style="width:100%">
     <tr>
       <th>Название</th>
       <th>Товаров сегодня</th>
       <th>Товаров сейчас</th>
       <th>Логин</th>
-      <th>Пароль</th>
       <th>Активен</th>
     </tr>
     @foreach($shops as $shop)
@@ -18,7 +34,6 @@
       <td>{{ $shop->city->todayCountProducts->count }}</td>
       <td>{{ $shop->city->total_products }}</td>
       <td>{{ $shop->users[0]->phone }}</td>
-      <td>{{ $shop->city_id }}</td>
       <td><input class="shop-active" type="checkbox" id="{{ $shop->id }}" name="{{ $shop->id }}" {{ $shop->active == 1 ? 'checked' : '' }} value="1" /><label for="{{ $shop->id }}">Toggle</label></td>
     </tr>
     @endforeach
@@ -69,6 +84,10 @@ input:checked + label:after {
 
 label:active:after {
 	width: 32.5px;
+}
+
+.spells-wrapper {
+  margin-bottom: 60px;
 }
 </style>
 @stop

@@ -519,6 +519,20 @@ class ProductsController extends Controller
                 $product->shop_id = $shop->id;
                 $product->save();
 
+                if($shop->id == 350) {
+                       $shops = Shop::where('copy_id', 350)->get();
+                       foreach($shops as $shop) {
+                                $productCopy = new Product();
+                                $productCopy->dop = !empty($request->isDop) ? 1 : 0;
+                                $productCopy->name = Product::getNewProductName($shop->id, $productCopy->dop);
+                                $productCopy->slug = Product::getNewProductSlug($productCopy->name);
+                                $productCopy->photo = $filename;
+                                $productCopy->shop_id = $shop->id;
+                                $productCopy->copy_id = $product->id;
+                                $productCopy->save();
+                       } 
+                }
+
                 return response()->json([
                     'error' => false,
                     'code'  => 200
@@ -538,7 +552,7 @@ class ProductsController extends Controller
 
                         if($this->user->admin) {
                                 $perPage = 40;
-                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->whereNull('single')->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC");
+                                $productRequestModel = Product::with(['compositions.flower', 'photos', 'shop'])->whereNull('single')->orderByRaw("status = 2 DESC, status = 0 DESC, status = 1 DESC, updated_at DESC")->whereNull('copy_id');
 
                                 //$productSearchModel = \Connection::query();
                                 //$builder = Model::query();
@@ -546,27 +560,27 @@ class ProductsController extends Controller
                                 //dd($builder);
 
                                 if(!empty($request->search)) {
-/*
-                                        $productSearchModel->orWhereHas('shop', function($query) use ($request) {
-                                                $query->where('shops.name', 'like', "%$request->search%");
-                                        });
 
-                                        $productSearchModel->orWhereHas('shop.city', function($query) use ($request) {
-                                                $query->where('cities.name', 'like', "%$request->search%");
-                                        });
-*/
+                                        // $productSearchModel->orWhereHas('shop', function($query) use ($request) {
+                                        //         $query->where('shops.name', 'like', "%$request->search%");
+                                        // });
+
+                                        // $productSearchModel->orWhereHas('shop.city', function($query) use ($request) {
+                                        //         $query->where('cities.name', 'like', "%$request->search%");
+                                        // });
+
 
                                         //$productRequestModel->merge($productRequestModel);
 
-/*
-                                        $productRequestModel->orWhereHas('shop', function($query) use ($request) {
-                                                $query->where('shops.name', 'like', "%$request->search%");
-                                        });
 
-                                        $productRequestModel->orWhereHas('shop.city', function($query) use ($request) {
-                                                $query->where('cities.name', 'like', "%$request->search%");
-                                        });
-*/
+                                        // $productRequestModel->orWhereHas('shop', function($query) use ($request) {
+                                        //         $query->where('shops.name', 'like', "%$request->search%");
+                                        // });
+
+                                        // $productRequestModel->orWhereHas('shop.city', function($query) use ($request) {
+                                        //         $query->where('cities.name', 'like', "%$request->search%");
+                                        // });
+
                                 }
 
                                // echo $productRequestModel->toSql(); exit();
@@ -636,6 +650,9 @@ class ProductsController extends Controller
                         if(empty($product)) {
                                 throw new \Exception('Продукт не найден');
                         } else {
+                                if($product->shop->id == 350) {
+                                        Product::where('copy_id', $product->id)->delete();
+                                 }
                                 $product->delete();
                         }
 
@@ -678,6 +695,20 @@ class ProductsController extends Controller
                                                                 $product->save();
                                                         }
                                                         $i++;
+                                                }
+
+                                                $products = Product::where('copy_id', $product->id);
+
+                                                foreach($products as $product) {
+                                                        $photo = $product->photos()->find($value);
+                                                        if(!empty($photo)) {
+                                                                $photo->priority = $i;
+                                                                if($photo->save() && $i == 0 && $photo->photo) {
+                                                                        $product->photo = $photo->photo;
+                                                                        $product->save();
+                                                                }
+                                                                $i++;
+                                                        } 
                                                 }
                                         }
                                 }
@@ -990,6 +1021,7 @@ class ProductsController extends Controller
                       $productCopy->name = $request->input('name');
                       $productCopy->width = (int)$request->input('width');
                       $productCopy->height = (int)$request->input('height');
+                      $productCopy->price = $request->input('price');
                       $productCopy->product_type_id = $request->input('product_type_id');
                       $productCopy->color_id = $request->input('color_id');
                       $productCopy->make_time = $request->input('make_time');
@@ -1390,6 +1422,13 @@ class ProductsController extends Controller
                         try {
                                 $shop = $this->user->getShop();
                                 \DB::update('UPDATE products SET price = price + (price * (?/100)) WHERE shop_id = ?', [(int)$request->percent, $shop->id]);
+
+                                if($shop->id == 350) {
+                                        $shops = Shop::where('copy_id', 350)->get();
+                                        foreach($shops as $shop) {
+                                                \DB::update('UPDATE products SET price = price + (price * (?/100)) WHERE shop_id = ?', [(int)$request->percent, $shop->id]);
+                                        } 
+                                 }
                                 $message = "Цены успешно изменены";
                         } catch (\Exception $e) {
                                 $statusCode = 400;
