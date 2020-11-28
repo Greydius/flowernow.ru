@@ -248,6 +248,24 @@ class ProductsController extends Controller
                 ]);
         }
 
+        public function newIndex(Request $request) {
+                $city_id = $this->current_city->id;
+
+                $popular_products = ProductType::where('show_on_main', 1)->with(['product' => function($query) use($city_id) {
+                        $query->where('shop_city_id', $city_id)
+                                ->where('price', '>', 0)
+                                ->where('dop', 0)
+                                ->where('status', 1)
+                                ->where('pause', 0)
+                                ->whereNull('single')
+                                ->limit(8);
+                }])->get();
+                return view("front.index", [
+                        'popularProducts' => $popular_products,
+                        'blocks' => []
+                ]);
+        }
+
         public function show($slug, Request $request) {
 
                 $product = Product::where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($request){

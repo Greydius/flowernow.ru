@@ -1,0 +1,124 @@
+Reading from STDIN ...
+
+# 45.7s user time, 4s system time, 27.31M rss, 97.09M vsz
+# Current date: Sun Sep 27 05:11:20 2020
+# Hostname: ironman.beget.ru
+# Files: STDIN
+# Overall: 7.61k total, 82 unique, 0.53 QPS, 2.40x concurrency ___________
+# Time range: 2020-09-27T01:11:30 to 2020-09-27T05:11:10
+# Attribute          total     min     max     avg     95%  stddev  median
+# ============     ======= ======= ======= ======= ======= ======= =======
+# Exec time         34486s   100ms    108s      5s     12s      7s      3s
+# Lock time              0       0       0       0       0       0       0
+# Query size         3.12M      20   1.65k  429.71  463.90  100.93  441.81
+# id               247.89G  33.02M  33.64M  33.36M  33.06M 317.39k  33.06M
+
+# Profile
+# Rank Query ID           Response time    Calls R/Call  V/M   Item
+# ==== ================== ================ ===== ======= ===== ===========
+#    1 0xA7CB32CC2FAF7C81 20139.1404 58.4%  4995  4.0319  1.45 SELECT product_types products shops
+#    2 0x6950530B82BFB862  9361.7875 27.1%   644 14.5369 18.63 SELECT products shops single_products
+#    3 0x05A2DD33A076A2E8  4720.1538 13.7%   538  8.7735  7.96 SELECT products shops single_products
+# MISC 0xMISC               265.0583  0.8%  1432  0.1851   0.0 <79 ITEMS>
+
+# Query 1: 0.35 QPS, 1.40x concurrency, ID 0xA7CB32CC2FAF7C81 at byte 0 __
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 1.45
+# Time range: 2020-09-27T01:11:30 to 2020-09-27T05:11:07
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count         65    4995
+# Exec time     58  20139s   100ms     28s      4s      7s      2s      4s
+# Lock time      0       0       0       0       0       0       0       0
+# Query size    70   2.21M     456     463  462.99  441.81       0  441.81
+# id            65 162.80G  33.02M  33.64M  33.38M  33.06M 310.74k  33.06M
+# String:
+# Databases    mihast6k_flow2
+# Hosts        localhost
+# Users        mihast6k_flow2
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms
+# 100ms  #
+#    1s  ################################################################
+#  10s+  #
+# Tables
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'product_types'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`product_types`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'products'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`products`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'shops'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`shops`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+select * from `product_types` where `show_on_main` = '1' and exists (select * from `products` where `product_types`.`id` = `products`.`product_type_id` and exists (select * from `shops` where `products`.`shop_id` = `shops`.`id` and `city_id` = 631020 and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1)) and `price` > 0 and `dop` = 0 and `status` = 1 and `pause` = 0 and `single` is null and `products`.`deleted_at` is null) order by `priority` asc\G
+
+# Query 2: 0.04 QPS, 0.65x concurrency, ID 0x6950530B82BFB862 at byte 0 __
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 18.63
+# Time range: 2020-09-27T01:12:17 to 2020-09-27T05:11:10
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          8     644
+# Exec time     27   9362s   100ms    108s     15s     52s     16s     11s
+# Lock time      0       0       0       0       0       0       0       0
+# Query size     9 296.84k     467     472  471.99  463.90       0  463.90
+# id             8  20.95G  33.02M  33.64M  33.32M  33.06M 316.33k  33.06M
+# String:
+# Databases    mihast6k_flow2
+# Hosts        localhost
+# Users        mihast6k_flow2
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms
+# 100ms  ##
+#    1s  ###################################
+#  10s+  ################################################################
+# Tables
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'products'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`products`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'shops'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`shops`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'single_products'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`single_products`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+select * from `products` where exists (select * from `shops` where `products`.`shop_id` = `shops`.`id` and `city_id` = 643560 and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1)) and `single` is not null and exists (select * from `single_products` where `products`.`single` = `single_products`.`id` and `visible` = 1) and `price` > 1 and `status` = 1 and `pause` = 0 and `products`.`deleted_at` is null group by `single` order by `price` asc, RAND() limit 8\G
+
+# Query 3: 0.04 QPS, 0.34x concurrency, ID 0x05A2DD33A076A2E8 at byte 0 __
+# This item is included in the report because it matches --limit.
+# Scores: V/M = 7.96
+# Time range: 2020-09-27T01:12:29 to 2020-09-27T05:06:40
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          7     538
+# Exec time     13   4720s   202ms     57s      9s     26s      8s      7s
+# Lock time      0       0       0       0       0       0       0       0
+# Query size     7 247.98k     472     472     472     472       0     472
+# id             7  17.51G  33.02M  33.63M  33.32M  33.06M 311.07k  33.06M
+# String:
+# Databases    mihast6k_flow2
+# Hosts        localhost
+# Users        mihast6k_flow2
+# Query_time distribution
+#   1us
+#  10us
+# 100us
+#   1ms
+#  10ms
+# 100ms  ##
+#    1s  ################################################################
+#  10s+  #############
+# Tables
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'products'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`products`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'shops'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`shops`\G
+#    SHOW TABLE STATUS FROM `mihast6k_flow2` LIKE 'single_products'\G
+#    SHOW CREATE TABLE `mihast6k_flow2`.`single_products`\G
+# EXPLAIN /*!50100 PARTITIONS*/
+select * from `products` where `single` is not null and exists (select * from `shops` where `products`.`shop_id` = `shops`.`id` and `city_id` = 653240 and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1)) and exists (select * from `single_products` where `products`.`single` = `single_products`.`id` and `visible` = 1) and `price` > 1 and `status` = 1 and `pause` = 0 and `products`.`deleted_at` is null group by `single` order by `price` asc, RAND() limit 8\G

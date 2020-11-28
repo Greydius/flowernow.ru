@@ -13,7 +13,7 @@
 
 
 Route::get('/', [
-        'uses' => 'ProductsController@index',
+        'uses' => 'ProductsController@newIndex',
         'as' => 'front.index'
 ]);
 
