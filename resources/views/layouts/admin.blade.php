@@ -406,6 +406,20 @@
 									</span>
                                 </a>
                             </li>
+			  @if($user->admin)
+              <li class="m-menu__item {{ \Request::route()->getName() == 'admin.reports' ? 'm-menu__item--active' : null }}">
+                <a href="{{ route('admin.reports') }}" class="m-menu__link ">
+                  <i class="m-menu__link-icon la la-clipboard"></i>
+                  <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                      <span class="m-menu__link-text">
+                        Отчёты
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </li>
+              @endif			
               @if(!$user->admin)
               <li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.shopReports' ? 'm-menu__item--active' : null }}">
                 <a href="{{ route('admin.shop.shopReports') }}" class="m-menu__link ">
