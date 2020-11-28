@@ -14,6 +14,20 @@ class Product extends MainModel
     //
         use SoftDeletes;
 
+        protected $table = '';
+
+        public function __construct($order = '')
+        {
+                parent::__construct();
+
+                if ($order) {
+                    $tablename = 'products_' . $order;
+                } else {
+                    $tablename = 'products';
+                }
+                $this->setTable($tablename);
+        }
+
         protected $dates = ['deleted_at'];
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
