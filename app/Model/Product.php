@@ -129,9 +129,9 @@ class Product extends MainModel
         static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15) {
 
                 $currentPage = $page;
-                $productRequest = self::whereHas('shop')->with(['shop'  => function($query) {
+                $productRequest = self::with(['shop'  => function($query) use($city_id) {
                         $query->select(['id', 'name', 'delivery_price', 'delivery_time', 'city_id']);
-                }, 'photos'])->where('shop_city_id', $city_id)
+                }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
                         ->where('price', '>', 0)
                         ->where('dop', 0)
                         ->where('status', 1)

@@ -44,19 +44,25 @@ class ProductFillShopInfo extends Command
 
         foreach($products as $product) {
             $shop = $product->shop;
-            $product->shop_city_id = $shop->city_id;
-            $product->shop_delivery_price = $shop->delivery_price;
-            $product->shop_delivery_time = $shop->delivery_time;
-            $product->shop_delivery_out = $shop->delivery_out;
-            $product->shop_delivery_out_max = $shop->delivery_out_max;
-            $product->shop_delivery_out_price = $shop->delivery_out_price;
-            $product->shop_active = $shop->active;
-            $product->shop_delivery_free = $shop->delivery_free;
-            $product->shop_copy_id = $shop->copy_id;
+            if($shop) {
+                $product->shop_city_id = $shop->city_id;
+                $product->shop_delivery_price = $shop->delivery_price;
+                $product->shop_delivery_time = $shop->delivery_time;
+                $product->shop_delivery_out = $shop->delivery_out;
+                $product->shop_delivery_out_max = $shop->delivery_out_max;
+                $product->shop_delivery_out_price = $shop->delivery_out_price;
+                $product->shop_active = $shop->active;
+                $product->shop_delivery_free = $shop->delivery_free;
+                $product->shop_copy_id = $shop->copy_id;
 
-            $product->save();
+                $product->save();
 
-            $this->info($product->name);
+                $this->info($product->name);
+            } else {
+                $product->delete();
+                $this->error($product->name);
+            }
+            
         }
 
         $this->info("Готово");
