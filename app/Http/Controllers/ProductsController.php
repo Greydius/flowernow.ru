@@ -43,81 +43,9 @@ class ProductsController extends Controller
                 $specialOffers = null;
                 $specialOfferProducts = [];
 
-                // if(!empty($this->current_city) && $this->current_city->id == 637640 && empty($request->product_type)) {
-
-                //         $productRequest = Product::with(['shop'  => function($query) {
-                //                 $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                //         }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$this->current_city->id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
-                //                 ->where('price', '>', 0)
-                //                 ->where('dop', 0)
-                //                 ->where('status', 1)
-                //                 ->where('pause', 0)
-                //                 ->whereNull('single')
-                //                 ->orderBy('star', 'DESC')
-                //                 ->orderBy('sort', 'DESC');
-
-                //         $blocks = Block::all();
-                //         $blockRequest = [];
-                //         foreach($blocks as $key => $block) {
-                //                 $blockRequest[$key] = clone $productRequest;
-                //                 $blockRequest[$key]->where('block_id', $block->id)->limit($block->items);
-                //         }
-
-                //         for($i=1; $i< count($blockRequest); $i++) {
-                //                 $blockRequest[0]->unionAll($blockRequest[$i]);
-                //         }
-
-                //         $blockProducts = $blockRequest[0]->get();
-
-                //         foreach($blocks as $key => &$block) {
-                //                 $products = [];
-                //                 foreach($blockProducts as $product) {
-                //                         if($product->block_id == $block->id) {
-                //                                 $products[] = $product;
-                //                         }
-                //                 }
-
-                //                 $blocks[$key]->products = $products;
-                //         }
-                // }
-
-
                 $productTypes = ProductType::where('show_on_main', '1')->get();
 
-                $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
-                  105, //красных тюльпанов
-                  97, //красных гвоздик
-                  116, //красных пионов
-                  130, //разноцветных ирисов
-                  //138, //белых калл
-                  171, //белых фрезий
-                  183, //белых гортензий
-                  166 //белых анемонов
-                ];
-
-                // $singleProductsIds = [];
-                $singleProducts = Product::popularSingle($this->current_city->id, $singleProductsIds);
-                if(empty($blocks)) {
-                        $singleProducts = Product::popularSingle2($this->current_city->id, $singleProductsIds, true)->limit(8)->get();
-                }
-
                 if(empty($request->product_type)) {
-                        /*
-                        $item = [];
-                        $request->q = "новог";
-                        $request->order = "rand";
-                        $item['productType'] = null;
-                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 6);
-                        $item['popularProductCount'] = count($item['popularProduct']);
-
-                        if($item['popularProductCount']) {
-                                $popularProducts[] = $item;
-                        }
-
-                        unset($request->q);
-                        unset($request->order);
-                        */
-
                         if(empty($blocks)) {
                                 $item = [];
                                 foreach ($productTypes as $productType) {
@@ -161,31 +89,6 @@ class ProductsController extends Controller
                         unset($request->product_type);
                 }
 
-                $specialOffers = \DB::table('special_offers')->whereRaw('? between date_from and date_to', [date('Y-m-d')])->get();
-
-                if(!empty($specialOffers)) {
-                        foreach ($specialOffers as $specialOffer) {
-                                $specialOfferProduct = Product::whereHas('shop', function($query) use ($city_id) {
-                                        $query->where('city_id', $city_id)->available();
-                                })->where('price', '>', 0)->where('status', 1)->where('pause', 0)->whereRaw('FIND_IN_SET(? ,special_offer_id)', [$specialOffer->id]);
-
-                                if($specialOfferProduct->count()) {
-                                        $specialOfferProducts[$specialOffer->id] = $specialOfferProduct->inRandomOrder()->take(9)->get();
-                                }
-                        }
-                }
-                /*
-                $randProducts = Product::whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id)->available();
-                        })
-                        ->where('price', '>', 0)
-                        ->where('status', 1)
-                        ->where('pause', 0)
-                        ->whereNotIn('product_type_id', [7, 8, 9, 10])
-                        ->whereNull('single')
-                        ->orderByRaw('(price + (SELECT delivery_price FROM shops WHERE shops.id = products.shop_id))')->take(9)->get();
-                */
-
                 if(empty($blocks)) {
                         if(!empty($popularProduct) && $popularProduct->total() <= 30) {
                                 $request2 = new Request();
@@ -197,33 +100,11 @@ class ProductsController extends Controller
                         }
                 }
 
-                if(!empty($this->user) && $this->user->admin) {
-                        //dd($popularProduct);
-                }
-
                 if(!empty($request->flowers)) {
                         $promoText = \App\Model\PromoText::where('flower_id', $request->flowers[0])->where('type', 'info')->first();
                         if(!empty($promoText)) {
 
                         }
-                }
-
-
-
-
-                //$topFeedbackId = FeedbackCity::getCityTopFeedbackId($city_id);
-
-                $feedback1 = Feedback::getTodayFeedback($city_id);
-                $feedback2 =  Feedback::whereHas('shop', function($query) use ($city_id) {
-                        $query->where('city_id', $city_id)->available();
-                })->where('id', '!=', !empty($feedback1) ? $feedback1[0]->id : 0)->where('approved', 1)->orderBy('feedback_date_tmp', 'desc')->take(9)->get();
-
-
-
-                if(!empty($feedback1)) {
-                        $feedbacks = $feedback1->merge($feedback2);
-                } else {
-                        $feedbacks = $feedback2;
                 }
 
                 if($request->get('app') === 'true' || $request->cookie('app') === 'true') {
@@ -238,12 +119,7 @@ class ProductsController extends Controller
                         'popularProduct' => $popularProduct,
                         'popularProducts' => $popularProducts,
                         'randProducts' => $randProducts,
-                        // 'singleProducts' => $singleProducts,
-                        'singleProducts' => [],
                         'currentType' => $currentType,
-                        'specialOffers' => $specialOffers,
-                        'specialOfferProducts' => $specialOfferProducts,
-                        'feedbacks' => $feedbacks,
                         'blocks' => $blocks
                 ]);
         }
@@ -1340,7 +1216,7 @@ class ProductsController extends Controller
                         $request->product_type = $queries[0];
                         if($queries[1] != 'vse-cvety') {
                                 $flower = Flower::where('slug', $queries[1])->first();
-                                if(count($flower)) {
+                                if(!$flower) {
                                         if(empty($request->flowers)) {
                                                 $request->flowers = [];
                                         }
