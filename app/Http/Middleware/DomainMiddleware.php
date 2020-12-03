@@ -32,7 +32,7 @@ class DomainMiddleware
 
         $subdomain = current($subdomains);
 
-        if(empty($subdomain) || $subdomain == 'www') {
+        if(empty($subdomain) || $subdomain == 'www' || $subdomain == 'floristum') {
                 if($request->_cn != false) {
                   $subdomain = $request->_cn;
                 } else {

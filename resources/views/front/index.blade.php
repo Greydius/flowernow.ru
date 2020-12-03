@@ -24,7 +24,7 @@
     </div>
 
 
-    @if(count($popularProducts) || count($singleProducts) || count($blocks))
+    @if(count($popularProducts) || count($blocks))
 
         <div class="container" ng-controller="mainPage">
 
@@ -261,30 +261,6 @@
 
                         @endforeach
                     @endif
-
-                        @if(count($singleProducts))
-                            <div data-ng-hide="isFiltered">
-                                <div class="hidden-lg hidden-md hidden-xs">
-                                    <br><br>
-                                </div>
-
-                                <h2 class="margin-top-null">Букеты цветов поштучно</h2>
-                                <br class="hidden-lg hidden-md">
-
-                                <div class="row">
-                                    @foreach($singleProducts as $_item)
-                                        @include('front.product.list-item', ['col' => 3])
-                                    @endforeach
-                                </div>
-
-                                <br clear="all">
-                                <div class="col-md-6 col-md-offset-3 bottom30">
-                                    <a href="/catalog/single" class="btn btn-block btn-more">Смотреть все букеты поштучно</a>
-                                </div>
-
-                                <br clear="all">
-                            </div>
-                        @endif
 
                         @if(false)
                             <div data-ng-hide="isFiltered">
