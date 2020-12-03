@@ -530,7 +530,7 @@ class OrdersController extends Controller
 
                 $statusCode = 200;
                 $response = [
-                        'orders' => []
+                        'orders' => [],
                 ];
 
                 try{
@@ -577,6 +577,7 @@ class OrdersController extends Controller
                                 $orders_data = json_decode($orderModel->paginate($perPage)->toJson(), true);
                                 $orders = $orders_data['data'];
                                 unset($orders_data['data']);
+                                
 
                                 //$orders = $orderModel->paginate($perPage)->makeVisible('created_at')->toArray();
                                 array_walk_recursive($orders, function(&$item){$item=strval($item);});
@@ -584,15 +585,15 @@ class OrdersController extends Controller
                                 $response = array_merge($response, $orders_data);
 
                                 try {
-                                        foreach($orders as $key => &$_order) {
-                                                if($_order['receiving_time'] != 'Время согласовать') {
-                                                        $tz = str_replace('UTC', '', $_order['shop']['city']['region']['tz']);
-                                                        $receiving_time_array = AppHelper::orderTimeToArray($_order['receiving_time']);
-                                                        $fromTime = $_order['receiving_date'].' '.$receiving_time_array[0];
-                                                        $toTime = $_order['receiving_date'].' '.$receiving_time_array[1];
-                                                        $_order['receiving_time_msk'] = [];
-                                                        $_order['receiving_time_msk']['from'] = \Carbon::parse($fromTime, $tz)->setTimezone('+3:00')->format('H:i');
-                                                        $_order['receiving_time_msk']['to'] = \Carbon::parse($toTime, $tz)->setTimezone('+3:00')->format('H:i');
+                                        foreach($orders as $key => $_order) {
+                                                if($_order['receiving_time'] != 'Время согласовать' && $_order['receiving_time'] != 'в течении дня') {
+                                                        //$tz = str_replace('UTC', '', $_order['shop']['city']['region']['tz']);
+                                                        //$receiving_time_array = AppHelper::orderTimeToArray($_order['receiving_time']);
+                                                        //$fromTime = $_order['receiving_date'].' '.$receiving_time_array[0];
+                                                        //$toTime = $_order['receiving_date'].' '.$receiving_time_array[1];
+                                                        //$_order['receiving_time_msk'] = [];
+                                                        //$_order['receiving_time_msk']['from'] = \Carbon::parse($fromTime, $tz)->setTimezone('+3:00')->format('H:i');
+                                                        //$_order['receiving_time_msk']['to'] = \Carbon::parse($toTime, $tz)->setTimezone('+3:00')->format('H:i');
                                                 }
                                         }
                                 } catch(\Exception $e) {

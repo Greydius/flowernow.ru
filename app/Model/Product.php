@@ -393,6 +393,10 @@ class Product extends MainModel
                         return $this->price;
                 }
 
+                if(!$this->shop) {
+                        return ceil(ceil($this->price));
+                }
+
                 if(empty($this->single)) {
                         return ceil(ceil($this->price + $this->shop->delivery_price));
                 }
