@@ -155,17 +155,17 @@
 
 										</span>
 									</span>
-									<span class="m-menu__link-badge">
+									<!-- <span class="m-menu__link-badge">
 										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
-											{{$user->totalProducts()}}
+											{$user->totalProducts()}
 										</span>
 									</span>
 
 									<span class="m-menu__link-badge">
 										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
-											{{$user->totalProducts([0, 3])}}
+											{$user->totalProducts([0, 3])}
 										</span>
-									</span>
+									</span> -->
 								</a>
 							</li>
 
@@ -180,17 +180,17 @@
 
 										</span>
 									</span>
-									<span class="m-menu__link-badge">
+									<!-- <span class="m-menu__link-badge">
 										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
-											{{$user->totalProducts([], 1)}}
+											{$user->totalProducts([], 1)}
 										</span>
 									</span>
 
 									<span class="m-menu__link-badge">
 										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
-											{{$user->totalProducts([0, 3], 1)}}
+											{$user->totalProducts([0, 3], 1)}
 										</span>
-									</span>
+									</span> -->
 								</a>
 							</li>
 

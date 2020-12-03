@@ -668,11 +668,15 @@ class OrdersController extends Controller
                         }
                 }
 
+                $products = [];
+
+                foreach($order->orderLists as $orderList) {
+                        $products[] = $orderList->product;
+                }
+
                 return view('admin.orders.view', [
                         'order' => $order,
-                        'products' => Product::whereHas('OrderList', function($query) use ($order) {
-                                $query->where('order_lists.order_id', $order->id);
-                        })->withTrashed()->get(),
+                        'products' => $products,
                         'shops' => $shops,
                         'shop' => $order->shop_id != -1 ? $order->shop : Shop::find($order->prev_shop_id),
                 ]);
