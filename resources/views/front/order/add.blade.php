@@ -754,8 +754,8 @@
           womanDaysHint.hide();
         }
 
-        // if(isWomanDays){
-        if(false){
+        if(isWomanDays){
+        // if(false){
           toDefault();
           defaultTimepicker.hide();
           defaultTimepicker.find('select').val('в течении дня');

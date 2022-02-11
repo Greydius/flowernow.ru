@@ -898,8 +898,11 @@ class ProductsController extends Controller
 
                 if($product->save()) {
                         if(!$this->user->admin && ($updated_at != $product->updated_at || $product->status == 0) && !$this->user->isSupervisor($shop->city_id)) {
-                                $product->status = 2;
-                                $product->save();
+                                if($product->copy_id == null) {
+                                        $product->status = 2;
+                                        $product->save();
+                                }
+                                
                         }
 
                   if($product->shop_id == 350){
@@ -1511,10 +1514,10 @@ class ProductsController extends Controller
 
                                         $newProduct = $product->replicate();
                                         $newProduct->shop_id = $request->to_shop_id;
+                                        $newProduct->shop_copy_id = $product->shop_id;
                                         $newProduct->status = 3;
                                         $newProduct->slug = Product::getNewProductSlug($newProduct->name);
                                         $newProduct->save();
-
 
                                         foreach($product->photos as $photo) {
                                                 $filePathNew = Product::$fileUrl.$request->to_shop_id.'/';

@@ -127,6 +127,7 @@ class OrdersController extends Controller
 
                                 $order = new Order();
                                 $order->shop_id = $shop_id;
+                                $order->city_name = $shop->city->name;
                                 $order->recipient_name = $request->recipient_name;
                                 $order->recipient_phone = $request->recipient_phone;
                                 $order->recipient_address = $request->recipient_address;

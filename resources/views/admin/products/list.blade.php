@@ -182,11 +182,10 @@
 
                                     <!--
                                     <a href ng-click="editItem($event, product)" style="display: block">
-                                        <img ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
+                                        <img ng-src="<% product.photoUrl %>" width="100%" />
                                     </a>
                                     -->
-                                        <img style="<% product.copy_id != null ? 'display: block;' : 'display: none;' %>" ng-src="/uploads/products/632x632/350/<% product.photo %>" width="100%" />
-                                        <img style="<% product.copy_id != null ? 'display: none;' : '' %>" ng-src="/uploads/products/632x632/<% product.shop_id %>/<% product.photo %>" width="100%" />
+                                        <img ng-src="<% product.photoUrl %>" width="100%" />
                                 </div>
                             </div>
 
@@ -318,8 +317,7 @@
                                 <div class="row product-photos">
                                     <div class="photo-preloader"><div></div></div>
                                     <div class="col-md-2 product-photos-container" style="width: 80px; height: 80px" ng-repeat="photo in photos | orderBy:'priority'">
-                                        <img style="<% product.copy_id != null ? 'display: block;' : 'display: none;' %>" ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
-                                        <img style="<% product.copy_id != null ? 'display: none;' : '' %>" ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                        <img ng-src="<% product.photoUrl %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
                                         <button class="delete_photo close" data-id="<% photo.id %>" ng-show="photos.length > 1" ng-click="deletePhoto(photo)">×</button>
                                     </div>
 
@@ -718,8 +716,7 @@
                                         <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="rotatePhoto(photo, item)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Перевернуть">
                                             <i class="fa fa-undo"></i>
                                         </a>
-                                        <img style="<% product.copy_id != null ? 'display: block;' : 'display: none;' %>" ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
-                                        <img style="<% product.copy_id != null ? 'display: none;' : '' %>" ng-src="/uploads/products/632x632/<% item.shop_id %>/<% photo.photo %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
+                                        <img ng-src="<% product.photoUrl %>" width="100%" style="margin-bottom: 10px" data-photo-id="<% photo.id %>">
                                     </div>
 
                                 </div>

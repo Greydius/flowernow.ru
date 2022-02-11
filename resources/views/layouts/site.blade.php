@@ -971,14 +971,20 @@
                     <hr>
                     <div class="row">
                         @if(count($popular_city))
+                            @php
+                                echo request()->_lang;
+                            @endphp
                             <div class="col-xs-6 col-md-3">
                                 @endif
 
                                 @foreach($popular_city as $key => $city_item)
                                     <div class="city-popular">
                                         <p>
-                                          @if(request()->_cn != false)
-                                            <a href="http://<?=$city_item->slug?>.floristum.ru/en/{{ $city_item->slug }}"><?=$city_item->name?></a>
+                                            @php
+                                            $language = null;
+                                            @endphp
+                                          @if($language)
+                                            <a href="http://<?=$city_item->slug?>.floristum.ru/en/"><?=$city_item->name?></a>
                                           @else
                                             <a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a>
                                           @endif
@@ -1087,7 +1093,42 @@
                         </div>
                     </div>
                 </div>
+                @if($current_city->slug == 'moskva')
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-md-12">
+                        <strong>Популярные языки:</strong>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/en/">English</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/ml/">Malaysian</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/zh-CN/">Chinese</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/ja/">Japanese</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/es/">Spanish</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/">Russian</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/ar/">Arabic</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/fr/">French</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/pt/">Portuguese</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/de/">German</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/id/">Indonesian</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/languages">All languages...</a> <span class="text-muted"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
+            
     </section>
 
     <footer>
@@ -1406,10 +1447,10 @@ function strpos (haystack, needle, offset) {
 }
  
 if(strpos(location.href, '/en/')){
-  @if(request()->_cn != false)
-  let href = "http://{{ request()->_cn }}.floristum.ru";
+  @if(request()->_city->slug != 'moskva')
+  let href = "https://{{ request()->_city->slug }}." + "floristum.ru";
   @else
-  let href = "http://floristum.ru";
+  let href = "https://" + "floristum.ru";
   @endif
   $('.translate_div a').attr('href', href);
 
@@ -1417,7 +1458,14 @@ if(strpos(location.href, '/en/')){
 	$('.translate_div img').attr('src', '/images/ru_translate.png');
 	current_lang = 'en';
 }else{
-	$('.translate_div a').attr('href', location.href.replace(".ru", '.ru/en'));
+    @if(request()->_city->slug != 'moskva')
+    let replace = "{{ request()->_city->slug }}." + "floristum.ru";
+    let href = "floristum.ru/en/{{ request()->_city->slug }}-d";
+    @else
+    let replace = ".ru";
+    let href = ".ru/en";
+    @endif
+	$('.translate_div a').attr('href', location.href.replace(replace, href));
 	$('.translate_div span').html('English');
 	$('.translate_div img').attr('src', '/images/eng_translate.png');
 	current_lang = 'ru';

@@ -26,6 +26,10 @@ class CityController extends Controller
                 ]);
         }
 
+        public function languages() {
+                return view('front.lang.popular');
+        }
+
         public function choosePopup() {
 
                 $cities = City::whereNotNull('slug')->get();

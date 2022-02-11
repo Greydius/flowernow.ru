@@ -423,6 +423,8 @@ class Product extends MainModel
                         //return secure_asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
                         if($this->copy_id != null){
                           return \App\Helpers\AppHelper::RESIZER('/uploads/products/350/'.$this->photo, 351, 351, 1, NULL, 75);
+                        } elseif($this->shop_copy_id != null) {
+                          return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_copy_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                         }else {
                           return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                         }

@@ -284,7 +284,7 @@
 
                                                             <div ng-show="mode == 'view'">
                                                                 <p class="lead">
-                                                                    {{ $shop->city->name }}<br>
+                                                                    {{ $order->city_name }}<br>
                                                                     {{ $order->recipient_address.' '.$order->recipient_flat }}
                                                                 </p>
 

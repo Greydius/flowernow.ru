@@ -196,7 +196,7 @@
                 <div class="col-md-12" style="background-color: #fff; padding-top: 10px;"  >
                     <div class="free_phone hidden-xs">
                       <b>8 800 600-54-97</b>
-                       <!-- <span>Или напишите на <b>service@floristum.ru</b> <br>--><br><br></span>
+                       <!-- --> <span>Или напишите на <b>service@floristum.ru</b> <br><br><br></span>
                     </div>
 
                     @if(!empty($popularProducts) || !empty($blocks))
@@ -242,7 +242,7 @@
 
                                     <div class="row">
                                         @foreach($item['popularProduct'] as $key => $_item)
-                                            @if($key < 3 || $item['popularProductCount'] == 8)
+                                            @if($key <= 3 || $item['popularProductCount'] == 8)
 
                                                 @include('front.product.list-item', ['col' => 3])
 
@@ -327,7 +327,7 @@
 
                                         <div class="row">
                                             @foreach($item['popularProduct'] as $key => $_item)
-                                                @if($key < 3 || $item['popularProductCount'] == 8)
+                                                @if($key <= 3 || $item['popularProductCount'] == 8)
 
                                                     @include('front.product.list-item', ['col' => 3])
 
