@@ -364,6 +364,24 @@ class Order extends MainModel
                         $message->send_to = $this->phone;
                        $message->msg = json_encode(['text' => 'Заказ выполнен. Будем рады чаевым: https://pay.cloudtips.ru/p/e2544504']);
                         $message->save();
+
+                        if($this->recipient_phone && $this->phone !== $this->recipient_phone) {
+                                $message = new Message();
+                                $message->message_type = 'sms';
+                                $message->send_to = $this->recipient_phone;
+
+                                if($this->text != '') {
+                                        if(preg_match('/[А-Яа-яЁё]/u', $this->text)) {
+                                                $message->msg = json_encode(['text' => 'Заказ выполнен. Будем рады чаевым: https://pay.cloudtips.ru/p/e2544504']);
+                                        } else {
+                                                $message->msg = json_encode(['text' => "Flowers delivered. We'll be glad to tip: https://pay.cloudtips.ru/p/e2544504"]);
+                                        }
+                                } else {
+                                        $message->msg = json_encode(['text' => 'Заказ выполнен. Будем рады чаевым: https://pay.cloudtips.ru/p/e2544504']);
+                                }
+                                
+                                $message->save();
+                        }
                 }
 
                 /*

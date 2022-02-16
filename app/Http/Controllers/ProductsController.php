@@ -52,7 +52,7 @@ class ProductsController extends Controller
                                         //$request->product_type = $productType->slug;
                                         $request->productType = $productType->id;
                                         $item['productType'] = $productType;
-                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 12);
+                                        $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 12, true);
                                         $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
                                         if($item['popularProductCount']) {
                                                 $popularProducts[] = $item;
@@ -99,6 +99,7 @@ class ProductsController extends Controller
                                 $randProducts = Product::randProducts($city_id)->take(12)->get();
                         }
                 }
+
 
                 if(!empty($request->flowers)) {
                         $promoText = \App\Model\PromoText::where('flower_id', $request->flowers[0])->where('type', 'info')->first();
@@ -1219,7 +1220,7 @@ class ProductsController extends Controller
                         $request->product_type = $queries[0];
                         if($queries[1] != 'vse-cvety') {
                                 $flower = Flower::where('slug', $queries[1])->first();
-                                if(!$flower) {
+                                if($flower) {
                                         if(empty($request->flowers)) {
                                                 $request->flowers = [];
                                         }

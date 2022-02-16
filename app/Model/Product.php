@@ -140,7 +140,7 @@ class Product extends MainModel
                 return $this->hasMany('App\Model\ProductPhoto')->orderBy('priority');
         }
 
-        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15) {
+        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15, $isMain = false) {
 
                 $currentPage = $page;
                 $productRequest = self::with(['shop'  => function($query) use($city_id) {
@@ -357,6 +357,10 @@ class Product extends MainModel
                                       echo $productRequest->toSql(); exit();
                                       //echo $city_id; exit();
                               }
+
+                        //       if($isMain) {
+                        //         $productRequestwhere->orderBy('price', 'asc');
+                        //       }
 
                               $products = $productRequest->paginate($perPage);
 
