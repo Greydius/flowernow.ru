@@ -156,6 +156,11 @@ Route::get('/cities', [
         'as' => 'city.popular'
 ]);
 
+Route::get('/languages', [
+        'uses' => 'CityController@languages',
+        'as' => 'city.languages'
+]);
+
 Route::get('/choosePopup', [
         'uses' => 'CityController@choosePopup',
         'as' => 'city.choosePopup'

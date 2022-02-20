@@ -155,17 +155,17 @@
 
 										</span>
 									</span>
-									<span class="m-menu__link-badge">
+									<!-- <span class="m-menu__link-badge">
 										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
-											{{$user->totalProducts()}}
+											{$user->totalProducts()}
 										</span>
 									</span>
 
 									<span class="m-menu__link-badge">
 										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
-											{{$user->totalProducts([0, 3])}}
+											{$user->totalProducts([0, 3])}
 										</span>
-									</span>
+									</span> -->
 								</a>
 							</li>
 
@@ -180,17 +180,17 @@
 
 										</span>
 									</span>
-									<span class="m-menu__link-badge">
+									<!-- <span class="m-menu__link-badge">
 										<span class="m-badge m-badge--info" data-toggle="tooltip" data-placement="top" data-original-title="Всего">
-											{{$user->totalProducts([], 1)}}
+											{$user->totalProducts([], 1)}
 										</span>
 									</span>
 
 									<span class="m-menu__link-badge">
 										<span class="m-badge m-badge--danger" data-toggle="tooltip" data-placement="top" data-original-title="Не прошедщих модерацию">
-											{{$user->totalProducts([0, 3], 1)}}
+											{$user->totalProducts([0, 3], 1)}
 										</span>
-									</span>
+									</span> -->
 								</a>
 							</li>
 
@@ -349,6 +349,16 @@
 												</span>
                                                 </a>
                                             </li>
+											@if($user->admin)
+												<li class="m-menu__item">
+													<a href="/promo" class="m-menu__link ">
+														<i class="m-menu__link-bullet m-menu__link-bullet--dot"><span></span></i>
+														<span class="m-menu__link-text">
+															ФКМагазины
+														</span>
+													</a>
+												</li>
+											@endif
 										</ul>
 									</div>
 								</li>
@@ -396,9 +406,9 @@
 									</span>
                                 </a>
                             </li>
-              @if(!$user->admin)
-              <li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.shopReports' ? 'm-menu__item--active' : null }}">
-                <a href="{{ route('admin.shop.shopReports') }}" class="m-menu__link ">
+			  @if($user->admin)
+              <li class="m-menu__item {{ \Request::route()->getName() == 'admin.reports' ? 'm-menu__item--active' : null }}">
+                <a href="{{ route('admin.reports') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon la la-clipboard"></i>
                   <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">
@@ -409,10 +419,10 @@
                   </span>
                 </a>
               </li>
-              @endif
-              @if($user->admin)
+              @endif			
+              @if(!$user->admin)
               <li class="m-menu__item {{ \Request::route()->getName() == 'admin.shop.shopReports' ? 'm-menu__item--active' : null }}">
-                <a href="{{ route('admin.reports') }}" class="m-menu__link ">
+                <a href="{{ route('admin.shop.shopReports') }}" class="m-menu__link ">
                   <i class="m-menu__link-icon la la-clipboard"></i>
                   <span class="m-menu__link-title">
                     <span class="m-menu__link-wrap">

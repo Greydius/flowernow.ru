@@ -24,7 +24,7 @@
     </div>
 
 
-    @if(count($popularProducts) || count($singleProducts) || count($blocks))
+    @if(count($popularProducts) || count($blocks))
 
         <div class="container" ng-controller="mainPage">
 
@@ -196,7 +196,7 @@
                 <div class="col-md-12" style="background-color: #fff; padding-top: 10px;"  >
                     <div class="free_phone hidden-xs">
                       <b>8 800 600-54-97</b>
-                       <!-- <span>Или напишите на <b>service@floristum.ru</b> <br>--><br><br></span>
+                       <!-- --> <span>Или напишите на <b>service@floristum.ru</b> <br><br><br></span>
                     </div>
 
                     @if(!empty($popularProducts) || !empty($blocks))
@@ -242,7 +242,7 @@
 
                                     <div class="row">
                                         @foreach($item['popularProduct'] as $key => $_item)
-                                            @if($key < 3 || $item['popularProductCount'] == 8)
+                                            @if($key <= 3 || $item['popularProductCount'] == 8)
 
                                                 @include('front.product.list-item', ['col' => 3])
 
@@ -261,30 +261,6 @@
 
                         @endforeach
                     @endif
-
-                        @if(count($singleProducts))
-                            <div data-ng-hide="isFiltered">
-                                <div class="hidden-lg hidden-md hidden-xs">
-                                    <br><br>
-                                </div>
-
-                                <h2 class="margin-top-null">Букеты цветов поштучно</h2>
-                                <br class="hidden-lg hidden-md">
-
-                                <div class="row">
-                                    @foreach($singleProducts as $_item)
-                                        @include('front.product.list-item', ['col' => 3])
-                                    @endforeach
-                                </div>
-
-                                <br clear="all">
-                                <div class="col-md-6 col-md-offset-3 bottom30">
-                                    <a href="/catalog/single" class="btn btn-block btn-more">Смотреть все букеты поштучно</a>
-                                </div>
-
-                                <br clear="all">
-                            </div>
-                        @endif
 
                         @if(false)
                             <div data-ng-hide="isFiltered">
@@ -351,7 +327,7 @@
 
                                         <div class="row">
                                             @foreach($item['popularProduct'] as $key => $_item)
-                                                @if($key < 3 || $item['popularProductCount'] == 8)
+                                                @if($key <= 3 || $item['popularProductCount'] == 8)
 
                                                     @include('front.product.list-item', ['col' => 3])
 

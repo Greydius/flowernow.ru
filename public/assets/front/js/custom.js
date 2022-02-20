@@ -86,17 +86,19 @@ $(document).ready(function() {
         }).on('change', 'input[name="flowers[]"]', function() {
                 applyFilter();
         });
+
+        $('.buy-btn').on('click', function(){
+                preloader('show');
+        })
 });
 
 function preloader(action) {
-        var Body = $('body');
+        const spinner = document.querySelector('.loading-spinner');
 
         if(action == 'show') {
-                $('.preloader-wrapper').fadeIn();
-                Body.addClass('preloader-site');
+                $(spinner).addClass('active');
         } else if(action == 'hide') {
-                $('.preloader-wrapper').fadeOut();
-                $('body').removeClass('preloader-site');
+                $(spinner).removeClass('active');
         }
 }
 

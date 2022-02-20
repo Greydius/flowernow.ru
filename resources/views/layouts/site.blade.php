@@ -971,14 +971,20 @@
                     <hr>
                     <div class="row">
                         @if(count($popular_city))
+                            @php
+                                echo request()->_lang;
+                            @endphp
                             <div class="col-xs-6 col-md-3">
                                 @endif
 
                                 @foreach($popular_city as $key => $city_item)
                                     <div class="city-popular">
                                         <p>
-                                          @if(request()->_cn != false)
-                                            <a href="http://<?=$city_item->slug?>.floristum.ru/en/{{ $city_item->slug }}"><?=$city_item->name?></a>
+                                            @php
+                                            $language = null;
+                                            @endphp
+                                          @if($language)
+                                            <a href="http://<?=$city_item->slug?>.floristum.ru/en/"><?=$city_item->name?></a>
                                           @else
                                             <a href="http://<?=$city_item->slug?>.floristum.ru"><?=$city_item->name?></a>
                                           @endif
@@ -1087,7 +1093,42 @@
                         </div>
                     </div>
                 </div>
+                @if($current_city->slug == 'moskva')
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-md-12">
+                        <strong>Популярные языки:</strong>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/en/">English</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/ml/">Malaysian</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/zh-CN/">Chinese</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/ja/">Japanese</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/es/">Spanish</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/">Russian</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/ar/">Arabic</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/fr/">French</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/pt/">Portuguese</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/de/">German</a> <span class="text-muted"></span></p>
+                            </div>
+                            <div class="col-xs-6 col-md-2">
+                                <p class="world-popular"><a href="/id/">Indonesian</a> <span class="text-muted"></span></p>
+                                <p class="world-popular"><a href="/languages">All languages...</a> <span class="text-muted"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
+            
     </section>
 
     <footer>
@@ -1303,6 +1344,68 @@
     </script>
 </div>
 
+<div class="loading-spinner">
+        <div class="loadingio-spinner-rolling-8ezg7q54rn6">
+            <div class="ldio-6b3izqdiakh">
+                <div></div>
+            </div>
+        </div>    
+    </div>
+    
+    <style type="text/css">
+    @keyframes ldio-6b3izqdiakh {
+    0% { transform: translate(-50%,-50%) rotate(0deg); }
+    100% { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+    .ldio-6b3izqdiakh div {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 10px solid #df291e;
+    border-top-color: transparent;
+    border-radius: 50%;
+    }
+    .ldio-6b3izqdiakh div {
+    animation: ldio-6b3izqdiakh 1s linear infinite;
+    top: 50px;
+    left: 50px
+    }
+    .loadingio-spinner-rolling-8ezg7q54rn6 {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    overflow: hidden;
+    }
+    .ldio-6b3izqdiakh {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0; /* see note above */
+    }
+    .ldio-6b3izqdiakh div { box-sizing: content-box; }
+    /* generated by https://loading.io/ */
+
+    .loading-spinner {
+        display: none;
+        position: fixed;
+        z-index: 999999999999;
+        top: 0;
+        left: 0;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+
+    }
+
+    .loading-spinner.active {
+        display: flex;
+    }
+    </style>
+
 <!--lang switcher-->
 <style>
 .translate_div{-moz-transform: rotate(-90deg);
@@ -1344,10 +1447,10 @@ function strpos (haystack, needle, offset) {
 }
  
 if(strpos(location.href, '/en/')){
-  @if(request()->_cn != false)
-  let href = "http://{{ request()->_cn }}.floristum.ru";
+  @if(request()->_city->slug != 'moskva')
+  let href = "https://{{ request()->_city->slug }}." + "floristum.ru";
   @else
-  let href = "http://floristum.ru";
+  let href = "https://" + "floristum.ru";
   @endif
   $('.translate_div a').attr('href', href);
 
@@ -1355,7 +1458,14 @@ if(strpos(location.href, '/en/')){
 	$('.translate_div img').attr('src', '/images/ru_translate.png');
 	current_lang = 'en';
 }else{
-	$('.translate_div a').attr('href', location.href.replace(".ru", '.ru/en'));
+    @if(request()->_city->slug != 'moskva')
+    let replace = "{{ request()->_city->slug }}." + "floristum.ru";
+    let href = "floristum.ru/en/{{ request()->_city->slug }}-d";
+    @else
+    let replace = ".ru";
+    let href = ".ru/en";
+    @endif
+	$('.translate_div a').attr('href', location.href.replace(replace, href));
 	$('.translate_div span').html('English');
 	$('.translate_div img').attr('src', '/images/eng_translate.png');
 	current_lang = 'ru';

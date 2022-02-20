@@ -87,7 +87,7 @@ class Controller extends BaseController
                             View::share('detected_city', $this->detected_city);
                             //View::share('_productTypes', ProductType::where('show_on_main', '1')->orderBy('priority')->get());
 
-                            View::share('_productTypes', ProductType::where('show_on_main', '1')->inCity($this->current_city->id)->orderBy('priority')->get());
+                            View::share('_productTypes', ProductType::where('show_on_main', '1')->orderBy('priority')->get());
                             View::share('_flowers', \App\Model\Flower::orderBy('popularity', 'desc')->limit(9)->get());
                             View::share('_prices', \App\Model\Price::all());
                             View::share('_colors', \App\Model\Color::all());

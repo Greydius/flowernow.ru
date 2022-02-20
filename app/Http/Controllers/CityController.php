@@ -8,13 +8,26 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-        public function popular() {
+        public function popular(Request $request) {
                 //$cities = City::popular(0, false);
-                $cities = City::where('population', '>', '0')->orderby('name')->get();
+                $citiesQ = City::orderby('name');
+
+                $spell = $request->spell;
+                if($spell) {
+                    $citiesQ->where('name', 'like', $spell . '%');
+                } else {
+                    $citiesQ->where('name', 'like', 'А%');
+                }
+
+                $cities = $citiesQ->get();
 
                 return view('front.city.popular',[
                         'cities' => $cities,
                 ]);
+        }
+
+        public function languages() {
+                return view('front.lang.popular');
         }
 
         public function choosePopup() {

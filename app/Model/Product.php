@@ -14,6 +14,20 @@ class Product extends MainModel
     //
         use SoftDeletes;
 
+        protected $table = '';
+
+        public function __construct($order = '')
+        {
+                parent::__construct();
+
+                if ($order) {
+                    $tablename = 'products_' . $order;
+                } else {
+                    $tablename = 'products';
+                }
+                $this->setTable($tablename);
+        }
+
         protected $dates = ['deleted_at'];
 
         protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -126,39 +140,10 @@ class Product extends MainModel
                 return $this->hasMany('App\Model\ProductPhoto')->orderBy('priority');
         }
 
-        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15) {
+        static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15, $isMain = false) {
 
                 $currentPage = $page;
-
-                if(!empty($request->single)) {
-                        $singleProductsIds = [2, 23, 194, 40, 194, 84, 56, 16, 21, 70,
-                        105, //красных тюльпанов
-                        97, //красных гвоздик
-                        116, //красных пионов
-                        130, //разноцветных ирисов
-                        //138, //белых калл
-                        171, //белых фрезий
-                        183, //белых гортензий
-                        166 //белых анемонов
-                        ];
-                        //$request->product_type = 'klassika';
-                        unset($request->product_type);
-                        return self::popularSingle2($city_id, $singleProductsIds)->paginate($perPage);
-                }
-
-                /*
-                $productRequest = self::with(['shop'  => function($query) {
-                            $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                        }, 'photos'])->whereHas('shop', function($query) use ($city_id) {
-                                $query->where('city_id', $city_id)->available();
-                        })->where('price', '>', 0)
-                        ->where('dop', 0)
-                        ->where('status', 1)
-                        ->where('pause', 0)
-                        ->whereNull('single');
-                */
-
-                $productRequest = self::with(['shop'  => function($query) {
+                $productRequest = self::with(['shop'  => function($query) use($city_id) {
                         $query->select(['id', 'name', 'delivery_price', 'delivery_time', 'city_id']);
                 }, 'photos'])->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))')
                         ->where('price', '>', 0)
@@ -373,6 +358,10 @@ class Product extends MainModel
                                       //echo $city_id; exit();
                               }
 
+                        //       if($isMain) {
+                        //         $productRequestwhere->orderBy('price', 'asc');
+                        //       }
+
                               $products = $productRequest->paginate($perPage);
 
                               return $products;
@@ -385,113 +374,6 @@ class Product extends MainModel
                                       ->where('price', '>', 0)->get();
                               */
                       }
-
-                      static function popularSingle2($city_id = 637640, $ids = [], $orderRand = true, Request $request = null, $page = 1, $perPage = 15) {
-                              $parents_id = [];
-                              $products = Product::whereNotNull('single')
-                                                ->whereHas('shop', function($q) use($city_id)  {
-                                                  $q->where('city_id', $city_id)->available();
-                                                })
-                                                ->whereHas('singleProduct', function($q) use($parents_id)  {
-                                                  $q->where('visible', 1);
-                                                })
-                                                ->orderBy('price', 'asc')
-                                                ->groupBy('single')
-                                                ->inRandomOrder()
-                                                ->where('price', '>', 1)
-                                                ->where('status', '=', 1)
-                                                ->where('pause', '=', 0);
-
-                              $_products = Product::with(['shop' => function ($query) {
-                                      $query->select(['id', 'name', 'delivery_price', 'delivery_time']);
-                              }])->join(\DB::raw('
-                              (SELECT p.id AS id, p.single FROM products p  
-                              INNER JOIN shops ON shops.id = p.shop_id
-                              INNER JOIN 
-                              (SELECT products.single, MIN(products.price + shops.delivery_price) AS min_price
-                              FROM products 
-                              INNER JOIN shops ON shops.id = products.shop_id
-                              WHERE shops.city_id = ' . (int)$city_id . '
-                              '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
-                              AND products.status = 1 
-                              AND products.pause = 0 
-                              AND products.price > 0 
-                              '.(!empty($ids) ? ' AND products.single IN (' . implode(',', $ids) . ')' : '').'               
-                              GROUP BY single) AS single ON single.single = p.single AND single.min_price = (p.price + shops.delivery_price)
-                              WHERE shops.city_id = ' . (int)$city_id . '
-                              '.(!empty($request) && !empty($request->shop_id) ? ' AND shops.id = '. (int)$request->shop_id : '').'
-                              AND p.status = 1 
-                              AND p.pause = 0 
-                              AND p.price > 0 
-                              '.(!empty($ids) ? 'AND p.single IN (' . implode(',', $ids) . ')' : '') .' GROUP BY p.single) AS single2
-                          '), function ($join) {
-                                      $join->on('products.id', '=', 'single2.id');
-                              })->whereHas('shop', function ($query) use ($city_id) {
-                                      $query->where('city_id', $city_id)->available();
-                              });
-                              
-                              $_products->orderBy(\DB::raw('RAND()'));
-
-                              //\Log::debug($_products->toSql());
-
-                          // return $_products;
-                          return $products;
-                      }
-
-                      static function popularSingle($city_id, $ids = []) {
-
-
-
-
-
-                              $_products = self::with(['shop'  => function($query) {
-                                          $query->select(['id', 'name', 'delivery_price']);
-                                      }])->whereHas('shop', function($query) use ($city_id) {
-                                              $query->where('city_id', $city_id)->available();
-                                      })->whereNotNull('single')
-                                      ->whereHas('singleProduct', function($q)  {
-                                        $q->where('visible', 1);
-                                      })
-                                      ->orderBy('price', 'asc')
-                                      ->groupBy('single')
-                                      ->inRandomOrder()
-                                      ->where('price', '>', 1)
-                                      ->where('status', '=', 1)
-                                      ->where('pause', '=', 0)->limit(8)->get();
-
-
-
-                              return $_products;
-
-              /*
-                $_products = Product::with(['shop' => function ($query) {
-                        $query->select(['id', 'name', 'delivery_price']);
-                }])->join(\DB::raw('
-                        (SELECT products.id, products.single, MIN(products.price)
-                        FROM products 
-                        INNER JOIN shops ON shops.id = products.shop_id  and shops.`city_id` = '.(int)$city_id.'
-                        WHERE products.status = 1 AND products.pause = 0 AND products.price > 0 AND products.single IN (' . implode(',', $ids) . ')
-                        GROUP BY products.single) AS single
-                    '), function ($join) {
-                        $join->on('products.id', '=', 'single.id');
-                })->get();
-              */
-
-
-                $products = [];
-                foreach ($_products as $item) {
-                        if(empty($products[$item->single])) {
-                                $products[$item->single] = $item;
-                        }
-                }
-
-                $returnProducts = [];
-                foreach ($_products as $item) {
-                        $returnProducts[] = $item;
-                }
-
-                return $returnProducts;
-        }
 
         public function getClientPriceAttribute() {
 
@@ -513,6 +395,10 @@ class Product extends MainModel
         public function getFullPriceAttribute() {
                 if($this->dop) {
                         return $this->price;
+                }
+
+                if(!$this->shop) {
+                        return ceil(ceil($this->price));
                 }
 
                 if(empty($this->single)) {
@@ -541,6 +427,8 @@ class Product extends MainModel
                         //return secure_asset('/uploads/products/632x632/'.$this->shop_id.'/'.$this->photo.'');
                         if($this->copy_id != null){
                           return \App\Helpers\AppHelper::RESIZER('/uploads/products/350/'.$this->photo, 351, 351, 1, NULL, 75);
+                        } elseif($this->shop_copy_id != null) {
+                          return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_copy_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                         }else {
                           return \App\Helpers\AppHelper::RESIZER('/uploads/products/'.$this->shop_id.'/'.$this->photo, 351, 351, 1, NULL, 75);
                         }
