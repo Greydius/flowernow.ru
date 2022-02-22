@@ -111,9 +111,6 @@ class OrdersController extends Controller
 
                                 foreach ($products as $product_id) {
                                         $_product = Product::with('singleProduct')->find($product_id);
-                                        if($_product->shop_id === 350) {
-                                                $_product->shop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
-                                        }
                                         if(!empty($_product->single)) {
                                                 $_product->qty = !empty((int)$request->qty) ? (int)$request->qty : $_product->singleProduct->qty_from;
                                         }
@@ -122,7 +119,7 @@ class OrdersController extends Controller
                                 }
 
                                 if(!empty($productModel)) {
-                                        $shop_id = $productModel[0]->shop->id;
+                                        $shop_id = $productModel[0]->shop_id;
                                         if(!empty($request->promo_code)) {
                                                 $productModel[0]->setPromoCode($request->promo_code);
                                         }

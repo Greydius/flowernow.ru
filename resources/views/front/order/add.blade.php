@@ -18,7 +18,7 @@
                 <div class="media order-total-cost">
                     <div class="media-left">
                         @if(empty($product->single))
-                            @if($product->copy_id !== null)
+                            @if($product->copy_id !== null || $product->shop_id === 350)
                               <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="...">
                             @else
                               <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">

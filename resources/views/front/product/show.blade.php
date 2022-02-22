@@ -58,7 +58,7 @@
 
                     <div class="demo">
                         <ul id="lightSlider">
-                            @if($product->copy_id != null)
+                            @if($product->copy_id != null || $product->shop_id === 350)
                               <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}">
                                 <img src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" />                              
                             </li>
@@ -68,7 +68,7 @@
                             </li>
                             @endif
                             @foreach($product->photos as $photo)
-                              @if($product->copy_id != null)
+                              @if($product->copy_id != null || $product->shop_id === 350)
                                 <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}">
                                     <img src="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}" />
                                 </li>
