@@ -150,7 +150,10 @@ class Product extends MainModel
                 }, 'photos']);
 
                 if($fakeShop) {
-                        $productRequest->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1)) OR products.shop_id = 350');
+                        $productRequest->where(function($query) use($city_id) {
+                                $query->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))');
+                                $query->orWhere('shop_id', 350);
+                        });
                 } else {
                         $productRequest->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))');
                 }
@@ -176,7 +179,7 @@ class Product extends MainModel
                         }
 
                         if(!empty($request->product_type) && $request->product_type != 'all') {
-
+                                
                                 $productType = ProductType::where('slug', $request->product_type)->first();
                                 $productTypeSearchKey = !empty($productType) ? $productType->search_key : null;
                                 $productTypeSearchKeys = [];

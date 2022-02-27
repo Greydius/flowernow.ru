@@ -28,7 +28,7 @@
               <div class="product-wrapper">
                 <figure class="main-picture">
                     @if(empty($product->single))
-                      @if($product->copy_id != null)
+                      @if($product->copy_id != null || $product->shop_id === 350)
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
                       @else 
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
