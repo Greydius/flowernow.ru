@@ -202,7 +202,7 @@ class ProductsController extends Controller
         public function showProduct($city_id, $slug) {
 
                 $product = Product::withTrashed()->where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($city_id){
-                  $q->where('city_id', '=', $city_id);
+                  $q->where('city_id', '=', $city_id)->orWhere('shop_id', 350);
                 })->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
                 $params = [

@@ -147,7 +147,7 @@ class Product extends MainModel
                 $currentPage = $page;
                 $productRequest = self::with(['shop'  => function($query) use($city_id) {
                         $query->select(['id', 'name', 'delivery_price', 'delivery_time', 'city_id']);
-                }, 'photos', 'compositions.flower']);
+                }, 'photos']);
 
                 if($fakeShop) {
                         $productRequest->where(function($query) use($city_id) {
@@ -374,7 +374,7 @@ class Product extends MainModel
                         //         $productRequestwhere->orderBy('price', 'asc');
                         //       }
 
-                              $products = $productRequest->simplePaginate($perPage);
+                              $products = $productRequest->paginate($perPage);
 
                               return $products;
 
@@ -487,8 +487,8 @@ class Product extends MainModel
                         ->where('status', 1)
                         ->where('pause', 0)
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
-                        ->whereNull('single');
-                        // ->inRandomOrder();
+                        ->whereNull('single')
+                        ->inRandomOrder();
         }
 
         public static function validateField($fieldName, $fieldValue) {
