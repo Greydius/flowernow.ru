@@ -337,7 +337,7 @@
 
         <br clear="all">
 
-        @if($products->total())
+        @if(count($products))
             <div class="container-fluid">
                 <h3 class="margin-top-null"><strong>Вам может понравиться:</strong></h3>
                 <div class="row" style="position:relative;margin-left:0px;margin-right:0px;">

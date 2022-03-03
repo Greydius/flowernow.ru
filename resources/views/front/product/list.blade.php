@@ -51,7 +51,7 @@
                 @endif
 
 
-                @if($popularProduct->total() <= 30)
+                @if(count($popularProduct) <= 30)
                         <h3 class="margin-top-null top30"><strong>Вам также может понравится:</strong></h3>
                         <div class="row">
                             @foreach($randProducts as $_item)

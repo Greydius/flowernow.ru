@@ -53,7 +53,7 @@ class ProductsController extends Controller
                                         $request->productType = $productType->id;
                                         $item['productType'] = $productType;
                                         $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 12, true);
-                                        $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
+                                        $item['popularProductCount'] = count($item['popularProduct']) >=8 ? 8 : count($item['popularProduct']);
                                         if($item['popularProductCount']) {
                                                 $popularProducts[] = $item;
                                         }
@@ -90,7 +90,7 @@ class ProductsController extends Controller
                 }
 
                 if(empty($blocks)) {
-                        if(!empty($popularProduct) && $popularProduct->total() <= 30) {
+                        if(!empty($popularProduct) && count($popularProduct) <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'price';
                                 $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
@@ -976,7 +976,7 @@ class ProductsController extends Controller
 
                         $response['links'] = $request->server('HTTP_REFERER');
 
-                        if(!$response['products']->total()) {
+                        if(!count($response['products'])) {
                                 $productTypes = ProductType::where('show_on_main', '1')->get();
                                 $item = [];
                                 $popularProducts = [];
@@ -1204,7 +1204,7 @@ class ProductsController extends Controller
                 if($request->q) {
                         $title = 'Поиск "'.$request->q.'"';
 
-                        if(!empty($popularProduct) && $popularProduct->total() <= 30) {
+                        if(!empty($popularProduct) && count($popularProduct) <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'rand';
                                 $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
