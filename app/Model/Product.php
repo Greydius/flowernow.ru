@@ -143,7 +143,9 @@ class Product extends MainModel
         static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15, $isMain = false) {
 
                 $fakeShop = Shop::where('city_id', $city_id)->where('copy_id', 350)->first();
-                $shops = Shop::where('city_id', $city_id)->pluck('id')->toArray();
+                $shops = Shop::where('city_id', $city_id)->where('active', 1)->where(function($query) {
+                        $query->where('delivery_price', '>', 0)->orWhere('delivery_free', 1);
+                })->pluck('id')->toArray();
 
                 $currentPage = $page;
                 $productRequest = self::with(['shop'  => function($query) use($city_id) {
