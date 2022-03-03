@@ -19,3 +19,6 @@ yarn-error.log
 composer.phar
 /public_html
 /public/uploads
+
+*.log
+*.log.*
