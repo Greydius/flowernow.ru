@@ -153,7 +153,7 @@ class Product extends MainModel
                 }, 'photos', 'compositions.flower']);
 
                 if($fakeShop) {
-                        $shops[] = $fakeShop->id;
+                        $shops[] = 350;
                 }
 
                 $productRequest->whereIn('shop_id', $shops);
