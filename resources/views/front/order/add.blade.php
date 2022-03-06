@@ -756,10 +756,10 @@
 
         if(isWomanDays){
         // if(false){
-          toDefault();
-          defaultTimepicker.hide();
-          defaultTimepicker.find('select').val('в течении дня');
-          womanDaysHint.show();
+        //  toDefault();
+        //  defaultTimepicker.hide();
+        //  defaultTimepicker.find('select').val('в течении дня');
+        //  womanDaysHint.show();
         }else if(isLoveDay) {
           toDefault();
           defaultTimepicker.find("select").attr("name", 'receiving_time2');
