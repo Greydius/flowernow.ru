@@ -41,10 +41,10 @@
           @if(Route::currentRouteName() != 'favorites.show')
             <span data-product-id="{{ $_item['id'] }}" title="" class="product-image__like"></span>
           @endif
-          <span class="product-image__qr">
+          <!-- <span class="product-image__qr">
             <span class="product-image__qr--top">100 ₽ скидка</span>
             <span class="product-image__qr--bottom">в приложении</span>
-          </span>
+          </span> -->
         </div>
 
         <div class="description-media-item">

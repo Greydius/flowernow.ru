@@ -20,6 +20,10 @@
             </div>
         @endif
 
+        @if(
+            // true
+            $user->admin
+            )
         <div class="row">
 
 
@@ -44,6 +48,7 @@
             </div>
 
         </div>
+        @endif
 
         <br>
 
@@ -73,6 +78,10 @@
                             @endif
                         </div>
 
+                        @if(
+                        // true
+                        $user->admin
+                        )
                         <div class="col-md-3">
                             <button type="button" class="btn btn-outline-warning m-btn m-btn--icon pull-right" data-toggle="modal" data-target="#m_modal_5">
                                 <span>
@@ -83,8 +92,9 @@
                                 </span>
                             </button>
                         </div>
+                        @endif
 
-                        <div class="col-md-3">
+                        <!-- <div class="col-md-3">
                             <a href="{{ route('shop.products', ['id' => $shop->id]) }}" target="_blank" class="btn btn-outline-info m-btn m-btn--icon pull-right">
                                 <span>
                                     <i class="la la-diamond"></i>
@@ -93,7 +103,7 @@
                                     </span>
                                 </span>
                             </a>
-                        </div>
+                        </div> -->
 
                     @endif
                 </div>
@@ -245,7 +255,10 @@
 
                         <div class="m-portlet__foot m-portlet__foot--fit">
                             <div class="m-form__actions" style="padding: 5px;">
-                                @if($user->admin || $user->created_at > '2019-08-03' || $user->isSupervisor())
+                                @if($user->admin
+                                    // || $user->created_at > '2019-08-03'
+                                    || $user->isSupervisor()
+                                )
                                     <a href  class="btn btn-outline-info m-btn m-btn--icon m-btn--icon-only" ng-click="editItem($event, product)"  bs-tooltip data-toggle="tooltip" data-placement="top" data-original-title="Редактировать">
                                         <i class="la la-pencil"></i>
                                     </a>
