@@ -46,10 +46,10 @@
                   <span class="add-favorites__like"></span>
                 </div>
 
-                <span class="product-image__qr">
+                <!-- <span class="product-image__qr">
                   <span class="product-image__qr--top">100 ₽ скидка</span>
                   <span class="product-image__qr--bottom">в приложении</span>
-                </span>
+                </span> -->
               </div>
 
             @else
@@ -93,10 +93,10 @@
                           <span class="add-favorites__like"></span>
                         </div>
 
-                        <span class="product-image__qr">
+                        <!-- <span class="product-image__qr">
                           <span class="product-image__qr--top">100 ₽ скидка</span>
                           <span class="product-image__qr--bottom">в приложении</span>
-                        </span>
+                        </span> -->
                     </div>
 
                     <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
