@@ -112,6 +112,8 @@ class ProductsController extends Controller
                   Cookie::queue(Cookie::make('app', 'true', 1800000, '/', '.' . $request->getHttpHost(), false, false));
                 }
 
+                $fakeShop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
+
 
                 return view($viewFile,[
                         'title' => $title,
@@ -121,7 +123,8 @@ class ProductsController extends Controller
                         'popularProducts' => $popularProducts,
                         'randProducts' => $randProducts,
                         'currentType' => $currentType,
-                        'blocks' => $blocks
+                        'blocks' => $blocks,
+                        'fakeShop' => $fakeShop
                 ]);
         }
 
