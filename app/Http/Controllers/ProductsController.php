@@ -1344,6 +1344,10 @@ class ProductsController extends Controller
                 try{
                         $product = Product::with('singleProduct')->findOrFail($request->product_id);
 
+                        if($product->shop_id === 350) {
+                                $product->shop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
+                        }
+
                         if(!empty($product->single)) {
                                 $singleProduct = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->whereRaw((int)$request->qty." BETWEEN qty_from AND qty_to ")->with('parent')->first();
 
