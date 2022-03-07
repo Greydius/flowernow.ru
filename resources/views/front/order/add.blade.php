@@ -366,12 +366,12 @@
                                         Банковская карта</a>
                                 </li>
 
-                                <li role="presentation" class="payment-type">
+                                <!-- <li role="presentation" class="payment-type">
                                     <a href="#oplata2" aria-controls="profile" role="oplata2" data-toggle="tab" data-payment="cash">
                                         <figure><img  height="40" src="{{ asset('assets/front/img/nal.png') }}" alt="..."></figure>
                                         Наличные
                                     </a>
-                                </li>
+                                </li> -->
 
                                 <li role="presentation" class="payment-type entity">
                                   <a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs">
