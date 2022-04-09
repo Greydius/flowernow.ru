@@ -53,7 +53,7 @@ class ProductsController extends Controller
                                         $request->productType = $productType->id;
                                         $item['productType'] = $productType;
                                         $item['popularProduct'] = Product::popular($this->current_city->id, $request, 1, 12, true);
-                                        $item['popularProductCount'] = $item['popularProduct']->total() >=8 ? 8 : $item['popularProduct']->total();
+                                        $item['popularProductCount'] = count($item['popularProduct']) >=8 ? 8 : count($item['popularProduct']);
                                         if($item['popularProductCount']) {
                                                 $popularProducts[] = $item;
                                         }
@@ -90,7 +90,7 @@ class ProductsController extends Controller
                 }
 
                 if(empty($blocks)) {
-                        if(!empty($popularProduct) && $popularProduct->total() <= 30) {
+                        if(!empty($popularProduct) && count($popularProduct) <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'price';
                                 $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
@@ -112,6 +112,8 @@ class ProductsController extends Controller
                   Cookie::queue(Cookie::make('app', 'true', 1800000, '/', '.' . $request->getHttpHost(), false, false));
                 }
 
+                $fakeShop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
+
 
                 return view($viewFile,[
                         'title' => $title,
@@ -121,7 +123,8 @@ class ProductsController extends Controller
                         'popularProducts' => $popularProducts,
                         'randProducts' => $randProducts,
                         'currentType' => $currentType,
-                        'blocks' => $blocks
+                        'blocks' => $blocks,
+                        'fakeShop' => $fakeShop
                 ]);
         }
 
@@ -146,8 +149,12 @@ class ProductsController extends Controller
         public function show($slug, Request $request) {
 
                 $product = Product::where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($request){
-                  $q->where('city_id', '=', $this->current_city->id);
+                  $q->where('city_id', '=', $this->current_city->id)->orWhere('id', 350);
                 })->with('compositions.flower')->with('singleProduct')->firstOrFail();
+
+                if($product->shop_id === 350) {
+                        $product->shop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
+                }
 
                 $params = [
                         'product' => $product,
@@ -198,7 +205,7 @@ class ProductsController extends Controller
         public function showProduct($city_id, $slug) {
 
                 $product = Product::withTrashed()->where('slug', $slug)->with('shop.city')->whereHas('shop', function($q) use ($city_id){
-                  $q->where('city_id', '=', $city_id);
+                  $q->where('city_id', '=', $city_id)->orWhere('shop_id', 350);
                 })->with('compositions.flower')->with('singleProduct')->firstOrFail();
 
                 $params = [
@@ -413,20 +420,6 @@ class ProductsController extends Controller
                 $product->photo = $filename;
                 $product->shop_id = $shop->id;
                 $product->save();
-
-                if($shop->id == 350) {
-                       $shops = Shop::where('copy_id', 350)->get();
-                       foreach($shops as $shop) {
-                                $productCopy = new Product();
-                                $productCopy->dop = !empty($request->isDop) ? 1 : 0;
-                                $productCopy->name = Product::getNewProductName($shop->id, $productCopy->dop);
-                                $productCopy->slug = Product::getNewProductSlug($productCopy->name);
-                                $productCopy->photo = $filename;
-                                $productCopy->shop_id = $shop->id;
-                                $productCopy->copy_id = $product->id;
-                                $productCopy->save();
-                       } 
-                }
 
                 return response()->json([
                     'error' => false,
@@ -906,63 +899,6 @@ class ProductsController extends Controller
                                 
                         }
 
-                  if($product->shop_id == 350){
-                    $productCopies = Product::where('copy_id', '=', $product->id)->get();
-
-                    $response = $productCopies;
-
-                    foreach($productCopies as $productCopy) {
-                      if($request->input('name') != $productCopy->name) {
-                              $productCopy->slug = Product::getNewProductSlug($request->input('name'));
-                      }
-
-                      $productCopy->name = $request->input('name');
-                      $productCopy->width = (int)$request->input('width');
-                      $productCopy->height = (int)$request->input('height');
-                      $productCopy->price = $request->input('price');
-                      $productCopy->product_type_id = $request->input('product_type_id');
-                      $productCopy->color_id = $request->input('color_id');
-                      $productCopy->make_time = $request->input('make_time');
-                      $productCopy->description = $request->input('description');
-                      $productCopy->special_offer_id = $request->input('special_offer_id');
-
-                      $productCopy->compositions()->delete();
-
-                      $compositions = $request->input('compositions');
-                      $newCompositions = [];
-
-                      if (!empty($compositions)) {
-                              foreach ($compositions as $composition) {
-                                      if (!empty($composition['flower_id'])) {
-                                              if (!empty($composition['qty'])) {
-                                                      $newCompositions[] = [
-                                                              'flower_id' => $composition['flower_id'],
-                                                              'qty' => $composition['qty']
-                                                      ];
-                                              } else {
-                                                      return response()->json([
-                                                              'error' => true,
-                                                              'message' => 'Не указано кол-во в составе',
-                                                              'code' => 400
-                                                      ], 400);
-                                              }
-                                      }
-                              }
-
-                              $productCopy->compositions()->createMany($newCompositions);
-                      }
-
-                      $updated_at = $productCopy->updated_at;
-
-                      if($productCopy->save()) {
-                        if(!$this->user->admin && ($updated_at != $productCopy->updated_at || $productCopy->status == 0) && !$this->user->isSupervisor($shop->city_id)) {
-                                $productCopy->status = 2;
-                                $productCopy->save();
-                        }
-                      }
-                    }
-                  }
-
                         return response()->json([
                                 'error' => false,
                                 'code' => 200,
@@ -1043,7 +979,7 @@ class ProductsController extends Controller
 
                         $response['links'] = $request->server('HTTP_REFERER');
 
-                        if(!$response['products']->total()) {
+                        if(!count($response['products'])) {
                                 $productTypes = ProductType::where('show_on_main', '1')->get();
                                 $item = [];
                                 $popularProducts = [];
@@ -1271,7 +1207,7 @@ class ProductsController extends Controller
                 if($request->q) {
                         $title = 'Поиск "'.$request->q.'"';
 
-                        if(!empty($popularProduct) && $popularProduct->total() <= 30) {
+                        if(!empty($popularProduct) && count($popularProduct) <= 30) {
                                 $request2 = new Request();
                                 $request2->order = 'rand';
                                 $randProducts = Product::popular($this->current_city->id, $request2, 1, 76);
@@ -1320,13 +1256,6 @@ class ProductsController extends Controller
                         try {
                                 $shop = $this->user->getShop();
                                 \DB::update('UPDATE products SET price = price + (price * (?/100)) WHERE shop_id = ?', [(int)$request->percent, $shop->id]);
-
-                                if($shop->id == 350) {
-                                        $shops = Shop::where('copy_id', 350)->get();
-                                        foreach($shops as $shop) {
-                                                \DB::update('UPDATE products SET price = price + (price * (?/100)) WHERE shop_id = ?', [(int)$request->percent, $shop->id]);
-                                        } 
-                                 }
                                 $message = "Цены успешно изменены";
                         } catch (\Exception $e) {
                                 $statusCode = 400;
@@ -1417,6 +1346,10 @@ class ProductsController extends Controller
 
                 try{
                         $product = Product::with('singleProduct')->findOrFail($request->product_id);
+
+                        if($product->shop_id === 350) {
+                                $product->shop = Shop::where('city_id', $this->current_city->id)->where('copy_id', 350)->first();
+                        }
 
                         if(!empty($product->single)) {
                                 $singleProduct = SingleProduct::where('parent_id', $product->singleProduct->parent_id)->whereRaw((int)$request->qty." BETWEEN qty_from AND qty_to ")->with('parent')->first();

@@ -30,7 +30,7 @@
         <div class="col-md-12 main-products-container">
 
             <div class="free_phone hidden-xs">
-                <b>8 800 600-54-97</b>
+                <b>+7 965 092-00-71</b>
                 <span>Или напишите на <b>service@floristum.ru</b></span>
             </div>
 
@@ -51,7 +51,7 @@
                 @endif
 
 
-                @if($popularProduct->total() <= 30)
+                @if(count($popularProduct) <= 30)
                         <h3 class="margin-top-null top30"><strong>Вам также может понравится:</strong></h3>
                         <div class="row">
                             @foreach($randProducts as $_item)

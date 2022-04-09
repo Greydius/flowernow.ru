@@ -28,7 +28,9 @@
               <div class="product-wrapper">
                 <figure class="main-picture">
                     @if(empty($product->single))
-                      @if($product->copy_id != null)
+                      @if($product->shop_copy_id != null)
+                        <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop_copy_id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
+                      @elseif($product->copy_id != null || $product->shop_id === 350)
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
                       @else 
                         <img class="img-responsive" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="{{ html_entity_decode(strip_tags($product->name)) }}">
@@ -44,10 +46,10 @@
                   <span class="add-favorites__like"></span>
                 </div>
 
-                <span class="product-image__qr">
+                <!-- <span class="product-image__qr">
                   <span class="product-image__qr--top">100 ₽ скидка</span>
                   <span class="product-image__qr--bottom">в приложении</span>
-                </span>
+                </span> -->
               </div>
 
             @else
@@ -58,7 +60,11 @@
 
                     <div class="demo">
                         <ul id="lightSlider">
-                            @if($product->copy_id != null)
+                            @if($product->shop_copy_id != null)
+                                <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop_copy_id.'/'.$product->photo) }}">
+                                    <img src="{{ asset('/uploads/products/632x632/'.$product->shop_copy_id.'/'.$product->photo) }}" />
+                                </li>
+                            @elseif($product->copy_id != null || $product->shop_id === 350)
                               <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}">
                                 <img src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" />                              
                             </li>
@@ -68,7 +74,11 @@
                             </li>
                             @endif
                             @foreach($product->photos as $photo)
-                              @if($product->copy_id != null)
+                              @if($product->shop_copy_id != null)
+                                <li data-thumb="{{ asset('/uploads/products/632x632/'.$product->shop_copy_id.'/'.$photo->photo) }}">
+                                    <img src="{{ asset('/uploads/products/632x632/'.$product->shop_copy_id.'/'.$photo->photo) }}" />
+                                </li>
+                              @elseif($product->copy_id != null || $product->shop_id === 350)
                                 <li data-thumb="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}">
                                     <img src="{{ asset('/uploads/products/632x632/350/'.$photo->photo) }}" />
                                 </li>
@@ -83,10 +93,10 @@
                           <span class="add-favorites__like"></span>
                         </div>
 
-                        <span class="product-image__qr">
+                        <!-- <span class="product-image__qr">
                           <span class="product-image__qr--top">100 ₽ скидка</span>
                           <span class="product-image__qr--bottom">в приложении</span>
-                        </span>
+                        </span> -->
                     </div>
 
                     <figcaption><span class="glyphicon glyphicon-resize-vertical text-muted" aria-hidden="true"></span> {{ $product->height }} см <span class="glyphicon glyphicon-resize-horizontal text-muted" aria-hidden="true"></span> {{ $product->width }} см</figcaption>
@@ -337,7 +347,7 @@
 
         <br clear="all">
 
-        @if($products->total())
+        @if(count($products))
             <div class="container-fluid">
                 <h3 class="margin-top-null"><strong>Вам может понравиться:</strong></h3>
                 <div class="row" style="position:relative;margin-left:0px;margin-right:0px;">

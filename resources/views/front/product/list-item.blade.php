@@ -41,17 +41,24 @@
           @if(Route::currentRouteName() != 'favorites.show')
             <span data-product-id="{{ $_item['id'] }}" title="" class="product-image__like"></span>
           @endif
-          <span class="product-image__qr">
+          <!-- <span class="product-image__qr">
             <span class="product-image__qr--top">100 ₽ скидка</span>
             <span class="product-image__qr--bottom">в приложении</span>
-          </span>
+          </span> -->
         </div>
 
         <div class="description-media-item">
             <div class="row">
                 <div class="col-xs-12 buy">
-                    <a href="{{ route('order.add', ['product_id' => $_item['id']]) }}" class="btn btn-danger btn-outline buy-btn">Заказать</a>
-                    <p><strong class="price-media-item">{{ empty($_item['deleted_at']) ? $_item['clientPrice'].' ₽' : '&nbsp;' }}</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
+                    <a rel="nofollow" href="{{ route('order.add', ['product_id' => $_item['id']]) }}" class="btn btn-danger btn-outline buy-btn">Заказать</a>
+                    @php
+                      $price = $_item['clientPrice'];
+
+                      if($_item->shop_id === 350 && isset($fakeShop)) {
+                        $price = $_item['price'] + $fakeShop->delivery_price;
+                      }
+                    @endphp
+                    <p><strong class="price-media-item">{{ empty($_item['deleted_at']) ? $price.' ₽' : '&nbsp;' }}</strong> <a href="/flowers/{{ $_item['slug'] }}" class="name">{{ $_item['name'] }}</a></p>
                     @if(!empty($isNeedShopName))
                         <p>{{ $_item['shop']->name }}</p>
                     @endif

@@ -18,7 +18,7 @@
                 <div class="media order-total-cost">
                     <div class="media-left">
                         @if(empty($product->single))
-                            @if($product->copy_id !== null)
+                            @if($product->copy_id !== null || $product->shop_id === 350)
                               <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/350/'.$product->photo) }}" alt="...">
                             @else
                               <img class="media-object img-circle" width="80" height="80" src="{{ asset('/uploads/products/632x632/'.$product->shop->id.'/'.$product->photo) }}" alt="...">
@@ -366,12 +366,12 @@
                                         Банковская карта</a>
                                 </li>
 
-                                <li role="presentation" class="payment-type">
+                                <!-- <li role="presentation" class="payment-type">
                                     <a href="#oplata2" aria-controls="profile" role="oplata2" data-toggle="tab" data-payment="cash">
                                         <figure><img  height="40" src="{{ asset('assets/front/img/nal.png') }}" alt="..."></figure>
                                         Наличные
                                     </a>
-                                </li>
+                                </li> -->
 
                                 <li role="presentation" class="payment-type entity">
                                   <a href="#oplata3" aria-controls="oplata3" role="tab" data-toggle="tab" data-payment="rs">
@@ -754,12 +754,12 @@
           womanDaysHint.hide();
         }
 
-        if(isWomanDays){
-        // if(false){
-          toDefault();
-          defaultTimepicker.hide();
-          defaultTimepicker.find('select').val('в течении дня');
-          womanDaysHint.show();
+        // if(isWomanDays){
+        if(false){
+         toDefault();
+         defaultTimepicker.hide();
+         defaultTimepicker.find('select').val('в течении дня');
+         womanDaysHint.show();
         }else if(isLoveDay) {
           toDefault();
           defaultTimepicker.find("select").attr("name", 'receiving_time2');

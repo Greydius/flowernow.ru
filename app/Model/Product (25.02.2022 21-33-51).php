@@ -143,20 +143,20 @@ class Product extends MainModel
         static function popular($city_id = null, Request $request = null, $page = 1, $perPage = 15, $isMain = false) {
 
                 $fakeShop = Shop::where('city_id', $city_id)->where('copy_id', 350)->first();
-                $shops = Shop::where('city_id', $city_id)->where('active', 1)->where(function($query) {
-                        $query->where('delivery_price', '>', 0)->orWhere('delivery_free', 1);
-                })->pluck('id')->toArray();
 
                 $currentPage = $page;
                 $productRequest = self::with(['shop'  => function($query) use($city_id) {
                         $query->select(['id', 'name', 'delivery_price', 'delivery_time', 'city_id']);
-                }, 'photos', 'compositions.flower']);
+                }, 'photos']);
 
                 if($fakeShop) {
-                        $shops[] = 350;
+                        $productRequest->where(function($query) use($city_id) {
+                                $query->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))');
+                                $query->orWhere('shop_id', 350);
+                        });
+                } else {
+                        $productRequest->whereRaw('products.shop_id IN (select shops.id from `shops` where `city_id` = '.(int)$city_id.'  and `active` = 1 and (`delivery_price` > 0 or `delivery_free` = 1))');
                 }
-
-                $productRequest->whereIn('shop_id', $shops);
                 
                 $productRequest->where('price', '>', 0)
                         ->where('dop', 0)
@@ -181,9 +181,39 @@ class Product extends MainModel
                         if(!empty($request->product_type) && $request->product_type != 'all') {
                                 
                                 $productType = ProductType::where('slug', $request->product_type)->first();
-                                $productRequest->where('product_type_id', (int)$productType->id);
+                                $productTypeSearchKey = !empty($productType) ? $productType->search_key : null;
+                                $productTypeSearchKeys = [];
+                                if(!empty($productTypeSearchKey)) {
+                                        $productTypeSearchKeys = explode(',', $productTypeSearchKey);
+                                }
 
-                        }
+                                $productRequest->where(function ($query) use ($request, $productTypeSearchKeys) {
+                                        $query->whereHas('productType', function($query) use ($request) {
+                                                $query->where('slug', $request->product_type);
+                                        });
+
+                                        /*
+                                        foreach($productTypeSearchKeys as $pk) {
+                                                $query->orWhere('name', 'like', '%'.$pk.'%')
+                                                        ->orWhere('description', 'like', '%'.$pk.'%');
+                                        }
+                                        */
+                                });
+
+              /*
+                                              $productRequest->whereHas('productType', function($query) use ($request) {
+                                                      $query->where('slug', $request->product_type);
+                                              });
+                                              */
+
+                                      }
+              /*
+                                      if(!empty($request->product_type) && $request->product_type != 'all') {
+                                              $productRequest->whereHas('productType', function($query) use ($request) {
+                                                      $query->where('slug', $request->product_type);
+                                              });
+                                      }
+              */
 
                                       if(!empty($request->productPrice)) {
                                               $price = Price::find($request->productPrice);
@@ -344,7 +374,7 @@ class Product extends MainModel
                         //         $productRequestwhere->orderBy('price', 'asc');
                         //       }
 
-                              $products = $productRequest->simplePaginate($perPage);
+                              $products = $productRequest->paginate($perPage);
 
                               return $products;
 
@@ -457,8 +487,8 @@ class Product extends MainModel
                         ->where('status', 1)
                         ->where('pause', 0)
                         ->whereNotIn('product_type_id', [7, 8, 9, 10])
-                        ->whereNull('single');
-                        // ->inRandomOrder();
+                        ->whereNull('single')
+                        ->inRandomOrder();
         }
 
         public static function validateField($fieldName, $fieldValue) {

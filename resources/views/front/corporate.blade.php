@@ -91,7 +91,7 @@
                             @endforeach
 
                             <br clear="all">
-                            @if($item['popularProduct']->total() > 6)
+                            @if(count($item['popularProduct']))
                                 <div class="col-md-6 col-md-offset-3 bottom30">
                                     <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
                                 </div>

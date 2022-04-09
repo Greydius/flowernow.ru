@@ -195,7 +195,7 @@
 
                 <div class="col-md-12" style="background-color: #fff; padding-top: 10px;"  >
                     <div class="free_phone hidden-xs">
-                      <b>8 800 600-54-97</b>
+                      <b>+7 965 092-00-71</b>
                        <!-- --> <span>Или напишите на <b>service@floristum.ru</b> <br><br><br></span>
                     </div>
 
@@ -250,7 +250,7 @@
                                         @endforeach
 
                                         <br clear="all">
-                                        @if($item['popularProduct']->total() > 8)
+                                        @if(count($item['popularProduct']) > 8)
                                             <div class="col-md-6 col-md-offset-3 bottom30">
                                                 <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все</a>
                                             </div>
@@ -335,7 +335,7 @@
                                             @endforeach
 
                                             <br clear="all">
-                                            @if($item['popularProduct']->total() > 6)
+                                            @if(count($item['popularProduct']) > 6)
                                                 <div class="col-md-6 col-md-offset-3 bottom30">
                                                     <a href="/catalog/{{ $item['productType']->slug }}/vse-cvety" class="btn btn-block btn-more">Показать все {{ mb_strtolower($item['productType']->alt_name) }}</a>
                                                 </div>
