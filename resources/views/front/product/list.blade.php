@@ -30,7 +30,7 @@
         <div class="col-md-12 main-products-container">
 
             <div class="free_phone hidden-xs">
-                <b>8 800 600-54-97</b>
+                <b>+7 965 092-00-71</b>
                 <span>Или напишите на <b>service@floristum.ru</b></span>
             </div>
 
