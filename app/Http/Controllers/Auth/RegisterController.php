@@ -71,7 +71,7 @@ class RegisterController extends Controller
     ];
 
     private  static $rules = [
-            'phone' => 'required|string|max:16|min:16|unique:users',
+            'phone' => 'required|string|max:17|min:12|unique:users',
             'city_id' => 'required|integer',
             'shop_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

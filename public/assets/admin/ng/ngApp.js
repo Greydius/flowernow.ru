@@ -21,7 +21,7 @@
                 return {
                         link: function(scope, element, attr) {
                                 $timeout(function() {
-                                        element.mask("+7(999)999-99-99");;
+                                        element.mask("+998(99)999-99-99");;
                                 });
                         }
                 }

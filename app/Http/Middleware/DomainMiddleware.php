@@ -36,12 +36,8 @@ class DomainMiddleware
                 if($request->_cn != false) {
                   $subdomain = $request->_cn;
                 } else {
-                  $subdomain = 'moskva';
+                  $subdomain = 'tashkent';
                 }     
-        }
-
-        if($subdomain == 'spb') {
-                $subdomain = 'sankt-peterburg';
         }
 
         $city = City::whereSlug($subdomain)->with(['region'])->firstOrFail();

@@ -36,7 +36,7 @@
 								</div>
 								<div class="m-login__title">
 									<h3>
-										Регистрация нового цветочного магазина на floristum.ru
+										Регистрация нового магазина на marketplace.uz
 									</h3>
 								</div>
 								<div class="m-login__desc">
