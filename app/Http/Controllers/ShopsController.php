@@ -380,7 +380,7 @@ class ShopsController extends Controller
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
-                        \File::makeDirectory(public_path($filePath));
+                        \File::makeDirectory(public_path($filePath),0777,true);
                 }
 
                 Image::make($photo)->save( public_path($fullFileName ) );
@@ -441,7 +441,7 @@ class ShopsController extends Controller
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
-                        \File::makeDirectory(public_path($filePath));
+                        \File::makeDirectory(public_path($filePath),0777,true);
                 }
 
                 Image::make($photo)->save( public_path($fullFileName ) );

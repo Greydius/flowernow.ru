@@ -338,7 +338,7 @@ class ProductsController extends Controller
                         $fullFileName = $filePath . $filename;
 
                         if(!file_exists(public_path($filePath))) {
-                                \File::makeDirectory(public_path($filePath));
+                                \File::makeDirectory(public_path($filePath),0777,true);
                         }
 
                         Image::make($photo)->save( public_path($fullFileName ) );
@@ -347,7 +347,7 @@ class ProductsController extends Controller
                         $fullFileName = $filePath . $filename;
 
                         if(!file_exists(public_path($filePath))) {
-                                \File::makeDirectory(public_path($filePath));
+                                \File::makeDirectory(public_path($filePath),0777,true);
                         }
 
                         Image::make($photo)->fit(632, 632)->save( public_path($fullFileName ) );
@@ -399,7 +399,7 @@ class ProductsController extends Controller
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
-                        \File::makeDirectory(public_path($filePath));
+                        \File::makeDirectory(public_path($filePath),0777,true);
                 }
 
                 Image::make($photo)->save( public_path($fullFileName ) );
@@ -408,7 +408,7 @@ class ProductsController extends Controller
                 $fullFileName = $filePath . $filename;
 
                 if(!file_exists(public_path($filePath))) {
-                        \File::makeDirectory(public_path($filePath));
+                        \File::makeDirectory(public_path($filePath),0777,true);
                 }
 
                 Image::make($photo)->fit(632, 632)->save( public_path($fullFileName ) );
@@ -1461,11 +1461,11 @@ class ProductsController extends Controller
                                                 $filePathOld632 = Product::$fileUrl.'632x632/'.$request->from_shop_id.'/';
 
                                                 if(!file_exists(public_path($filePathNew))) {
-                                                        \File::makeDirectory(public_path($filePathNew));
+                                                        \File::makeDirectory(public_path($filePathNew),0777,true);
                                                 }
 
                                                 if(!file_exists(public_path($filePathNew632))) {
-                                                        \File::makeDirectory(public_path($filePathNew632));
+                                                        \File::makeDirectory(public_path($filePathNew632),0777,true);
                                                 }
 
                                                 if (!copy(public_path($filePathOld.$photo->photo), public_path($filePathNew.$photo->photo)) ||
